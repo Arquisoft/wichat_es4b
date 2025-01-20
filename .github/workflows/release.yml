@@ -1,4 +1,4 @@
-name: CI for wichat_0
+name: CI for wichat_es4b
 
 on:
   release:
@@ -56,7 +56,7 @@ jobs:
         API_URI: http://${{ secrets.DEPLOY_HOST }}:8000
         LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
       with:
-          name: arquisoft/wichat_0/webapp
+          name: arquisoft/wichat_es4b/webapp
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: ghcr.io
@@ -76,7 +76,7 @@ jobs:
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@v5
       with:
-          name: arquisoft/wichat_0/authservice
+          name: arquisoft/wichat_es4b/authservice
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: ghcr.io
@@ -95,7 +95,7 @@ jobs:
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@v5
       with:
-        name: arquisoft/wichat_0/userservice
+        name: arquisoft/wichat_es4b/userservice
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: ghcr.io
@@ -113,7 +113,7 @@ jobs:
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@v5
       with:
-        name: arquisoft/wichat_0/llmservice
+        name: arquisoft/wichat_es4b/llmservice
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: ghcr.io
@@ -135,7 +135,7 @@ jobs:
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@v5
       with:
-        name: arquisoft/wichat_0/gatewayservice
+        name: arquisoft/wichat_es4b/gatewayservice
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: ghcr.io
@@ -152,6 +152,6 @@ jobs:
   #       user: ${{ secrets.DEPLOY_USER }}
   #       key: ${{ secrets.DEPLOY_KEY }}
   #       command: |
-  #         wget https://raw.githubusercontent.com/arquisoft/wichat_0/master/docker-compose.yml -O docker-compose.yml
+  #         wget https://raw.githubusercontent.com/arquisoft/wichat_es4b/master/docker-compose.yml -O docker-compose.yml
   #         docker compose --profile prod down
   #         docker compose --profile prod up -d --pull always

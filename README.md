@@ -1,8 +1,8 @@
-# wichat_0
+# wichat_es4b
 
-[![Actions Status](https://github.com/arquisoft/wichat_0/workflows/CI%20for%20wichat_0/badge.svg)](https://github.com/arquisoft/wichat_0/actions)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wichat_0&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Arquisoft_wichat_0)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wichat_0&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Arquisoft_wichat_0)
+[![Actions Status](https://github.com/arquisoft/wichat_es4b/workflows/CI%20for%20wichat_es4b/badge.svg)](https://github.com/arquisoft/wichat_es4b/actions)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wichat_es4b&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Arquisoft_wichat_es4b)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wichat_es4b&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Arquisoft_wichat_es4b)
 
 <p float="left">
 <img src="https://blog.wildix.com/wp-content/uploads/2020/06/react-logo.jpg" height="100">
@@ -23,7 +23,7 @@ Both the user and auth service share a Mongo database that is accessed with mong
 
 First, clone the project:
 
-```git clone git@github.com:arquisoft/wichat_0.git```
+```git clone git@github.com:arquisoft/wichat_es4b.git```
 
 ### LLM API key configuration
 
@@ -106,7 +106,7 @@ deploy:
         user: ${{ secrets.DEPLOY_USER }}
         key: ${{ secrets.DEPLOY_KEY }}
         command: |
-          wget https://raw.githubusercontent.com/arquisoft/wichat_0/master/docker-compose.yml -O docker-compose.yml
+          wget https://raw.githubusercontent.com/arquisoft/wichat_es4b/master/docker-compose.yml -O docker-compose.yml
           docker compose --profile prod down
           docker compose --profile prod up -d --pull always
 ```
