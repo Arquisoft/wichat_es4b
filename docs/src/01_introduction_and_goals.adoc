@@ -96,6 +96,6 @@ endif::arc42help[]
 [options="header",cols="1,2,2"]
 |===
 |Role/Name|Contact|Expectations
-| _<Role-1>_ | _<Contact-1>_ | _<Expectation-1>_
+| _<Pureba>_ | _<Contact-1>_ | _<Expectation-1>_
 | _<Role-2>_ | _<Contact-2>_ | _<Expectation-2>_
 |===
