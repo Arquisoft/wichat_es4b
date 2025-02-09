@@ -8,10 +8,10 @@ The system generates questions and hints using Wikidata and an external LLM, enh
 The platform includes user registration, game history tracking, and various gameplay modes.
 
 
-* Guerbartchouk Pérez, Nicolás mailto: UO293912@uniovi.es[_UO293912_]
-* García Baldó, Manuel mailto: UO295497@uniovi.es[_UO295497_].
+* Guerbartchouk Pérez, Nicolás mailto:UO293912@uniovi.es[_UO293912_]
+* García Baldó, Manuel mailto:UO295497@uniovi.es[_UO295497_].
 * Jirout Cid, Alfredo mailto:uo288443@uniovi.es[_UO288443_].
-* Olamendi De Yaxte Alonso, Miguel Ángel mailto: UO285032@uniovi.es[_UO285032_].
+* Olamendi De Yaxte Alonso, Miguel Ángel mailto:UO285032@uniovi.es[_UO285032_].
 
 ifdef::arc42help[]
 [role="arc42help"]
