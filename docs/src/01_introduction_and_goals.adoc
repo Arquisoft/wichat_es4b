@@ -3,6 +3,16 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-introduction-and-goals]]
 == Introduction and Goals
 
+WIChat is an interactive web-based quiz game where users guess locations from images, earning rewards for correct answers. 
+The system generates questions and hints using Wikidata and an external LLM, enhancing user experience through conversational clues. 
+The platform includes user registration, game history tracking, and various gameplay modes.
+
+
+* Guerbartchouk Pérez, Nicolás mailto: UO293912@uniovi.es [_UO293912_]
+* García Baldó, Manuel mailto: UO295497@uniovi.es [_UO295497_].
+* Jirout Cid, Alfredo mailto:uo288443@uniovi.es [_UO288443_].
+* Olamendi De Yaxte Alonso, Miguel Ángel mailto: UO285032@uniovi.es [_UO285032_].
+
 ifdef::arc42help[]
 [role="arc42help"]
 ****
@@ -17,7 +27,27 @@ These include
 ****
 endif::arc42help[]
 
-=== Requirements Overview
+== Requirements Overview
+
+=== 1. Business Goals
+* Enhance audience engagement through an interactive online quiz.
+* Automate question and hint generation using AI and Wikidata.
+* Provide a scalable and accessible web-based trivia game.
+
+=== 2. Essential Features
+* User registration, authentication, and game history tracking.
+* Quiz system with image-based multiple-choice questions.
+* AI-powered hint system via an external LLM API.
+* Timed responses, scoring, and rewards.
+* API access for user data and question generation.
+
+=== 3. Essential Functional Requirements
+* Automatic question and answer generation from Wikidata.
+* Conversational AI hints for user assistance.
+* Fair play enforcement with time constraints.
+* User performance tracking and leaderboard system.
+
+
 
 ifdef::arc42help[]
 [role="arc42help"]
@@ -46,6 +76,15 @@ See https://docs.arc42.org/section-1/[Introduction and Goals] in the arc42 docum
 endif::arc42help[]
 
 === Quality Goals
+[options="header"]
+|===
+| Priority | Quality Goal | Motivation
+| High     | Scalability  | Ensure the system can support a growing number of users and future feature expansions.
+| High     | Performance  | Provide low-latency interactions for real-time quiz gameplay.
+| High     | Security     | Protect user data and prevent cheating or unauthorized access.
+| Medium   | Availability | Guarantee uptime and reliability for a seamless user experience.
+| Medium   | Maintainability | Use a modular architecture to facilitate updates and future improvements.
+|===
 
 ifdef::arc42help[]
 [role="arc42help"]
@@ -95,7 +134,11 @@ endif::arc42help[]
 
 [options="header",cols="1,2,2"]
 |===
-|Role/Name|Contact|Expectations
-| _<Pureba>_ | _<Contact-1>_ | _<Expectation-1>_
-| _<Role-2>_ | _<Contact-2>_ | _<Expectation-2>_
+| Role/Name        | Contact         | Expectations
+| _RTVE_          | _RTVE Team_     | Ensure an engaging and well-integrated quiz experience aligned with their brand.
+| _Users_         | _Players_       | Enjoy a fun, challenging, and fair gameplay experience.
+| _Developers_    | _Dev Team_      | Work with a clear architecture and maintainable codebase.
+| _Administrators_| _Ops Team_      | Maintain reliable deployment, monitoring, and observability.
+| _Students (Developers)_ | _Project Team_ | Gain experience in software development while ensuring high-quality implementation.
 |===
+
