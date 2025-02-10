@@ -27,21 +27,21 @@ These include
 ****
 endif::arc42help[]
 
-== Requirements Overview
+=== Requirements Overview
 
-=== 1. Business Goals
+==== Business Goals
 * Enhance audience engagement through an interactive online quiz.
 * Automate question and hint generation using AI and Wikidata.
 * Provide a scalable and accessible web-based trivia game.
 
-=== 2. Essential Features
+==== Essential Features
 * User registration, authentication, and game history tracking.
 * Quiz system with image-based multiple-choice questions.
 * AI-powered hint system via an external LLM API.
 * Timed responses, scoring, and rewards.
 * API access for user data and question generation.
 
-=== 3. Essential Functional Requirements
+==== Essential Functional Requirements
 * Automatic question and answer generation from Wikidata.
 * Conversational AI hints for user assistance.
 * Fair play enforcement with time constraints.
