@@ -55,6 +55,30 @@ endif::arc42help[]
 
 **<optionally: Explanation of external domain interfaces>**
 
+The wichat_es4b system is an interactive web-based application designed as a quiz game similar to "Saber y Ganar". Users can register, log in, and interact with a language model (LLM) to receive dynamically generated questions and answers. The system ensures secure authentication and structured data retrieval to enhance the gaming experience.
+
+==== Involved Actors
+
+[cols="1,2"]
+|===
+| Actor | Description
+| User | A person who accesses the application to play the quiz game.
+| Administrator | Responsible for managing system infrastructure and security.
+| LLM Provider | External service that provides AI-generated quiz questions.
+| Database | MongoDB used to store user information and game history.
+|===
+
+==== Business Context Table
+
+[cols="1,2,2"]
+|===
+| Communication Partner | Inputs | Outputs
+| User | Login credentials, game interactions | Quiz questions, score updates
+| LLM Provider | Quiz prompts | AI-generated questions and answers
+| Database | User data, game records | Stored authentication and game history
+|===
+
+
 === Technical Context
 
 ifdef::arc42help[]
@@ -78,3 +102,28 @@ endif::arc42help[]
 **<optionally: Explanation of technical interfaces>**
 
 **<Mapping Input/Output to Channels>**
+
+The system consists of several services developed in Node.js with Express, a React web application, and a MongoDB database. Communication between services is handled via REST API and WebSockets.
+
+==== Technical Interfaces
+
+[cols="1,2,2"]
+|===
+| Component | Technology | Interface
+| Webapp | React | Connects to the Gateway Service via REST API
+| Gateway Service | Express (Node.js) | Exposes the public API
+| User Service | Express (Node.js) | REST API with access to MongoDB
+| Auth Service | Express (Node.js) | REST API for user authentication
+| LLM Service | Express (Node.js) | REST API with external LLM connection
+|===
+
+==== Mapping Input/Output to Channels
+
+[cols="1,2"]
+|===
+| Input/Output | Channel
+| User actions | Web application via HTTPS
+| Authentication requests | REST API via JWT tokens
+| Quiz questions and responses | REST API with LLM service
+| User data storage | MongoDB database
+|===
