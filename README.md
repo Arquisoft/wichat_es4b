@@ -4,15 +4,15 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wiq_es04b&metric=alert_status)](https://sonarcloud.io/summary/overall?id=Arquisoft_wiq_es04b)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wiq_es04b&metric=coverage)](https://sonarcloud.io/summary/overall?id=Arquisoft_wiq_es04b)
 
-### 🚀 TEAM:
+## Contributors:
 
-- **Pelayo Rojas Iñigo**
-- **Álvaro Arias Martínez De Vega**
-- **Ricardo Díaz Núñez**
-- **Roberto Peña Goy**
-- **Iker Álvarez Fernández**
+| Contributor | Profile |
+| ------------- | ------------- |
+| Alfredo Jirout Cid  | <a href="https://github.com/UO288443"><img src="https://img.shields.io/badge/UO288443-Alfredo Jirout Cid-red"></a>  |
+| Manuel García Baldo  | <a href="https://github.com/manugbd"><img src="https://img.shields.io/badge/manugbd-Manuel García Baldo-purple"></a>  |
+| Miguel Olamendi Alonso  | <a href="https://github.com/uo285032"><img src="https://img.shields.io/badge/uo285032-Miguel Olamendi Alonso-green"></a>  |
+| Nicolas Guerbartchouk Pérez  | <a href="https://github.com/NicolasGuerbartchoukPerez"><img src="https://img.shields.io/badge/NicolasGuerbartchoukPerez-Nicolas Guerbartchouk Pérez-blue"></a>  |
 
-[Monitorización](https://monitor.pelayori.com:2053)
 
 ### Local deployment instructions:
 
