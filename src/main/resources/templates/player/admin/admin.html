@@ -1,0 +1,65 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="~{fragments/head}"></head>
+<body class="d-flex flex-column min-vh-100">
+<link rel="stylesheet" href="/css/admin.css"/>
+
+<nav th:replace="~{fragments/nav}"></nav>
+
+<canvas th:replace="~{fragments/background}"></canvas>
+
+<div class="container-fluid flex-fill" style="text-align: center; overflow: visible">
+    <h1 th:text="#{navbar.section.admin}"></h1>
+    <ul class="nav nav-tabs justify-content-center" id="adminTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="tab1-tab" data-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true" th:text="#{admin.section.user.management}"></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab2-tab" data-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false" th:text="#{admin.section.question.management}"></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab3-tab" data-toggle="tab" href="#tab3" role="tab" aria-controls="tab3" aria-selected="false" th:text="#{admin.monitoring}"></a>
+        </li>
+    </ul>
+    <div class="separator"></div>
+    <div class="tab-content" id="tab-content">
+    </div>
+</div>
+<footer th:replace="~{fragments/footer}"></footer>
+<script>
+    $(document).ready(function(){
+        $('#adminTab a:first').tab('show');
+        $('#tab-content').load('/player/admin/userManagement');
+        var activeTab = 'tab1';
+
+        $('#adminTab a').on('click', function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+            let tabNum = $(this).attr('id').split('-')[0];
+            if (activeTab === tabNum) {
+                return;
+            }
+
+            let tabContent = $('#tab-content');
+            activeTab = tabNum;
+            console.log(window.location.origin);
+            switch (tabNum) {
+                case 'tab1':
+                    tabContent.load(window.location.origin + '/player/admin/userManagement');
+                    break;
+                case 'tab2':
+                    tabContent.load(window.location.origin + '/player/admin/questionManagement');
+                    break;
+                case 'tab3':
+                    tabContent.load(window.location.origin + '/player/admin/monitoring');
+                    break;
+            }
+        });
+    });
+</script>
+<script src="/script/adminModals.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/10.0.3/jsoneditor.min.js" integrity="sha512-KrNxmbQP5Edirsv+ahh/HcaHBXINizYSODFpcDI2cFoFCH35Z+bvtbOjwuzaWVOSkfWqGq4P/yzPljcPEnSU7A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/10.0.3/jsoneditor.min.css" integrity="sha512-8G+Vb2+10BSrSo+wupdzJIylDLpGtEYniQhp0rsbTigPG7Onn2S08Ai/KEGlxN2Ncx9fGqVHtRehMuOjPb9f8g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="/script/questionManagement.js"></script>
+</body>
+</html>

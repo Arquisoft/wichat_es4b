@@ -1,0 +1,32 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="~{fragments/head}"></head>
+<body>
+<nav th:replace="~{fragments/nav}"></nav>
+
+<canvas th:replace="~{fragments/background}"></canvas>
+
+<div class="container" style="text-align: center">
+    <h2 th:text="#{home.apikey.title}"></h2>
+    <div th:if="${apiKey != null}" class="container mx-auto" id="apiKeyDiv">
+        <p th:text="#{home.apikey.description}"></p>
+        <form>
+            <div class="form-group">
+                <div class="input-group show_hide_password">
+                    <input class="form-control text-center" type="password" th:value="${apiKey.getKeyToken()}" readonly>
+                    <div class="input-group-text">
+                        <a href=""><i class="fa fa-eye-slash mx-auto" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div th:unless="${apiKey != null}">
+        <p th:text="#{home.apikey.missing}"></p>
+        <a type="submit" class="btn btn-primary" th:text="#{home.apikey.create}" href="/home/apikey/create"></a>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer}"></footer>
+<script th:inline="javascript" th:src="@{/script/show_hide_password.js}"></script>
+</body>
+</html>

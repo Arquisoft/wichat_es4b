@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head}"></head>
+<body class="d-flex flex-column min-vh-100">
+<nav th:replace="~{fragments/nav}"></nav>
+
+<canvas th:replace="~{fragments/background}"></canvas>
+
+<div class="container mt-5">
+    <h2 class="text-danger" th:text="#{error.page.title}"></h2>
+    <div class="alert alert-danger" role="alert">
+        <span th:text="#{error.status}"></span> <strong th:text="${status}"></strong>
+    </div>
+    <div class="alert alert-warning" role="alert">
+        <span th:text="#{error.error}"></span> <strong th:text="${error}"></strong>
+    </div>
+    <div class="alert alert-info" role="alert">
+        <span th:text="#{error.message}"></span> <strong th:text="${message}"></strong>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer}"></footer>
+
+</body>
+</html>

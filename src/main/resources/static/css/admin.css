@@ -1,0 +1,26 @@
+.nav .nav-link {
+    color: white;
+    border-color: white;
+}
+
+.nav .nav-item {
+    margin: 0 5px;
+    flex: 1;
+}
+
+.nav .nav-link.active {
+    color: black !important;
+}
+
+.nav-tabs {
+    border-bottom: 0px;
+}
+
+.separator {
+    border-bottom: 1px solid white;
+    margin: 10px 0;
+}
+
+.text-danger-light {
+    color: #ff5e5e;
+}

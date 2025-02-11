@@ -1,0 +1,18 @@
+.api-table th, .api-table td {
+    vertical-align: top;
+    text-align: left;
+}
+.example-response {
+    background-color: #f0f4f8; /* Light grey-blue background for readability */
+    border-radius: 0.25rem; /* Rounded corners */
+    padding: 1rem; /* Padding inside the box */
+    border: 1px solid #d3d3d3; /* Light grey border */
+}
+
+h3 {
+    color: black;
+}
+
+td {
+    color: white;
+}

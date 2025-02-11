@@ -1,0 +1,37 @@
+/* Estilo del navbar */
+.navbar {
+    background-color: transparent !important; /* Hace que el navbar sea transparente */
+}
+
+.navbar-nav .nav-link {
+    color: white !important; /* Cambia el color del texto del enlace a blanco */
+}
+
+.navbar-nav .nav-link:hover {
+    color: rgba(255, 255, 255, 0.7) !important; /* Cambia el color del texto del enlace cuando se pasa el mouse */
+}
+
+.navbar-toggler {
+    border-color: white !important; /* Cambia el color del borde del toggler a blanco */
+}
+
+/* Estilo para los desplegables */
+.dropdown-menu {
+    color: #fff;
+    background-color: rgb(19, 19, 19);
+    border: 2px solid #fff;
+}
+
+.dropdown-item {
+    color: white;
+}
+
+.dropdown-item:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+
+
+
+

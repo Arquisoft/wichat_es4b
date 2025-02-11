@@ -1,0 +1,30 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head}"></head>
+<body class="d-flex flex-column min-vh-100">
+<nav th:replace="~{fragments/nav}"></nav>
+<canvas th:replace="~{fragments/background}"></canvas>
+<div class="container-fluid d-flex justify-content-center align-items-center text-center text-white" style="height: 80vh;">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="display-4 mb-4" th:text="#{index.heading}"></h2>
+            <p class="lead mb-4" th:text="#{index.subtitle}"></p>
+            <button id="gameBtn" type="button" class="btn btn-custom" th:text="#{index.button}"></button>
+            <br></br>
+            <button id="multiplayerBtn" type="button" class="btn btn-custom" th:text="#{index.multiplayer.button}"></button>
+        </div>
+    </div>
+</div>
+<script>
+    $("#gameBtn").click(function () {
+        window.location.href = "/game";
+    });
+</script>
+<script>
+    $("#multiplayerBtn").click(function () {
+        window.location.href = "/multiplayerGame";
+    });
+</script>
+<footer th:replace="~{fragments/footer}"></footer>
+</body>
+</html>

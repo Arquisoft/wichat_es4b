@@ -1,0 +1,42 @@
+name: Deploy Pages
+on:
+  push:
+    branches: [ master, develop, deploy-gh-pages ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+
+    - name: Install Asciidoctor and Asciidoctor-diagram
+      run: gem install asciidoctor asciidoctor-diagram
+
+    - name: Install Graphviz
+      run: sudo apt-get install graphviz
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '14.x'
+
+    - name: Install npm dependencies in docs
+      run: cd docs && npm install
+
+    - name: Build project
+      run: cd docs && npm run build
+
+    - name: Deploy to GitHub Pages
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        cd docs
+        npx gh-pages -d build -r https://x-access-token:${GITHUB_TOKEN}@github.com/Arquisoft/wiq_es04b.git

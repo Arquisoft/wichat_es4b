@@ -1,0 +1,15 @@
+<h2 th:text="#{ranking.title}">Ranking</h2>
+<table class="ranking-table">
+    <thead>
+    <tr>
+        <th th:text="#{ranking.position}">Posición</th>
+        <th th:text="#{ranking.score}">Puntuación</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="game : ${ranking}">
+        <td th:text="${game.createdAt}"></td>
+        <td th:text="${game.score}"></td>
+    </tr>
+    </tbody>
+</table>

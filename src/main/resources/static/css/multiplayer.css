@@ -1,0 +1,26 @@
+.display-5 {
+    margin-top: 3em;
+}
+
+#lobbyCode, #label-code {
+    font-size: 3em;
+}
+
+#lobbyInfo {
+    margin-top: 3em;
+}
+
+#playerList {
+    list-style-type: none;
+    text-align: center;
+    padding: 0;
+}
+
+#finishedGame {
+    font-size: 5em;
+    margin-bottom: 0.5em;
+}
+
+#multiPoints {
+    margin-top: 3em;
+}

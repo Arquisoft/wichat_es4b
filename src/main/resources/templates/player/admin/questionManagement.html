@@ -1,0 +1,29 @@
+<div class="container-fluid">
+    <div id="jsonEditorElement"></div>
+    <button id="saveButton" class="btn btn-primary mt-2 mb-2" th:text="#{modal.confirm}">Save</button>
+    <button type="button" class="btn btn-primary"
+            data-bs-toggle="modal" data-bs-target="#deleteQuestionsDialog"
+            th:text="#{admin.questions.delete.title}">
+    </button>
+</div>
+<script>
+    setupQuestionManagement();
+</script>
+
+<div class="modal fade" id="deleteQuestionsDialog" tabindex="-1" aria-labelledby="deleteQuestionsDialogLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span><strong th:text="#{admin.questions.delete.title}"></strong></span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" th:text="#{admin.questions.delete}"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{modal.close}">Cerrar</button>
+                <button id="deleteQuestionsConfirm" type="button" class="btn btn-danger" th:text="#{modal.confirm}">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+<table class="table table-hover" th:fragment="globalRankingTable" id="playerRankingTable">
+    <thead>
+    <tr>
+        <th scope="col" th:text="#{ranking.position}">Posición</th>
+        <th scope="col" th:text="#{ranking.score}">Puntuación</th>
+        <th scope="col" th:text="#{ranking.time}">Tiempo empleado</th>
+        <th scope="col" th:text="#{ranking.question.right}">Preguntas correctas</th>
+        <th scope="col" th:text="#{ranking.question.wrong}">Preguntas incorrectas</th>
+        <th scope="col" th:text="#{ranking.date}">Fecha</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="game, iterStat : ${ranking}">
+        <td th:text="${iterStat.count + page.getNumber() * num}"></td>
+        <td th:text="${game.score}"></td>
+        <td th:text="${game.getDuration()}"></td>
+        <td th:text="${game.correctQuestions}"></td>
+        <td th:text="${game.totalQuestions - game.correctQuestions}"></td>
+        <td th:text="${#temporals.format(game.createdAt, 'dd-MM-yyyy HH:mm:ss')}"></td>
+    </tr>
+    </tbody>
+</table>

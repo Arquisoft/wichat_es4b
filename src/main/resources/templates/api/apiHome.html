@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head}">
+<body>
+<link rel="stylesheet" th:href="@{/css/api.css}" />
+<nav th:replace="~{fragments/nav}"></nav>
+
+<canvas th:replace="~{fragments/background}"></canvas>
+
+<div class="container-fluid mt-5">
+    <h2 th:text="#{api.doc.title}"></h2>
+    <div class="row">
+        <!-- Lateral Navigation Sidebar -->
+        <div class="col-md-2 pr-md-3">
+            <p th:text="#{api.doc.description}"></p>
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-pills-players-tab" data-toggle="pill" href="#v-pills-players" role="tab" aria-controls="v-pills-players" aria-selected="true">/api/players</a>
+                <a class="nav-link" id="v-pills-questions-tab" data-toggle="pill" href="#v-pills-questions" role="tab" aria-controls="v-pills-questions" aria-selected="false">/api/questions</a>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="col-md-10">
+            <div class="tab-content" id="v-pills-tabContent">
+                <!-- /api/players Endpoint -->
+                <div class="tab-pane fade show active" id="v-pills-players" role="tabpanel" aria-labelledby="v-pills-players-tab">
+                    <h2 th:text="#{api.doc.endpoints.players.title}"></h2>
+                    <p th:text="#{api.doc.endpoints.players.description}"></p>
+
+                    <table class="table api-table">
+                        <thead class="thead-light">
+                        <tr>
+                            <th th:text="#{api.doc.table.parameters}"></th>
+                            <th th:text="#{api.doc.table.description}"></th>
+                            <th th:text="#{api.doc.table.example}"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>apiKey</td>
+                                <td th:text="#{api.doc.apikey}"></td>
+                                <td>4640gdfsj4654-hi54egs</td>
+                            </tr>
+                            <tr>
+                                <td>username</td>
+                                <td th:text="#{api.doc.player.username}"></td>
+                                <td>student1</td>
+                            </tr>
+                            <tr>
+                                <td>email</td>
+                                <td th:text="#{api.doc.player.email}"></td>
+                                <td>student1@example.com</td>
+                            </tr>
+                            <tr>
+                                <td>id</td>
+                                <td th:text="#{api.doc.player.id}"></td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>usernames</td>
+                                <td th:text="#{api.doc.player.usernames}"></td>
+                                <td>student1,student2</td>
+                            </tr>
+                            <tr>
+                                <td>emails</td>
+                                <td th:text="#{api.doc.player.emails}"></td>
+                                <td>student1@example.com,student2@example.com</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-response">
+                        <h3 th:text="#{api.doc.exampleRequest}"></h3>
+                        <code>GET /api/players?apiKey={api_key}&username=student1</code>
+                        <h3 th:text="#{api.doc.exampleResponse}"></h3>
+                        <pre class="bg-light p-3 rounded">
+ {
+    "players":[
+       {
+          "id":1,
+          "username":"student1",
+          "email":"student1@example.com",
+          "roles":[
+             "ROLE_USER"
+          ],
+          "gameSessions":[
+             {
+                "id":1,
+                "player":1,
+                "correctQuestions":10,
+                "totalQuestions":40,
+                "createdAt":"2024-03-04T22:44:41.067901",
+                "finishTime":"2024-03-04T22:49:41.067901",
+                "score":0
+             }
+          ]
+       }
+    ]
+ }</pre>
+                    </div>
+                </div>
+
+                <!-- /api/questions Endpoint -->
+                <div class="tab-pane fade" id="v-pills-questions" role="tabpanel" aria-labelledby="v-pills-questions-tab">
+                    <h2 th:text="#{api.doc.endpoints.questions.title}"></h2>
+                    <p th:text="#{api.doc.endpoints.questions.description}"></p>
+
+                    <table class="table api-table">
+                        <thead class="thead-light">
+                        <tr>
+                            <th th:text="#{api.doc.table.parameters}"></th>
+                            <th th:text="#{api.doc.table.description}"></th>
+                            <th th:text="#{api.doc.table.example}"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>apiKey</td>
+                            <td th:text="#{api.doc.apikey}"></td>
+                            <td>4640gdfsj4654-hi54egs</td>
+                        </tr>
+                        <tr>
+                            <td>category</td>
+                            <td th:text="#{api.doc.question.category}"></td>
+                            <td>Geography</td>
+                        </tr>
+                        <tr>
+                            <td>id</td>
+                            <td th:text="#{api.doc.question.id}"></td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>statement</td>
+                            <td th:text="#{api.doc.question.statement}"></td>
+                            <td>capital</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-response">
+                        <h3 th:text="#{api.doc.exampleRequest}"></h3>
+                        <code>GET /api/questions?apiKey={api_key}&category=Geography</code>
+                        <h3 th:text="#{api.doc.exampleResponse}"></h3>
+                        <pre class="bg-light p-3 rounded">
+ {
+   "questions":[
+      {
+         "id":11802,
+         "statement":"Which countries share a border with Solomon Islands?",
+         "category":{
+            "id":1,
+            "name":"Geography",
+            "description":"Questions about geography"
+         },
+         "options":[
+            {
+               "id":46252,
+               "text":"Papua New Guinea",
+               "correct":true,
+               "question":11802
+            },
+            {
+               "id":46253,
+               "text":"Venezuela",
+               "correct":false,
+               "question":11802
+            },
+            {
+               "id":46254,
+               "text":"Austria",
+               "correct":false,
+               "question":11802
+            },
+            {
+               "id":46255,
+               "text":"United States of America",
+               "correct":false,
+               "question":11802
+            }
+         ]
+      }
+   ]
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Adding padding at the bottom to avoid overlap with the footer -->
+    <div class="pb-5"></div>
+</div>
+
+<footer th:replace="~{fragments/footer}"></footer>
+</body>
+</html>

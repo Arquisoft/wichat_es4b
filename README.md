@@ -1,119 +1,39 @@
-# wichat_es4b
+# wiq_es04b
 
-[![Actions Status](https://github.com/arquisoft/wichat_es4b/workflows/CI%20for%20wichat_es4b/badge.svg)](https://github.com/arquisoft/wichat_es4b/actions)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wichat_es4b&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Arquisoft_wichat_es4b)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wichat_es4b&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Arquisoft_wichat_es4b)
+[![Deploy on release](https://github.com/Arquisoft/wiq_es04b/actions/workflows/release.yml/badge.svg)](https://github.com/Arquisoft/wiq_es04b/actions/workflows/release.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wiq_es04b&metric=alert_status)](https://sonarcloud.io/summary/overall?id=Arquisoft_wiq_es04b)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wiq_es04b&metric=coverage)](https://sonarcloud.io/summary/overall?id=Arquisoft_wiq_es04b)
 
-<p float="left">
-<img src="https://blog.wildix.com/wp-content/uploads/2020/06/react-logo.jpg" height="100">
-<img src="https://miro.medium.com/max/365/1*Jr3NFSKTfQWRUyjblBSKeg.png" height="100">
-</p>
+### 🚀 TEAM:
 
-This is a base project for the Software Architecture course in 2024/2025. It is a basic application composed of several components.
+- **Pelayo Rojas Iñigo**
+- **Álvaro Arias Martínez De Vega**
+- **Ricardo Díaz Núñez**
+- **Roberto Peña Goy**
+- **Iker Álvarez Fernández**
 
-- **User service**. Express service that handles the insertion of new users in the system.
-- **Auth service**. Express service that handles the authentication of users.
-- **LLM service**. Express service that handles the communication with the LLM.
-- **Gateway service**. Express service that is exposed to the public and serves as a proxy to the two previous ones.
-- **Webapp**. React web application that uses the gateway service to allow basic login and new user features.
+[Monitorización](https://monitor.pelayori.com:2053)
 
-Both the user and auth service share a Mongo database that is accessed with mongoose.
+### Local deployment instructions:
 
-## Quick start guide
+#### Without docker (slower):
 
-First, clone the project:
+1. Fist you have to clone the repository using a CMD and the following command: `git clone https://github.com/Arquisoft/wiq_es04b.git` or using an IDE with Git integration or any other app of your preference.
 
-```git clone git@github.com:arquisoft/wichat_es4b.git```
+2. Then you have to execute the [runServer.bat](https://github.com/Arquisoft/wiq_es04b/blob/master/database/hsqldb/bin/runServer.bat) to start the local database.
 
-### LLM API key configuration
+3. With the database initialized you have to open a CMD in the project root directory and execute the following command `mvnw spring-boot:run`, to start the application.
 
-In order to communicate with the LLM integrated in this project, we need to setup an API key. Two integrations are available in this propotipe: gemini and empaphy. The API key provided must match the LLM provider used.
+4. When the application is started the web app uses the port 3000. You can access the app through any web client using the following URL: http://localhost:3000/.
 
-We need to create two .env files. 
-- The first one in the webapp directory (for executing the webapp using ```npm start```). The content of this .env file should be as follows:
-```
-REACT_APP_LLM_API_KEY="YOUR-API-KEY"
-```
-- The second one located in the root of the project (along the docker-compose.yml). This .env file is used for the docker-compose when launching the app with docker. The content of this .env file should be as follows:
-```
-LLM_API_KEY="YOUR-API-KEY"
-```
+5. If you wish to execute the tests you have to open a CMD in the project root directory (you could use the same you used before), you have to execute `set EXCLUDE_JUNIT=true` if you also want to execute the E2E tests. Then to execute the tests you have to use the following command: `mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify`.
 
-Note that these files must NOT be uploaded to the github repository (they are excluded in the .gitignore).
+6. If you want to obtain the report you have to torn off the app and in the same CMD as before execute the following command: `mvnw org.jacoco:jacoco-maven-plugin:report`.
 
-An extra configuration for the LLM to work in the deployed version of the app is to include it as a repository secret (LLM_API_KEY). This secret will be used by GitHub Action when building and deploying the application.
+#### With docker (faster):
 
+> #### *Disclaimer: This method is faster but it is not recommended for development because it is harder to debug and to see the logs and it is harder to execute the tests.*
 
-### Launching Using docker
-For launching the propotipe using docker compose, just type:
-```docker compose --profile dev up --build```
-
-### Component by component start
-First, start the database. Either install and run Mongo or run it using docker:
-
-```docker run -d -p 27017:27017 --name=my-mongo mongo:latest```
-
-You can use also services like Mongo Altas for running a Mongo database in the cloud.
-
-Now launch the auth, user and gateway services. Just go to each directory and run `npm install` followed by `npm start`.
-
-Lastly, go to the webapp directory and launch this component with `npm install` followed by `npm start`.
-
-After all the components are launched, the app should be available in localhost in port 3000.
-
-## Deployment
-For the deployment, we have several options. The first and more flexible is to deploy to a virtual machine using SSH. This will work with any cloud service (or with our own server). Other options include using the container services that all the cloud services provide. This means, deploying our Docker containers directly. Here I am going to use the first approach. I am going to create a virtual machine in a cloud service and after installing docker and docker-compose, deploy our containers there using GitHub Actions and SSH.
-
-### Machine requirements for deployment
-The machine for deployment can be created in services like Microsoft Azure or Amazon AWS. These are in general the settings that it must have:
-
-- Linux machine with Ubuntu > 20.04 (the recommended is 24.04).
-- Docker installed.
-- Open ports for the applications installed (in this case, ports 3000 for the webapp and 8000 for the gateway service).
-
-Once you have the virtual machine created, you can install **docker** using the following instructions:
-
-```ssh
-sudo apt update
-sudo apt install apt-transport-https ca-certificates curl software-properties-common
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
-sudo apt update
-sudo apt install docker-ce
-sudo usermod -aG docker ${USER}
-```
-
-### Continuous delivery (GitHub Actions)
-Once we have our machine ready, we could deploy by hand the application, taking our docker-compose file and executing it in the remote machine. In this repository, this process is done automatically using **GitHub Actions**. The idea is to trigger a series of actions when some condition is met in the repository. The precondition to trigger a deployment is going to be: "create a new release". The actions to execute are the following:
-
-![imagen](https://github.com/user-attachments/assets/7ead6571-0f11-4070-8fe8-1bbc2e327ad2)
-
-
-As you can see, unitary tests of each module and e2e tests are executed before pushing the docker images and deploying them. Using this approach we avoid deploying versions that do not pass the tests.
-
-The deploy action is the following:
-
-```yml
-deploy:
-    name: Deploy over SSH
-    runs-on: ubuntu-latest
-    needs: [docker-push-userservice,docker-push-authservice,docker-push-llmservice,docker-push-gatewayservice,docker-push-webapp]
-    steps:
-    - name: Deploy over SSH
-      uses: fifsky/ssh-action@master
-      with:
-        host: ${{ secrets.DEPLOY_HOST }}
-        user: ${{ secrets.DEPLOY_USER }}
-        key: ${{ secrets.DEPLOY_KEY }}
-        command: |
-          wget https://raw.githubusercontent.com/arquisoft/wichat_es4b/master/docker-compose.yml -O docker-compose.yml
-          docker compose --profile prod down
-          docker compose --profile prod up -d --pull always
-```
-
-This action uses three secrets that must be configured in the repository:
-- DEPLOY_HOST: IP of the remote machine.
-- DEPLOY_USER: user with permission to execute the commands in the remote machine.
-- DEPLOY_KEY: key to authenticate the user in the remote machine.
-
-Note that this action logs in the remote machine and downloads the docker-compose file from the repository and launches it. Obviously, previous actions have been executed which have uploaded the docker images to the GitHub Packages repository.
+1. First you need to have installed [docker](https://www.docker.com/#build) and docker [compose](https://docs.docker.com/compose/install/).
+2. Then you have to clone the repository using a CMD and the following command: `git clone https://github.com/Arquisoft/wiq_es04b.git` or using an IDE with Git integration or any other app of your preference.
+3. Then you have to open a CMD in the project root directory and execute the following command: `docker-compose up`. This is going to deploy the docker image that is in our repository. This docker will contain the app, a MySql database, Graphana and Prometheus. The app will be available in the port 443 https.

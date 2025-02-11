@@ -1,0 +1,54 @@
+<div class="container-fluid" style="overflow: visible">
+    <h2 th:text="#{admin.section.user.management}"></h2>
+    <div class="table-responsive" style="overflow: visible">
+        <table class="table table-hover" th:fragment="userManagementTable" id="userManagementTable" style="overflow: visible">
+            <thead>
+            <tr>
+                <th scope="col" th:text="#{login.username.label}">Username</th>
+                <th scope="col" th:text="#{signup.email.label}">Email</th>
+                <th scope="col" th:text="#{role.label}">Role</th>
+                <th scope="col" th:text="#{user.details}">Actions</th>
+            </tr>
+            </thead>
+            <tbody style="overflow:visible">
+            <tr style="overflow:visible" th:each="user, iterStat : ${users}">
+                <td th:text="${user.username}">Username</td>
+                <td th:text="${user.email}">Email</td>
+                <td th:text="${user.roles}">Role</td>
+                <td class="dropdown">
+                    <button th:text="#{user.details}" class="btn btn-info dropdown-toggle" type="button"
+                            th:id="'dropdownMenuButton' + ${iterStat.index}" data-bs-toggle="dropdown"
+                            aria-expanded="false" th:attr="data-bs-username=${user.username}">
+                    </button>
+                    <ul class="dropdown-menu" th:attr="aria-labelledby=${'dropdownMenuButton' + iterStat.index}">
+                        <li>
+                            <button type="button" class="dropdown-item"
+                                    data-bs-toggle="modal" data-bs-target="#changePasswordAdminModal"
+                                    th:text="#{admin.changepassword}" th:attr="data-bs-username=${user.username}">
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="dropdown-item"
+                                    data-bs-toggle="modal" data-bs-target="#changeRolesAdminModal"
+                                    th:text="#{admin.changeroles}" th:attr="data-bs-username=${user.username}">
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="dropdown-item text-danger-light"
+                                    data-bs-toggle="modal" data-bs-target="#deleteUserAdminModal"
+                                    th:text="#{admin.user.delete}" th:attr="data-bs-username=${user.username}">
+                            </button>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="~{fragments/adminModals}"></div>
+    <script>
+        setupUserEvents();
+    </script>
+</div>
+<footer th:replace="~{fragments/paginationDynamic}"></footer>

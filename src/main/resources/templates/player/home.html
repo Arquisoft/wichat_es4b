@@ -1,0 +1,25 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="~{fragments/head}"></head>
+<body class="d-flex flex-column min-vh-100">
+<nav th:replace="~{fragments/nav}"></nav>
+
+<canvas th:replace="~{fragments/background}"></canvas>
+
+<div class="container" style="text-align: center">
+    <h2 th:text="#{home.heading}"></h2>
+    <p>
+        <span th:text="#{home.authenticated_as}"></span>
+        <b th:inline="text" sec:authentication="principal.username"></b>
+    </p>
+
+    <div class="button-container">
+        <a class="btn btn-primary" href="/ranking/playerRanking" th:text="#{navbar.ranking.player}"></a>
+        <a class="btn btn-primary" href="/ranking/globalRanking" th:text="#{navbar.ranking.global}"></a>
+        <a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-primary" href="/player/admin" th:text="#{navbar.section.admin}"></a>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer}"></footer>
+</body>
+</html>

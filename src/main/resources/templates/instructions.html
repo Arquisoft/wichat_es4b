@@ -1,0 +1,29 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head}"></head>
+<body class="d-flex flex-column min-vh-100">
+<nav th:replace="~{fragments/nav}"></nav>
+<canvas th:replace="~{fragments/background}"></canvas>
+<div class="mb-4 container-fluid d-flex justify-content-center align-items-center text-center text-white" style="height: 80vh;">
+    <div class="row">
+        <div class="col-md-12" id="textBlock">
+            <h2 class="display-3 mb-4" th:text="#{instructions.heading}"></h2>
+            <p class="lead mb-4" th:text="#{instructions.subtitle}"></p>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer}"></footer>
+<script th:inline="javascript">
+/*<![CDATA[*/
+    $(document).ready(function(){
+        let message = /*[[#{instructions.text}]]*/ 'default message';
+        message.split('\n').forEach(function (line) {
+            $('#textBlock').append($('<p></p>').text(line));
+        });
+
+        $('#textBlock p:last').addClass('mb-4');
+    });
+/*]]>*/
+</script>
+</body>
+</html>

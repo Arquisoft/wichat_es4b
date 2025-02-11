@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head}"/>
+<body class="d-flex flex-column min-vh-100">
+<nav th:replace="~{fragments/nav}"/>
+
+<canvas th:replace="~{fragments/background}"></canvas>
+
+<div class="container">
+  <div class="alert alert-danger" th:if="${error}" role="alert">
+    <span th:text="#{login.error}"></span>
+    <a th:href="@{/signup}" th:text="#{login.register}"></a>
+  </div>
+
+
+  <h2 th:text="#{login.title}"> </h2>
+  <form class="form-horizontal" method="post" action="/login">
+    <div class="form-group">
+      <label class="control-label col-sm-10" for="username" th:text="#{login.username.label}"></label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="username" name="username"
+               th:placeholder="#{login.username.placeholder}" required="true" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-10" for="password" th:text="#{login.password.label}"></label>
+      <div class="col-sm-10">
+        <input type="password" class="form-control" id="password" name="password"
+               th:placeholder="#{login.password.placeholder}" required="true" />
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-custom" th:text="#{login.sumbit}"></button>
+      </div>
+    </div>
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+  </form>
+  <div>
+    <nav class="nav">
+      <a class="nav-link" th:href="@{/signup}" th:text="#{login.register}"></a>
+    </nav>
+  </div>
+</div>
+<footer th:replace="~{fragments/footer}"/>
+</body>
+</html>

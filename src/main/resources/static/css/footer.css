@@ -1,0 +1,33 @@
+/* Estilo del footer */
+.footer {
+    bottom: 0;
+    width: 100%;
+    height: 60px; /* Set the fixed height of the footer here */
+    line-height: 60px; /* Vertically center the text there */
+    background-color: transparent !important; /* Hace que el footer sea transparente */
+}
+
+.footer .container {
+    max-width: 960px; /* Ancho máximo del contenido */
+    margin: 0 auto; /* Centrar el contenido */
+}
+
+/* Estilo para los enlaces del footer */
+.footer .nav-link {
+    color: white !important; /* Cambia el color del texto del enlace a blanco */
+}
+
+.footer .nav-link:hover {
+    color: rgba(255, 255, 255, 0.7) !important; /* Cambia el color del texto del enlace cuando se pasa el mouse */
+}
+
+/* Estilo para el texto centrado del footer */
+.footer .text-center {
+    color: white !important; /* Cambia el color del texto a blanco */
+}
+
+.footer .nav-link:hover {
+    color: rgba(255, 255, 255, 0.7) !important; /* Cambia el color del texto del enlace cuando se pasa el mouse */
+}
+
+

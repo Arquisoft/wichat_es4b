@@ -1,0 +1,36 @@
+#apiKeyDiv {
+    display: flex;
+    flex-direction: column;
+    margin: 0 5% 5% 5%;
+}
+
+#apiKeyDiv form {
+    margin: 5% 20% 0 20%;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    margin-bottom: 60px; /* Margin bottom by footer height */
+}
+
+div div .btn-danger {
+    color: #fff;
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+}
+
+div div .btn-success {
+    color: #fff;
+    background-color: #218838 !important;
+    border-color: #1e7e34 !important;
+}
+
+div div .toggle-handle {
+    border-width: 0 1px;
+    background-color: #fff !important;
+    color: #212529;
+    border-color: #f8f9fa;
+}

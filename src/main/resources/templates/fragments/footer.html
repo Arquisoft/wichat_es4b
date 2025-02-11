@@ -1,0 +1,71 @@
+<footer class="footer bg-primary mt-auto">
+  <div class="container">
+    <!-- Navigation Menu to the left -->
+    <div class="row">
+      <div class="col-md-4">
+        <nav class="nav flex-column">
+          <a class="nav-link text-white" href="/api">API docs</a>
+        </nav>
+      </div>
+
+      <!-- Centered Copyright Notice -->
+      <div class="col-md-4 text-center">
+        <span class="text-white" th:text="#{footer.copyright}"></span>
+      </div>
+
+      <div class="col-md-4" style="padding-left: 10px">
+        <div class="form-check form-check-inline" style="padding-left: 10px">
+          <label class="checkbox-inline" style="padding-left: 10px">
+            <input id="backgroundToggleCheckbox" type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger" style="padding-left: 10px" th:text="#{footer.animation}">
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function setCookie(cname, cvalue, exdays) {
+      const d = new Date();
+      d.setTime(d.getTime() + (exdays*24*60*60*1000));
+      let expires = "expires="+ d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+    function getCookie(cname) {
+      let name = cname + "=";
+      let decodedCookie = decodeURIComponent(document.cookie);
+      let ca = decodedCookie.split(';');
+      for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
+
+    /*<![CDATA[*/
+    $(function() {
+      let onText = "[[#{footer.toggle.on}]]";
+      let offText = "[[#{footer.toggle.off}]]";
+      $(".toggle-on").text(onText);
+      $(".toggle-off").text(offText);
+      $('#backgroundToggleCheckbox').change(function() {
+        if ($(this).prop('checked')) {
+          setCookie("backgroundAnimation", "true", 365);
+        } else {
+          setCookie("backgroundAnimation", "false", 365);
+        }
+      });
+
+        let backgroundAnimation = getCookie("backgroundAnimation");
+        if (backgroundAnimation === "false") {
+          $('#backgroundToggleCheckbox').bootstrapToggle('off');
+        }
+    });
+    /*]]>*/
+  </script>
+</footer>
+
+

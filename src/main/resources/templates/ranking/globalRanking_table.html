@@ -1,0 +1,18 @@
+<table class="table table-hover" th:fragment="globalRankingTable" id="globalRankingTable">
+    <thead>
+    <tr>
+        <th scope="col" th:text="#{ranking.position}">Posición</th>
+        <th scope="col" th:text="#{ranking.player}">Jugador</th>
+        <th scope="col" th:text="#{ranking.score}">Puntuación</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <!-- Now iterate through the playerScores map to display the final rankings -->
+    <tr th:each="player, iterStat : ${ranking}">
+        <td th:text="${iterStat.count + page.getNumber() * num}"></td>
+        <td th:text="${player[0].username}"></td>
+        <td th:text="${player[1]}"></td>
+    </tr>
+    </tbody>
+</table>

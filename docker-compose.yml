@@ -1,123 +1,76 @@
+version: '3.8'
+
 services:
-  mongodb:
-    container_name: mongodb-wichat_es4b
-    image: mongo
-    profiles: ["dev", "prod"]
+  db:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+        MYSQL_DATABASE: ${MYSQL_DATABASE:-wiq_es04b}
+        MYSQL_USER: ${MYSQL_USER:-wiq_es04b}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD:-wiq_es04b}
+        MYSQL_PORT: ${MYSQL_PORT:-3306}
     volumes:
-      - mongodb_data:/data/db
-    ports:
-      - "27017:27017"
+      - db_data:/var/lib/mysql
     networks:
       - mynetwork
+    restart: always
 
-  authservice:
-    container_name: authservice-wichat_es4b
-    image: ghcr.io/arquisoft/wichat_es4b/authservice:latest
-    profiles: ["dev", "prod"]
-    build: ./users/authservice
-    depends_on:
-      - mongodb
-    ports:
-      - "8002:8002"
-    networks:
-      - mynetwork
+  wiq_es04b:
+    image: ${WIQ_IMAGE:-ghcr.io/arquisoft/wiq_es04b:latest}
     environment:
-      MONGODB_URI: mongodb://mongodb:27017/userdb
-
-  userservice:
-    container_name: userservice-wichat_es4b
-    image: ghcr.io/arquisoft/wichat_es4b/userservice:latest
-    profiles: ["dev", "prod"]
-    build: ./users/userservice
-    depends_on:
-      - mongodb
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-wiq_es04b}
+      MYSQL_USER: ${MYSQL_USER:-wiq_es04b}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-wiq_es04b}
+      MYSQL_PORT: ${MYSQL_PORT:-3306}
+      KEYSTORE_PATH: ${KEYSTORE_PATH}
+      KEYSTORE_PASSWORD: ${KEYSTORE_PASSWORD}
     ports:
-      - "8001:8001"
+      - "443:443"
     networks:
       - mynetwork
-    environment:
-      MONGODB_URI: mongodb://mongodb:27017/userdb
-
-  llmservice:
-    container_name: llmservice-wichat_es4b
-    image: ghcr.io/arquisoft/wichat_es4b/llmservice:latest
-    profiles: ["dev", "prod"]
-    build: ./llmservice
-    ports:
-      - "8003:8003"
-    networks:
-      - mynetwork
-
-  gatewayservice:
-    container_name: gatewayservice-wichat_es4b
-    image: ghcr.io/arquisoft/wichat_es4b/gatewayservice:latest
-    profiles: ["dev", "prod"]
-    build: ./gatewayservice
     depends_on:
-      - mongodb
-      - userservice
-      - authservice
-      - llmservice
-    ports:
-      - "8000:8000"
-    networks:
-      - mynetwork
-    environment:
-      AUTH_SERVICE_URL: http://authservice:8002
-      USER_SERVICE_URL: http://userservice:8001
-      LLM_SERVICE_URL: http://llmservice:8003
-
-  webapp:
-    container_name: webapp-wichat_es4b
-    image: ghcr.io/arquisoft/wichat_es4b/webapp:latest
-    profiles: ["dev", "prod"]
-    build: 
-      context: ./webapp
-      args:
-        LLM_API_KEY: ${LLM_API_KEY}
-    depends_on:
-      - gatewayservice
-    ports:
-      - "3000:3000"
+      - db
+    restart:
+      always
+    volumes:
+      - ${KEYSTORE_PATH}:/certs/keystore.p12
 
   prometheus:
-    image: prom/prometheus
-    container_name: prometheus-wichat_es4b
-    profiles: ["dev"]
-    networks:
-      - mynetwork
+    image: prom/prometheus:latest
     volumes:
-      - ./gatewayservice/monitoring/prometheus:/etc/prometheus
       - prometheus_data:/prometheus
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
-    depends_on: 
-      - gatewayservice
-      
-  grafana:
-    image: grafana/grafana
-    container_name: grafana-wichat_es4b
-    profiles: ["dev"]
     networks:
       - mynetwork
+    depends_on:
+      - wiq_es04b
+    restart: always
+
+  grafana:
+    image: grafana/grafana:latest
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./gatewayservice/monitoring/grafana/provisioning:/etc/grafana/provisioning
     environment:
-      - GF_SERVER_HTTP_PORT=9091
-      - GF_AUTH_DISABLE_LOGIN_FORM=true
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      GF_AUTH_DISABLE_LOGIN_FORM: 1
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
     ports:
-      - "9091:9091"
-    depends_on: 
+      - "3000:3000"
+    networks:
+      - mynetwork
+    depends_on:
       - prometheus
-
+    restart: always
 
 volumes:
-  mongodb_data:
-  prometheus_data: 
-  grafana_data: 
+  db_data:
+  prometheus_data:
+  grafana_data:
 
 networks:
   mynetwork:

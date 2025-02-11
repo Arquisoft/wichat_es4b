@@ -1,0 +1,22 @@
+<div class="container mx-auto" id="gameFrame">
+    <h1 class="text-center" th:text="#{game.finish}"></h1>
+    <p class="display-1 text-center">
+        <span th:text="#{game.points}"></span>
+        <b th:inline="text" th:text="${score}"></b>
+    </p>
+    <img class="game-logo d-block mx-auto" th:src="${logoImage}">
+    <div class="row text-center">
+        <div class="col-6">
+            <a class="btn btn-primary" href="/ranking/playerRanking" th:text="#{navbar.ranking.player}"></a>
+        </div>
+        <div class="col-6">
+            <a class="btn btn-primary" href="/ranking/globalRanking" th:text="#{navbar.ranking.global}"></a>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $(".points").remove();
+            $(".questionCounter").remove();
+        });
+    </script>
+</div>

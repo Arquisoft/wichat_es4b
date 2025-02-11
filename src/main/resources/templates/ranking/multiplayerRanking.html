@@ -1,0 +1,64 @@
+<link th:href="@{/css/multiplayer.css}" rel="stylesheet" type="text/css"/>
+<div class="container" style="text-align: center">
+    <h2 th:text ="#{multi.info}"></h2>
+    <code id="lobbyCode" th:text="${code}"></code>
+    <div class="table-responsive" style="overflow: visible">
+        <table class="table table-hover" id="playerList" style="overflow: visible">
+            <thead>
+            <tr>
+                <th scope="col" th:text="#{ranking.position}"></th>
+                <th scope="col" th:text="#{ranking.player}"></th>
+                <th scope="col" th:text="#{ranking.score}"></th>
+            </tr>
+            </thead>
+            <tbody style="overflow:visible" id="playersTable">
+            </tbody>
+        </table>
+    </div>
+    <a th:href="@{'/'}">
+        <button id="createBtn" type="button" class="btn btn-custom btn-block mb-2" th:text="#{multi.menu}"></button>
+    </a>
+</div>
+<script>
+    $(document).ready(function() {
+        $(".points").remove();
+        $(".questionCounter").remove();
+        updatePlayerList();
+        function updatePlayerList() {
+            const code = [[${code}]];
+            $.ajax({
+                url: '/endGameList/' + code,
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    $('#playersTable').empty();
+                    let playersArray = $.map(response, function(points, name) {
+                        return { playerName: name, playerPoints: points };
+                    });
+
+                    playersArray.sort(function(a, b) {
+                        if (b.playerPoints !== a.playerPoints) {
+                            return b.playerPoints - a.playerPoints;
+                        } else {
+                            return a.playerName.localeCompare(b.playerName);
+                        }
+                    });
+
+                    $.each(playersArray, function(index, player) {
+                        $('#playersTable').append(
+                            $('<tr>').append(
+                                $('<td>').text(index + 1),
+                                $('<td>').text(player.playerName),
+                                $('<td>').text(player.playerPoints)
+                            )
+                        );
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error al actualizar la lista de jugadores:', error);
+                }
+            });
+        }
+        setInterval(updatePlayerList, 1000);
+    });
+</script>

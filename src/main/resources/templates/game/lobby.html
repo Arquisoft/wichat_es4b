@@ -1,0 +1,59 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<head th:replace="~{fragments/head}"></head>
+<body class="d-flex flex-column min-vh-100">
+<link th:href="@{/css/multiplayer.css}" rel="stylesheet" type="text/css"/>
+<canvas th:replace="~{fragments/background}"></canvas>
+<nav th:replace="~{fragments/nav}"></nav>
+
+<div class="container" style="text-align: center" >
+    <h2 th:text ="#{lobby.friends}">  </h2>
+    <code id="lobbyCode" th:text="${code}"></code>
+    <button id="copyBtn" type="button" class="btn btn-custom btn-block mb-2" onclick="copyCodeToClipboard()" th:text="#{multi.copyCode}"></button>
+
+    <h3 id="lobbyInfo" th:text ="#{lobby.info}"> </h3>
+    <ul id="playerList">
+        <li th:each="player : ${players}" th:text="${player.username}"></li>
+    </ul>
+    <a th:href="@{'/startMultiplayerGame'}">
+        <button id="startBtn" type="button" class="btn btn-custom btn-block mb-2" th:text="#{lobby.start}"></button>
+    </a>
+</div>
+
+<footer th:replace="~{fragments/footer}"></footer>
+
+<script>
+    $(document).ready(function() {
+        function updatePlayerList() {
+            const code = [[${code}]];
+            $.ajax({
+                url: '/game/lobby/' + code,
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    $('#playerList').empty();
+                    response.forEach(function (playerName) {
+                        $('#playerList').append('<li>' + playerName + '</li>');
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error al actualizar la lista de jugadores:', error);
+                }
+            });
+        }
+        setInterval(updatePlayerList, 2000);
+    });
+
+    function copyCodeToClipboard() {
+        const codeElement = document.getElementById('lobbyCode');
+        const codeText = codeElement.innerText;
+
+        navigator.clipboard.writeText(codeText)
+            .then(() => {
+            })
+            .catch(err => {
+                console.error('Error al copiar el código al portapapeles: ', err);
+            });
+    }
+</script>

@@ -1,0 +1,61 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head}"></head>
+<body class="d-flex flex-column min-vh-100">
+<link th:href="@{/css/multiplayer.css}" rel="stylesheet" type="text/css"/>
+<canvas th:replace="~{fragments/background}"></canvas>
+<nav th:replace="~{fragments/nav}"></nav>
+
+<div class="container" style="text-align: center">
+    <span class="alert alert-danger" th:if="${errorKey}" th:text="#{${errorKey}}"></span>
+    <label id="label-code" class="form-label col-sm-10 text-center mb-3" for="code" th:text="#{multi.label}"></label>
+    <div class="form-group col-sm-8 mx-auto">
+        <input type="text" class="form-control w-80 mx-auto" id="code" name="code"
+               th:placeholder="#{multi.placeholder}" oninput="toggleJoinButton()" style="text-align: center"/>
+        <p id="error-msg"  class="text-danger" style="display: none;" th:text="#{multi.onlyNumber}"></p>
+
+    </div>
+    <button id="joinBtn" type="submit" class="btn btn-custom btn-block mb-2" th:text="#{multi.join}" onclick="joinGame()" disabled></button>
+
+    <p class="display-5 text-center">
+        <span th:text="#{multi.text}"></span>
+    </p>
+    <a th:href="@{'/multiplayerGame/createGame'}">
+        <button id="createBtn" type="button" class="btn btn-custom btn-block mb-2" th:text="#{multi.create}"></button>
+    </a>
+</div>
+
+
+<footer th:replace="~{fragments/footer}"></footer>
+
+</body>
+</html>
+
+<script>
+    function joinGame() {
+        var code = document.getElementById("code").value;
+        window.location.href = '/multiplayerGame/' + code;
+    }
+
+    function toggleJoinButton() {
+        var codeInput = document.getElementById("code");
+        var joinBtn = document.getElementById("joinBtn");
+        var errorMsg = document.getElementById("error-msg");
+
+        if (codeInput.value.trim() === "") {
+            joinBtn.disabled = true;
+            errorMsg.style.display = "none";
+            return;
+        }
+
+        var containsOnlyNumbers = /^[0-9]+$/.test(codeInput.value);
+
+        if (containsOnlyNumbers) {
+            joinBtn.disabled = false;
+            errorMsg.style.display = "none";
+        } else {
+            joinBtn.disabled = true;
+            errorMsg.style.display = "block";
+        }
+    }
+</script>

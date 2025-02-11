@@ -1,0 +1,76 @@
+<div class="modal fade" id="deleteUserAdminModal" tabindex="-1" aria-labelledby="deleteUserAdminModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span><strong th:text="#{admin.user.delete.title}"></strong></span>
+                    <b th:inline="text"></b>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" th:text="#{admin.user.delete.message}">
+                ¿Está seguro de que desea eliminar este usuario? <br>
+                Todos los datos asociados con esta cuenta se eliminarán.<br>
+                La acción es irreversible.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{modal.close}">Cerrar</button>
+                <button id="deleteModalConfirm" type="button" class="btn btn-danger" th:text="#{modal.confirm}">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="changePasswordAdminModal" tabindex="-1" aria-labelledby="changePasswordAdminModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span><strong th:text="#{modal.password.title}"></strong></span>
+                    <b th:inline="text"></b>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex justify-center flex-column">
+                <label for="changePasswordInput" th:text="#{admin.password.change.input}">Nueva contraseña</label>
+                <input type="password" class="form-control justify-center" id="changePasswordInput" placeholder="1234">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{modal.close}">Cerrar</button>
+                <button id="changePasswordConfirm" type="button" class="btn btn-success" th:text="#{modal.confirm}">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="changeRolesAdminModal" tabindex="-1" aria-labelledby="changeRolesAdminModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span><strong th:text="#{admin.roles.change}"></strong></span>
+                    <b th:inline="text"></b>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="col-6 text-left">
+                <div>
+                    <input type="checkbox" value="ROLE_USER" id="checkbox0" checked disabled>
+                    <label for="checkbox0">ROLE_USER</label>
+                </div>
+                <!-- here goes the rest of the roles -->
+                <div id="rolesContainer"></div>
+                <div>
+                    <label for="newRole" th:text="#{modal.new.role}">Nuevo rol</label>
+                    <input type="text" class="form-control" placeholder="ROLE_NEW" id="newRole">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{modal.close}">Cerrar</button>
+                <button id="changeRolesConfirm" type="button" class="btn btn-success" th:text="#{modal.confirm}">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>

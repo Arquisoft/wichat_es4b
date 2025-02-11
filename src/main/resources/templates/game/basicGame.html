@@ -1,0 +1,50 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head}"></head>
+<body class="d-flex flex-column min-vh-100">
+<link th:href="@{/css/game.css}" rel="stylesheet" type="text/css"/>
+<canvas th:replace="~{fragments/background}"></canvas>
+<nav th:replace="~{fragments/nav}"></nav>
+<p class="points text-right mr-3">
+    <span class="" th:text="#{game.points}"></span>
+    <b id="gamePoints" th:inline="text" th:text="${session.gameSession.score}"></b>
+</p>
+<p class="questionCounter text-right mr-3">
+    <span class="" th:text="#{game.currentQuestion}"></span>
+    <b id="questionNumber" th:inline="text">
+        <span id="currentQuestion" th:text="${session.gameSession.answeredQuestions.size()+1}"></span>
+        /
+        <span id="totalQuestions" th:text="${session.gameSession.questionsToAnswer.size() + session.gameSession.answeredQuestions.size()}"></span>
+    </b>
+</p>
+<div id="gameFrame" th:replace="~{game/fragments/gameFrame}"></div>
+
+<footer th:replace="~{fragments/footer}"></footer>
+<script>
+    function updatePoints() {
+        $.ajax({
+            type: "GET",
+            url: "/game/points",
+            success: function (response) {
+                if (!isNaN(response))
+                    $("#gamePoints").text(response);
+            }
+        });
+    }
+
+    function updateQuestionCounter() {
+        $.ajax({
+            type: "GET",
+            url: "/game/currentQuestion",
+            success: function (response) {
+                if (!isNaN(response))
+                    $("#currentQuestion").text(response);
+            }
+        });
+    }
+
+    setInterval(updatePoints, 1000);
+    setInterval(updateQuestionCounter, 1000);
+</script>
+</body>
+</html>

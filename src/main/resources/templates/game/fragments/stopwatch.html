@@ -1,0 +1,31 @@
+<div class="text-center">
+    <div class="stopwatch-container">
+        <img src="images/stopwatch.svg" class="stopwatch-img" alt="Stopwatch">
+        <div class="countdown" id="stopwatch" th:text="${questionDuration - 1}"></div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    activeIntervalId = null;
+
+    function initStopwatch(timer) {
+        // Si ya hay un contador activo, lo limpiamos
+        if (activeIntervalId !== null) {
+            clearInterval(activeIntervalId);
+        }
+
+        let countdown = timer - 1;
+        const display = document.getElementById('stopwatch');
+
+        // Creamos un nuevo intervalo
+        activeIntervalId = setInterval(() => {
+            countdown -= 1;
+            if (countdown < 0) {
+                countdown = 0;
+            }
+            display.textContent = countdown;
+        }, 1000);
+    }
+    /*]]>*/
+</script>

@@ -1,0 +1,59 @@
+.stopwatch-container {
+    position: relative;
+    text-align: center;
+    width: 35%;
+    margin: 2% auto;
+}
+
+.countdown {
+    position: absolute;
+    top: 53%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2em;
+    color: white;
+}
+.stopwatch-img {
+    width: 45%;
+    height: auto;
+}
+
+.game-logo {
+    margin: auto;
+    width: 15%;
+    height: auto;
+}
+
+#bottomGamePart {
+    margin-bottom: 10%;
+}
+
+.points, .questionCounter {
+    font-size: 2em;
+    color: white;
+}
+
+@media (max-width: 750px) {
+    .stopwatch-img {
+        width: 100%;
+    }
+
+    h1, h2, h3 {
+        font-size: 1.5em;
+    }
+
+    .countdown {
+         font-size: 3em;
+     }
+}
+
+.container .btn {
+    color: #fff;
+    background-color: transparent;
+    border: 2px solid #fff;
+}
+
+.container .btn:hover {
+    background-color: #fff;
+    color: #000;
+}
