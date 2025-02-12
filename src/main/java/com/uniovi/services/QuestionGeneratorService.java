@@ -108,6 +108,10 @@ public class QuestionGeneratorService {
         List<Question> qfr = qgen.getQuestions(Question.FRENCH,  type.getQuestion(), type.getCategory());
         questions = qfr.stream().map(QuestionDto::new).toList();
         questions.forEach(questionService::addNewQuestion);
+
+        List<Question> qDe = qgen.getQuestions(Question.DEUCH,  type.getQuestion(), type.getCategory());
+        questions = qDe.stream().map(QuestionDto::new).toList();
+        questions.forEach(questionService::addNewQuestion);
     }
 
     @Transactional

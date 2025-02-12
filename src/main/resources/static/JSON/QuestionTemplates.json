@@ -1,95 +1,111 @@
 {
-  "language_placeholder" : "[LANGUAGE]",
-  "question_placeholder" : "[QUESTION]",
-  "answer_placeholder" : "[ANSWER]",
-  "categories" : [
+  "language_placeholder": "[LANGUAGE]",
+  "question_placeholder": "[QUESTION]",
+  "answer_placeholder": "[ANSWER]",
+  "categories": [
     {
-      "name" : "Geography",
-      "questions" : [
+      "name": "Geography",
+      "questions": [
         {
-          "type" : "capital",
-          "statements" : [
+          "type": "capital",
+          "statements": [
             {
-              "language" : "es",
-              "statement" : "¿Cuál es la capital de [QUESTION]?"
+              "language": "es",
+              "statement": "¿Cuál es la capital de [QUESTION]?"
             },
             {
-              "language" : "en",
-              "statement" : "What is the capital of [QUESTION]?"
+              "language": "en",
+              "statement": "What is the capital of [QUESTION]?"
             },
             {
-              "language" : "fr",
-              "statement" : "Quelle est la capitale de [QUESTION]?"
+              "language": "fr",
+              "statement": "Quelle est la capitale de [QUESTION]?"
+            },
+            {
+              "language": "de",
+              "statement": "Was ist die Hauptstadt von [QUESTION]?"
             }
           ],
-          "question" : "countryLabel",
-          "answer" : "capitalLabel",
-          "sparqlQuery" : "select distinct ?country ?[QUESTION] ?capital ?[ANSWER] where {\n  ?country wdt:P31 wd:Q6256 .\n  ?capital wdt:P31 wd:Q5119 .\n  ?country wdt:P36 ?capital .\n  ?country rdfs:label ?[QUESTION] .\n  ?capital rdfs:label ?[ANSWER] .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\" && LANG(?[ANSWER])=\"[LANGUAGE]\")\n  }"
+          "question": "countryLabel",
+          "answer": "capitalLabel",
+          "sparqlQuery": "select distinct ?country ?[QUESTION] ?capital ?[ANSWER] where {\n  ?country wdt:P31 wd:Q6256 .\n  ?capital wdt:P31 wd:Q5119 .\n  ?country wdt:P36 ?capital .\n  ?country rdfs:label ?[QUESTION] .\n  ?capital rdfs:label ?[ANSWER] .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\" && LANG(?[ANSWER])=\"[LANGUAGE]\")\n  }"
         },
         {
-          "type" : "currency",
-          "statements" : [
+          "type": "currency",
+          "statements": [
             {
-              "language" : "es",
-              "statement" : "¿Cuál es la moneda de [QUESTION]?"
+              "language": "es",
+              "statement": "¿Cuál es la moneda de [QUESTION]?"
             },
             {
-              "language" : "en",
-              "statement" : "What is the currency of [QUESTION]?"
+              "language": "en",
+              "statement": "What is the currency of [QUESTION]?"
             },
             {
-              "language" : "fr",
-              "statement" : "Quelle est la monnaie de [QUESTION]?"
+              "language": "fr",
+              "statement": "Quelle est la monnaie de [QUESTION]?"
+            },
+            {
+              "language": "de",
+              "statement": "Was ist die Währung von [QUESTION]?"
             }
           ],
-          "question" : "countryLabel",
-          "answer" : "currencyLabel",
-          "sparqlQuery" : "select distinct ?country ?[QUESTION] ?currency ?[ANSWER] where {\n  ?country wdt:P31 wd:Q6256 .\n  ?currency wdt:P31 wd:Q8142 .\n  ?country wdt:P38 ?currency .\n  ?country rdfs:label ?[QUESTION] .\n  ?currency rdfs:label ?[ANSWER] .\n  FILTER NOT EXISTS {?country wdt:P31 wd:Q3024240} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\" && LANG(?[ANSWER])=\"[LANGUAGE]\")\n  }"
+          "question": "countryLabel",
+          "answer": "currencyLabel",
+          "sparqlQuery": "select distinct ?country ?[QUESTION] ?currency ?[ANSWER] where {\n  ?country wdt:P31 wd:Q6256 .\n  ?currency wdt:P31 wd:Q8142 .\n  ?country wdt:P38 ?currency .\n  ?country rdfs:label ?[QUESTION] .\n  ?currency rdfs:label ?[ANSWER] .\n  FILTER NOT EXISTS {?country wdt:P31 wd:Q3024240} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\" && LANG(?[ANSWER])=\"[LANGUAGE]\")\n  }"
         }
       ]
     },
     {
-      "name" : "Science",
-      "questions" : [
+      "name": "Science",
+      "questions": [
         {
-          "type" : "element",
-          "statements" : [
+          "type": "element",
+          "statements": [
             {
-              "language" : "es",
-              "statement" : "¿Cuál es el símbolo químico del [QUESTION]?"
+              "language": "es",
+              "statement": "¿Cuál es el símbolo químico del [QUESTION]?"
             },
             {
-              "language" : "en",
-              "statement" : "What is the chemical symbol of [QUESTION]?"
+              "language": "en",
+              "statement": "What is the chemical symbol of [QUESTION]?"
             },
             {
-              "language" : "fr",
-              "statement" : "Quel est le symbole chimique du [QUESTION]?"
+              "language": "fr",
+              "statement": "Quel est le symbole chimique du [QUESTION]?"
+            },
+            {
+              "language": "de",
+              "statement": "Was ist das chemische Symbol für [QUESTION]?"
             }
           ],
-          "question" : "elementLabel",
-          "answer" : "symbol",
-          "sparqlQuery" : "select distinct ?element ?[QUESTION] ?[ANSWER] where {\n  ?element wdt:P31 wd:Q11344 .\n  ?element wdt:P246 ?[ANSWER] .\n  ?element rdfs:label ?[QUESTION] .\n  FILTER NOT EXISTS {?element wdt:P31 wd:Q1299291} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\")\n  }"
+          "question": "elementLabel",
+          "answer": "symbol",
+          "sparqlQuery": "select distinct ?element ?[QUESTION] ?[ANSWER] where {\n  ?element wdt:P31 wd:Q11344 .\n  ?element wdt:P246 ?[ANSWER] .\n  ?element rdfs:label ?[QUESTION] .\n  FILTER NOT EXISTS {?element wdt:P31 wd:Q1299291} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\")\n  }"
         },
         {
-          "type" : "atomic_number",
-          "statements" : [
+          "type": "atomic_number",
+          "statements": [
             {
-              "language" : "es",
-              "statement" : "¿Cuál es el número atómico del [QUESTION]?"
+              "language": "es",
+              "statement": "¿Cuál es el número atómico del [QUESTION]?"
             },
             {
-              "language" : "en",
-              "statement" : "What is the atomic number of [QUESTION]?"
+              "language": "en",
+              "statement": "What is the atomic number of [QUESTION]?"
             },
             {
-              "language" : "fr",
-              "statement" : "Quel est le numéro atomique du [QUESTION]?"
+              "language": "fr",
+              "statement": "Quel est le numéro atomique du [QUESTION]?"
+            },
+            {
+              "language": "de",
+              "statement": "Was ist die Ordnungszahl von [QUESTION]?"
             }
           ],
-          "question" : "elementLabel",
-          "answer" : "atomicNumber",
-          "sparqlQuery" : "select distinct ?element ?[QUESTION] ?[ANSWER] where {\n  ?element wdt:P31 wd:Q11344 .\n  ?element wdt:P1086 ?[ANSWER] .\n  ?element rdfs:label ?[QUESTION] .\n  FILTER NOT EXISTS {?element wdt:P31 wd:Q1299291} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\")\n  }"
+          "question": "elementLabel",
+          "answer": "atomicNumber",
+          "sparqlQuery": "select distinct ?element ?[QUESTION] ?[ANSWER] where {\n  ?element wdt:P31 wd:Q11344 .\n  ?element wdt:P1086 ?[ANSWER] .\n  ?element rdfs:label ?[QUESTION] .\n  FILTER NOT EXISTS {?element wdt:P31 wd:Q1299291} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\")\n  }"
         }
       ]
     }
