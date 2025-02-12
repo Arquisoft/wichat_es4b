@@ -6,8 +6,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class WiqEs04bApplication {
+public class WichatEs4bApplication {
     public static void main(String[] args) {
-        SpringApplication.run(WiqEs04bApplication.class, args);
+        SpringApplication.run(WichatEs4bApplication.class, args);
     }
 }
