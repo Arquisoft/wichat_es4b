@@ -39,4 +39,4 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         cd docs
-        npx gh-pages -d build -r https://x-access-token:${GITHUB_TOKEN}@github.com/Arquisoft/wiq_es04b.git
+        npx gh-pages -d build -r https://x-access-token:${GITHUB_TOKEN}@github.com/Arquisoft/wichat_es4b.git

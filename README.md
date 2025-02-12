@@ -1,8 +1,8 @@
-# wiq_es04b
+# wichat_es4b
 
-[![Deploy on release](https://github.com/Arquisoft/wiq_es04b/actions/workflows/release.yml/badge.svg)](https://github.com/Arquisoft/wiq_es04b/actions/workflows/release.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wiq_es04b&metric=alert_status)](https://sonarcloud.io/summary/overall?id=Arquisoft_wiq_es04b)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wiq_es04b&metric=coverage)](https://sonarcloud.io/summary/overall?id=Arquisoft_wiq_es04b)
+[![Deploy on release](https://github.com/Arquisoft/wichat_es4b/actions/workflows/release.yml/badge.svg)](https://github.com/Arquisoft/wichat_es4b/actions/workflows/release.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wichat_es4b&metric=alert_status)](https://sonarcloud.io/summary/overall?id=Arquisoft_wichat_es4b)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wichat_es4b&metric=coverage)](https://sonarcloud.io/summary/overall?id=Arquisoft_wichat_es4b)
 
 ## Contributors:
 
@@ -18,9 +18,9 @@
 
 #### Without docker (slower):
 
-1. Fist you have to clone the repository using a CMD and the following command: `git clone https://github.com/Arquisoft/wiq_es04b.git` or using an IDE with Git integration or any other app of your preference.
+1. Fist you have to clone the repository using a CMD and the following command: `git clone https://github.com/Arquisoft/wichat_es4b.git` or using an IDE with Git integration or any other app of your preference.
 
-2. Then you have to execute the [runServer.bat](https://github.com/Arquisoft/wiq_es04b/blob/master/database/hsqldb/bin/runServer.bat) to start the local database.
+2. Then you have to execute the [runServer.bat](https://github.com/Arquisoft/wichat_es4b/blob/master/database/hsqldb/bin/runServer.bat) to start the local database.
 
 3. With the database initialized you have to open a CMD in the project root directory and execute the following command `mvnw spring-boot:run`, to start the application.
 
@@ -35,5 +35,5 @@
 > #### *Disclaimer: This method is faster but it is not recommended for development because it is harder to debug and to see the logs and it is harder to execute the tests.*
 
 1. First you need to have installed [docker](https://www.docker.com/#build) and docker [compose](https://docs.docker.com/compose/install/).
-2. Then you have to clone the repository using a CMD and the following command: `git clone https://github.com/Arquisoft/wiq_es04b.git` or using an IDE with Git integration or any other app of your preference.
+2. Then you have to clone the repository using a CMD and the following command: `git clone https://github.com/Arquisoft/wichat_es4b.git` or using an IDE with Git integration or any other app of your preference.
 3. Then you have to open a CMD in the project root directory and execute the following command: `docker-compose up`. This is going to deploy the docker image that is in our repository. This docker will contain the app, a MySql database, Graphana and Prometheus. The app will be available in the port 443 https.

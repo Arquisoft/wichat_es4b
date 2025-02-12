@@ -74,4 +74,4 @@ jobs:
             kill $(cat spring-boot-app.pid)
       - name: Collect Jacoco report and send to Sonar
         run: |
-            ./mvnw org.jacoco:jacoco-maven-plugin:report sonar:sonar -Dsonar.projectKey=Arquisoft_wiq_es04b -Dsonar.organization=arquisoft -Dsonar.branch.name=${{ github.head_ref || github.ref_name }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dspring.profiles.active=test
+            ./mvnw org.jacoco:jacoco-maven-plugin:report sonar:sonar -Dsonar.projectKey=Arquisoft_wichat_es4b -Dsonar.organization=arquisoft -Dsonar.branch.name=${{ github.head_ref || github.ref_name }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dspring.profiles.active=test

@@ -66,7 +66,7 @@ jobs:
           kill $(cat spring-boot-app.pid)
       - name: Collect Jacoco report and send to Sonar
         run: |
-          ./mvnw org.jacoco:jacoco-maven-plugin:report sonar:sonar -Dsonar.projectKey=Arquisoft_wiq_es04b -Dsonar.organization=arquisoft -Dsonar.branch.name=${{ github.head_ref || github.ref_name }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dspring.profiles.active=test
+          ./mvnw org.jacoco:jacoco-maven-plugin:report sonar:sonar -Dsonar.projectKey=Arquisoft_wichat_es4b -Dsonar.organization=arquisoft -Dsonar.branch.name=${{ github.head_ref || github.ref_name }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dspring.profiles.active=test
   build-and-push:
     runs-on: ubuntu-latest
     needs: app-tests-analyze
@@ -89,7 +89,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ghcr.io/arquisoft/wiq_es04b:latest
+          tags: ghcr.io/arquisoft/wichat_es4b:latest
           no-cache: true
 
   deploy:
