@@ -3,8 +3,9 @@
     <!-- Navigation Menu to the left -->
     <div class="row">
       <div class="col-md-4">
-        <nav class="nav flex-column">
+        <nav class="nav d-flex">
           <a class="nav-link text-white" href="/api">API docs</a>
+          <a class="nav-link" href="/authors" th:text="#{footer.authors}"></a>
         </nav>
       </div>
 
@@ -59,13 +60,11 @@
         }
       });
 
-        let backgroundAnimation = getCookie("backgroundAnimation");
-        if (backgroundAnimation === "false") {
-          $('#backgroundToggleCheckbox').bootstrapToggle('off');
-        }
+      let backgroundAnimation = getCookie("backgroundAnimation");
+      if (backgroundAnimation === "false") {
+        $('#backgroundToggleCheckbox').bootstrapToggle('off');
+      }
     });
     /*]]>*/
   </script>
 </footer>
-
-
