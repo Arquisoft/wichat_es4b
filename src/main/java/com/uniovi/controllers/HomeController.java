@@ -52,4 +52,10 @@ public class HomeController{
     public String instructions(){
         return "instructions";
     }
+
+    @GetMapping("/authors")
+    public String authors(){
+        return "/authors";
+    }
+
 }
