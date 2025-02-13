@@ -13,6 +13,7 @@
 | Miguel Olamendi Alonso  | <a href="https://github.com/uo285032"><img src="https://img.shields.io/badge/uo285032-Miguel Olamendi Alonso-green"></a>  |
 | Nicolas Guerbartchouk Pérez  | <a href="https://github.com/NicolasGuerbartchoukPerez"><img src="https://img.shields.io/badge/NicolasGuerbartchoukPerez-Nicolas Guerbartchouk Pérez-blue"></a>  |
 
+As a basis, we have used last year's project [wiq_es04b](https://github.com/Arquisoft/wiq_es04b).
 
 ### Local deployment instructions:
 
