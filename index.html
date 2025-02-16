@@ -898,7 +898,7 @@ conventions (e.g. programming or versioning guidelines, documentation or naming 
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>External language model</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A LLM accessed through a predefined API will be used, limiting the choice of models and customization options.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A LLM accessed through a predefined API will be used, limiting the choice of models, customization options, and potential for fine-tuning or adaptation to specific needs.</p></td>
 </tr>
 </tbody>
 </table>
@@ -926,12 +926,12 @@ conventions (e.g. programming or versioning guidelines, documentation or naming 
 <td class="tableblock halign-left valign-top"><p class="tableblock">Hints must be generated while mitigating hallucinations using specific techniques, integrated with Wikidata.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Automatic generation</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Both the questions and distractors must be generated automatically, restricting manual design.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Docker for containerization</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Docker must be used for application containerization, as the solution&#8217;s architecture requires that all components be packaged into containers to ensure portability, isolation, and compatibility across environments</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Time-limited answers</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Each question must be answered within a set time, necessitating efficient interaction and time management design.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>GitHub Actions for CI/CD</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GitHub Actions must be used for automating the CI/CD pipeline, ensuring seamless integration, testing, and deployment processes.</p></td>
 </tr>
 </tbody>
 </table>
@@ -987,6 +987,14 @@ conventions (e.g. programming or versioning guidelines, documentation or naming 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Mandatory interaction</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Users must interact with the system to obtain conversational hints about the questions.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Time-limited answers</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Each question must be answered within a set time, necessitating efficient interaction and time management design.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Automatic generation</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Both the questions and distractors must be generated automatically, restricting manual design to ensure consistency and scalability.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -1010,7 +1018,11 @@ conventions (e.g. programming or versioning guidelines, documentation or naming 
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Monitoring and deployment</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Observability and deployment automation are required.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Observability and deployment automation are required. The deployment must maintain high availability, meaning the infrastructure must be capable of handling potential failures with minimal service disruption, ensuring maximum uptime. Due to this, an online virtual machine provider must be selected for deployment.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Docker for deployment</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Docker is also used in the deployment process to ensure efficient management of production, testing, and development environments. This facilitates scalability and maintenance by allowing more precise control over dependencies and configurations.</p></td>
 </tr>
 </tbody>
 </table>
@@ -2225,7 +2237,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2025-02-13 20:37:18 UTC
+Last updated 2025-02-16 09:51:44 UTC
 </div>
 </div>
 </body>
