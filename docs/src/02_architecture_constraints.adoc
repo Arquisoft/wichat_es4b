@@ -34,7 +34,7 @@ endif::arc42help[]
 |===
 | Constraints        | Explanations        
 | _Fixed data source_          | Questions, images, and hints must be generated exclusively from Wikidata data.
-| _External language model_         | A LLM accessed through a predefined API will be used, limiting the choice of models and customization options.
+| _External language model_         | A LLM accessed through a predefined API will be used, limiting the choice of models, customization options, and potential for fine-tuning or adaptation to specific needs.
 |===
 
 === Technical Constraints
@@ -44,8 +44,8 @@ endif::arc42help[]
 | Constraints        | Explanations        
 | _Mandatory web platform_          | The application must be accessible via web browsers and deployed online.
 | _Conversational hints logic_         | Hints must be generated while mitigating hallucinations using specific techniques, integrated with Wikidata.
-| _Automatic generation_          | Both the questions and distractors must be generated automatically, restricting manual design.
-| _Time-limited answers_         | Each question must be answered within a set time, necessitating efficient interaction and time management design.
+| _Docker for containerization_     | Docker must be used for application containerization, as the solution's architecture requires that all components be packaged into containers to ensure portability, isolation, and compatibility across environments
+| _GitHub Actions for CI/CD_        | GitHub Actions must be used for automating the CI/CD pipeline, ensuring seamless integration, testing, and deployment processes.
 |===
 
 === Legal and Regulatory Constraints
@@ -65,6 +65,8 @@ endif::arc42help[]
 | _Fixed question format_          | Each question must have one correct answer and several incorrect ones generated automatically, with balanced and coherent options. 
 | _User registration_          | The system must include functionalities for registration, participation history, and statistics.
 | _Mandatory interaction_         | Users must interact with the system to obtain conversational hints about the questions.
+| _Time-limited answers_         | Each question must be answered within a set time, necessitating efficient interaction and time management design.
+| _Automatic generation_          | Both the questions and distractors must be generated automatically, restricting manual design to ensure consistency and scalability.
 |===
 
 === Operational Constraints
@@ -73,5 +75,6 @@ endif::arc42help[]
 |===
 | Constraints        | Explanations        
 | _Scalability_          | The system must support multiple simultaneous users.
-| _Monitoring and deployment_         | Observability and deployment automation are required.
+| _Monitoring and deployment_         | Observability and deployment automation are required. The deployment must maintain high availability, meaning the infrastructure must be capable of handling potential failures with minimal service disruption, ensuring maximum uptime. Due to this, an online virtual machine provider must be selected for deployment.
+| _Docker for deployment_         | Docker is also used in the deployment process to ensure efficient management of production, testing, and development environments. This facilitates scalability and maintenance by allowing more precise control over dependencies and configurations.
 |===
