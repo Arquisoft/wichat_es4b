@@ -467,7 +467,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_technical_context">3.2. Technical Context</a></li>
 </ul>
 </li>
-<li><a href="#section-solution-strategy">4. Solution Strategy</a></li>
+<li><a href="#section-solution-strategy">4. Solution Strategy</a>
+<ul class="sectlevel2">
+<li><a href="#_introduction_and_purpose">4.1. Introduction and Purpose</a></li>
+<li><a href="#_technology_decisions">4.2. Technology Decisions</a></li>
+<li><a href="#_system_decomposition">4.3. System Decomposition</a></li>
+<li><a href="#_strategies_for_quality_goals">4.4. Strategies for Quality Goals</a></li>
+<li><a href="#_organizational_decisions">4.5. Organizational Decisions</a></li>
+<li><a href="#_justification">4.6. Justification</a></li>
+<li><a href="#_references">4.7. References</a></li>
+</ul>
+</li>
 <li><a href="#section-building-block-view">5. Building Block View</a>
 <ul class="sectlevel2">
 <li><a href="#_whitebox_overall_system">5.1. Whitebox Overall System</a></li>
@@ -1329,48 +1339,138 @@ together with a mapping table showing the relationships between channels and inp
 <div class="sect1">
 <h2 id="section-solution-strategy">4. Solution Strategy</h2>
 <div class="sectionbody">
-<div class="sidebarblock arc42help">
-<div class="content">
+<div class="sect2">
+<h3 id="_introduction_and_purpose">4.1. Introduction and Purpose</h3>
 <div class="paragraph">
-<div class="title">Contents</div>
-<p>A short summary and explanation of the fundamental decisions and solution strategies, that shape system architecture. It includes</p>
+<p>We chose to build upon last year&#8217;s base application, selecting technologies that we were most comfortable with and that aligned well with the project requirements. The application consists of a web-based platform where users can register, compete against others, and answer questions. Additionally, it integrates a Large Language Model (LLM) to provide hints and assist users in responding to quiz questions.</p>
 </div>
+<div class="paragraph">
+<p>This section outlines the key architectural decisions and strategies that shape the system, including technology choices, architectural patterns, and approaches to achieving the system&#8217;s quality goals.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_technology_decisions">4.2. Technology Decisions</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>technology decisions</p>
+<p><strong>Architecture:</strong> Model-View-Controller (MVC) pattern.</p>
 </li>
 <li>
-<p>decisions about the top-level decomposition of the system, e.g. usage of an architectural pattern or design pattern</p>
+<p><strong>Backend:</strong> Spring Boot for API development and business logic.</p>
 </li>
 <li>
-<p>decisions on how to achieve key quality goals</p>
+<p><strong>Frontend:</strong> Thymeleaf for dynamic rendering within the MVC framework.</p>
 </li>
 <li>
-<p>relevant organizational decisions, e.g. selecting a development process or delegating certain tasks to third parties.</p>
+<p><strong>Database:</strong> HSQLDB for structured data storage.</p>
+</li>
+<li>
+<p><strong>Authentication:</strong> Spring Security with JWT for secure access control.</p>
+</li>
+<li>
+<p><strong>Hosting &amp; Deployment:</strong> Docker and Kubernetes for scalability.</p>
+</li>
+<li>
+<p><strong>Integration:</strong> Wikidata API for question generation and an external LLM API for hints.</p>
 </li>
 </ul>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_system_decomposition">4.3. System Decomposition</h3>
 <div class="paragraph">
-<div class="title">Motivation</div>
-<p>These decisions form the cornerstones for your architecture. They are the foundation for many other detailed decisions or implementation rules.</p>
+<p>The application follows an MVC architecture with clearly defined layers:
+* <strong>Model Layer:</strong> Represents the data and business logic.
+* <strong>View Layer:</strong> Uses Thymeleaf templates for rendering dynamic content.
+* <strong>Controller Layer:</strong> Manages requests and responses, handling business logic with Spring Boot.
+* <strong>Database:</strong> Stores user data, questions, and game history in PostgreSQL.
+* <strong>LLM Integration:</strong> Provides AI-generated hints via an external API.
+* <strong>External APIs:</strong> Wikidata for question data and third-party services for deployment.</p>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_strategies_for_quality_goals">4.4. Strategies for Quality Goals</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Priority</th>
+<th class="tableblock halign-left valign-top">Quality Goal</th>
+<th class="tableblock halign-left valign-top">Strategy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scalability</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Load balancing, database connection pooling, and optimized queries.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Performance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Asynchronous processing with Spring Boot and caching mechanisms.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Security</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spring Security, encrypted storage, and role-based access control.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Availability</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deployment with Kubernetes and monitoring tools.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maintainability</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Modular architecture with well-documented Spring Boot services.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_organizational_decisions">4.5. Organizational Decisions</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Development Process:</strong> Agile methodology with Scrum.</p>
+</li>
+<li>
+<p><strong>Collaboration Tools:</strong> GitHub for version control and Jira for task management.</p>
+</li>
+<li>
+<p><strong>Testing Strategy:</strong> Unit tests with JUnit, integration tests with Spring Test, and performance testing.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_justification">4.6. Justification</h3>
 <div class="paragraph">
-<div class="title">Form</div>
-<p>Keep the explanations of such key decisions short.</p>
-</div>
-<div class="paragraph">
-<p>Motivate what was decided and why it was decided that way,
-based upon problem statement, quality goals and key constraints.
-Refer to details in the following sections.</p>
-</div>
-<div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-4/">Solution Strategy</a> in the arc42 documentation.</p>
+<p>These decisions ensure that the system is <strong>scalable, secure, and maintainable</strong>, leveraging Spring Boot&#8217;s powerful ecosystem for <strong>enterprise-grade applications</strong> while integrating <strong>AI-powered hints and automated question generation</strong>.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_references">4.7. References</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.arc42.org/section-4/" class="bare">https://docs.arc42.org/section-4/</a></p>
+</li>
+<li>
+<p><a href="https://www.wikidata.org/" class="bare">https://www.wikidata.org/</a></p>
+</li>
+<li>
+<p><a href="https://spring.io/projects/spring-boot" class="bare">https://spring.io/projects/spring-boot</a></p>
+</li>
+</ul>
 </div>
 <div style="page-break-after: always;"></div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -2340,7 +2440,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2025-02-17 10:16:45 UTC
+Last updated 2025-02-17 10:36:45 UTC
 </div>
 </div>
 </body>
