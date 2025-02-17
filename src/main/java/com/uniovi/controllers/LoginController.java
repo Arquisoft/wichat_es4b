@@ -2,7 +2,7 @@ package com.uniovi.controllers;
 
 
 
-import com.uniovi.entities.User;
+import com.uniovi.entities.Userllm;
 import com.uniovi.services.LlmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,24 +22,24 @@ public class LoginController {
 
     @GetMapping("/llm/login")
     public String showLoginForm(Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("user", new Userllm());
         return "llm/login";
     }
 
     @PostMapping("/llm/login")
-    public String loginUser(User user, Model model) {
+    public String loginUser(Userllm userllm, Model model) {
         // Validación del usuario (esto debería ser más robusto)
-        if (user.getUsername().isEmpty() || user.getPassword().isEmpty()) {
+        if (userllm.getUsername().isEmpty() || userllm.getPassword().isEmpty()) {
             model.addAttribute("error", "Username or Password is required");
             return "llm/login";
         }
 
         // Llamada al servicio LLM para generar el mensaje
-        String question = "Please, generate a greeting message for " + user.getUsername();
+        String question = "Please, generate a greeting message for " + userllm.getUsername();
         String greetingMessage = llmService.getLLMResponse(question, apiKey,"empathy");
 
         model.addAttribute("greetingMessage", greetingMessage);
-        model.addAttribute("username", user.getUsername());
+        model.addAttribute("username", userllm.getUsername());
 
         return "llm/login"; // Regresar a la misma página con el mensaje
     }
