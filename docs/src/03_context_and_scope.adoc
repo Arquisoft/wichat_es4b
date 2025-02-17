@@ -67,7 +67,7 @@ WIChat is an interactive web-based quiz game application, inspired by "Saber y G
 | User | A person who accesses the application to play the quiz game.
 | Administrator | Responsible for managing system infrastructure and security.
 | LLM Provider | External service that provides AI-generated quiz questions and hints.
-| Database | MongoDB used to store user information, game history, and question data.
+| Database | RDBMS used to store user information, game history, and question data.
 | WikiData | External service used to retrieve image and metadata for question generation.
 |===
 
@@ -107,7 +107,7 @@ together with a mapping table showing the relationships between channels and inp
 ****
 endif::arc42help[]
 
-The system consists of several services developed in Java using Spring Boot, a web frontend using HTML, and a MongoDB database. Communication between services is handled via REST API and HTTPS.
+The system consists of several services developed in Java using Spring Boot, a web frontend using HTML, and a relational database. Communication between services is handled via REST API and HTTPS.
 
 ==== Technical Interfaces
 
@@ -119,7 +119,7 @@ The system consists of several services developed in Java using Spring Boot, a w
 | Question Service | Spring (Java) | REST API to retrieve and display questions and images
 | LLM Service | External (REST API) | Connects to external LLM provider for dynamic hints
 | WikiData Service | External (REST API) | Retrieves image and question metadata from Wikidata
-| Database | MongoDB | Stores user data, game history, and question data
+| Database | RDBMS | Stores user data, game history, and question data
 |===
 
 ==== Mapping Input/Output to Channels
@@ -129,7 +129,7 @@ The system consists of several services developed in Java using Spring Boot, a w
 | Component | Input/Output | Channel/Protocol
 | RestApiService | External developer interactions | HTTPS
 | Frontend | User interactions, game display | HTTPS
-| Database | User data, game history, questions | Specific database driver (MongoDB)
+| Database | User data, game history, questions | Specific database driver (MySQL)
 | WikiData | Data for question generation | HTTP
 | Question Generator | Generated questions | In-memory
 | Question Service | Questions for game | In-memory
