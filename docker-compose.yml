@@ -4,7 +4,7 @@ services:
   db:
     image: mysql:latest
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
         MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
         MYSQL_DATABASE: ${MYSQL_DATABASE:-wichat_es4b}
@@ -18,7 +18,9 @@ services:
     restart: always
 
   wichat_es4b:
-    image: ${WIQ_IMAGE:-ghcr.io/arquisoft/wichat_es4b:latest}
+    build:
+      context: .  # El directorio donde se encuentra tu código fuente (y Dockerfile)
+      dockerfile: Dockerfile  # Asegúrate de que el nombre del Dockerfile sea correcto
     environment:
       MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-wichat_es4b}
@@ -28,7 +30,7 @@ services:
       KEYSTORE_PATH: ${KEYSTORE_PATH}
       KEYSTORE_PASSWORD: ${KEYSTORE_PASSWORD}
     ports:
-      - "443:443"
+      - "444:443"
     networks:
       - mynetwork
     depends_on:
@@ -37,6 +39,7 @@ services:
       always
     volumes:
       - ${KEYSTORE_PATH}:/certs/keystore.p12
+
 
   prometheus:
     image: prom/prometheus:latest
