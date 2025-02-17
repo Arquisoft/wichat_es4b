@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Login</title>
+</head>
+<body>
+<h1>Login</h1>
+
+<form th:action="@{/llm/login}" method="post">
+  <label for="username">Username:</label>
+  <input type="text" id="username" name="username" th:value="${user.username}" required>
+  <br><br>
+  <label for="password">Password:</label>
+  <input type="password" id="password" name="password" required>
+  <br><br>
+  <button type="submit">Login</button>
+</form>
+
+<!-- Mostrar mensaje generado por el LLM -->
+<div th:if="${greetingMessage}">
+  <p><b>Greeting Message:</b> <span th:text="${greetingMessage}"></span></p>
+</div>
+
+<!-- Error handling -->
+<div th:if="${error}">
+  <p style="color: red;" th:text="${error}"></p>
+</div>
+
+</body>
+</html>

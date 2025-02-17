@@ -17,7 +17,7 @@ const llmConfigs = {
     transformResponse: (response) => response.data.candidates[0]?.content?.parts[0]?.text
   },
   empathy: {
-    url: () => 'https://empathyai.staging.empathy.co/v1/chat/completions',
+    url: () => 'https://empathyai.prod.empathy.co/v1/chat/completions',
     transformRequest: (question) => ({
       model: "qwen/Qwen2.5-Coder-7B-Instruct",
       messages: [

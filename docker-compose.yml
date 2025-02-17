@@ -40,7 +40,6 @@ services:
     volumes:
       - ${KEYSTORE_PATH}:/certs/keystore.p12
 
-
   prometheus:
     image: prom/prometheus:latest
     volumes:
