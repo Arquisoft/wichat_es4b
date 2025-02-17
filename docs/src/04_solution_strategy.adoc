@@ -19,6 +19,7 @@ This section outlines the key architectural decisions and strategies that shape 
 
 === System Decomposition
 The application follows an MVC architecture with clearly defined layers:
+
 * **Model Layer:** Represents the data and business logic.
 * **View Layer:** Uses Thymeleaf templates for rendering dynamic content.
 * **Controller Layer:** Manages requests and responses, handling business logic with Spring Boot.
