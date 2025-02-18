@@ -1,30 +1,31 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <title>Login</title>
-</head>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
 <body>
-<h1>Login</h1>
-
-<form th:action="@{/llm/login}" method="post">
-  <label for="username">Username:</label>
-  <input type="text" id="username" name="username" th:value="${userllm.username}" required>
-  <br><br>
-  <label for="password">Password:</label>
-  <input type="password" id="password" name="password" required>
-  <br><br>
-  <button type="submit">Login</button>
-</form>
-
-<!-- Mostrar mensaje generado por el LLM -->
-<div th:if="${greetingMessage}">
-  <p><b>Greeting Message:</b> <span th:text="${greetingMessage}"></span></p>
+<div class="container">
+  <h2>Identifícate</h2>
+  <form class="form-horizontal" method="post" action="/llm/login" th:object="${userllm}">
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="username">DNI:</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="username" name="username"
+               placeholder="Juan" required="true"/>
+        <span class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="password">Password:</label>
+      <div class="col-sm-10">
+        <input type="password" class="form-control" id="password" name="password"
+               placeholder="Entre el Password" />
+        <span class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-primary">Conectarse</button>
+      </div>
+    </div>
+  </form>
 </div>
-
-<!-- Error handling -->
-<div th:if="${error}">
-  <p style="color: red;" th:text="${error}"></p>
-</div>
-
 </body>
 </html>

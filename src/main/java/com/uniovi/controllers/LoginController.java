@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class LoginController {
@@ -22,11 +23,11 @@ public class LoginController {
 
     @GetMapping("/llm/login")
     public String showLoginForm(Model model) {
-        model.addAttribute("user", new Userllm());
+        model.addAttribute("userllm", new Userllm());
         return "llm/login";
     }
 
-    @PostMapping("/llm/login")
+    @PostMapping(value="/llm/login", method= RequestMethod.POST)
     public String loginUser(Userllm userllm, Model model) {
         // Validación del usuario (esto debería ser más robusto)
         if (userllm.getUsername().isEmpty() || userllm.getPassword().isEmpty()) {
