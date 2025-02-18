@@ -3,32 +3,50 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-solution-strategy]]
 == Solution Strategy
 
+=== Introduction and Purpose
+We chose to build upon last year's base application, selecting technologies that we were most comfortable with and that aligned well with the project requirements. The application consists of a web-based platform where users can register, compete against others, and answer questions. Additionally, it integrates a Large Language Model (LLM) to provide hints and assist users in responding to quiz questions.
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Contents
-A short summary and explanation of the fundamental decisions and solution strategies, that shape system architecture. It includes
+This section outlines the key architectural decisions and strategies that shape the system, including technology choices, architectural patterns, and approaches to achieving the system's quality goals.
 
-* technology decisions
-* decisions about the top-level decomposition of the system, e.g. usage of an architectural pattern or design pattern
-* decisions on how to achieve key quality goals
-* relevant organizational decisions, e.g. selecting a development process or delegating certain tasks to third parties.
+=== Technology Decisions
+* **Architecture:** Model-View-Controller (MVC) pattern.
+* **Backend:** Spring Boot for API development and business logic.
+* **Frontend:** Thymeleaf for dynamic rendering within the MVC framework.
+* **Database:** HSQLDB for structured data storage.
+* **Authentication:** Spring Security with JWT for secure access control.
+* **Hosting & Deployment:** Docker and Kubernetes for scalability.
+* **Integration:** Wikidata API for question generation and an external LLM API for hints.
 
-.Motivation
-These decisions form the cornerstones for your architecture. They are the foundation for many other detailed decisions or implementation rules.
+=== System Decomposition
+The application follows an MVC architecture with clearly defined layers:
 
-.Form
-Keep the explanations of such key decisions short.
+* **Model Layer:** Represents the data and business logic.
+* **View Layer:** Uses Thymeleaf templates for rendering dynamic content.
+* **Controller Layer:** Manages requests and responses, handling business logic with Spring Boot.
+* **Database:** Stores user data, questions, and game history in PostgreSQL.
+* **LLM Integration:** Provides AI-generated hints via an external API.
+* **External APIs:** Wikidata for question data and third-party services for deployment.
 
-Motivate what was decided and why it was decided that way,
-based upon problem statement, quality goals and key constraints.
-Refer to details in the following sections.
+=== Strategies for Quality Goals
+[options="header"]
+|===
+| Priority | Quality Goal | Strategy
+| High     | Scalability  | Load balancing, database connection pooling, and optimized queries.
+| High     | Performance  | Asynchronous processing with Spring Boot and caching mechanisms.
+| High     | Security     | Spring Security, encrypted storage, and role-based access control.
+| Medium   | Availability | Deployment with Kubernetes and monitoring tools.
+| Medium   | Maintainability | Modular architecture with well-documented Spring Boot services.
+|===
 
+=== Organizational Decisions
+* **Development Process:** Agile methodology with Scrum.
+* **Collaboration Tools:** GitHub for version control and Jira for task management.
+* **Testing Strategy:** Unit tests with JUnit, integration tests with Spring Test, and performance testing.
 
-.Further Information
+=== Justification
+These decisions ensure that the system is **scalable, secure, and maintainable**, leveraging Spring Boot's powerful ecosystem for **enterprise-grade applications** while integrating **AI-powered hints and automated question generation**.
 
-See https://docs.arc42.org/section-4/[Solution Strategy] in the arc42 documentation.
-
-****
-endif::arc42help[]
+=== References
+* https://docs.arc42.org/section-4/
+* https://www.wikidata.org/
+* https://spring.io/projects/spring-boot

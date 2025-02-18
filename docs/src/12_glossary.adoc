@@ -34,11 +34,23 @@ endif::arc42help[]
 
 [cols="e,2e" options="header"]
 |===
-|Term |Definition
+| Term | Definition
 
-|<Term-1>
-|<definition-1>
+| _Wikidata_
+| A free and open knowledge base that provides structured data to support various applications, including WIChat's question generation.
 
-|<Term-2>
-|<definition-2>
+| _LLM (Large Language Model)_
+| An advanced AI model capable of understanding and generating human-like text, used in WIChat to provide interactive hints.
+
+| _API (Application Programming Interface)_
+| A set of protocols and tools that allow different software components to communicate, enabling external access to user and question data.
+
+| _Gamification_
+| The integration of game-like elements, such as rewards and leaderboards, to enhance user engagement and motivation.
+
+| _Scalability_
+| The ability of the system to handle increased load and users without significant performance degradation.
+
+| _Observability_
+| The capability to monitor, log, and analyze system performance and behavior to ensure reliability and quick issue resolution.
 |===
