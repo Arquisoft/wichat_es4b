@@ -7,12 +7,6 @@ WIChat is an interactive web-based quiz game where users guess locations from im
 The system generates questions and hints using Wikidata and an external LLM, enhancing user experience through conversational clues. 
 The platform includes user registration, game history tracking, and various gameplay modes.
 
-
-* Guerbartchouk Pérez, Nicolás mailto:UO293912@uniovi.es[_UO293912_]
-* García Baldó, Manuel mailto:UO295497@uniovi.es[_UO295497_].
-* Jirout Cid, Alfredo mailto:uo288443@uniovi.es[_UO288443_].
-* Olamendi De Yaxte Alonso, Miguel Ángel mailto:UO285032@uniovi.es[_UO285032_].
-
 ifdef::arc42help[]
 [role="arc42help"]
 ****
@@ -82,6 +76,7 @@ endif::arc42help[]
 | High     | Scalability  | Ensure the system can support a growing number of users and future feature expansions.
 | High     | Performance  | Provide low-latency interactions for real-time quiz gameplay.
 | High     | Security     | Protect user data and prevent cheating or unauthorized access.
+| High     | Usability    | Ensure that users can easily navigate and interact with the application.
 | Medium   | Availability | Guarantee uptime and reliability for a seamless user experience.
 | Medium   | Maintainability | Use a modular architecture to facilitate updates and future improvements.
 |===
@@ -138,7 +133,8 @@ endif::arc42help[]
 | _RTVE_          | _RTVE Team_     | Ensure an engaging and well-integrated quiz experience aligned with their brand.
 | _Users_         | _Players_       | Enjoy a fun, challenging, and fair gameplay experience.
 | _Developers_    | _Dev Team_      | Work with a clear architecture and maintainable codebase.
-| _Administrators_| _Ops Team_      | Maintain reliable deployment, monitoring, and observability.
-| _Students (Developers)_ | _Project Team_ | Gain experience in software development while ensuring high-quality implementation.
+| _System Administrators_ | _Ops Team_      | Maintain reliable deployment, monitoring, and observability.
+| _LLM API Providers_ | _Third-party LLM Providers_ | Ensure access to the language model API.
+| _Hosting Provider_ | _Microsoft Azure_ | Provide reliable and scalable hosting solutions for the application.
 |===
 
