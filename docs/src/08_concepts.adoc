@@ -3,72 +3,54 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-concepts]]
 == Cross-cutting Concepts
 
+=== Domain Concepts
+The system revolves around an interactive quiz where users answer image-based questions. Key domain concepts include:
+* **Users:** Can register, log in, and track their game history.
+* **Questions:** Generated from Wikidata, consisting of an image and multiple-choice answers.
+* ***Game Modes:** You can choose different game modes.
+* **Hints:** AI-generated clues provided by an external LLM API.
+* **Game Sessions:** Users participate in timed quizzes, competing for scores.
+* **Leaderboard:** Tracks user performance based on accuracy and speed.
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Content
-This section describes overall, principal regulations and solution ideas that are relevant in multiple parts (= cross-cutting) of your system.
-Such concepts are often related to multiple building blocks.
-They can include many different topics, such as
+=== User Experience (UX) Concepts
+To ensure a seamless and engaging user experience:
+* **Responsive Design:** The web interface adapts to different devices using Bootstrap.
+* **Intuitive Navigation:** A simple and clear UI layout with a focus on gameplay.
+* **Feedback System:** Immediate response validation and progress tracking.
+* **Ergonomics  ** Ergonomics is the discipline focused on designing and arranging workspaces, products,
+        and systems to adapt to the needs of the people using them. Its goal is to enhance comfort, efficiency,
+        and safety by considering human physical and psychological limitations.
 
-* models, especially domain models
-* architecture or design patterns
-* rules for using specific technology
-* principal, often technical decisions of an overarching (= cross-cutting) nature
-* implementation rules
+* **Internationalization ** The application should support multiple languages and regions to ensure accessibility
+    for users from different countries and cultures. Currently, it is available in Spanish, English, German and France.
 
+=== Security Concepts
+Security is critical due to user authentication and data handling:
+* **Authentication & Authorization:** Implemented using Spring Security with JWT.
+* **Data Encryption:** Passwords hashed with bcrypt and sensitive data encrypted.
+* **API Security:** Access control enforced through role-based permissions.
+* **Rate Limiting:** Protection against abuse using API throttling.
 
-.Motivation
-Concepts form the basis for _conceptual integrity_ (consistency, homogeneity) of the architecture. 
-Thus, they are an important contribution to achieve inner qualities of your system.
+=== Architecture and Design Patterns
+The system follows the **Model-View-Controller (MVC)** architectural pattern:
+* **Model:** Entities representing users, questions, and game sessions.
+* **View:** Thymeleaf templates for server-side rendering.
+* **Controller:** Spring Boot REST controllers handling requests and responses.
+* **Service Layer:** Encapsulates business logic, ensuring separation of concerns.
+* **Repository Layer:** Uses Spring Data JPA for efficient database interactions.
 
-Some of these concepts cannot be assigned to individual building blocks, e.g. security or safety. 
+=== Development Concepts
+Best practices for development include:
+* **Testing Strategy:** TO DO
+* **CI/CD Pipeline:** Automated testing and deployment using GitHub Actions.
+* **Code Quality:** Static code analysis with SonarQube.
+* **Logging & Monitoring:** Implemented with Logback and Prometheus.
 
+=== Operational Concepts
+To ensure reliability and scalability:
+* **Containerization:** Deployment using Docker and Kubernetes.
+* **Database Management:** MySQL with scheduled backups.
+* **Load Balancing:** Managed through Nginx for high availability.
+* **Observability:** Monitoring with Grafana and centralized logging.
 
-.Form
-The form can be varied:
-
-* concept papers with any kind of structure
-* cross-cutting model excerpts or scenarios using notations of the architecture views
-* sample implementations, especially for technical concepts
-* reference to typical usage of standard frameworks (e.g. using Hibernate for object/relational mapping)
-
-.Structure
-A potential (but not mandatory) structure for this section could be:
-
-* Domain concepts
-* User Experience concepts (UX)
-* Safety and security concepts
-* Architecture and design patterns
-* "Under-the-hood"
-* development concepts
-* operational concepts
-
-Note: it might be difficult to assign individual concepts to one specific topic
-on this list.
-
-image::08-concepts-EN.drawio.png["Possible topics for crosscutting concepts"]
-
-
-.Further Information
-
-See https://docs.arc42.org/section-8/[Concepts] in the arc42 documentation.
-****
-endif::arc42help[]
-
-=== _<Concept 1>_
-
-_<explanation>_
-
-
-
-=== _<Concept 2>_
-
-_<explanation>_
-
-...
-
-=== _<Concept n>_
-
-_<explanation>_
+This structured approach ensures a **secure, scalable, and maintainable** system while delivering a seamless user experience.
