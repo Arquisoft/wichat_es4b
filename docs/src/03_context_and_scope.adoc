@@ -67,7 +67,7 @@ WIChat is an interactive web-based quiz game application, inspired by "Saber y G
 | User | A person who accesses the application to play the quiz game.
 | Administrator | Responsible for managing system infrastructure and security.
 | LLM Provider | External service that provides AI-generated quiz questions and hints.
-| Database | RDBMS used to store user information, game history, and question data.
+| Database | MySQL used to store user information, game history, and question data.
 | WikiData | External service used to retrieve image and metadata for question generation.
 |===
 
@@ -119,7 +119,7 @@ The system consists of several services developed in Java using Spring Boot, a w
 | Question Service | Spring (Java) | REST API to retrieve and display questions and images
 | LLM Service | External (REST API) | Connects to external LLM provider for dynamic hints
 | WikiData Service | External (REST API) | Retrieves image and question metadata from Wikidata
-| Database | RDBMS | Stores user data, game history, and question data
+| Database | MySQL | Stores user data, game history, and question data
 |===
 
 ==== Mapping Input/Output to Channels

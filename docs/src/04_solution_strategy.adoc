@@ -50,3 +50,4 @@ These decisions ensure that the system is **scalable, secure, and maintainable**
 * https://docs.arc42.org/section-4/
 * https://www.wikidata.org/
 * https://spring.io/projects/spring-boot
+* https://github.com/Arquisoft/wiq_es04b
