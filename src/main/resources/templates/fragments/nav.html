@@ -15,10 +15,18 @@
                     <span th:text="#{navbar.home}"></span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/game" th:text="#{navbar.play}"></a>
-            </li>
-            <li class="nav-item dropdown">
+        <!-- Modos de juego -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false" th:text="#{navbar.play}">
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/game" th:text="#{modo.trivial}"></a></li>
+                <!-- MAS MODOS DE JUEGO AQUI -->
+            </ul>
+        </li>
+        <!--FIN MODOS DE JUEGO-->
+        <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown">
                     <span th:text="#{navbar.ranking}"></span>
