@@ -113,10 +113,10 @@ public class Question implements JsonEntity {
                 obj = mapper.createObjectNode()
                     .put("id", id)
                     .put("statement", statement);
-                obj .put("category", category.toJson());
+                obj.put("category", category.toJson());
         ArrayNode optionsArray = mapper.createArrayNode();
         options.forEach(option -> optionsArray.add(option.toJson()));
-        obj         .put("options", optionsArray);
+        obj.put("options", optionsArray);
         return obj;
     }
 

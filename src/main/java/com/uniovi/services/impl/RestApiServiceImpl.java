@@ -3,10 +3,7 @@ package com.uniovi.services.impl;
 import com.mysql.cj.util.StringUtils;
 import com.uniovi.entities.*;
 import com.uniovi.repositories.RestApiLogRepository;
-import com.uniovi.services.CategoryService;
-import com.uniovi.services.PlayerService;
-import com.uniovi.services.QuestionService;
-import com.uniovi.services.RestApiService;
+import com.uniovi.services.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -21,14 +18,16 @@ public class RestApiServiceImpl implements RestApiService {
     private final PlayerService playerService;
     private final RestApiLogRepository restApiLogRepository;
     private final QuestionService questionService;
+    private final ImageQuestionService imageQuestionService;
     private final CategoryService categoryService;
 
     @Autowired
     public RestApiServiceImpl(PlayerService playerService, RestApiLogRepository restApiLogRepository,
-                              QuestionService questionService, CategoryService categoryService) {
+                              QuestionService questionService, ImageQuestionService imageQuestionService, CategoryService categoryService) {
         this.playerService = playerService;
         this.restApiLogRepository = restApiLogRepository;
         this.questionService = questionService;
+        this.imageQuestionService = imageQuestionService;
         this.categoryService = categoryService;
     }
 
@@ -137,5 +136,41 @@ public class RestApiServiceImpl implements RestApiService {
         }
 
         return questionService.getQuestions(pageable).toList();
+    }
+
+    @Override
+    public List<ImageQuestion> getImageQuestions(Map<String, String> params, Pageable pageable) {
+        String lang = LocaleContextHolder.getLocale().getLanguage();
+        if (params.containsKey("lang")) {
+            lang = params.get("lang");
+        }
+
+        if (params.containsKey("category")) {
+            String category = params.get("category");
+            Category cat = null;
+            if (StringUtils.isStrictlyNumeric(category)) {
+                Optional<Category> optCat = categoryService.getCategory(Long.parseLong(category));
+                if (optCat.isPresent())
+                    cat = optCat.get();
+            } else {
+                cat = categoryService.getCategoryByName(category);
+            }
+
+            return imageQuestionService.getImageQuestionsByCategory(pageable, cat, lang);
+        }
+        if (params.containsKey("id")) {
+            try {
+                Optional<ImageQuestion> found = imageQuestionService.getImageQuestion(Long.parseLong(params.get("id")));
+                return found.map(List::of).orElseGet(List::of);
+            } catch (NumberFormatException e) {
+                return List.of();
+            }
+        }
+
+        if (params.containsKey("statement")) {
+            return imageQuestionService.getImageQuestionsByStatement(pageable, params.get("statement"), lang);
+        }
+
+        return imageQuestionService.getImageQuestions(pageable).toList();
     }
 }

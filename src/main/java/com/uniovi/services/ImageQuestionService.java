@@ -107,7 +107,7 @@ public class ImageQuestionService {
 
 
     public List<ImageQuestion> getAllImageQuestions() {
-        return imageQuestionRepository.findAll();
+        return new ArrayList<>(imageQuestionRepository.findAll());
     }
 
     public Page<ImageQuestion> getImageQuestions(Pageable pageable) {
@@ -199,14 +199,16 @@ public class ImageQuestionService {
         return questionGeneratorService.getJsonGeneration();
     }
 
-    public String getHintForImageQuestion(Long imageQuestionId, String playerQuestion) {
-        // Aquí puedes agregar la lógica para obtener la descripción de la imagen
-        String imageDescription = "Descripción de la imagen relacionada con el ID " + imageQuestionId;
+    public String getHintForImageQuestion(String imageUrl, String playerQuestion) {
+
 
         // Formar la pregunta completa con el contexto de la imagen
-        String question = "Con base en la imagen, " + playerQuestion;
+        // README: Se puede pasar el objeto imageQuestion a este metodo para meterle más contexto sobre las distintas posibles respuestas
+        //         o sobre la pregunta de la propia aplicación. Habría que probar para ver como da las pistas.
+        String question = "Quiero que uses la imagen que te he pasado para darme una respuesta a " +
+                "modo de pista de la siguiente pregunta relacionada con esa misma imagen, ¿" + playerQuestion +"?";
 
         // Llamar al servicio LLM para obtener la pista usando Gemini.
-        return llmService.getImageHint(imageDescription, question);
+        return llmService.getImageHint(imageUrl, question, "gemini");
     }
 }

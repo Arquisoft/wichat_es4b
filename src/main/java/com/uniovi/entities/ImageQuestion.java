@@ -118,7 +118,7 @@ public class ImageQuestion implements JsonEntity {
                 .put("id", id)
                 .put("statement", statement)
                 .put("imageUrl", imageUrl); // Añadimos la URL de la imagen
-        obj.put("category", category.toJson());
+            obj.put("category", category.toJson());
 
         ArrayNode optionsArray = mapper.createArrayNode();
         options.forEach(option -> optionsArray.add(option.toJson()));
