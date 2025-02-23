@@ -159,10 +159,12 @@ public class ImageQuestionController {
     @GetMapping("/game/image-question/{id}/hint")
     @ResponseBody
     public String getImageQuestionHint(@PathVariable Long id, @RequestParam String playerQuestion) {
-        // Llama al servicio para obtener una pista basada en la pregunta del jugador y la imagen
-        String hint = imageQuestionService.getHintForImageQuestion(id, playerQuestion);
-
-        return hint;
+        // Intenta obtener la pregunta con imagen
+        // README: Hay que devolver la vista del juego de nuevo metiendo la respuesta como atributo  de Model como se viene haciendo
+        // en las practicas de sdi. IN_DEVELOPMENT
+        return imageQuestionService.getImageQuestion(id)
+                .map(question -> imageQuestionService.getHintForImageQuestion(question.getImageUrl(), playerQuestion))
+                .orElse("No se encontró la imagen asociada a la pregunta");
     }
 
 
