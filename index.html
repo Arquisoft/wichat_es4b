@@ -501,9 +501,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#section-concepts">8. Cross-cutting Concepts</a>
 <ul class="sectlevel2">
-<li><a href="#_concept_1">8.1. <em>&lt;Concept 1&gt;</em></a></li>
-<li><a href="#_concept_2">8.2. <em>&lt;Concept 2&gt;</em></a></li>
-<li><a href="#_concept_n">8.3. <em>&lt;Concept n&gt;</em></a></li>
+<li><a href="#domain-concepts">8.1. Domain Concepts</a></li>
+<li><a href="#ux-concepts">8.2. User Experience (UX) Concepts</a></li>
+<li><a href="#security-concepts">8.3. Security Concepts</a></li>
+<li><a href="#architecture-concepts">8.4. Architectural Concepts</a></li>
+<li><a href="#development-concepts">8.5. Development Concepts</a></li>
+<li><a href="#operations-concepts">8.6. Operational Concepts</a></li>
 </ul>
 </li>
 <li><a href="#section-design-decisions">9. Architecture Decisions</a>
@@ -2035,124 +2038,271 @@ when your infrastructure is more complex.</p>
 <div class="sect1">
 <h2 id="section-concepts">8. Cross-cutting Concepts</h2>
 <div class="sectionbody">
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<div class="title">Content</div>
-<p>This section describes overall, principal regulations and solution ideas that are relevant in multiple parts (= cross-cutting) of your system.
-Such concepts are often related to multiple building blocks.
-They can include many different topics, such as</p>
-</div>
+<div class="sect2">
+<h3 id="domain-concepts">8.1. Domain Concepts</h3>
 <div class="ulist">
+<div class="title">Key Entities</div>
 <ul>
 <li>
-<p>models, especially domain models</p>
+<p><strong>User</strong>: Handles registration, authentication, and game history tracking</p>
 </li>
 <li>
-<p>architecture or design patterns</p>
+<p><strong>Question</strong>: Image-based multiple-choice items generated from Wikidata</p>
 </li>
 <li>
-<p>rules for using specific technology</p>
+<p><strong>GameSession</strong>: Timed quiz session with score tracking</p>
 </li>
 <li>
-<p>principal, often technical decisions of an overarching (= cross-cutting) nature</p>
-</li>
-<li>
-<p>implementation rules</p>
+<p><strong>LeaderboardEntry</strong>: Aggregates user performance metrics</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>Concepts form the basis for <em>conceptual integrity</em> (consistency, homogeneity) of the architecture.
-Thus, they are an important contribution to achieve inner qualities of your system.</p>
-</div>
-<div class="paragraph">
-<p>Some of these concepts cannot be assigned to individual building blocks, e.g. security or safety.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>The form can be varied:</p>
-</div>
 <div class="ulist">
+<div class="title">Key Processes</div>
 <ul>
 <li>
-<p>concept papers with any kind of structure</p>
+<p>Question generation pipeline (Wikidata integration)</p>
 </li>
 <li>
-<p>cross-cutting model excerpts or scenarios using notations of the architecture views</p>
+<p>Real-time answer validation</p>
 </li>
 <li>
-<p>sample implementations, especially for technical concepts</p>
+<p>Score calculation (accuracy + speed)</p>
 </li>
 <li>
-<p>reference to typical usage of standard frameworks (e.g. using Hibernate for object/relational mapping)</p>
+<p>Hint generation via LLM API integration</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<div class="title">Structure</div>
-<p>A potential (but not mandatory) structure for this section could be:</p>
 </div>
+<div class="sect2">
+<h3 id="ux-concepts">8.2. User Experience (UX) Concepts</h3>
 <div class="ulist">
+<div class="title">User Experience Goals</div>
 <ul>
 <li>
-<p>Domain concepts</p>
+<p>Responsive design using Bootstrap grid system</p>
 </li>
 <li>
-<p>User Experience concepts (UX)</p>
+<p>Progressive disclosure of complex features</p>
 </li>
 <li>
-<p>Safety and security concepts</p>
+<p>Immediate visual feedback for user actions</p>
 </li>
 <li>
-<p>Architecture and design patterns</p>
-</li>
-<li>
-<p>"Under-the-hood"</p>
-</li>
-<li>
-<p>development concepts</p>
-</li>
-<li>
-<p>operational concepts</p>
+<p>Consistent cross-device experience</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>Note: it might be difficult to assign individual concepts to one specific topic
-on this list.</p>
+<div class="sect3">
+<h4 id="i18n-accessibility">8.2.1. Internationalization &amp; Accessibility</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Multi-language support (EN/ES/DE/FR) with resource bundles</p>
+</li>
+<li>
+<p>Screen reader compatibility</p>
+</li>
+<li>
+<p>Color contrast compliance (WCAG 2.1)</p>
+</li>
+<li>
+<p>Keyboard navigation support</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="security-concepts">8.3. Security Concepts</h3>
+<div class="ulist">
+<div class="title">Authentication</div>
+<ul>
+<li>
+<p>JWT-based stateless authentication</p>
+</li>
+<li>
+<p>Spring Security role management (ROLE_USER, ROLE_ADMIN)</p>
+</li>
+<li>
+<p>Bcrypt password hashing (work factor 12)</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Data Protection</div>
+<ul>
+<li>
+<p>TLS 1.3 for data in transit</p>
+</li>
+<li>
+<p>AES-256 encryption for sensitive data at rest</p>
+</li>
+<li>
+<p>Secure HTTP headers (CSP, HSTS)</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">API Protection</div>
+<ul>
+<li>
+<p>Rate limiting (Bucket4j integration)</p>
+</li>
+<li>
+<p>Input validation (Spring Validation)</p>
+</li>
+<li>
+<p>OWASP Top 10 protections</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="architecture-concepts">8.4. Architectural Concepts</h3>
+<div class="ulist">
+<div class="title">System Architecture</div>
+<ul>
+<li>
+<p>MVC pattern implementation</p>
+</li>
+<li>
+<p>Three-layer architecture:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Presentation Layer (Thymeleaf + Bootstrap)</p>
+</li>
+<li>
+<p>Service Layer (business logic)</p>
+</li>
+<li>
+<p>Repository Layer (Spring Data JPA)</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Integration Patterns</div>
+<ul>
+<li>
+<p>RESTful APIs for internal communication</p>
+</li>
+<li>
+<p>Async communication for hint generation</p>
+</li>
+<li>
+<p>Circuit breakers for external API calls</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="development-concepts">8.5. Development Concepts</h3>
+<div class="ulist">
+<div class="title">Testing Strategy</div>
+<ul>
+<li>
+<p>Unit testing (JUnit 5, Mockito)</p>
+</li>
+<li>
+<p>Integration testing (Testcontainers)</p>
+</li>
+<li>
+<p>E2E testing (Selenium)</p>
+</li>
+<li>
+<p>Mutation testing (PITest)</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">CI/CD Pipeline <span class="image"><img src="./images/pipe.png" alt="pipe"></span></div>
+<ul>
+<li>
+<p>GitHub Actions workflow:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>SonarQube quality gate</p>
+</li>
+<li>
+<p>Docker image build/push</p>
+</li>
+<li>
+<p>Kubernetes deployment (prod/staging)</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="operations-concepts">8.6. Operational Concepts</h3>
+<div class="ulist">
+<div class="title">Monitoring</div>
+<ul>
+<li>
+<p>Prometheus metrics exporter</p>
+</li>
+<li>
+<p>Grafana dashboard:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Key metrics: response times, error rates, system load</p>
+</li>
+<li>
+<p>Custom game metrics: questions served, active sessions</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Deployment</div>
+<ul>
+<li>
+<p>Docker Swarm orchestration</p>
+</li>
+<li>
+<p>Blue/green deployments</p>
+</li>
+<li>
+<p>Database replication (1 primary + 2 replicas)</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Database Management</div>
+<ul>
+<li>
+<p>MySQL 8 with daily backups</p>
+</li>
+<li>
+<p>Flyway schema migration</p>
+</li>
+<li>
+<p>Query optimization using index tuning</p>
+</li>
+</ul>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/08-concepts-EN.drawio.png" alt="Possible topics for crosscutting concepts">
+<img src="./images/architecture-diagram.png" alt="System Architecture Diagram" width="600">
 </div>
 </div>
 <div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-8/">Concepts</a> in the arc42 documentation.</p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_concept_1">8.1. <em>&lt;Concept 1&gt;</em></h3>
-<div class="paragraph">
-<p><em>&lt;explanation&gt;</em></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_concept_2">8.2. <em>&lt;Concept 2&gt;</em></h3>
-<div class="paragraph">
-<p><em>&lt;explanation&gt;</em></p>
-</div>
-<div class="paragraph">
-<p>&#8230;&#8203;</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_concept_n">8.3. <em>&lt;Concept n&gt;</em></h3>
-<div class="paragraph">
-<p><em>&lt;explanation&gt;</em></p>
+<p>This structured approach ensures:
+* <em>Security-first</em> design
+* <em>Maintainable</em> codebase through SOLID principles
+* <em>Scalable</em> infrastructure via containerization
+* <em>Engaging UX</em> through performance optimization</p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -2458,7 +2608,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2025-02-22 12:39:10 UTC
+Last updated 2025-02-23 13:37:52 UTC
 </div>
 </div>
 </body>
