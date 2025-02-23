@@ -30,6 +30,10 @@ public class Answer implements JsonEntity {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     private Question question;
 
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    private ImageQuestion imageQuestion;
+
     public Answer(String text, boolean correct) {
         this.text = text;
         this.correct = correct;
@@ -49,4 +53,5 @@ public class Answer implements JsonEntity {
                 .put("question", question.getId());
         return obj;
     }
+
 }

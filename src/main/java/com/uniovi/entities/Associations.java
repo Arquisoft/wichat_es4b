@@ -155,4 +155,59 @@ public class Associations {
             question.setCategory(null);
         }
     }
+    public static class ImageQuestionAnswers {
+        /**
+         * Add a new association between an ImageQuestion and its answers
+         *
+         * @param imageQuestion The image question
+         * @param answers       The answers
+         */
+        public static void addAnswer(ImageQuestion imageQuestion, List<Answer> answers) {
+            for (Answer a : answers) {
+                a.setImageQuestion(imageQuestion);
+                if (a.isCorrect()) {
+                    imageQuestion.setCorrectAnswer(a);
+                }
+            }
+            imageQuestion.getOptions().addAll(answers);
+        }
+
+        /**
+         * Remove an association between an ImageQuestion and its answers
+         *
+         * @param imageQuestion The image question
+         * @param answers       The answers
+         */
+        public static void removeAnswer(ImageQuestion imageQuestion, List<Answer> answers) {
+            imageQuestion.getOptions().removeAll(answers);
+            for (Answer a : answers) {
+                a.setImageQuestion(null);
+            }
+            imageQuestion.setCorrectAnswer(null);
+        }
+    }
+
+    public static class ImageQuestionCategory {
+        /**
+         * Add a new association between an ImageQuestion and a category
+         *
+         * @param imageQuestion The image question
+         * @param category      The category
+         */
+        public static void addCategory(ImageQuestion imageQuestion, Category category) {
+            imageQuestion.setCategory(category);
+            category.getImageQuestions().add(imageQuestion);
+        }
+
+        /**
+         * Remove an association between an ImageQuestion and a category
+         *
+         * @param imageQuestion The image question
+         * @param category      The category
+         */
+        public static void removeCategory(ImageQuestion imageQuestion, Category category) {
+            category.getImageQuestions().remove(imageQuestion);
+            imageQuestion.setCategory(null);
+        }
+    }
 }

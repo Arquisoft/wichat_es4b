@@ -26,6 +26,7 @@ database/hsqldb/testrun/
 *.iws
 *.iml
 *.ipr
+*.env
 
 ### NetBeans ###
 /nbproject/private/

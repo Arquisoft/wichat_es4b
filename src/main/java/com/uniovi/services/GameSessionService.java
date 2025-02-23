@@ -45,4 +45,5 @@ public interface GameSessionService {
     GameSession startNewMultiplayerGame(Player player, int code);
 
     void endGame(GameSession gameSession);
+
 }
