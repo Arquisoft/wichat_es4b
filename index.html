@@ -436,7 +436,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
-<h1><span class="image"><img src="./images/wichat-logo.png" alt="wichat logo" width="150" height="75"></span> Wichat - (ES4b)</h1>
+<h1><span class="image"><img src="./images/icono-logo.png" alt="icono logo" width="150" height="75"></span> Wichat - (ES4b)</h1>
 <div class="details">
 <span id="revnumber">version 8.2 EN,</span>
 <span id="revdate">January 2023</span>
@@ -461,7 +461,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_operational_constraints">2.5. Operational Constraints</a></li>
 </ul>
 </li>
-<li><a href="#section-system-scope-and-context">3. System Scope and Context</a>
+<li><a href="#section-context-and-scope">3. Context and Scope</a>
 <ul class="sectlevel2">
 <li><a href="#_business_context">3.1. Business Context</a></li>
 <li><a href="#_technical_context">3.2. Technical Context</a></li>
@@ -1055,72 +1055,236 @@ conventions (e.g. programming or versioning guidelines, documentation or naming 
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-system-scope-and-context">3. System Scope and Context</h2>
+<h2 id="section-context-and-scope">3. Context and Scope</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_business_context">3.1. Business Context</h3>
-<div class="imageblock">
+<div class="sidebarblock arc42help">
 <div class="content">
-<img src="./images/Deployment%20diagram.png" alt="Deployment diagram" width="853" height="610">
+<div class="paragraph">
+<div class="title">Contents</div>
+<p>Context and scope - as the name suggests - delimits your system (i.e. your scope) from all its communication partners
+(neighboring systems and users, i.e. the context of your system). It thereby specifies the external interfaces.</p>
 </div>
+<div class="paragraph">
+<p>If necessary, differentiate the business context (domain specific inputs and outputs) from the technical context (channels, protocols, hardware).</p>
+</div>
+<div class="paragraph">
+<div class="title">Motivation</div>
+<p>The domain interfaces and technical interfaces to communication partners are among your system&#8217;s most critical aspects. Make sure that you completely understand them.</p>
+</div>
+<div class="paragraph">
+<div class="title">Form</div>
+<p>Various options:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Player:</strong> Represents users who interact with the application to play games or view their history.</p>
+<p>Context diagrams</p>
 </li>
 <li>
-<p><strong>Question management:</strong> The sytem that retrieves the questions generated from Wikidata.</p>
-</li>
-<li>
-<p><strong>Player management:</strong> The system that manages player data, such as registration, login, and game history.</p>
-</li>
-<li>
-<p><strong>WikiData:</strong> Component used to retrieve data from Wikidata and automatically generate questions.</p>
-</li>
-<li>
-<p><strong>External Developers:</strong> Represents developers who access the system to retrieve player and question data.</p>
+<p>Lists of communication partners and their interfaces.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<div class="title">Further Information</div>
+<p>See <a href="https://docs.arc42.org/section-3/">Context and Scope</a> in the arc42 documentation.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_business_context">3.1. Business Context</h3>
+<div class="sidebarblock arc42help">
+<div class="content">
+<div class="paragraph">
+<div class="title">Contents</div>
+<p>Specification of <strong>all</strong> communication partners (users, IT-systems, &#8230;&#8203;) with explanations of domain specific inputs and outputs or interfaces.
+Optionally you can add domain specific formats or communication protocols.</p>
+</div>
+<div class="paragraph">
+<div class="title">Motivation</div>
+<p>All stakeholders should understand which data are exchanged with the environment of the system.</p>
+</div>
+<div class="paragraph">
+<div class="title">Form</div>
+<p>All kinds of diagrams that show the system as a black box and specify the domain interfaces to communication partners.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively (or additionally) you can use a table.
+The title of the table is the name of your system, the three columns contain the name of the communication partner, the inputs, and the outputs.</p>
+</div>
+<div class="paragraph">
+<p><strong>&lt;Diagram or Table&gt;</strong></p>
+</div>
+<div class="paragraph">
+<p><strong>&lt;optionally: Explanation of external domain interfaces&gt;</strong></p>
+</div>
+<div class="paragraph">
+<p><strong>The WIChat system</strong></p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>WIChat is an interactive web-based quiz game application, inspired by "Saber y Ganar". Users can register, log in, and play the game, where they are presented with images and have to guess the associated place or object. The novelty lies in the integration of a conversational language model (LLM), which allows users to interact with the game and get hints for the answers dynamically. The questions and images are generated from Wikidata, providing an automated, real-time experience.</p>
+</div>
+<div class="sect3">
+<h4 id="_involved_actors">3.1.1. Involved Actors</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Actor</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A person who accesses the application to play the quiz game.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Administrator</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Responsible for managing system infrastructure and security.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LLM Provider</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">External service that provides AI-generated quiz questions and hints.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MySQL used to store user information, game history, and question data.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">WikiData</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">External service used to retrieve image and metadata for question generation.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_business_context_table">3.1.2. Business Context Table</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Communication Partner</th>
+<th class="tableblock halign-left valign-top">Inputs</th>
+<th class="tableblock halign-left valign-top">Outputs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Login credentials, game interactions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quiz questions, score updates</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LLM Provider</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quiz prompts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AI-generated questions and answers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User data, game records</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stored authentication and game history</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">WikiData</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data requests for images and metadata</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Retrieved image and metadata for questions</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_technical_context">3.2. Technical Context</h3>
-<div class="imageblock">
+<div class="sidebarblock arc42help">
 <div class="content">
-<img src="./images/Technical%20Context%20Diagram.png" alt="Technical Context Diagram" width="718" height="1014">
+<div class="paragraph">
+<div class="title">Contents</div>
+<p>Technical interfaces (channels and transmission media) linking your system to its environment. In addition a mapping of domain specific input/output to the channels, i.e. an explanation which I/O uses which channel.</p>
+</div>
+<div class="paragraph">
+<div class="title">Motivation</div>
+<p>Many stakeholders make architectural decision based on the technical interfaces between the system and its context. Especially infrastructure or hardware designers decide these technical interfaces.</p>
+</div>
+<div class="paragraph">
+<div class="title">Form</div>
+<p>E.g. UML deployment diagram describing channels to neighboring systems,
+together with a mapping table showing the relationships between channels and input/output.</p>
+</div>
+<div class="paragraph">
+<p><strong>&lt;Diagram or Table&gt;</strong></p>
+</div>
+<div class="paragraph">
+<p><strong>&lt;optionally: Explanation of technical interfaces&gt;</strong></p>
+</div>
+<div class="paragraph">
+<p><strong>&lt;Mapping Input/Output to Channels&gt;</strong></p>
 </div>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Player:</strong> Represents users who interact with the application to play games or view their history.</p>
-</li>
-<li>
-<p><strong>Question service:</strong> The system that retrieves the questions generated from Wikidata.</p>
-</li>
-<li>
-<p><strong>Player service:</strong> The system that manages player data, such as registration, login, and game history.</p>
-</li>
-<li>
-<p><strong>WikiData:</strong> Component used to retrieve data from Wikidata</p>
-</li>
-<li>
-<p><strong>Question generator:</strong> The system that generates questions based on the data retrieved from Wikidata.</p>
-</li>
-<li>
-<p><strong>External Developers:</strong> Represents developers who access the system to retrieve player and question data.</p>
-</li>
-<li>
-<p><strong>Database:</strong> The database that stores player data, game history, and questions.</p>
-</li>
-<li>
-<p><strong>Rest API Service:</strong> The service that provides an API for external developers to access player and question data.</p>
-</li>
-</ul>
+</div>
+<div class="paragraph">
+<p>The system consists of several services developed in Java using Spring Boot, a web frontend using HTML, and a relational database. Communication between services is handled via REST API and HTTPS.</p>
 </div>
 <div class="sect3">
-<h4 id="_inputoutput_mapping_table">3.2.1. Input/Output Mapping Table</h4>
+<h4 id="_technical_interfaces">3.2.1. Technical Interfaces</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component</th>
+<th class="tableblock halign-left valign-top">Technology</th>
+<th class="tableblock halign-left valign-top">Interface</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Web Application</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTML, Spring (Java)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Connects to backend services via HTTPS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User Service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spring (Java)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REST API for managing user data (login, history)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Question Service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spring (Java)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REST API to retrieve and display questions and images</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LLM Service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">External (REST API)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Connects to external LLM provider for dynamic hints</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">WikiData Service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">External (REST API)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Retrieves image and question metadata from Wikidata</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MySQL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stores user data, game history, and question data</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_mapping_inputoutput_to_channels">3.2.2. Mapping Input/Output to Channels</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 20%;">
@@ -1148,7 +1312,7 @@ conventions (e.g. programming or versioning guidelines, documentation or naming 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Database</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">User data, game history, questions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Specific database driver</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specific database driver (MySQL)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">WikiData</p></td>
@@ -1169,6 +1333,11 @@ conventions (e.g. programming or versioning guidelines, documentation or naming 
 <td class="tableblock halign-left valign-top"><p class="tableblock">Player Service</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Player data</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">In-memory</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LLM Service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hint generation, AI responses</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REST API via HTTPS</p></td>
 </tr>
 </tbody>
 </table>
@@ -2538,7 +2707,7 @@ The infrastructure features a Docker container running the Java Spring Boot appl
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2025-02-24 21:02:13 UTC
+Last updated 2025-02-24 22:34:57 UTC
 </div>
 </div>
 </body>
