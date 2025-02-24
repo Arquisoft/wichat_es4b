@@ -3,65 +3,141 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-runtime-view]]
 == Runtime View
 
-
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Contents
-The runtime view describes concrete behavior and interactions of the system’s building blocks in form of scenarios from the following areas:
-
-* important use cases or features: how do building blocks execute them?
-* interactions at critical external interfaces: how do building blocks cooperate with users and neighboring systems?
-* operation and administration: launch, start-up, stop
-* error and exception scenarios
-
-Remark: The main criterion for the choice of possible scenarios (sequences, workflows) is their *architectural relevance*. It is *not* important to describe a large number of scenarios. You should rather document a representative selection.
-
-.Motivation
-You should understand how (instances of) building blocks of your system perform their job and communicate at runtime.
-You will mainly capture scenarios in your documentation to communicate your architecture to stakeholders that are less willing or able to read and understand the static models (building block view, deployment view).
-
-.Form
-There are many notations for describing scenarios, e.g.
-
-* numbered list of steps (in natural language)
-* activity diagrams or flow charts
-* sequence diagrams
-* BPMN or EPCs (event process chains)
-* state machines
-* ...
-
-
-.Further Information
-
-See https://docs.arc42.org/section-6/[Runtime View] in the arc42 documentation.
-
-****
-endif::arc42help[]
-
-=== <Runtime Scenario 1>
-
-
-* _<insert runtime diagram or textual description of the scenario>_
-* _<insert description of the notable aspects of the interactions between the
-building block instances depicted in this diagram.>_
-
-It is possible to use a sequence diagram:
-
-[plantuml,"Sequence diagram",png]
+=== User Authentication
+[plantuml,"Sequence diagram 1",png]
 ----
-actor Alice
-actor Bob
-database Pod as "Bob's Pod"
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
-Alice  --> Pod: Store route
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+actor User
+participant "WIChat Frontend" as Frontend
+participant "WIChat Backend" as Backend
+database Database as Data
+
+User -> Frontend: Log in
+Frontend -> Backend: Authentication request
+Backend -> Data: User data query
+Data --> Backend: User data
+Backend --> Frontend: Authentication response
+Frontend --> User: Login confirmation
 ----
 
-=== <Runtime Scenario 2>
+=== Question Generation
+[plantuml,"Sequence diagram 2",png]
+----
+actor User
+participant "WIChat Frontend" as Frontend
+participant "WIChat Backend" as Backend
+database Database as DB
+database Wikidata as Data
 
-=== ...
+User -> Frontend: Request question generation
+Frontend -> Backend: Question generation request
+Backend -> DB: Relevant data query in DB
+DB --> Backend: Data obtained from DB
+Backend -> Data: Relevant data query in Wikidata
+Data --> Backend: Data obtained from Wikidata
+Backend -> Backend: Question and answers generation
+Backend --> Frontend: Generated question
+----
 
-=== <Runtime Scenario n>
+=== User Responds to a Question
+[plantuml,"Sequence diagram 3",png]
+----
+actor User
+participant "WIChat Frontend" as Frontend
+participant "WIChat Backend" as Backend
+database Database as Data
+
+User -> Frontend: Answer question
+Frontend -> Backend: Send answer
+Backend -> Data: Question data query
+Data --> Backend: Question data
+Backend -> Backend: Evaluate answer
+Backend --> Frontend: Answer result
+----
+
+=== User Checks their History
+[plantuml,"Sequence diagram 4",png]
+----
+actor User
+participant "WIChat Frontend" as Frontend
+participant "WIChat Backend" as Backend
+database Database as DB
+
+User -> Frontend: Check history
+Frontend -> Backend: History request
+Backend -> DB: User history query
+DB --> Backend: History data
+Backend --> Frontend: User history
+----
+
+=== Access to User Information via an API
+[plantuml,"Sequence diagram 5",png]
+----
+actor User
+participant "WIChat Frontend" as Frontend
+participant "WIChat Backend" as Backend
+database Database as DB
+participant "User API" as UserAPI
+
+User -> Frontend: Access user information
+Frontend -> Backend: User information request
+Backend -> DB: User data query
+DB --> Backend: User data
+Backend -> UserAPI: User information query
+UserAPI --> Backend: User data via API
+Backend --> Frontend: User data
+----
+
+=== Access to Generated Questions Information via an API
+[plantuml,"Sequence diagram 6",png]
+----
+actor User
+participant "WIChat Frontend" as Frontend
+participant "WIChat Backend" as Backend
+database Database as DB
+participant "Question API" as QuestionAPI
+
+User -> Frontend: Access question information
+Frontend -> Backend: Question information request
+Backend -> DB: Questions data query
+DB --> Backend: Questions data
+Backend -> QuestionAPI: Questions information query
+QuestionAPI --> Backend: Questions data via API
+Backend --> Frontend: Questions data
+----
+
+=== User Interacts with the Game and Requests a Hint
+[plantuml,"Sequence diagram 7",png]
+----
+actor User
+participant "WIChat Frontend" as Frontend
+participant "WIChat Backend" as Backend
+participant "LLM Service API" as LLM
+database Database as DB
+
+User -> Frontend: Start game
+Frontend -> Backend: Start game request
+Backend -> DB: Retrieve game state and questions
+DB --> Backend: Game state and questions
+Backend --> Frontend: Initialize game
+
+User -> Frontend: Request hint
+Frontend -> Backend: Hint request
+Backend -> DB: Query question data for hint
+DB --> Backend: Retrieve question data
+Backend -> LLM: Query LLM for hint based on question
+LLM --> Backend: Hint response
+Backend --> Frontend: Return hint to user
+Frontend --> User: Display hint
+
+User -> Frontend: Submit answer
+Frontend -> Backend: Send answer
+Backend -> DB: Query question data
+DB --> Backend: Retrieve question data
+Backend -> Backend: Evaluate answer
+Backend --> Frontend: Return answer result
+Frontend --> User: Display result
+----
+
+==== Error Handling (During Gameplay)
+If any data retrieval fails (game state, questions, hint, etc.), the Backend will send an error response, and the Frontend will display an appropriate message to the User, such as "Could not retrieve hint" or "Game error occurred."
+
