@@ -1,138 +1,124 @@
 ifndef::imagesdir[:imagesdir: ../images]
 
-[[section-context-and-scope]]
-== Context and Scope
-
-
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Contents
-Context and scope - as the name suggests - delimits your system (i.e. your scope) from all its communication partners
-(neighboring systems and users, i.e. the context of your system). It thereby specifies the external interfaces.
-
-If necessary, differentiate the business context (domain specific inputs and outputs) from the technical context (channels, protocols, hardware).
-
-.Motivation
-The domain interfaces and technical interfaces to communication partners are among your system's most critical aspects. Make sure that you completely understand them.
-
-.Form
-Various options:
-
-* Context diagrams
-* Lists of communication partners and their interfaces.
-
-
-.Further Information
-
-See https://docs.arc42.org/section-3/[Context and Scope] in the arc42 documentation.
-
-****
-endif::arc42help[]
+[[section-system-scope-and-context]]
+== System Scope and Context
 
 === Business Context
+[plantuml,"Deployment diagram",png]
+----
+@startuml
+actor Player as user
+actor "External Developers" as developers
+component WebApp [
+  <<System>>
+  Web game
+]
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Contents
-Specification of *all* communication partners (users, IT-systems, ...) with explanations of domain specific inputs and outputs or interfaces.
-Optionally you can add domain specific formats or communication protocols.
+component PlayerService [
+  <<System>>
+  Player Management
+]
 
-.Motivation
-All stakeholders should understand which data are exchanged with the environment of the system.
+component QuestionService [
+  <<System>>
+  Question Management
+]
 
-.Form
-All kinds of diagrams that show the system as a black box and specify the domain interfaces to communication partners.
+component WikiData [
+    <<extern>>
+    Wikidata
+]
 
-Alternatively (or additionally) you can use a table.
-The title of the table is the name of your system, the three columns contain the name of the communication partner, the inputs, and the outputs.
+user ...> WebApp: Plays
+WebApp ---> PlayerService : Handles\nlogin and signup
+WebApp -left-> QuestionService : Retrieves generated\nquestions for game
+WebApp <-- WikiData : Retrieves\nInformation to\nform questions\nand answers
+developers .right.> PlayerService : Modify\nplayer data
+developers <.right. PlayerService : Retrieve\nplayer data
+developers .right.> QuestionService : Modify questions
+developers <.right. QuestionService : Retrieve question list
+@enduml
 
-**<Diagram or Table>**
-
-**<optionally: Explanation of external domain interfaces>**
-
-**The WIChat system**
-
-****
-endif::arc42help[]
-
-WIChat is an interactive web-based quiz game application, inspired by "Saber y Ganar". Users can register, log in, and play the game, where they are presented with images and have to guess the associated place or object. The novelty lies in the integration of a conversational language model (LLM), which allows users to interact with the game and get hints for the answers dynamically. The questions and images are generated from Wikidata, providing an automated, real-time experience.
-
-==== Involved Actors
-
-[options="header",cols="1,2"]
-|===
-| Actor | Description
-| User | A person who accesses the application to play the quiz game.
-| Administrator | Responsible for managing system infrastructure and security.
-| LLM Provider | External service that provides AI-generated quiz questions and hints.
-| Database | MySQL used to store user information, game history, and question data.
-| WikiData | External service used to retrieve image and metadata for question generation.
-|===
-
-==== Business Context Table
-
-[options="header",cols="1,2,2"]
-|===
-| Communication Partner | Inputs | Outputs
-| User | Login credentials, game interactions | Quiz questions, score updates
-| LLM Provider | Quiz prompts | AI-generated questions and answers
-| Database | User data, game records | Stored authentication and game history
-| WikiData | Data requests for images and metadata | Retrieved image and metadata for questions
-|===
-
+----
+* **Player:** Represents users who interact with the application to play games or view their history.
+* **Question management:** The sytem that retrieves the questions generated from Wikidata.
+* **Player management:** The system that manages player data, such as registration, login, and game history.
+* **WikiData:** Component used to retrieve data from Wikidata and automatically generate questions.
+* **External Developers:** Represents developers who access the system to retrieve player and question data.
 
 === Technical Context
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Contents
-Technical interfaces (channels and transmission media) linking your system to its environment. In addition a mapping of domain specific input/output to the channels, i.e. an explanation which I/O uses which channel.
+[plantuml,"Technical Context Diagram",png]
+----
+actor Player as user
+actor "External Developers" as developers
+component WebApp [
+  <<System>>
+  Web game
+]
 
-.Motivation
-Many stakeholders make architectural decision based on the technical interfaces between the system and its context. Especially infrastructure or hardware designers decide these technical interfaces.
+component PlayerService [
+  <<System>>
+  PlayerService
+]
 
-.Form
-E.g. UML deployment diagram describing channels to neighboring systems,
-together with a mapping table showing the relationships between channels and input/output.
+component QuestionService [
+  <<System>>
+  QuestionService
+]
 
-**<Diagram or Table>**
+component WikiData [
+    <<extern>>
+    Wikidata
+]
 
-**<optionally: Explanation of technical interfaces>**
+component QuestionGenerator [
+    <<system>>
+    QuestionGenerator
+]
 
-**<Mapping Input/Output to Channels>**
+component RestApiService [
+    <<system>>
+    RestApiService
+]
 
-****
-endif::arc42help[]
+database Database [
+    Database
+]
 
-The system consists of several services developed in Java using Spring Boot, a web frontend using HTML, and a relational database. Communication between services is handled via REST API and HTTPS.
+user .left.> WebApp: HTTPS
+WebApp ---> PlayerService : Handles\nlogin, signup\nand game history
+WebApp -left-> QuestionService : Retrieves generated\nquestions for game
+QuestionGenerator <-up- WikiData : Get entity info\nfrom SPARQL HTTP
+QuestionGenerator --> QuestionService : Generate questions\nwith entity data
+QuestionService --> Database: Save\nquestion\nentities
+QuestionService <-- Database: Retrieve\nsaved\nquestions
+developers .up---.> RestApiService : HTTP\nPOST\nPUT\nDELETE
+developers <.up. RestApiService : HTTP GET
+RestApiService -up-> QuestionService: Retrieve/Modify questions
+RestApiService ---> PlayerService: Retrieve/Modify player data
 
-==== Technical Interfaces
+----
+
+* **Player:** Represents users who interact with the application to play games or view their history.
+* **Question service:** The system that retrieves the questions generated from Wikidata.
+* **Player service:** The system that manages player data, such as registration, login, and game history.
+* **WikiData:** Component used to retrieve data from Wikidata
+* **Question generator:** The system that generates questions based on the data retrieved from Wikidata.
+* **External Developers:** Represents developers who access the system to retrieve player and question data.
+* **Database:** The database that stores player data, game history, and questions.
+* **Rest API Service:** The service that provides an API for external developers to access player and question data.
+
+==== Input/Output Mapping Table
 
 [options="header",cols="1,2,2"]
 |===
-| Component | Technology | Interface
-| Web Application | HTML, Spring (Java) | Connects to backend services via HTTPS
-| User Service | Spring (Java) | REST API for managing user data (login, history)
-| Question Service | Spring (Java) | REST API to retrieve and display questions and images
-| LLM Service | External (REST API) | Connects to external LLM provider for dynamic hints
-| WikiData Service | External (REST API) | Retrieves image and question metadata from Wikidata
-| Database | MySQL | Stores user data, game history, and question data
-|===
-
-==== Mapping Input/Output to Channels
-
-[options="header",cols="1,2,2"]
-|===
-| Component | Input/Output | Channel/Protocol
-| RestApiService | External developer interactions | HTTPS
-| Frontend | User interactions, game display | HTTPS
-| Database | User data, game history, questions | Specific database driver (MySQL)
-| WikiData | Data for question generation | HTTP
-| Question Generator | Generated questions | In-memory
-| Question Service | Questions for game | In-memory
-| Player Service | Player data | In-memory
-| LLM Service | Hint generation, AI responses | REST API via HTTPS
+|Component|Input/Output|Channel/Protocol
+| RestApiService| External developer interactions| HTTPS
+| Frontend| User interactions, game display| HTTPS
+| Database| User data, game history, questions| Specific database driver
+| WikiData| Data for question generation| HTTP
+| Question Generator| Generated questions| In-memory
+| Question Service| Questions for game| In-memory
+| Player Service| Player data| In-memory
 |===
