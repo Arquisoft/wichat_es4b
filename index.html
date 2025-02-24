@@ -436,7 +436,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
-<h1><span class="image"><img src="./images/icono-logo.png" alt="icono logo" width="150" height="75"></span> Wichat - (ES4b)</h1>
+<h1><span class="image"><img src="./images/wichat-logo.png" alt="wichat logo" width="150" height="75"></span> Wichat - (ES4b)</h1>
 <div class="details">
 <span id="revnumber">version 8.2 EN,</span>
 <span id="revdate">January 2023</span>
@@ -461,7 +461,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_operational_constraints">2.5. Operational Constraints</a></li>
 </ul>
 </li>
-<li><a href="#section-context-and-scope">3. Context and Scope</a>
+<li><a href="#section-system-scope-and-context">3. System Scope and Context</a>
 <ul class="sectlevel2">
 <li><a href="#_business_context">3.1. Business Context</a></li>
 <li><a href="#_technical_context">3.2. Technical Context</a></li>
@@ -487,16 +487,20 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#section-runtime-view">6. Runtime View</a>
 <ul class="sectlevel2">
-<li><a href="#_runtime_scenario_1">6.1. &lt;Runtime Scenario 1&gt;</a></li>
-<li><a href="#_runtime_scenario_2">6.2. &lt;Runtime Scenario 2&gt;</a></li>
-<li><a href="#">6.3. &#8230;&#8203;</a></li>
-<li><a href="#_runtime_scenario_n">6.4. &lt;Runtime Scenario n&gt;</a></li>
+<li><a href="#_user_authentication">6.1. User Authentication</a></li>
+<li><a href="#_question_generation">6.2. Question Generation</a></li>
+<li><a href="#_user_responds_to_a_question">6.3. User Responds to a Question</a></li>
+<li><a href="#_user_checks_their_history">6.4. User Checks their History</a></li>
+<li><a href="#_access_to_user_information_via_an_api">6.5. Access to User Information via an API</a></li>
+<li><a href="#_access_to_generated_questions_information_via_an_api">6.6. Access to Generated Questions Information via an API</a></li>
+<li><a href="#_user_interacts_with_the_game_and_requests_a_hint">6.7. User Interacts with the Game and Requests a Hint</a></li>
 </ul>
 </li>
 <li><a href="#section-deployment-view">7. Deployment View</a>
 <ul class="sectlevel2">
 <li><a href="#_infrastructure_level_1">7.1. Infrastructure Level 1</a></li>
 <li><a href="#_infrastructure_level_2">7.2. Infrastructure Level 2</a></li>
+<li><a href="#_github_deployment_workflows">7.3. GitHub Deployment Workflows</a></li>
 </ul>
 </li>
 <li><a href="#section-concepts">8. Cross-cutting Concepts</a>
@@ -517,14 +521,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#section-quality-scenarios">10. Quality Requirements</a>
 <ul class="sectlevel2">
 <li><a href="#_quality_tree">10.1. Quality Tree</a></li>
+<li><a href="#_quality_scenarios">10.2. Quality Scenarios</a></li>
 </ul>
 </li>
-<li><a href="#section-technical-risks">11. Risks and Technical Debts</a>
-<ul class="sectlevel2">
-<li><a href="#_technical_risks">11.1. Technical Risks</a></li>
-<li><a href="#_technical_debts">11.2. Technical Debts</a></li>
-</ul>
-</li>
+<li><a href="#section-technical-risks">11. Risks and Technical Debts</a></li>
 <li><a href="#section-glossary">12. Glossary</a></li>
 </ul>
 </div>
@@ -745,11 +745,6 @@ If requirements documents exist this overview should refer to these documents.</
 <td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Maintainability</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Use a modular architecture to facilitate updates and future improvements.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Internationalization</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ensure the system supports multiple languages and cultural adaptations for a global audience.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1051,236 +1046,72 @@ conventions (e.g. programming or versioning guidelines, documentation or naming 
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-context-and-scope">3. Context and Scope</h2>
+<h2 id="section-system-scope-and-context">3. System Scope and Context</h2>
 <div class="sectionbody">
-<div class="sidebarblock arc42help">
+<div class="sect2">
+<h3 id="_business_context">3.1. Business Context</h3>
+<div class="imageblock">
 <div class="content">
-<div class="paragraph">
-<div class="title">Contents</div>
-<p>Context and scope - as the name suggests - delimits your system (i.e. your scope) from all its communication partners
-(neighboring systems and users, i.e. the context of your system). It thereby specifies the external interfaces.</p>
+<img src="./images/Deployment%20diagram.png" alt="Deployment diagram" width="1039" height="593">
 </div>
-<div class="paragraph">
-<p>If necessary, differentiate the business context (domain specific inputs and outputs) from the technical context (channels, protocols, hardware).</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>The domain interfaces and technical interfaces to communication partners are among your system&#8217;s most critical aspects. Make sure that you completely understand them.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>Various options:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Context diagrams</p>
+<p><strong>Player:</strong> Represents users who interact with the application to play games or view their history.</p>
 </li>
 <li>
-<p>Lists of communication partners and their interfaces.</p>
+<p><strong>Question management:</strong> The sytem that retrieves the questions generated from Wikidata.</p>
+</li>
+<li>
+<p><strong>Player management:</strong> The system that manages player data, such as registration, login, and game history.</p>
+</li>
+<li>
+<p><strong>WikiData:</strong> Component used to retrieve data from Wikidata and automatically generate questions.</p>
+</li>
+<li>
+<p><strong>External Developers:</strong> Represents developers who access the system to retrieve player and question data.</p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-3/">Context and Scope</a> in the arc42 documentation.</p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_business_context">3.1. Business Context</h3>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<div class="title">Contents</div>
-<p>Specification of <strong>all</strong> communication partners (users, IT-systems, &#8230;&#8203;) with explanations of domain specific inputs and outputs or interfaces.
-Optionally you can add domain specific formats or communication protocols.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>All stakeholders should understand which data are exchanged with the environment of the system.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>All kinds of diagrams that show the system as a black box and specify the domain interfaces to communication partners.</p>
-</div>
-<div class="paragraph">
-<p>Alternatively (or additionally) you can use a table.
-The title of the table is the name of your system, the three columns contain the name of the communication partner, the inputs, and the outputs.</p>
-</div>
-<div class="paragraph">
-<p><strong>&lt;Diagram or Table&gt;</strong></p>
-</div>
-<div class="paragraph">
-<p><strong>&lt;optionally: Explanation of external domain interfaces&gt;</strong></p>
-</div>
-<div class="paragraph">
-<p><strong>The WIChat system</strong></p>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>WIChat is an interactive web-based quiz game application, inspired by "Saber y Ganar". Users can register, log in, and play the game, where they are presented with images and have to guess the associated place or object. The novelty lies in the integration of a conversational language model (LLM), which allows users to interact with the game and get hints for the answers dynamically. The questions and images are generated from Wikidata, providing an automated, real-time experience.</p>
-</div>
-<div class="sect3">
-<h4 id="_involved_actors">3.1.1. Involved Actors</h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Actor</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A person who accesses the application to play the quiz game.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Administrator</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Responsible for managing system infrastructure and security.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">LLM Provider</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">External service that provides AI-generated quiz questions and hints.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">MySQL used to store user information, game history, and question data.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">WikiData</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">External service used to retrieve image and metadata for question generation.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="_business_context_table">3.1.2. Business Context Table</h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 40%;">
-<col style="width: 40%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Communication Partner</th>
-<th class="tableblock halign-left valign-top">Inputs</th>
-<th class="tableblock halign-left valign-top">Outputs</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Login credentials, game interactions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Quiz questions, score updates</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">LLM Provider</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Quiz prompts</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">AI-generated questions and answers</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User data, game records</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Stored authentication and game history</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">WikiData</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Data requests for images and metadata</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Retrieved image and metadata for questions</p></td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_technical_context">3.2. Technical Context</h3>
-<div class="sidebarblock arc42help">
+<div class="imageblock">
 <div class="content">
-<div class="paragraph">
-<div class="title">Contents</div>
-<p>Technical interfaces (channels and transmission media) linking your system to its environment. In addition a mapping of domain specific input/output to the channels, i.e. an explanation which I/O uses which channel.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>Many stakeholders make architectural decision based on the technical interfaces between the system and its context. Especially infrastructure or hardware designers decide these technical interfaces.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>E.g. UML deployment diagram describing channels to neighboring systems,
-together with a mapping table showing the relationships between channels and input/output.</p>
-</div>
-<div class="paragraph">
-<p><strong>&lt;Diagram or Table&gt;</strong></p>
-</div>
-<div class="paragraph">
-<p><strong>&lt;optionally: Explanation of technical interfaces&gt;</strong></p>
-</div>
-<div class="paragraph">
-<p><strong>&lt;Mapping Input/Output to Channels&gt;</strong></p>
+<img src="./images/Technical%20Context%20Diagram.png" alt="Technical Context Diagram" width="998" height="593">
 </div>
 </div>
-</div>
-<div class="paragraph">
-<p>The system consists of several services developed in Java using Spring Boot, a web frontend using HTML, and a relational database. Communication between services is handled via REST API and HTTPS.</p>
-</div>
-<div class="sect3">
-<h4 id="_technical_interfaces">3.2.1. Technical Interfaces</h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 40%;">
-<col style="width: 40%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Component</th>
-<th class="tableblock halign-left valign-top">Technology</th>
-<th class="tableblock halign-left valign-top">Interface</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Web Application</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">HTML, Spring (Java)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Connects to backend services via HTTPS</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User Service</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Spring (Java)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">REST API for managing user data (login, history)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Question Service</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Spring (Java)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">REST API to retrieve and display questions and images</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">LLM Service</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">External (REST API)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Connects to external LLM provider for dynamic hints</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">WikiData Service</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">External (REST API)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Retrieves image and question metadata from Wikidata</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">MySQL</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Stores user data, game history, and question data</p></td>
-</tr>
-</tbody>
-</table>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Player:</strong> Represents users who interact with the application to play games or view their history.</p>
+</li>
+<li>
+<p><strong>Question service:</strong> The system that retrieves the questions generated from Wikidata.</p>
+</li>
+<li>
+<p><strong>Player service:</strong> The system that manages player data, such as registration, login, and game history.</p>
+</li>
+<li>
+<p><strong>WikiData:</strong> Component used to retrieve data from Wikidata</p>
+</li>
+<li>
+<p><strong>Question generator:</strong> The system that generates questions based on the data retrieved from Wikidata.</p>
+</li>
+<li>
+<p><strong>External Developers:</strong> Represents developers who access the system to retrieve player and question data.</p>
+</li>
+<li>
+<p><strong>Database:</strong> The database that stores player data, game history, and questions.</p>
+</li>
+<li>
+<p><strong>Rest API Service:</strong> The service that provides an API for external developers to access player and question data.</p>
+</li>
+</ul>
 </div>
 <div class="sect3">
-<h4 id="_mapping_inputoutput_to_channels">3.2.2. Mapping Input/Output to Channels</h4>
+<h4 id="_inputoutput_mapping_table">3.2.1. Input/Output Mapping Table</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 20%;">
@@ -1308,7 +1139,7 @@ together with a mapping table showing the relationships between channels and inp
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Database</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">User data, game history, questions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Specific database driver (MySQL)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specific database driver</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">WikiData</p></td>
@@ -1329,11 +1160,6 @@ together with a mapping table showing the relationships between channels and inp
 <td class="tableblock halign-left valign-top"><p class="tableblock">Player Service</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Player data</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">In-memory</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">LLM Service</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Hint generation, AI responses</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">REST API via HTTPS</p></td>
 </tr>
 </tbody>
 </table>
@@ -1804,243 +1630,200 @@ part of arc42 for additional levels.</p>
 <div class="sect1">
 <h2 id="section-runtime-view">6. Runtime View</h2>
 <div class="sectionbody">
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<div class="title">Contents</div>
-<p>The runtime view describes concrete behavior and interactions of the system’s building blocks in form of scenarios from the following areas:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>important use cases or features: how do building blocks execute them?</p>
-</li>
-<li>
-<p>interactions at critical external interfaces: how do building blocks cooperate with users and neighboring systems?</p>
-</li>
-<li>
-<p>operation and administration: launch, start-up, stop</p>
-</li>
-<li>
-<p>error and exception scenarios</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Remark: The main criterion for the choice of possible scenarios (sequences, workflows) is their <strong>architectural relevance</strong>. It is <strong>not</strong> important to describe a large number of scenarios. You should rather document a representative selection.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>You should understand how (instances of) building blocks of your system perform their job and communicate at runtime.
-You will mainly capture scenarios in your documentation to communicate your architecture to stakeholders that are less willing or able to read and understand the static models (building block view, deployment view).</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>There are many notations for describing scenarios, e.g.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>numbered list of steps (in natural language)</p>
-</li>
-<li>
-<p>activity diagrams or flow charts</p>
-</li>
-<li>
-<p>sequence diagrams</p>
-</li>
-<li>
-<p>BPMN or EPCs (event process chains)</p>
-</li>
-<li>
-<p>state machines</p>
-</li>
-<li>
-<p>&#8230;&#8203;</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-6/">Runtime View</a> in the arc42 documentation.</p>
-</div>
-</div>
-</div>
 <div class="sect2">
-<h3 id="_runtime_scenario_1">6.1. &lt;Runtime Scenario 1&gt;</h3>
-<div class="ulist">
-<ul>
-<li>
-<p><em>&lt;insert runtime diagram or textual description of the scenario&gt;</em></p>
-</li>
-<li>
-<p><em>&lt;insert description of the notable aspects of the interactions between the
-building block instances depicted in this diagram.&gt;</em></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>It is possible to use a sequence diagram:</p>
-</div>
+<h3 id="_user_authentication">6.1. User Authentication</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Sequence%20diagram.png" alt="Sequence diagram" width="332" height="335">
+<img src="./images/Sequence%20diagram%201.png" alt="Sequence diagram 1" width="466" height="365">
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_runtime_scenario_2">6.2. &lt;Runtime Scenario 2&gt;</h3>
-
+<h3 id="_question_generation">6.2. Question Generation</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Sequence%20diagram%202.png" alt="Sequence diagram 2" width="716" height="439">
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="">6.3. &#8230;&#8203;</h3>
-
+<h3 id="_user_responds_to_a_question">6.3. User Responds to a Question</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Sequence%20diagram%203.png" alt="Sequence diagram 3" width="447" height="378">
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_runtime_scenario_n">6.4. &lt;Runtime Scenario n&gt;</h3>
+<h3 id="_user_checks_their_history">6.4. User Checks their History</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Sequence%20diagram%204.png" alt="Sequence diagram 4" width="418" height="335">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_access_to_user_information_via_an_api">6.5. Access to User Information via an API</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Sequence%20diagram%205.png" alt="Sequence diagram 5" width="586" height="396">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_access_to_generated_questions_information_via_an_api">6.6. Access to Generated Questions Information via an API</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Sequence%20diagram%206.png" alt="Sequence diagram 6" width="692" height="396">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_user_interacts_with_the_game_and_requests_a_hint">6.7. User Interacts with the Game and Requests a Hint</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Sequence%20diagram%207.png" alt="Sequence diagram 7" width="654" height="803">
+</div>
+</div>
+<div class="sect3">
+<h4 id="_error_handling_during_gameplay">6.7.1. Error Handling (During Gameplay)</h4>
+<div class="paragraph">
+<p>If any data retrieval fails (game state, questions, hint, etc.), the Backend will send an error response, and the Frontend will display an appropriate message to the User, such as "Could not retrieve hint" or "Game error occurred."</p>
+</div>
 <div style="page-break-after: always;"></div>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="section-deployment-view">7. Deployment View</h2>
 <div class="sectionbody">
-<div class="sidebarblock arc42help">
-<div class="content">
 <div class="paragraph">
-<div class="title">Content</div>
-<p>The deployment view describes:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>technical infrastructure used to execute your system, with infrastructure elements like geographical locations, environments, computers, processors, channels and net topologies as well as other infrastructure elements and</p>
-</li>
-<li>
-<p>mapping of (software) building blocks to that infrastructure elements.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Often systems are executed in different environments, e.g. development environment, test environment, production environment. In such cases you should document all relevant environments.</p>
-</div>
-<div class="paragraph">
-<p>Especially document a deployment view if your software is executed as distributed system with more than one computer, processor, server or container or when you design and construct your own hardware processors and chips.</p>
-</div>
-<div class="paragraph">
-<p>From a software perspective it is sufficient to capture only those elements of an infrastructure that are needed to show a deployment of your building blocks. Hardware architects can go beyond that and describe an infrastructure to any level of detail they need to capture.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>Software does not run without hardware.
-This underlying infrastructure can and will influence a system and/or some
-cross-cutting concepts. Therefore, there is a need to know the infrastructure.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>Maybe a highest level deployment diagram is already contained in section 3.2. as
-technical context with your own infrastructure as ONE black box. In this section one can
-zoom into this black box using additional deployment diagrams:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>UML offers deployment diagrams to express that view. Use it, probably with nested diagrams,
-when your infrastructure is more complex.</p>
-</li>
-<li>
-<p>When your (hardware) stakeholders prefer other kinds of diagrams rather than a deployment diagram, let them use any kind that is able to show nodes and channels of the infrastructure.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-7/">Deployment View</a> in the arc42 documentation.</p>
-</div>
-</div>
+<p>The deployment strategy for our game, which uses the Wikidata API to dynamically generate questions, is built around a Docker-based infrastructure. This approach enables a consistent and scalable deployment across various environments (development, testing, production) by encapsulating the Java Spring Boot application within a Docker container.</p>
 </div>
 <div class="sect2">
 <h3 id="_infrastructure_level_1">7.1. Infrastructure Level 1</h3>
-<div class="sidebarblock arc42help">
-<div class="content">
 <div class="paragraph">
-<p>Describe (usually in a combination of diagrams, tables, and text):</p>
+<p>The system is containerized using Docker, allowing the entire stack to be deployed as a single <code>.jar</code> file, which includes the Java Spring Boot application and an embedded web server. This architecture reduces environment-specific discrepancies and facilitates easy scalability.</p>
+</div>
+<div class="paragraph">
+<p><em><strong>Overview Diagram</strong>:</em>
+The infrastructure features a Docker container running the Java Spring Boot application, which communicates with external services like the Wikidata API for real-time data fetching and dynamic question generation. Additionally, the game will connect to an external Large Language Model (LLM) API to handle text-based queries for generating hints when the user is struggling with answering questions.</p>
+</div>
+<div class="paragraph">
+<div class="title">Motivation</div>
+<p>Docker was chosen to simplify the development and deployment processes, enabling consistent behavior across environments. The integration with the LLM API is aimed at enhancing the user experience by providing hints when needed, making the game more interactive and user-friendly.</p>
 </div>
 <div class="ulist">
+<div class="title">Quality and/or Performance Features</div>
 <ul>
 <li>
-<p>distribution of a system to multiple locations, environments, computers, processors, .., as well as physical connections between them</p>
+<p><strong>Portability:</strong> Docker containers ensure the application runs consistently across different systems.</p>
 </li>
 <li>
-<p>important justifications or motivations for this deployment structure</p>
+<p><strong>Scalability:</strong> Docker Compose or Docker Swarm can be used to scale the containers as needed for increased load.</p>
 </li>
 <li>
-<p>quality and/or performance features of this infrastructure</p>
+<p><strong>Efficiency:</strong> Docker reduces overhead compared to traditional virtual machines, providing faster startup times and resource-efficient execution.</p>
 </li>
 <li>
-<p>mapping of software artifacts to elements of this infrastructure</p>
+<p><strong>Enhanced User Support:</strong> The LLM API assists users by generating dynamic hints when they need help selecting the correct answer.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>For multiple environments or alternative deployments please copy and adapt this section of arc42 for all relevant environments.</p>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p><em><strong>&lt;Overview Diagram&gt;</strong></em></p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Motivation</dt>
-<dd>
-<p><em>&lt;explanation in text form&gt;</em></p>
-</dd>
-<dt class="hdlist1">Quality and/or Performance Features</dt>
-<dd>
-<p><em>&lt;explanation in text form&gt;</em></p>
-</dd>
-<dt class="hdlist1">Mapping of Building Blocks to Infrastructure</dt>
-<dd>
-<p><em>&lt;description of the mapping&gt;</em></p>
-</dd>
-</dl>
+<div class="ulist">
+<div class="title">Mapping of Building Blocks to Infrastructure</div>
+<ul>
+<li>
+<p><strong>Web Server/Application (.jar file):</strong> This is the core application packaged into a Docker container that runs on any Docker-supported platform.</p>
+</li>
+<li>
+<p><strong>External APIs (e.g., Wikidata API):</strong> The application retrieves dynamic content for the game from external APIs over the network.</p>
+</li>
+<li>
+<p><strong>LLM API:</strong> The application communicates with an external LLM API, sending text-based queries to generate hints when users request help with answering a question.</p>
+</li>
+<li>
+<p><strong>Grafana:</strong> A tool for monitoring the application’s health and performance, visualizing metrics.</p>
+</li>
+<li>
+<p><strong>Prometheus:</strong> Used to collect performance and health metrics from the application and infrastructure, which are then visualized in Grafana.</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_infrastructure_level_2">7.2. Infrastructure Level 2</h3>
-<div class="sidebarblock arc42help">
+<div class="paragraph">
+<p>At this level, we describe the configuration of the Docker containers that encapsulate the application and its dependencies.</p>
+</div>
+<div class="sect3">
+<h4 id="_docker_container">7.2.1. <em>Docker Container</em></h4>
+<div class="paragraph">
+<p>The application runs within a Docker container that uses a Java base image, with the Spring Boot <code>.jar</code> file layered on top. Additionally, the infrastructure includes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>MySQL Server:</strong> The official MySQL Docker image is used to run the database, which stores game-related data, such as user scores and questions.</p>
+</li>
+<li>
+<p><strong>Prometheus and Grafana:</strong> These monitoring tools are contained in separate Docker containers. Prometheus collects metrics from the application, while Grafana visualizes those metrics in real time.</p>
+</li>
+<li>
+<p><strong>LLM Integration:</strong> The game communicates with an external LLM API for processing user queries and generating hints when struggling to select the correct answer. This API is accessible over the network, and the application sends requests to it for content generation based on user inputs (user questions).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This Docker-based setup encapsulates the entire runtime environment, minimizing the need for complex configuration and external dependencies.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_github_deployment_workflows">7.3. GitHub Deployment Workflows</h3>
+<div class="paragraph">
+<p>To ensure a smooth development cycle and keep the team informed of project progress, we utilize GitHub for continuous integration and deployment. The following GitHub Actions workflows are configured to automate various stages of the project lifecycle:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Application Tests:</strong> Runs automated tests to verify that the application behaves as expected, ensuring no regressions are introduced.</p>
+</li>
+<li>
+<p><strong>Dependabot Updates:</strong> Automatically checks for and proposes updates to project dependencies, keeping the application up to date with the latest stable versions.</p>
+</li>
+<li>
+<p><strong>Deploy on Release:</strong> Automatically deploys the application to production whenever a new release is created. This ensures that the production environment is always running the latest stable version.</p>
+</li>
+<li>
+<p><strong>Deploy Pages:</strong> Deploys the project’s front-end (such as documentation or static assets) to GitHub Pages, ensuring that the team has easy access to the latest information.</p>
+</li>
+<li>
+<p><strong>pages-build-deployment:</strong> Used to trigger the deployment of the static content built by GitHub Pages, ensuring that the content is always up to date and available to the team.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These workflows help maintain the project’s quality, ensure that the team remains up to date, and automate routine tasks, allowing the team to focus more on development and less on manual processes.</p>
+</div>
+<div class="imageblock">
 <div class="content">
-<div class="paragraph">
-<p>Here you can include the internal structure of (some) infrastructure elements from level 1.</p>
+<img src="./images/Docker%20Container%20Setup.png" alt="Docker Container Setup" width="990" height="593">
+</div>
+<div class="title">Figure 1. Diagram: Docker Container Setup</div>
 </div>
 <div class="paragraph">
-<p>Please copy the structure from level 1 for each selected element.</p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_infrastructure_element_1">7.2.1. <em>&lt;Infrastructure Element 1&gt;</em></h4>
-<div class="paragraph">
-<p><em>&lt;diagram + explanation&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_infrastructure_element_2">7.2.2. <em>&lt;Infrastructure Element 2&gt;</em></h4>
-<div class="paragraph">
-<p><em>&lt;diagram + explanation&gt;</em></p>
+<div class="title">Explanation:</div>
+<p>This diagram illustrates the structure of the application’s Docker containers. The Java Spring Boot application, with its embedded web server, interacts with the MySQL database for persistent data and external APIs, such as the Wikidata API, for dynamic game content.</p>
 </div>
 <div class="paragraph">
-<p>&#8230;&#8203;</p>
+<p>The application also communicates with an external LLM API to process text queries for hint generation during gameplay. The system’s performance is monitored by Prometheus, with the collected metrics being visualized in Grafana.</p>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_infrastructure_element_n">7.2.3. <em>&lt;Infrastructure Element n&gt;</em></h4>
 <div class="paragraph">
-<p><em>&lt;diagram + explanation&gt;</em></p>
+<p>By using Docker to encapsulate all services, the deployment remains consistent, portable, and scalable across various platforms.</p>
 </div>
 <div style="page-break-after: always;"></div>
-</div>
 </div>
 </div>
 </div>
@@ -2229,7 +2012,7 @@ when your infrastructure is more complex.</p>
 </ul>
 </div>
 <div class="ulist">
-<div class="title">CI/CD Pipeline</div>
+<div class="title">CI/CD Pipeline <span class="image"><img src="./images/pipe.png" alt="pipe"></span></div>
 <ul>
 <li>
 <p>GitHub Actions workflow:</p>
@@ -2301,6 +2084,11 @@ when your infrastructure is more complex.</p>
 </li>
 </ul>
 </div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/architecture-diagram.png" alt="System Architecture Diagram" width="600">
+</div>
+</div>
 <div class="paragraph">
 <p>This structured approach ensures:
 * <em>Security-first</em> design
@@ -2351,6 +2139,50 @@ when your infrastructure is more complex.</p>
 </tr>
 </tbody>
 </table>
+<div class="sidebarblock arc42help">
+<div class="content">
+<div class="paragraph">
+<div class="title">Contents</div>
+<p>Important, expensive, large scale or risky architecture decisions including rationales.
+With "decisions" we mean selecting one alternative based on given criteria.</p>
+</div>
+<div class="paragraph">
+<p>Please use your judgement to decide whether an architectural decision should be documented
+here in this central section or whether you better document it locally
+(e.g. within the white box template of one building block).</p>
+</div>
+<div class="paragraph">
+<p>Avoid redundancy.
+Refer to section 4, where you already captured the most important decisions of your architecture.</p>
+</div>
+<div class="paragraph">
+<div class="title">Motivation</div>
+<p>Stakeholders of your system should be able to comprehend and retrace your decisions.</p>
+</div>
+<div class="paragraph">
+<div class="title">Form</div>
+<p>Various options:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>ADR (<a href="https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions">Documenting Architecture Decisions</a>) for every important decision</p>
+</li>
+<li>
+<p>List or table, ordered by importance and consequences or:</p>
+</li>
+<li>
+<p>more detailed in form of separate sections per decision</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Further Information</div>
+<p>See <a href="https://docs.arc42.org/section-9/">Architecture Decisions</a> in the arc42 documentation.
+There you will find links and examples about ADR.</p>
+</div>
+</div>
+</div>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
@@ -2358,326 +2190,172 @@ when your infrastructure is more complex.</p>
 <div class="sect1">
 <h2 id="section-quality-scenarios">10. Quality Requirements</h2>
 <div class="sectionbody">
+<div class="sidebarblock arc42help">
+<div class="content">
+<div class="paragraph">
+<div class="title">Content</div>
+<p>This section contains all quality requirements as quality tree with scenarios. The most important ones have already been described in section 1.2. (quality goals)</p>
+</div>
+<div class="paragraph">
+<p>Here you can also capture quality requirements with lesser priority,
+which will not create high risks when they are not fully achieved.</p>
+</div>
+<div class="paragraph">
+<div class="title">Motivation</div>
+<p>Since quality requirements will have a lot of influence on architectural
+decisions you should know for every stakeholder what is really important to them,
+concrete and measurable.</p>
+</div>
+<div class="paragraph">
+<div class="title">Further Information</div>
+<p>See <a href="https://docs.arc42.org/section-10/">Quality Requirements</a> in the arc42 documentation.</p>
+</div>
+</div>
+</div>
 <div class="sect2">
 <h3 id="_quality_tree">10.1. Quality Tree</h3>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Quality Requirement</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#usage-scenarios-efficiency"><strong>Efficiency</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system should ensure fast user access, smooth navigation, quick game interactions, optimized image loading, and efficient generation of questions, LLM responses, and API data to provide a seamless experience.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#usage-scenarios-usability"><strong>Usability</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application should be intuitive and accessible to a broad audience, supporting seamless navigation and interaction.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#change-scenarios-maintainability"><strong>Maintainability</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system must allow easy extension and modification to accommodate new features and improvements.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#usage-scenarios-availability"><strong>Availability</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system should maintain at least 95% uptime, ensuring users can access the application reliably.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#usage-scenarios-reliability"><strong>Reliability</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system should minimize errors or failures and provide consistent and accurate results to users.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#usage-scenarios-resilience"><strong>Resilience</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system should recover from failures and continue operating in a degraded state when necessary.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#usage-scenarios-internationalization"><strong>Internationalization</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application should support multiple languages and cultural adaptations for a global audience.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#change-scenarios-scalability"><strong>Scalability</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system should be capable of handling increasing loads efficiently.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#change-scenarios-testability"><strong>Testability</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system should support automated testing to facilitate quality assurance and reduce errors.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#change-scenarios-monitoring"><strong>Monitoring &amp; Logging</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application should include monitoring and logging mechanisms to track performance and troubleshoot issues.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#usage-scenarios-security"><strong>Security</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system ensures that only registered users can access their data. API keys are private and user-specific. Personal data is protected, ensuring only authorized users can view their private information.</p></td>
-</tr>
-</tbody>
-</table>
-<div class="sect3">
-<h4 id="_usage_scenarios">10.1.1. Usage Scenarios</h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top"><strong>Scenario Category</strong></th>
-<th class="tableblock halign-left valign-top"><strong>Scenario</strong></th>
-<th class="tableblock halign-left valign-top"><strong>System Response</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="usage-scenarios-efficiency"></a> Efficiency</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The user selects a game mode from the main page.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system retrieves and presents the relevant questions and answers efficiently.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="usage-scenarios-usability"></a> Usability</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A new user starts using the application.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Due to the intuitive design, they quickly understand how to register and navigate.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="usage-scenarios-availability"></a> Availability</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Users attempt to access the system during peak hours.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system remains accessible with minimal latency.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="usage-scenarios-reliability"></a> Reliability</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system processes a high volume of requests simultaneously.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application maintains stability and processes requests accurately.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="usage-scenarios-resilience"></a> Resilience</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A server fails during operation.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system automatically redirects traffic and continues operation with minimal impact.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="usage-scenarios-internationalization"></a> Internationalization</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A user selects a different language preference.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The interface updates accordingly, including translated content and localized settings.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="usage-scenarios-security"></a> Security</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A user logs in to the system.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system ensures the user is authenticated before granting access to private data and API keys.</p></td>
-</tr>
-</tbody>
-</table>
+<div class="sidebarblock arc42help">
+<div class="content">
+<div class="paragraph">
+<div class="title">Content</div>
+<p>The quality tree (as defined in ATAM – Architecture Tradeoff Analysis Method) with quality/evaluation scenarios as leafs.</p>
 </div>
-<div class="sect3">
-<h4 id="_change_scenarios">10.1.2. Change Scenarios</h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top"><strong>Scenario Category</strong></th>
-<th class="tableblock halign-left valign-top"><strong>Scenario</strong></th>
-<th class="tableblock halign-left valign-top"><strong>System Response</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="change-scenarios-maintainability"></a> Maintainability</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Developers add a new game mode.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Existing game modes remain unaffected, and the new mode integrates seamlessly.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="change-scenarios-scalability"></a> Scalability</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User traffic significantly increases.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system dynamically scales to maintain performance.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="change-scenarios-testability"></a> Testability</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Developers implement automated tests.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system supports comprehensive unit and integration testing.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="change-scenarios-monitoring"></a> Monitoring &amp; Logging</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">System logs errors and performance metrics.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Logs provide real-time monitoring and facilitate troubleshooting.</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<div class="title">Motivation</div>
+<p>The tree structure with priorities provides an overview for a sometimes large number of quality requirements.</p>
+</div>
+<div class="paragraph">
+<div class="title">Form</div>
+<p>The quality tree is a high-level overview of the quality goals and requirements:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>tree-like refinement of the term "quality". Use "quality" or "usefulness" as a root</p>
+</li>
+<li>
+<p>a mind map with quality categories as main branches</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In any case the tree should include links to the scenarios of the following section.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_quality_scenarios">10.2. Quality Scenarios</h3>
+<div class="sidebarblock arc42help">
+<div class="content">
+<div class="paragraph">
+<div class="title">Contents</div>
+<p>Concretization of (sometimes vague or implicit) quality requirements using (quality) scenarios.</p>
+</div>
+<div class="paragraph">
+<p>These scenarios describe what should happen when a stimulus arrives at the system.</p>
+</div>
+<div class="paragraph">
+<p>For architects, two kinds of scenarios are important:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Usage scenarios (also called application scenarios or use case scenarios) describe the system’s runtime reaction to a certain stimulus. This also includes scenarios that describe the system’s efficiency or performance. Example: The system reacts to a user’s request within one second.</p>
+</li>
+<li>
+<p>Change scenarios describe a modification of the system or of its immediate environment. Example: Additional functionality is implemented or requirements for a quality attribute change.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Motivation</div>
+<p>Scenarios make quality requirements concrete and allow to
+more easily measure or decide whether they are fulfilled.</p>
+</div>
+<div class="paragraph">
+<p>Especially when you want to assess your architecture using methods like
+ATAM you need to describe your quality goals (from section 1.2)
+more precisely down to a level of scenarios that can be discussed and evaluated.</p>
+</div>
+<div class="paragraph">
+<div class="title">Form</div>
+<p>Tabular or free form text.</p>
+</div>
+</div>
+</div>
 <div style="page-break-after: always;"></div>
-</div>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="section-technical-risks">11. Risks and Technical Debts</h2>
 <div class="sectionbody">
+<div class="sidebarblock arc42help">
+<div class="content">
 <div class="paragraph">
-<p>The risks and technical debts section outlines the potential challenges and issues that could affect the successful completion, timeline, and long-term viability of the project. These risks and debts must be carefully managed to ensure smooth development and delivery.</p>
+<div class="title">Contents</div>
+<p>A list of identified technical risks or technical debts, ordered by priority</p>
 </div>
-<div class="sect2">
-<h3 id="_technical_risks">11.1. Technical Risks</h3>
 <div class="paragraph">
-<p>A technical risk is a potential event that could threaten the success of the project, delay timelines, increase costs, or even lead to failure if not properly managed. Below are the identified internal and external technical risks:</p>
+<div class="title">Motivation</div>
+<p>“Risk management is project management for grown-ups” (Tim Lister, Atlantic Systems Guild.)</p>
 </div>
-<div class="sect3">
-<h4 id="_internal_risks">11.1.1. Internal Risks</h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Priority</th>
-<th class="tableblock halign-left valign-top">Considerations</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Poor knowledge of core technologies</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The team may struggle with unfamiliar tools, delaying development. To mitigate, consider training sessions.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Incomplete system planning</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Lack of detailed planning can lead to inefficiencies. A clear infrastructure plan is crucial from the start.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Uneven workload distribution</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Poor task management could lead to delays and inefficiency. Regular monitoring and clear task assignment are key.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Lack of experience with internationalization</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Without internationalization, the system may limit its global audience. Plan for future multilingual support.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Spring Boot unfamiliarity</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The architecture will use Spring Boot, a framework unfamiliar to some team members, potentially delaying development.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Wikidata integration</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The project will use Wikidata as a data source, which is new to the team, requiring time to learn and implement.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">IDE configuration</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Compatibility issues across IDE versions, extensions, and preferences may lead to development delays.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Docker familiarity</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The team may not be fully familiar with Docker, leading to delays in deployment and environment setup.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="_external_risks">11.1.2. External Risks</h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Priority</th>
-<th class="tableblock halign-left valign-top">Considerations</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Third-party API failure (Wikidata)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Dependency on external APIs (e.g., Wikidata) could introduce service disruptions. Plan for fallbacks and caching.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Third-party API failure (LLM)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Dependency on the LLM API for dynamic responses could lead to downtime. Ensure proper error handling and retries.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_technical_debts">11.2. Technical Debts</h3>
 <div class="paragraph">
-<p>Technical debt refers to suboptimal development practices or decisions that could slow down future work or introduce issues later. Below are identified technical debts:</p>
+<p>This should be your motto for systematic detection and evaluation of risks and technical debts in the architecture, which will be needed by management stakeholders (e.g. project managers, product owners) as part of the overall risk analysis and measurement planning.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Priority</th>
-<th class="tableblock halign-left valign-top">Considerations</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Lack of scalability</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The current architecture may not support future growth. Implement load balancing and auto-scaling to ensure performance under increased load.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Code quality issues</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The codebase may contain duplication or poor documentation. Regular code reviews and refactoring are necessary to maintain quality.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Incomplete internationalization</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Currently, the application is available in Spanish, English, German, and French. However, the full internationalization for all supported languages may not be completed in time.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database selection</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The choice of database is not based on familiarity but on suitability for the project. This may introduce challenges during implementation.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Documentation in parallel</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Documentation will be created alongside development, which may cause delays or incomplete documentation in the final stages.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Testing coverage</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Testing will cover most of the code, but some parts may not be fully covered due to time constraints.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Security constraints</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Standard security measures will be applied, but advanced security features may be delayed due to performance concerns.</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<div class="title">Form</div>
+<p>List of risks and/or technical debts, probably including suggested measures to minimize, mitigate or avoid risks or reduce technical debts.</p>
+</div>
+<div class="paragraph">
+<div class="title">Further Information</div>
+<p>See <a href="https://docs.arc42.org/section-11/">Risks and Technical Debt</a> in the arc42 documentation.</p>
+</div>
+</div>
+</div>
 <div style="page-break-after: always;"></div>
-</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="section-glossary">12. Glossary</h2>
 <div class="sectionbody">
+<div class="sidebarblock arc42help">
+<div class="content">
+<div class="paragraph">
+<div class="title">Contents</div>
+<p>The most important domain and technical terms that your stakeholders use when discussing the system.</p>
+</div>
+<div class="paragraph">
+<p>You can also see the glossary as source for translations if you work in multi-language teams.</p>
+</div>
+<div class="paragraph">
+<div class="title">Motivation</div>
+<p>You should clearly define your terms, so that all stakeholders</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>have an identical understanding of these terms</p>
+</li>
+<li>
+<p>do not use synonyms and homonyms</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Form</div>
+<p>A table with columns &lt;Term&gt; and &lt;Definition&gt;.</p>
+</div>
+<div class="paragraph">
+<p>Potentially more columns in case you need translations.</p>
+</div>
+<div class="paragraph">
+<div class="title">Further Information</div>
+<p>See <a href="https://docs.arc42.org/section-12/">Glossary</a> in the arc42 documentation.</p>
+</div>
+</div>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -2703,10 +2381,6 @@ when your infrastructure is more complex.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>A set of protocols and tools that allow different software components to communicate, enabling external access to user and question data.</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em><em>ApiKey</em></em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>A unique identifier used to authenticate and authorize requests to an API.</em></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em><em>Gamification</em></em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>The integration of game-like elements, such as rewards and leaderboards, to enhance user engagement and motivation.</em></p></td>
 </tr>
@@ -2718,26 +2392,6 @@ when your infrastructure is more complex.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em><em>Observability</em></em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>The capability to monitor, log, and analyze system performance and behavior to ensure reliability and quick issue resolution.</em></p></td>
 </tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em><em>Technical Risk</em></em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>A potential event or issue that could threaten the successful completion of the project, delay timelines, or increase costs if not properly managed.</em></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em><em>Technical Debt</em></em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Suboptimal development practices or decisions that could lead to additional work or issues in the future, such as poor code quality or incomplete features.</em></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em><em>Spring Boot</em></em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>A Java-based framework used for building web applications and microservices, which may introduce a learning curve for the development team.</em></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em><em>Docker</em></em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>A platform for developing, shipping, and running applications inside containers, enabling consistent environments across different systems.</em></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em><em>Internationalization</em></em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>The process of designing a system to support multiple languages and regions, enabling global accessibility.</em></p></td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -2746,7 +2400,7 @@ when your infrastructure is more complex.</p>
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2025-02-24 19:08:00 +0100
+Last updated 2025-02-20 19:32:49 +0100
 </div>
 </div>
 </body>
