@@ -7,8 +7,8 @@ ifndef::imagesdir[:imagesdir: ../images]
 [plantuml,"Sequence diagram 1",png]
 ----
 actor User
-participant "WIQ Frontend" as Frontend
-participant "WIQ Backend" as Backend
+participant "WIChat Frontend" as Frontend
+participant "WIChat Backend" as Backend
 database Database as Data
 
 User -> Frontend: Log in
@@ -23,8 +23,8 @@ Frontend --> User: Login confirmation
 [plantuml,"Sequence diagram 2",png]
 ----
 actor User
-participant "WIQ Frontend" as Frontend
-participant "WIQ Backend" as Backend
+participant "WIChat Frontend" as Frontend
+participant "WIChat Backend" as Backend
 database Database as DB
 database Wikidata as Data
 
@@ -42,8 +42,8 @@ Backend --> Frontend: Generated question
 [plantuml,"Sequence diagram 3",png]
 ----
 actor User
-participant "WIQ Frontend" as Frontend
-participant "WIQ Backend" as Backend
+participant "WIChat Frontend" as Frontend
+participant "WIChat Backend" as Backend
 database Database as Data
 
 User -> Frontend: Answer question
@@ -58,8 +58,8 @@ Backend --> Frontend: Answer result
 [plantuml,"Sequence diagram 4",png]
 ----
 actor User
-participant "WIQ Frontend" as Frontend
-participant "WIQ Backend" as Backend
+participant "WIChat Frontend" as Frontend
+participant "WIChat Backend" as Backend
 database Database as DB
 
 User -> Frontend: Check history
@@ -73,8 +73,8 @@ Backend --> Frontend: User history
 [plantuml,"Sequence diagram 5",png]
 ----
 actor User
-participant "WIQ Frontend" as Frontend
-participant "WIQ Backend" as Backend
+participant "WIChat Frontend" as Frontend
+participant "WIChat Backend" as Backend
 database Database as DB
 participant "User API" as UserAPI
 
@@ -91,8 +91,8 @@ Backend --> Frontend: User data
 [plantuml,"Sequence diagram 6",png]
 ----
 actor User
-participant "WIQ Frontend" as Frontend
-participant "WIQ Backend" as Backend
+participant "WIChat Frontend" as Frontend
+participant "WIChat Backend" as Backend
 database Database as DB
 participant "Question API" as QuestionAPI
 
@@ -109,8 +109,8 @@ Backend --> Frontend: Questions data
 [plantuml,"Sequence diagram 7",png]
 ----
 actor User
-participant "WIQ Frontend" as Frontend
-participant "WIQ Backend" as Backend
+participant "WIChat Frontend" as Frontend
+participant "WIChat Backend" as Backend
 participant "LLM Service API" as LLM
 database Database as DB
 
