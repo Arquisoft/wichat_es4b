@@ -71,7 +71,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 * E2E testing (Selenium)
 * Mutation testing (PITest)
 
-.CI/CD Pipeline image:pipe.png[]
+.CI/CD Pipeline
 * GitHub Actions workflow:
 ** SonarQube quality gate
 ** Docker image build/push
@@ -95,8 +95,6 @@ ifndef::imagesdir[:imagesdir: ../images]
 * Flyway schema migration
 * Query optimization using index tuning
 
-// Add visual elements where appropriate
-image::architecture-diagram.png[System Architecture Diagram, width=600]
 
 This structured approach ensures:
 * _Security-first_ design
