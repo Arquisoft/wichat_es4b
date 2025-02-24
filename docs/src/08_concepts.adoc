@@ -3,72 +3,101 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-concepts]]
 == Cross-cutting Concepts
 
+[[domain-concepts]]
+=== Domain Concepts
+.Key Entities
+* *User*: Handles registration, authentication, and game history tracking
+* *Question*: Image-based multiple-choice items generated from Wikidata
+* *GameSession*: Timed quiz session with score tracking
+* *LeaderboardEntry*: Aggregates user performance metrics
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Content
-This section describes overall, principal regulations and solution ideas that are relevant in multiple parts (= cross-cutting) of your system.
-Such concepts are often related to multiple building blocks.
-They can include many different topics, such as
+.Key Processes
+* Question generation pipeline (Wikidata integration)
+* Real-time answer validation
+* Score calculation (accuracy + speed)
+* Hint generation via LLM API integration
 
-* models, especially domain models
-* architecture or design patterns
-* rules for using specific technology
-* principal, often technical decisions of an overarching (= cross-cutting) nature
-* implementation rules
+[[ux-concepts]]
+=== User Experience (UX) Concepts
+.User Experience Goals
+* Responsive design using Bootstrap grid system
+* Progressive disclosure of complex features
+* Immediate visual feedback for user actions
+* Consistent cross-device experience
+
+[[i18n-accessibility]]
+==== Internationalization & Accessibility
+* Multi-language support (EN/ES/DE/FR) with resource bundles
+* Screen reader compatibility
+* Color contrast compliance (WCAG 2.1)
+* Keyboard navigation support
+
+[[security-concepts]]
+=== Security Concepts
+.Authentication
+* JWT-based stateless authentication
+* Spring Security role management (ROLE_USER, ROLE_ADMIN)
+* Bcrypt password hashing (work factor 12)
+
+.Data Protection
+* TLS 1.3 for data in transit
+* AES-256 encryption for sensitive data at rest
+* Secure HTTP headers (CSP, HSTS)
+
+.API Protection
+* Rate limiting (Bucket4j integration)
+* Input validation (Spring Validation)
+* OWASP Top 10 protections
+
+[[architecture-concepts]]
+=== Architectural Concepts
+.System Architecture
+* MVC pattern implementation
+* Three-layer architecture:
+** Presentation Layer (Thymeleaf + Bootstrap)
+** Service Layer (business logic)
+** Repository Layer (Spring Data JPA)
+
+.Integration Patterns
+* RESTful APIs for internal communication
+* Async communication for hint generation
+* Circuit breakers for external API calls
+
+[[development-concepts]]
+=== Development Concepts
+.Testing Strategy
+* Unit testing (JUnit 5, Mockito)
+* Integration testing (Testcontainers)
+* E2E testing (Selenium)
+* Mutation testing (PITest)
+
+.CI/CD Pipeline
+* GitHub Actions workflow:
+** SonarQube quality gate
+** Docker image build/push
+** Kubernetes deployment (prod/staging)
+
+[[operations-concepts]]
+=== Operational Concepts
+.Monitoring
+* Prometheus metrics exporter
+* Grafana dashboard:
+** Key metrics: response times, error rates, system load
+** Custom game metrics: questions served, active sessions
+
+.Deployment
+* Docker Swarm orchestration
+* Blue/green deployments
+* Database replication (1 primary + 2 replicas)
+
+.Database Management
+* MySQL 8 with daily backups
+* Flyway schema migration
+* Query optimization using index tuning
 
 
-.Motivation
-Concepts form the basis for _conceptual integrity_ (consistency, homogeneity) of the architecture. 
-Thus, they are an important contribution to achieve inner qualities of your system.
-
-Some of these concepts cannot be assigned to individual building blocks, e.g. security or safety. 
-
-
-.Form
-The form can be varied:
-
-* concept papers with any kind of structure
-* cross-cutting model excerpts or scenarios using notations of the architecture views
-* sample implementations, especially for technical concepts
-* reference to typical usage of standard frameworks (e.g. using Hibernate for object/relational mapping)
-
-.Structure
-A potential (but not mandatory) structure for this section could be:
-
-* Domain concepts
-* User Experience concepts (UX)
-* Safety and security concepts
-* Architecture and design patterns
-* "Under-the-hood"
-* development concepts
-* operational concepts
-
-Note: it might be difficult to assign individual concepts to one specific topic
-on this list.
-
-image::08-concepts-EN.drawio.png["Possible topics for crosscutting concepts"]
-
-
-.Further Information
-
-See https://docs.arc42.org/section-8/[Concepts] in the arc42 documentation.
-****
-endif::arc42help[]
-
-=== _<Concept 1>_
-
-_<explanation>_
-
-
-
-=== _<Concept 2>_
-
-_<explanation>_
-
-...
-
-=== _<Concept n>_
-
-_<explanation>_
+This structured approach ensures:
+* _Security-first_ design
+* _Maintainable_ codebase through SOLID principles
+* _Scalable_ infrastructure via containerization
+* _Engaging UX_ through performance optimization
