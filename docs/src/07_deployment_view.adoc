@@ -1,3 +1,5 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
 [[section-deployment-view]]
 
 == Deployment View
@@ -57,28 +59,27 @@ These workflows help maintain the project’s quality, ensure that the team rema
 [plantuml,"Docker Container Setup",png]
 ----
 @startuml
-rectangle "Docker compose" {
-    rectangle "App's Docker Container"  {
+package "Docker compose" {
+    package "App's Docker Container" {
         node "Java Spring Boot App (.jar)" as App
         database "Web Server (Embedded)" as WebServer
     }
 
-    rectangle "MySQL Server Container" {
+    package "MySQL Server Container" {
         database "MySQL Server" as MySQL
     }
 
-    rectangle "Prometheus Container" {
+    package "Prometheus Container" {
         database "Prometheus" as Prometheus
     }
 
-    rectangle "Grafana Container" {
+    package "Grafana Container" {
         node "Grafana" as Grafana
     }
-
 }
+
 cloud "LLM API" as LLM
 cloud "Wikidata API" as API
-
 
 App --> MySQL : Store game data
 MySQL --> App : Fetch game data
@@ -88,6 +89,7 @@ App ..> WebServer : Server application
 Prometheus --> App : Collect metrics
 Grafana --> Prometheus : Visualize metrics
 @enduml
+
 ----
 
 .Explanation:
