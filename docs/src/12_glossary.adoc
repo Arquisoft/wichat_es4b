@@ -27,4 +27,21 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 | _Observability_
 | The capability to monitor, log, and analyze system performance and behavior to ensure reliability and quick issue resolution.
+
+| _Technical Risk_
+| A potential event or issue that could threaten the successful completion of the project, delay timelines, or increase costs if not properly managed.
+
+| _Technical Debt_
+| Suboptimal development practices or decisions that could lead to additional work or issues in the future, such as poor code quality or incomplete features.
+
+| _Spring Boot_
+| A Java-based framework used for building web applications and microservices, which may introduce a learning curve for the development team.
+
+| _Docker_
+| A platform for developing, shipping, and running applications inside containers, enabling consistent environments across different systems.
+
+| _Internationalization_
+| The process of designing a system to support multiple languages and regions, enabling global accessibility.
+
+
 |===
