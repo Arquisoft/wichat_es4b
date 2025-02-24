@@ -487,16 +487,20 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#section-runtime-view">6. Runtime View</a>
 <ul class="sectlevel2">
-<li><a href="#_runtime_scenario_1">6.1. &lt;Runtime Scenario 1&gt;</a></li>
-<li><a href="#_runtime_scenario_2">6.2. &lt;Runtime Scenario 2&gt;</a></li>
-<li><a href="#">6.3. &#8230;&#8203;</a></li>
-<li><a href="#_runtime_scenario_n">6.4. &lt;Runtime Scenario n&gt;</a></li>
+<li><a href="#_user_authentication">6.1. User Authentication</a></li>
+<li><a href="#_question_generation">6.2. Question Generation</a></li>
+<li><a href="#_user_responds_to_a_question">6.3. User Responds to a Question</a></li>
+<li><a href="#_user_checks_their_history">6.4. User Checks their History</a></li>
+<li><a href="#_access_to_user_information_via_an_api">6.5. Access to User Information via an API</a></li>
+<li><a href="#_access_to_generated_questions_information_via_an_api">6.6. Access to Generated Questions Information via an API</a></li>
+<li><a href="#_user_interacts_with_the_game_and_requests_a_hint">6.7. User Interacts with the Game and Requests a Hint</a></li>
 </ul>
 </li>
 <li><a href="#section-deployment-view">7. Deployment View</a>
 <ul class="sectlevel2">
 <li><a href="#_infrastructure_level_1">7.1. Infrastructure Level 1</a></li>
 <li><a href="#_infrastructure_level_2">7.2. Infrastructure Level 2</a></li>
+<li><a href="#_github_deployment_workflows">7.3. GitHub Deployment Workflows</a></li>
 </ul>
 </li>
 <li><a href="#section-concepts">8. Cross-cutting Concepts</a>
@@ -1795,243 +1799,200 @@ part of arc42 for additional levels.</p>
 <div class="sect1">
 <h2 id="section-runtime-view">6. Runtime View</h2>
 <div class="sectionbody">
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<div class="title">Contents</div>
-<p>The runtime view describes concrete behavior and interactions of the system’s building blocks in form of scenarios from the following areas:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>important use cases or features: how do building blocks execute them?</p>
-</li>
-<li>
-<p>interactions at critical external interfaces: how do building blocks cooperate with users and neighboring systems?</p>
-</li>
-<li>
-<p>operation and administration: launch, start-up, stop</p>
-</li>
-<li>
-<p>error and exception scenarios</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Remark: The main criterion for the choice of possible scenarios (sequences, workflows) is their <strong>architectural relevance</strong>. It is <strong>not</strong> important to describe a large number of scenarios. You should rather document a representative selection.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>You should understand how (instances of) building blocks of your system perform their job and communicate at runtime.
-You will mainly capture scenarios in your documentation to communicate your architecture to stakeholders that are less willing or able to read and understand the static models (building block view, deployment view).</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>There are many notations for describing scenarios, e.g.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>numbered list of steps (in natural language)</p>
-</li>
-<li>
-<p>activity diagrams or flow charts</p>
-</li>
-<li>
-<p>sequence diagrams</p>
-</li>
-<li>
-<p>BPMN or EPCs (event process chains)</p>
-</li>
-<li>
-<p>state machines</p>
-</li>
-<li>
-<p>&#8230;&#8203;</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-6/">Runtime View</a> in the arc42 documentation.</p>
-</div>
-</div>
-</div>
 <div class="sect2">
-<h3 id="_runtime_scenario_1">6.1. &lt;Runtime Scenario 1&gt;</h3>
-<div class="ulist">
-<ul>
-<li>
-<p><em>&lt;insert runtime diagram or textual description of the scenario&gt;</em></p>
-</li>
-<li>
-<p><em>&lt;insert description of the notable aspects of the interactions between the
-building block instances depicted in this diagram.&gt;</em></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>It is possible to use a sequence diagram:</p>
-</div>
+<h3 id="_user_authentication">6.1. User Authentication</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Sequence%20diagram.png" alt="Sequence diagram" width="366" height="326">
+<img src="./images/Sequence%20diagram%201.png" alt="Sequence diagram 1" width="517" height="355">
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_runtime_scenario_2">6.2. &lt;Runtime Scenario 2&gt;</h3>
-
+<h3 id="_question_generation">6.2. Question Generation</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Sequence%20diagram%202.png" alt="Sequence diagram 2" width="794" height="427">
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="">6.3. &#8230;&#8203;</h3>
-
+<h3 id="_user_responds_to_a_question">6.3. User Responds to a Question</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Sequence%20diagram%203.png" alt="Sequence diagram 3" width="490" height="368">
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_runtime_scenario_n">6.4. &lt;Runtime Scenario n&gt;</h3>
+<h3 id="_user_checks_their_history">6.4. User Checks their History</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Sequence%20diagram%204.png" alt="Sequence diagram 4" width="458" height="326">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_access_to_user_information_via_an_api">6.5. Access to User Information via an API</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Sequence%20diagram%205.png" alt="Sequence diagram 5" width="644" height="385">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_access_to_generated_questions_information_via_an_api">6.6. Access to Generated Questions Information via an API</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Sequence%20diagram%206.png" alt="Sequence diagram 6" width="766" height="385">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_user_interacts_with_the_game_and_requests_a_hint">6.7. User Interacts with the Game and Requests a Hint</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Sequence%20diagram%207.png" alt="Sequence diagram 7" width="719" height="776">
+</div>
+</div>
+<div class="sect3">
+<h4 id="_error_handling_during_gameplay">6.7.1. Error Handling (During Gameplay)</h4>
+<div class="paragraph">
+<p>If any data retrieval fails (game state, questions, hint, etc.), the Backend will send an error response, and the Frontend will display an appropriate message to the User, such as "Could not retrieve hint" or "Game error occurred."</p>
+</div>
 <div style="page-break-after: always;"></div>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="section-deployment-view">7. Deployment View</h2>
 <div class="sectionbody">
-<div class="sidebarblock arc42help">
-<div class="content">
 <div class="paragraph">
-<div class="title">Content</div>
-<p>The deployment view describes:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>technical infrastructure used to execute your system, with infrastructure elements like geographical locations, environments, computers, processors, channels and net topologies as well as other infrastructure elements and</p>
-</li>
-<li>
-<p>mapping of (software) building blocks to that infrastructure elements.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Often systems are executed in different environments, e.g. development environment, test environment, production environment. In such cases you should document all relevant environments.</p>
-</div>
-<div class="paragraph">
-<p>Especially document a deployment view if your software is executed as distributed system with more than one computer, processor, server or container or when you design and construct your own hardware processors and chips.</p>
-</div>
-<div class="paragraph">
-<p>From a software perspective it is sufficient to capture only those elements of an infrastructure that are needed to show a deployment of your building blocks. Hardware architects can go beyond that and describe an infrastructure to any level of detail they need to capture.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>Software does not run without hardware.
-This underlying infrastructure can and will influence a system and/or some
-cross-cutting concepts. Therefore, there is a need to know the infrastructure.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>Maybe a highest level deployment diagram is already contained in section 3.2. as
-technical context with your own infrastructure as ONE black box. In this section one can
-zoom into this black box using additional deployment diagrams:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>UML offers deployment diagrams to express that view. Use it, probably with nested diagrams,
-when your infrastructure is more complex.</p>
-</li>
-<li>
-<p>When your (hardware) stakeholders prefer other kinds of diagrams rather than a deployment diagram, let them use any kind that is able to show nodes and channels of the infrastructure.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-7/">Deployment View</a> in the arc42 documentation.</p>
-</div>
-</div>
+<p>The deployment strategy for our game, which uses the Wikidata API to dynamically generate questions, is built around a Docker-based infrastructure. This approach enables a consistent and scalable deployment across various environments (development, testing, production) by encapsulating the Java Spring Boot application within a Docker container.</p>
 </div>
 <div class="sect2">
 <h3 id="_infrastructure_level_1">7.1. Infrastructure Level 1</h3>
-<div class="sidebarblock arc42help">
-<div class="content">
 <div class="paragraph">
-<p>Describe (usually in a combination of diagrams, tables, and text):</p>
+<p>The system is containerized using Docker, allowing the entire stack to be deployed as a single <code>.jar</code> file, which includes the Java Spring Boot application and an embedded web server. This architecture reduces environment-specific discrepancies and facilitates easy scalability.</p>
+</div>
+<div class="paragraph">
+<p><em><strong>Overview Diagram</strong>:</em>
+The infrastructure features a Docker container running the Java Spring Boot application, which communicates with external services like the Wikidata API for real-time data fetching and dynamic question generation. Additionally, the game will connect to an external Large Language Model (LLM) API to handle text-based queries for generating hints when the user is struggling with answering questions.</p>
+</div>
+<div class="paragraph">
+<div class="title">Motivation</div>
+<p>Docker was chosen to simplify the development and deployment processes, enabling consistent behavior across environments. The integration with the LLM API is aimed at enhancing the user experience by providing hints when needed, making the game more interactive and user-friendly.</p>
 </div>
 <div class="ulist">
+<div class="title">Quality and/or Performance Features</div>
 <ul>
 <li>
-<p>distribution of a system to multiple locations, environments, computers, processors, .., as well as physical connections between them</p>
+<p><strong>Portability:</strong> Docker containers ensure the application runs consistently across different systems.</p>
 </li>
 <li>
-<p>important justifications or motivations for this deployment structure</p>
+<p><strong>Scalability:</strong> Docker Compose or Docker Swarm can be used to scale the containers as needed for increased load.</p>
 </li>
 <li>
-<p>quality and/or performance features of this infrastructure</p>
+<p><strong>Efficiency:</strong> Docker reduces overhead compared to traditional virtual machines, providing faster startup times and resource-efficient execution.</p>
 </li>
 <li>
-<p>mapping of software artifacts to elements of this infrastructure</p>
+<p><strong>Enhanced User Support:</strong> The LLM API assists users by generating dynamic hints when they need help selecting the correct answer.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>For multiple environments or alternative deployments please copy and adapt this section of arc42 for all relevant environments.</p>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p><em><strong>&lt;Overview Diagram&gt;</strong></em></p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Motivation</dt>
-<dd>
-<p><em>&lt;explanation in text form&gt;</em></p>
-</dd>
-<dt class="hdlist1">Quality and/or Performance Features</dt>
-<dd>
-<p><em>&lt;explanation in text form&gt;</em></p>
-</dd>
-<dt class="hdlist1">Mapping of Building Blocks to Infrastructure</dt>
-<dd>
-<p><em>&lt;description of the mapping&gt;</em></p>
-</dd>
-</dl>
+<div class="ulist">
+<div class="title">Mapping of Building Blocks to Infrastructure</div>
+<ul>
+<li>
+<p><strong>Web Server/Application (.jar file):</strong> This is the core application packaged into a Docker container that runs on any Docker-supported platform.</p>
+</li>
+<li>
+<p><strong>External APIs (e.g., Wikidata API):</strong> The application retrieves dynamic content for the game from external APIs over the network.</p>
+</li>
+<li>
+<p><strong>LLM API:</strong> The application communicates with an external LLM API, sending text-based queries to generate hints when users request help with answering a question.</p>
+</li>
+<li>
+<p><strong>Grafana:</strong> A tool for monitoring the application’s health and performance, visualizing metrics.</p>
+</li>
+<li>
+<p><strong>Prometheus:</strong> Used to collect performance and health metrics from the application and infrastructure, which are then visualized in Grafana.</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_infrastructure_level_2">7.2. Infrastructure Level 2</h3>
-<div class="sidebarblock arc42help">
+<div class="paragraph">
+<p>At this level, we describe the configuration of the Docker containers that encapsulate the application and its dependencies.</p>
+</div>
+<div class="sect3">
+<h4 id="_docker_container">7.2.1. <em>Docker Container</em></h4>
+<div class="paragraph">
+<p>The application runs within a Docker container that uses a Java base image, with the Spring Boot <code>.jar</code> file layered on top. Additionally, the infrastructure includes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>MySQL Server:</strong> The official MySQL Docker image is used to run the database, which stores game-related data, such as user scores and questions.</p>
+</li>
+<li>
+<p><strong>Prometheus and Grafana:</strong> These monitoring tools are contained in separate Docker containers. Prometheus collects metrics from the application, while Grafana visualizes those metrics in real time.</p>
+</li>
+<li>
+<p><strong>LLM Integration:</strong> The game communicates with an external LLM API for processing user queries and generating hints when struggling to select the correct answer. This API is accessible over the network, and the application sends requests to it for content generation based on user inputs (user questions).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This Docker-based setup encapsulates the entire runtime environment, minimizing the need for complex configuration and external dependencies.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_github_deployment_workflows">7.3. GitHub Deployment Workflows</h3>
+<div class="paragraph">
+<p>To ensure a smooth development cycle and keep the team informed of project progress, we utilize GitHub for continuous integration and deployment. The following GitHub Actions workflows are configured to automate various stages of the project lifecycle:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Application Tests:</strong> Runs automated tests to verify that the application behaves as expected, ensuring no regressions are introduced.</p>
+</li>
+<li>
+<p><strong>Dependabot Updates:</strong> Automatically checks for and proposes updates to project dependencies, keeping the application up to date with the latest stable versions.</p>
+</li>
+<li>
+<p><strong>Deploy on Release:</strong> Automatically deploys the application to production whenever a new release is created. This ensures that the production environment is always running the latest stable version.</p>
+</li>
+<li>
+<p><strong>Deploy Pages:</strong> Deploys the project’s front-end (such as documentation or static assets) to GitHub Pages, ensuring that the team has easy access to the latest information.</p>
+</li>
+<li>
+<p><strong>pages-build-deployment:</strong> Used to trigger the deployment of the static content built by GitHub Pages, ensuring that the content is always up to date and available to the team.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These workflows help maintain the project’s quality, ensure that the team remains up to date, and automate routine tasks, allowing the team to focus more on development and less on manual processes.</p>
+</div>
+<div class="imageblock">
 <div class="content">
-<div class="paragraph">
-<p>Here you can include the internal structure of (some) infrastructure elements from level 1.</p>
+<img src="./images/Docker%20Container%20Setup.png" alt="Docker Container Setup" width="962" height="610">
+</div>
+<div class="title">Figure 1. Diagram: Docker Container Setup</div>
 </div>
 <div class="paragraph">
-<p>Please copy the structure from level 1 for each selected element.</p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_infrastructure_element_1">7.2.1. <em>&lt;Infrastructure Element 1&gt;</em></h4>
-<div class="paragraph">
-<p><em>&lt;diagram + explanation&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_infrastructure_element_2">7.2.2. <em>&lt;Infrastructure Element 2&gt;</em></h4>
-<div class="paragraph">
-<p><em>&lt;diagram + explanation&gt;</em></p>
+<div class="title">Explanation:</div>
+<p>This diagram illustrates the structure of the application’s Docker containers. The Java Spring Boot application, with its embedded web server, interacts with the MySQL database for persistent data and external APIs, such as the Wikidata API, for dynamic game content.</p>
 </div>
 <div class="paragraph">
-<p>&#8230;&#8203;</p>
+<p>The application also communicates with an external LLM API to process text queries for hint generation during gameplay. The system’s performance is monitored by Prometheus, with the collected metrics being visualized in Grafana.</p>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_infrastructure_element_n">7.2.3. <em>&lt;Infrastructure Element n&gt;</em></h4>
 <div class="paragraph">
-<p><em>&lt;diagram + explanation&gt;</em></p>
+<p>By using Docker to encapsulate all services, the deployment remains consistent, portable, and scalable across various platforms.</p>
 </div>
 <div style="page-break-after: always;"></div>
-</div>
 </div>
 </div>
 </div>
@@ -2608,7 +2569,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2025-02-23 13:37:52 UTC
+Last updated 2025-02-24 20:37:30 UTC
 </div>
 </div>
 </body>
