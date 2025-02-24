@@ -1,100 +1,98 @@
-ifndef::imagesdir[:imagesdir: ../images]
-
 [[section-deployment-view]]
-
 
 == Deployment View
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Content
-The deployment view describes:
-
- 1. technical infrastructure used to execute your system, with infrastructure elements like geographical locations, environments, computers, processors, channels and net topologies as well as other infrastructure elements and
-
-2. mapping of (software) building blocks to that infrastructure elements.
-
-Often systems are executed in different environments, e.g. development environment, test environment, production environment. In such cases you should document all relevant environments.
-
-Especially document a deployment view if your software is executed as distributed system with more than one computer, processor, server or container or when you design and construct your own hardware processors and chips.
-
-From a software perspective it is sufficient to capture only those elements of an infrastructure that are needed to show a deployment of your building blocks. Hardware architects can go beyond that and describe an infrastructure to any level of detail they need to capture.
-
-.Motivation
-Software does not run without hardware.
-This underlying infrastructure can and will influence a system and/or some
-cross-cutting concepts. Therefore, there is a need to know the infrastructure.
-
-.Form
-
-Maybe a highest level deployment diagram is already contained in section 3.2. as
-technical context with your own infrastructure as ONE black box. In this section one can
-zoom into this black box using additional deployment diagrams:
-
-* UML offers deployment diagrams to express that view. Use it, probably with nested diagrams,
-when your infrastructure is more complex.
-* When your (hardware) stakeholders prefer other kinds of diagrams rather than a deployment diagram, let them use any kind that is able to show nodes and channels of the infrastructure.
-
-
-.Further Information
-
-See https://docs.arc42.org/section-7/[Deployment View] in the arc42 documentation.
-
-****
-endif::arc42help[]
+The deployment strategy for our game, which uses the Wikidata API to dynamically generate questions, is built around a Docker-based infrastructure. This approach enables a consistent and scalable deployment across various environments (development, testing, production) by encapsulating the Java Spring Boot application within a Docker container.
 
 === Infrastructure Level 1
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-Describe (usually in a combination of diagrams, tables, and text):
+The system is containerized using Docker, allowing the entire stack to be deployed as a single `.jar` file, which includes the Java Spring Boot application and an embedded web server. This architecture reduces environment-specific discrepancies and facilitates easy scalability.
 
-* distribution of a system to multiple locations, environments, computers, processors, .., as well as physical connections between them
-* important justifications or motivations for this deployment structure
-* quality and/or performance features of this infrastructure
-* mapping of software artifacts to elements of this infrastructure
+_**Overview Diagram**:_
+The infrastructure features a Docker container running the Java Spring Boot application, which communicates with external services like the Wikidata API for real-time data fetching and dynamic question generation. Additionally, the game will connect to an external Large Language Model (LLM) API to handle text-based queries for generating hints when the user is struggling with answering questions.
 
-For multiple environments or alternative deployments please copy and adapt this section of arc42 for all relevant environments.
-****
-endif::arc42help[]
+.Motivation
+Docker was chosen to simplify the development and deployment processes, enabling consistent behavior across environments. The integration with the LLM API is aimed at enhancing the user experience by providing hints when needed, making the game more interactive and user-friendly.
 
-_**<Overview Diagram>**_
+.Quality and/or Performance Features
+- **Portability:** Docker containers ensure the application runs consistently across different systems.
+- **Scalability:** Docker Compose or Docker Swarm can be used to scale the containers as needed for increased load.
+- **Efficiency:** Docker reduces overhead compared to traditional virtual machines, providing faster startup times and resource-efficient execution.
+- **Enhanced User Support:** The LLM API assists users by generating dynamic hints when they need help selecting the correct answer.
 
-Motivation::
-
-_<explanation in text form>_
-
-Quality and/or Performance Features::
-
-_<explanation in text form>_
-
-Mapping of Building Blocks to Infrastructure::
-_<description of the mapping>_
-
+.Mapping of Building Blocks to Infrastructure
+- **Web Server/Application (.jar file):** This is the core application packaged into a Docker container that runs on any Docker-supported platform.
+- **External APIs (e.g., Wikidata API):** The application retrieves dynamic content for the game from external APIs over the network.
+- **LLM API:** The application communicates with an external LLM API, sending text-based queries to generate hints when users request help with answering a question.
+- **Grafana:** A tool for monitoring the application’s health and performance, visualizing metrics.
+- **Prometheus:** Used to collect performance and health metrics from the application and infrastructure, which are then visualized in Grafana.
 
 === Infrastructure Level 2
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-Here you can include the internal structure of (some) infrastructure elements from level 1.
+At this level, we describe the configuration of the Docker containers that encapsulate the application and its dependencies.
 
-Please copy the structure from level 1 for each selected element.
-****
-endif::arc42help[]
+==== _Docker Container_
 
-==== _<Infrastructure Element 1>_
+The application runs within a Docker container that uses a Java base image, with the Spring Boot `.jar` file layered on top. Additionally, the infrastructure includes:
 
-_<diagram + explanation>_
+- **MySQL Server:** The official MySQL Docker image is used to run the database, which stores game-related data, such as user scores and questions.
+- **Prometheus and Grafana:** These monitoring tools are contained in separate Docker containers. Prometheus collects metrics from the application, while Grafana visualizes those metrics in real time.
+- **LLM Integration:** The game communicates with an external LLM API for processing user queries and generating hints when struggling to select the correct answer. This API is accessible over the network, and the application sends requests to it for content generation based on user inputs (user questions).
 
-==== _<Infrastructure Element 2>_
+This Docker-based setup encapsulates the entire runtime environment, minimizing the need for complex configuration and external dependencies.
 
-_<diagram + explanation>_
+=== GitHub Deployment Workflows
 
-...
+To ensure a smooth development cycle and keep the team informed of project progress, we utilize GitHub for continuous integration and deployment. The following GitHub Actions workflows are configured to automate various stages of the project lifecycle:
 
-==== _<Infrastructure Element n>_
+- **Application Tests:** Runs automated tests to verify that the application behaves as expected, ensuring no regressions are introduced.
+- **Dependabot Updates:** Automatically checks for and proposes updates to project dependencies, keeping the application up to date with the latest stable versions.
+- **Deploy on Release:** Automatically deploys the application to production whenever a new release is created. This ensures that the production environment is always running the latest stable version.
+- **Deploy Pages:** Deploys the project’s front-end (such as documentation or static assets) to GitHub Pages, ensuring that the team has easy access to the latest information.
+- **pages-build-deployment:** Used to trigger the deployment of the static content built by GitHub Pages, ensuring that the content is always up to date and available to the team.
 
-_<diagram + explanation>_
+These workflows help maintain the project’s quality, ensure that the team remains up to date, and automate routine tasks, allowing the team to focus more on development and less on manual processes.
+
+.Diagram: Docker Container Setup
+[plantuml,"Docker Container Setup",png]
+----
+@startuml
+rectangle "Docker compose" {
+    rectangle "App's Docker Container"  {
+        node "Java Spring Boot App (.jar)" as App
+        database "Web Server (Embedded)" as WebServer
+    }
+
+    rectangle "MySQL Server Container" {
+        database "MySQL Server" as MySQL
+    }
+
+    rectangle "Prometheus Container" {
+        database "Prometheus" as Prometheus
+    }
+
+    rectangle "Grafana Container" {
+        node "Grafana" as Grafana
+    }
+
+}
+cloud "LLM API" as LLM
+cloud "Wikidata API" as API
+
+
+App --> MySQL : Store game data
+MySQL --> App : Fetch game data
+App -left-> API : Fetch questions
+App --> LLM : Send queries for hint generation
+App ..> WebServer : Server application
+Prometheus --> App : Collect metrics
+Grafana --> Prometheus : Visualize metrics
+@enduml
+----
+
+.Explanation:
+This diagram illustrates the structure of the application’s Docker containers. The Java Spring Boot application, with its embedded web server, interacts with the MySQL database for persistent data and external APIs, such as the Wikidata API, for dynamic game content.
+
+The application also communicates with an external LLM API to process text queries for hint generation during gameplay. The system’s performance is monitored by Prometheus, with the collected metrics being visualized in Grafana.
+
+By using Docker to encapsulate all services, the deployment remains consistent, portable, and scalable across various platforms.
