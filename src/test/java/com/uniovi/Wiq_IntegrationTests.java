@@ -22,16 +22,18 @@ public class Wiq_IntegrationTests {
 
     protected static WebDriver driver;
 
-    public Wiq_IntegrationTests() {
-        driver = webDriver();
+    @BeforeAll
+    public static void setUp() {
+        if (driver == null) {
+            driver = FirefoxWebDriver.getDriver();
+        }
     }
 
-    public WebDriver webDriver() {
+    @AfterAll
+    public static void tearDown() {
         if (driver != null) {
-            return driver;
+            driver.quit();
+            driver = null;
         }
-
-        driver = new FirefoxWebDriver();
-        return driver;
     }
 }
