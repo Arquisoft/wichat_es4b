@@ -105,7 +105,7 @@ public class PlayersController {
         return "player/home";
     }
 
-    @GetMapping("/ranking/globalRanking")
+    @GetMapping("/ranking/global")
     public String showGlobalRanking(Pageable pageable, Model model) {
         Page<Object[]> ranking = gameSessionService.getGlobalRanking(pageable);
 
@@ -116,7 +116,7 @@ public class PlayersController {
         return "ranking/globalRanking";
     }
 
-    @GetMapping("/ranking/playerRanking")
+    @GetMapping("/ranking/local")
     public String showPlayerRanking(Pageable pageable, Model model, Principal principal) {
         Optional<Player> player = playerService.getUserByUsername(principal.getName());
         Player p = player.orElse(null);
