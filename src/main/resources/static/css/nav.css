@@ -1,29 +1,53 @@
 /* Estilo del navbar */
 .navbar {
     background-color: transparent !important; /* Hace que el navbar sea transparente */
+    padding: 0.5rem 1rem;
 }
 
 .navbar-nav .nav-link {
-    color: white !important; /* Cambia el color del texto del enlace a blanco */
+    color: white !important; /* Color del texto */
+    font-weight: 500;
+    transition: color 0.3s ease-in-out;
 }
 
 .navbar-nav .nav-link:hover {
-    color: rgba(255, 255, 255, 0.7) !important; /* Cambia el color del texto del enlace cuando se pasa el mouse */
+    color: rgba(255, 255, 255, 0.7) !important; /* Color del texto al pasar el mouse */
 }
 
+/* Botón del menú en versión móvil */
 .navbar-toggler {
-    border-color: white !important; /* Cambia el color del borde del toggler a blanco */
+    border-color: white !important;
 }
 
-/* Estilo para los desplegables */
+/* Menú desplegable */
 .dropdown-menu {
     color: #fff;
     background-color: rgb(19, 19, 19);
     border: 2px solid #fff;
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 0.5rem;
+    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2); /* Sombra elegante */
+    transition: opacity 0.3s ease, transform 0.2s ease;
+    opacity: 0;
+    transform: translateY(-10px);
+    display: block;
+    visibility: hidden;
 }
 
+/* Mostrar el menú con animación */
+.nav-item.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+/* Estilo de los elementos del menú */
 .dropdown-item {
     color: white;
+    font-weight: 400;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .dropdown-item:hover {
@@ -31,7 +55,16 @@
     color: #000;
 }
 
+/* Flecha del dropdown más visible */
+.navbar .dropdown-toggle::after {
+    border-top: 0.4em solid white;
+}
 
-
-
-
+/* Asegura que el dropdown no afecte la disposición en móviles */
+@media (max-width: 991px) {
+    .dropdown-menu {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+        visibility: visible !important;
+    }
+}
