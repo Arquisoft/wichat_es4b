@@ -1,9 +1,7 @@
 package com.uniovi.steps;
 
-import com.uniovi.Wiq_IntegrationTests;
 import com.uniovi.util.PropertiesExtractor;
 import com.uniovi.*;
-import com.uniovi.dto.RoleDto;
 import com.uniovi.services.RoleService;
 import com.uniovi.util.SeleniumUtils;
 import io.cucumber.java.en.And;

@@ -7,8 +7,6 @@ import com.uniovi.dto.RoleDto;
 import com.uniovi.entities.*;
 import com.uniovi.repositories.*;
 import com.uniovi.services.*;
-import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.AssertTrue;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
