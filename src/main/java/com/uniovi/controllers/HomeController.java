@@ -53,7 +53,7 @@ public class HomeController{
         return "instructions";
     }
 
-    @GetMapping("/authors")
+    @GetMapping("/about-us")
     public String authors(){
         return "/authors";
     }
