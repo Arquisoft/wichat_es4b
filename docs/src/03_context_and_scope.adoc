@@ -59,29 +59,105 @@ endif::arc42help[]
 
 WIChat is an interactive web-based quiz game application, inspired by "Saber y Ganar". Users can register, log in, and play the game, where they are presented with images and have to guess the associated place or object. The novelty lies in the integration of a conversational language model (LLM), which allows users to interact with the game and get hints for the answers dynamically. The questions and images are generated from Wikidata, providing an automated, real-time experience.
 
+[plantuml,"Business Context Diagram",png]
+----
+@startuml
+actor Player as user
+actor Admin as admin
+actor "External Developers" as extDevelopers
+
+component WebApp [
+  <<System>>
+  Web App
+]
+
+component PlayerService [
+  <<System>>
+  Player Management
+]
+
+component QuestionService [
+  <<System>>
+  Question Management
+]
+
+component HintService [
+    <<System>>
+    Hint Generation
+]
+
+component RewardService [
+    <<System>>
+    Reward Management
+]
+
+component OwnAPIService [
+    <<System>>
+    History API Management
+]
+
+component LLmService [
+    <<System>>
+    LLM Management
+]
+
+component ExternalAPIService [
+    <<extern>>
+    External APIs (LLM, Wikidata, etc.)
+]
+
+database database [
+    Database
+]
+
+user ...> WebApp: Plays
+admin ...> WebApp: Administrate
+WebApp ---> PlayerService : Handles\nlogin and signup
+WebApp -left-> QuestionService : Retrieves generated\nquestions for game
+WebApp ---> HintService : Requests hints\nbased on LLM analysis
+WebApp ---> RewardService : Manages user rewards
+WebApp ---> OwnAPIService : Manages game history
+
+HintService --> LLmService : Generates hints from LLM
+
+ExternalAPIService --> LLmService : Provides metadata for questions
+ExternalAPIService --> HintService : Provides metadata for hints
+
+extDevelopers .right.> QuestionService : Modify questions
+extDevelopers <.right. QuestionService : Retrieve question list
+extDevelopers .right.> OwnAPIService : Retrieve user history
+
+database <-right- PlayerService : Stores user data
+database <-left- QuestionService : Stores questions
+database <-down- RewardService : Stores rewards
+OwnAPIService <-down- database
+@enduml
+
+----
+
 ==== Involved Actors
 
-[options="header",cols="1,2"]
-|===
-| Actor | Description
-| User | A person who accesses the application to play the quiz game.
-| Administrator | Responsible for managing system infrastructure and security.
-| LLM Provider | External service that provides AI-generated quiz questions and hints.
-| Database | MySQL used to store user information, game history, and question data.
-| WikiData | External service used to retrieve image and metadata for question generation.
-|===
+* **User**: Person who accesses the application to play one of the multiple games, review their history, manage their data, etc.
+* **Administrator**: Responsible for managing system infrastructure and security.
+* **WebApp**:Main interface of the system that connects with internal services.
+* **Database**: MySQL used to store user information, game history, and question data.
+* **External APIs**: External service used to retrieve image and metadata for question generation, provides AI-generated quiz questions and hints, etc.
+* **External developers**:  Developers who interact with the API to retrieve and modify player data, questions, and game history.
 
 ==== Business Context Table
 
 [options="header",cols="1,2,2"]
 |===
 | Communication Partner | Inputs | Outputs
-| User | Login credentials, game interactions | Quiz questions, score updates
-| LLM Provider | Quiz prompts | AI-generated questions and answers
-| Database | User data, game records | Stored authentication and game history
-| WikiData | Data requests for images and metadata | Retrieved image and metadata for questions
+| User | Login credentials, game interactions, answer selections | Quiz questions, score updates, hints, rewards
+| Admin | System configurations, user management requests | System status updates, logs, user management responses
+| Database | User data, game records, question storage | Stored authentication, game history, retrieved player and question data
+| WebApp | User actions, API requests to internal services | UI responses, game content, interaction processing
+| ExternalAPIService (LLM, Wikidata, etc.) | Quiz prompts, data requests for images and metadata | AI-generated questions, retrieved images, metadata, and hints
+| LLM Provider | Quiz prompts, hint generation requests | AI-generated questions, answers, and hints
+| WikiData | Data requests for images and metadata | Retrieved images and metadata for questions
+| External Developers | API requests for player and question data | Retrieved player information, question lists, game history
 |===
-
 
 === Technical Context
 
@@ -110,6 +186,73 @@ endif::arc42help[]
 The system consists of several services developed in Java using Spring Boot, a web frontend using HTML, and a relational database. Communication between services is handled via REST API and HTTPS.
 
 ==== Technical Interfaces
+
+[plantuml,"Technical Context Diagram",png]
+----
+actor Player as user
+actor "External Developers" as developers
+component WebApp [
+  <<System>>
+  Web App
+]
+
+component PlayerService [
+  <<System>>
+  PlayerService
+]
+
+component QuestionService [
+  <<System>>
+  QuestionService
+]
+
+component WikiData [
+    <<extern>>
+    Wikidata
+]
+
+component LLMService [
+    <<extern>>
+    LLMService
+]
+
+component LLMAPI [
+    <<system>>
+    LLM API
+]
+
+component QuestionGenerator [
+    <<system>>
+    QuestionGenerator
+]
+
+component QuestionGenerator [
+    <<system>>
+    QuestionGenerator
+]
+
+component RestApiService [
+    <<system>>
+    RestApiService
+]
+
+database Database [
+    Database
+]
+
+user .left.> WebApp: HTTPS
+WebApp ---> PlayerService : Handles\nlogin, signup\nand game history
+WebApp -left-> QuestionService : Retrieves generated\nquestions for game
+QuestionGenerator <-up- WikiData : Get entity info\nfrom SPARQL HTTP
+QuestionGenerator --> QuestionService : Generate questions\nwith entity data
+QuestionService --> Database: Save\nquestion\nentities
+QuestionService <-- Database: Retrieve\nsaved\nquestions
+developers .up---.> RestApiService : HTTP request
+developers <.up. RestApiService : HTTP GET
+RestApiService -up-> QuestionService: Retrieve/Modify questions
+RestApiService ---> PlayerService: Retrieve/Modify player data
+
+----
 
 [options="header",cols="1,2,2"]
 |===
