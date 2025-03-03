@@ -59,6 +59,40 @@ public class GameController {
         return "game/basicGame";
     }
 
+    /**
+     * En este modo de juego se Realiza una bateria de preguntas
+     * 2 opciones una verdadera y una falsa
+     * La duracion del mismo es de 3 minutos
+     * 20 puntos por respuesta correcta (podemos incluir la opcion de restar 10 puntos por respuesta fallida)
+     * Este es el modo offline por lo que no podemos cambiar al segundo concursante
+     * en caso de realizar el modo online al fallar la pregunta se pasa al siguiente concursante
+     * sin detener el tiempo
+     *
+     * @param session
+     * @param model
+     * @param principal
+     * @return
+     */
+    @GetMapping("/game/bateria")
+    public String getBateria(HttpSession session, Model model, Principal principal) {
+        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
+        if (gameSession != null && !gameSession.isFinished() && !gameSession.isMultiplayer()) {
+            if (checkUpdateGameSession(gameSession, session)) {
+                return "game/fragments/gameFinished";
+            }
+        } else {
+            gameSession = gameSessionService.startNewGame(getLoggedInPlayer(principal));
+            session.setAttribute(GAMESESSION_STR, gameSession);
+            playerService.deleteMultiplayerCode(gameSession.getPlayer().getId());
+        }
+
+        model.addAttribute("question", gameSession.getCurrentQuestion());
+        model.addAttribute("questionDuration", getRemainingTime(gameSession));
+        return "game/bateria";
+    }
+
+
+
     @GetMapping("/game/trivial/multiplayer")
     public String getTrivialMultiplayerGame() {
         return "redirect:/multiplayerGame/createGame";

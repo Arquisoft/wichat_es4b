@@ -1,0 +1,157 @@
+{
+  "language_placeholder": "[LANGUAGE]",
+  "question_placeholder": "[QUESTION]",
+  "answer_placeholder": "[ANSWER]",
+  "questions": [
+    {
+      "type": "capital",
+      "statements": [
+        {
+          "language": "es",
+          "statement": "¿Cuál es la capital de [QUESTION]?"
+        },
+        {
+          "language": "en",
+          "statement": "What is the capital of [QUESTION]?"
+        }
+      ],
+      "question": "countryLabel",
+      "answer": "capitalLabel"
+    },
+    {
+      "type": "currency",
+      "statements": [
+        {
+          "language": "es",
+          "statement": "¿Cuál es la moneda de [QUESTION]?"
+        },
+        {
+          "language": "en",
+          "statement": "What is the currency of [QUESTION]?"
+        }
+      ],
+      "question": "countryLabel",
+      "answer": "currencyLabel"
+    },
+    {
+      "type": "element",
+      "statements": [
+        {
+          "language": "es",
+          "statement": "¿Cuál es el símbolo químico del [QUESTION]?"
+        },
+        {
+          "language": "en",
+          "statement": "What is the chemical symbol of [QUESTION]?"
+        }
+      ],
+      "question": "elementLabel",
+      "answer": "symbol"
+    },
+    {
+      "type": "atomic_number",
+      "statements": [
+        {
+          "language": "es",
+          "statement": "¿Cuál es el número atómico del [QUESTION]?"
+        },
+        {
+          "language": "en",
+          "statement": "What is the atomic number of [QUESTION]?"
+        }
+      ],
+      "question": "elementLabel",
+      "answer": "atomicNumber"
+    },
+    {
+      "type": "historical_event",
+      "statements": [
+        {
+          "language": "es",
+          "statement": "¿En qué año ocurrió [QUESTION]?"
+        },
+        {
+          "language": "en",
+          "statement": "In what year did [QUESTION] happen?"
+        }
+      ],
+      "question": "eventLabel",
+      "answer": "year"
+    },
+    {
+      "type": "literature",
+      "statements": [
+        {
+          "language": "es",
+          "statement": "¿Quién escribió '[QUESTION]'?"
+        },
+        {
+          "language": "en",
+          "statement": "Who wrote '[QUESTION]'?"
+        }
+      ],
+      "question": "bookLabel",
+      "answer": "authorLabel"
+    },
+    {
+      "type": "mathematics",
+      "statements": [
+        {
+          "language": "es",
+          "statement": "¿Cuánto es [QUESTION]?"
+        },
+        {
+          "language": "en",
+          "statement": "What is [QUESTION]?"
+        }
+      ],
+      "question": "mathExpression",
+      "answer": "result"
+    },
+    {
+      "type": "biology",
+      "statements": [
+        {
+          "language": "es",
+          "statement": "¿Cuál es el nombre científico de [QUESTION]?"
+        },
+        {
+          "language": "en",
+          "statement": "What is the scientific name of [QUESTION]?"
+        }
+      ],
+      "question": "commonName",
+      "answer": "scientificName"
+    },
+    {
+      "type": "art",
+      "statements": [
+        {
+          "language": "es",
+          "statement": "¿Quién pintó '[QUESTION]'?"
+        },
+        {
+          "language": "en",
+          "statement": "Who painted '[QUESTION]'?"
+        }
+      ],
+      "question": "paintingLabel",
+      "answer": "artistLabel"
+    },
+    {
+      "type": "technology",
+      "statements": [
+        {
+          "language": "es",
+          "statement": "¿Quién inventó [QUESTION]?"
+        },
+        {
+          "language": "en",
+          "statement": "Who invented [QUESTION]?"
+        }
+      ],
+      "question": "inventionLabel",
+      "answer": "inventorLabel"
+    }
+  ]
+}
