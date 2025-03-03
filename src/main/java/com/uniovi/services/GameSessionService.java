@@ -42,7 +42,11 @@ public interface GameSessionService {
 
     GameSession startNewGame(Player player);
 
+    GameSession startNewImageGame(Player player);
+
     GameSession startNewMultiplayerGame(Player player, int code);
+
+    GameSession startNewMultiplayerImageGame(Player player, int code);
 
     void endGame(GameSession gameSession);
 

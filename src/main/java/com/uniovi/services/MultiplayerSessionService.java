@@ -1,5 +1,6 @@
 package com.uniovi.services;
 
+import com.uniovi.entities.ImageQuestion;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Question;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,8 @@ public interface MultiplayerSessionService {
     Map<Player, Integer> getPlayersWithScores(int multiplayerCode);
     void multiCreate(String code, Long id);
 
+    void multiImageGameCreate(String code, Long id);
+
     void addToLobby(String code, Long id);
 
     void changeScore(String code,Long id,int score);
@@ -20,4 +23,6 @@ public interface MultiplayerSessionService {
     boolean existsCode(String code);
 
     List<Question> getQuestions(String code);
+
+    List<ImageQuestion> getImageQuestions(String code);
 }

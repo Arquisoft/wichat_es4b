@@ -1,11 +1,13 @@
 package com.uniovi.services.impl;
 
+import com.uniovi.entities.ImageQuestion;
 import com.uniovi.entities.MultiplayerSession;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Question;
 import com.uniovi.repositories.MultiplayerSessionRepository;
 import com.uniovi.repositories.PlayerRepository;
 import com.uniovi.services.GameSessionService;
+import com.uniovi.services.ImageQuestionService;
 import com.uniovi.services.MultiplayerSessionService;
 import com.uniovi.services.QuestionService;
 import jakarta.transaction.Transactional;
@@ -18,15 +20,18 @@ public class MultiplayerSessionImpl implements MultiplayerSessionService {
     private final PlayerRepository playerRepository;
     private final MultiplayerSessionRepository multiplayerSessionRepository;
     private final QuestionService questionService;
+    private final ImageQuestionService imageQuestionService;
 
     private Map<String, List<Question>> multiplayerSessionQuestions = new HashMap<>();
 
+    private Map<String, List<ImageQuestion>> multiplayerSessionImageQuestions = new HashMap<>();
 
     public MultiplayerSessionImpl(PlayerRepository playerRepository, MultiplayerSessionRepository multiplayerSessionRepository,
-                                  QuestionService questionService) {
+                                  QuestionService questionService, ImageQuestionService imageQuestionService) {
         this.playerRepository = playerRepository;
         this.multiplayerSessionRepository = multiplayerSessionRepository;
         this.questionService = questionService;
+        this.imageQuestionService = imageQuestionService;
     }
 
     @Override
@@ -55,6 +60,16 @@ public class MultiplayerSessionImpl implements MultiplayerSessionService {
         if (p != null) {
             multiplayerSessionRepository.save(new MultiplayerSession(code, p));
             multiplayerSessionQuestions.put(code, questionService.getRandomQuestions(GameSessionService.NORMAL_GAME_QUESTION_NUM));
+        }
+    }
+
+    @Override
+    public void multiImageGameCreate(String code, Long id) {
+        Player p = playerRepository.findById(id).orElse(null);
+
+        if (p != null) {
+            multiplayerSessionRepository.save(new MultiplayerSession(code, p));
+            multiplayerSessionImageQuestions.put(code, imageQuestionService.getRandomImageQuestions(GameSessionService.NORMAL_GAME_QUESTION_NUM));
         }
     }
 
@@ -93,5 +108,13 @@ public class MultiplayerSessionImpl implements MultiplayerSessionService {
             return null;
         }
         return new ArrayList<>(multiplayerSessionQuestions.get(code));
+    }
+
+    @Override
+    public List<ImageQuestion> getImageQuestions(String code) {
+        if (!multiplayerSessionQuestions.containsKey(code)) {
+            return null;
+        }
+        return new ArrayList<>(multiplayerSessionImageQuestions.get(code));
     }
 }

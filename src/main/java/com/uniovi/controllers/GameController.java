@@ -59,15 +59,12 @@ public class GameController {
         return "game/basicGame";
     }
 
+
     @GetMapping("/game/trivial/multiplayer")
     public String getTrivialMultiplayerGame() {
         return "redirect:/multiplayerGame/createGame";
     }
 
-    @GetMapping("/game/image/multiplayer")
-    public String getImageMultiplayerGame() {
-        return "redirect:/multiplayerGame/createGame";
-    }
 
     @GetMapping("/multiplayerGame/{code}")
     public String joinMultiplayerGame(@PathVariable String code, HttpSession session, Principal principal, Model model) {

@@ -3,6 +3,7 @@ package com.uniovi.services.impl;
 import com.uniovi.entities.*;
 import com.uniovi.repositories.GameSessionRepository;
 import com.uniovi.services.GameSessionService;
+import com.uniovi.services.ImageQuestionService;
 import com.uniovi.services.MultiplayerSessionService;
 import com.uniovi.services.QuestionService;
 import org.springframework.data.domain.Page;
@@ -18,12 +19,14 @@ public class GameSessionImpl implements GameSessionService {
     private final GameSessionRepository gameSessionRepository;
     private final QuestionService questionService;
     private final MultiplayerSessionService multiplayerSessionService;
+    private final ImageQuestionService imageQuestionService;
 
     public GameSessionImpl(GameSessionRepository gameSessionRepository, QuestionService questionService,
-                           MultiplayerSessionService multiplayerSessionService) {
+                           MultiplayerSessionService multiplayerSessionService, ImageQuestionService imageQuestionService) {
         this.gameSessionRepository = gameSessionRepository;
         this.questionService = questionService;
         this.multiplayerSessionService = multiplayerSessionService;
+        this.imageQuestionService = imageQuestionService;
     }
 
     @Override
@@ -51,8 +54,24 @@ public class GameSessionImpl implements GameSessionService {
     }
 
     @Override
+    public GameSession startNewImageGame(Player player) {
+        return new GameSession(player, imageQuestionService.getRandomImageQuestions(NORMAL_GAME_QUESTION_NUM));
+    }
+
+    @Override
     public GameSession startNewMultiplayerGame(Player player, int code) {
         List<Question> qs = multiplayerSessionService.getQuestions(String.valueOf(code));
+        if (qs == null)
+            return null;
+
+        GameSession sess = new GameSession(player, qs);
+        sess.setMultiplayer(true);
+        return sess;
+    }
+
+    @Override
+    public GameSession startNewMultiplayerImageGame(Player player, int code) {
+        List<ImageQuestion> qs = multiplayerSessionService.getImageQuestions(String.valueOf(code));
         if (qs == null)
             return null;
 
