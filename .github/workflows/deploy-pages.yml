@@ -19,7 +19,7 @@ jobs:
       run: gem install asciidoctor asciidoctor-diagram
 
     - name: Install Graphviz
-      run: sudo apt-get install graphviz
+      run: sudo apt-get install graphviz && sudo apt-get upgrade graphviz
 
     - name: Set up Node.js
       uses: actions/setup-node@v1

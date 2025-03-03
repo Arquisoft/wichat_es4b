@@ -3,7 +3,6 @@ package com.uniovi.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
 
 import java.util.*;
 

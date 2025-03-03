@@ -3,25 +3,48 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-technical-risks]]
 == Risks and Technical Debts
 
+The risks and technical debts section outlines the potential challenges and issues that could affect the successful completion, timeline, and long-term viability of the project. These risks and debts must be carefully managed to ensure smooth development and delivery.
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Contents
-A list of identified technical risks or technical debts, ordered by priority
+=== Technical Risks
 
-.Motivation
-“Risk management is project management for grown-ups” (Tim Lister, Atlantic Systems Guild.) 
+A technical risk is a potential event that could threaten the success of the project, delay timelines, increase costs, or even lead to failure if not properly managed. Below are the identified internal and external technical risks:
 
-This should be your motto for systematic detection and evaluation of risks and technical debts in the architecture, which will be needed by management stakeholders (e.g. project managers, product owners) as part of the overall risk analysis and measurement planning.
+==== Internal Risks
 
-.Form
-List of risks and/or technical debts, probably including suggested measures to minimize, mitigate or avoid risks or reduce technical debts.
+[options="header"]
+|===
+| Description | Priority | Considerations
+| Poor knowledge of core technologies | High | The team may struggle with unfamiliar tools, delaying development. To mitigate, consider training sessions.
+| Incomplete system planning | Medium | Lack of detailed planning can lead to inefficiencies. A clear infrastructure plan is crucial from the start.
+| Uneven workload distribution | Medium | Poor task management could lead to delays and inefficiency. Regular monitoring and clear task assignment are key.
+| Lack of experience with internationalization | Low | Without internationalization, the system may limit its global audience. Plan for future multilingual support.
+| Spring Boot unfamiliarity | High | The architecture will use Spring Boot, a framework unfamiliar to some team members, potentially delaying development.
+| Wikidata integration | Medium | The project will use Wikidata as a data source, which is new to the team, requiring time to learn and implement.
+| IDE configuration | Medium | Compatibility issues across IDE versions, extensions, and preferences may lead to development delays.
+| Docker familiarity | Medium | The team may not be fully familiar with Docker, leading to delays in deployment and environment setup.
+|===
 
+==== External Risks
 
-.Further Information
+[options="header"]
+|===
+| Description | Priority | Considerations
+| Third-party API failure (Wikidata) | High | Dependency on external APIs (e.g., Wikidata) could introduce service disruptions. Plan for fallbacks and caching.
+| Third-party API failure (LLM) | High | Dependency on the LLM API for dynamic responses could lead to downtime. Ensure proper error handling and retries.
+|===
 
-See https://docs.arc42.org/section-11/[Risks and Technical Debt] in the arc42 documentation.
+=== Technical Debts
 
-****
-endif::arc42help[]
+Technical debt refers to suboptimal development practices or decisions that could slow down future work or introduce issues later. Below are identified technical debts:
+
+[options="header"]
+|===
+| Description | Priority | Considerations
+| Lack of scalability | High | The current architecture may not support future growth. Implement load balancing and auto-scaling to ensure performance under increased load.
+| Code quality issues | Medium | The codebase may contain duplication or poor documentation. Regular code reviews and refactoring are necessary to maintain quality.
+| Incomplete internationalization | Low | Currently, the application is available in Spanish, English, German, and French. However, the full internationalization for all supported languages may not be completed in time.
+| Database selection | Low | The choice of database is not based on familiarity but on suitability for the project. This may introduce challenges during implementation.
+| Documentation in parallel | Medium | Documentation will be created alongside development, which may cause delays or incomplete documentation in the final stages.
+| Testing coverage | Medium | Testing will cover most of the code, but some parts may not be fully covered due to time constraints.
+| Security constraints | Low | Standard security measures will be applied, but advanced security features may be delayed due to performance concerns.
+|===

@@ -1,7 +1,6 @@
 package com.uniovi.controllers;
 
 import com.uniovi.entities.GameSession;
-import com.uniovi.entities.MultiplayerSession;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Question;
 import com.uniovi.services.GameSessionService;
@@ -9,8 +8,6 @@ import com.uniovi.services.MultiplayerSessionService;
 import com.uniovi.services.PlayerService;
 import com.uniovi.services.QuestionService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +41,7 @@ public class GameController {
      * @param model The model to be used
      * @return The view to be shown
      */
-    @GetMapping("/game")
+    @GetMapping("/game/trivial")
     public String getGame(HttpSession session, Model model, Principal principal) {
         GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSession != null && !gameSession.isFinished() && !gameSession.isMultiplayer()) {
@@ -62,9 +59,14 @@ public class GameController {
         return "game/basicGame";
     }
 
-    @GetMapping("/multiplayerGame")
-    public String getMultiplayerGame() {
-        return "game/multiplayerGame";
+    @GetMapping("/game/trivial/multiplayer")
+    public String getTrivialMultiplayerGame() {
+        return "redirect:/multiplayerGame/createGame";
+    }
+
+    @GetMapping("/game/image/multiplayer")
+    public String getImageMultiplayerGame() {
+        return "redirect:/multiplayerGame/createGame";
     }
 
     @GetMapping("/multiplayerGame/{code}")
@@ -189,13 +191,13 @@ public class GameController {
     public String getCheckResult(@PathVariable Long idQuestion, @PathVariable Long idAnswer, Model model, HttpSession session, Principal principal) {
         GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSession == null) {
-            return "redirect:/game";
+            return "redirect:/game/trivial";
         }
 
         if (!gameSession.hasQuestionId(idQuestion)) {
             model.addAttribute("score", gameSession.getScore());
             session.removeAttribute(GAMESESSION_STR);
-            return "redirect:/game"; // if someone wants to exploit the game, just redirect to the game page
+            return "redirect:/game/trivial"; // if someone wants to exploit the game, just redirect to the game page
         }
 
         if(idAnswer == -1

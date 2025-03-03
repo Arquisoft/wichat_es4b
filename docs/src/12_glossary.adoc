@@ -3,35 +3,6 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-glossary]]
 == Glossary
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Contents
-The most important domain and technical terms that your stakeholders use when discussing the system.
-
-You can also see the glossary as source for translations if you work in multi-language teams.
-
-.Motivation
-You should clearly define your terms, so that all stakeholders
-
-* have an identical understanding of these terms
-* do not use synonyms and homonyms
-
-
-.Form
-
-A table with columns <Term> and <Definition>.
-
-Potentially more columns in case you need translations.
-
-
-.Further Information
-
-See https://docs.arc42.org/section-12/[Glossary] in the arc42 documentation.
-
-****
-endif::arc42help[]
-
 [cols="e,2e" options="header"]
 |===
 | Term | Definition
@@ -45,6 +16,9 @@ endif::arc42help[]
 | _API (Application Programming Interface)_
 | A set of protocols and tools that allow different software components to communicate, enabling external access to user and question data.
 
+| _ApiKey_
+| A unique identifier used to authenticate and authorize requests to an API.
+
 | _Gamification_
 | The integration of game-like elements, such as rewards and leaderboards, to enhance user engagement and motivation.
 
@@ -53,4 +27,21 @@ endif::arc42help[]
 
 | _Observability_
 | The capability to monitor, log, and analyze system performance and behavior to ensure reliability and quick issue resolution.
+
+| _Technical Risk_
+| A potential event or issue that could threaten the successful completion of the project, delay timelines, or increase costs if not properly managed.
+
+| _Technical Debt_
+| Suboptimal development practices or decisions that could lead to additional work or issues in the future, such as poor code quality or incomplete features.
+
+| _Spring Boot_
+| A Java-based framework used for building web applications and microservices, which may introduce a learning curve for the development team.
+
+| _Docker_
+| A platform for developing, shipping, and running applications inside containers, enabling consistent environments across different systems.
+
+| _Internationalization_
+| The process of designing a system to support multiple languages and regions, enabling global accessibility.
+
+
 |===

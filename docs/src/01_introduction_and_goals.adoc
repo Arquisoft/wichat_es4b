@@ -79,6 +79,7 @@ endif::arc42help[]
 | High     | Usability    | Ensure that users can easily navigate and interact with the application.
 | Medium   | Availability | Guarantee uptime and reliability for a seamless user experience.
 | Medium   | Maintainability | Use a modular architecture to facilitate updates and future improvements.
+| Low      | Internationalization | Ensure the system supports multiple languages and cultural adaptations for a global audience.
 |===
 
 ifdef::arc42help[]
