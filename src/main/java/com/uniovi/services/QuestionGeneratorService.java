@@ -92,24 +92,27 @@ public class QuestionGeneratorService {
         }
 
         QuestionGenerator qgen = new QuestionGeneratorV2(json);
-        QuestionType type = types.pop();
         List<QuestionDto> questions;
+        for(QuestionType type : types) {
 
-        List<Question> qsp = qgen.getQuestions(Question.SPANISH, type.getQuestion(), type.getCategory());
-        questions = qsp.stream().map(QuestionDto::new).toList();
-        questions.forEach(questionService::addNewQuestion);
+            List<Question> qsp = qgen.getQuestions(Question.SPANISH, type.getQuestion(), type.getCategory());
+            questions = qsp.stream().map(QuestionDto::new).toList();
+            questions.forEach(questionService::addNewQuestion);
 
-        List<Question> qen = qgen.getQuestions(Question.ENGLISH,  type.getQuestion(), type.getCategory());
-        questions = qen.stream().map(QuestionDto::new).toList();
-        questions.forEach(questionService::addNewQuestion);
+            List<Question> qen = qgen.getQuestions(Question.ENGLISH,  type.getQuestion(), type.getCategory());
+            questions = qen.stream().map(QuestionDto::new).toList();
+            questions.forEach(questionService::addNewQuestion);
 
-        List<Question> qfr = qgen.getQuestions(Question.FRENCH,  type.getQuestion(), type.getCategory());
-        questions = qfr.stream().map(QuestionDto::new).toList();
-        questions.forEach(questionService::addNewQuestion);
+            List<Question> qfr = qgen.getQuestions(Question.FRENCH,  type.getQuestion(), type.getCategory());
+            questions = qfr.stream().map(QuestionDto::new).toList();
+            questions.forEach(questionService::addNewQuestion);
 
-        List<Question> qDe = qgen.getQuestions(Question.DEUCH,  type.getQuestion(), type.getCategory());
-        questions = qDe.stream().map(QuestionDto::new).toList();
-        questions.forEach(questionService::addNewQuestion);
+            List<Question> qDe = qgen.getQuestions(Question.DEUCH,  type.getQuestion(), type.getCategory());
+            questions = qDe.stream().map(QuestionDto::new).toList();
+            questions.forEach(questionService::addNewQuestion);
+            types.remove(type);
+        }
+
     }
 
     @Transactional
