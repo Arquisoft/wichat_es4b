@@ -1,0 +1,36 @@
+{
+  "language_placeholder": "[LANGUAGE]",
+  "question_placeholder": "[QUESTION]",
+  "answer_placeholder": "[ANSWER]",
+  "categories": [
+    {
+      "name": "Science",
+      "questions": [
+        {
+          "type": "element",
+          "statements": [
+            {
+              "language": "es",
+              "statement": "¿Cuál es el símbolo químico del [QUESTION]?"
+            },
+            {
+              "language": "en",
+              "statement": "What is the chemical symbol of [QUESTION]?"
+            },
+            {
+              "language": "fr",
+              "statement": "Quel est le symbole chimique du [QUESTION]?"
+            },
+            {
+              "language": "de",
+              "statement": "Was ist das chemische Symbol für [QUESTION]?"
+            }
+          ],
+          "question": "elementLabel",
+          "answer": "symbol",
+          "sparqlQuery": "select distinct ?element ?[QUESTION] ?[ANSWER] where {\n  ?element wdt:P31 wd:Q11344 .\n  ?element wdt:P246 ?[ANSWER] .\n  ?element rdfs:label ?[QUESTION] .\n  FILTER NOT EXISTS {?element wdt:P31 wd:Q1299291} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\")\n  }"
+        }
+      ]
+    }
+  ]
+}
