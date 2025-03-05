@@ -17,157 +17,59 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class LlmService {
 
-    private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
-    private static final String EMPATHY_API_URL = "https://empathyai.prod.empathy.co/v1/chat/completions";
+    @Value("${API_KEY}")
+    private String apiKey;
 
-    @Value("${GEMINI_API_KEY}")
-    private String geminiApiKey;
+    private HttpHeaders headers;
 
-    @Value("${EMPATHY_API_KEY}")
-    private String empathyApiKey;
+    private final RestTemplate restTemplate = new RestTemplate();
 
-    private final RestTemplate restTemplate;
-
-    public LlmService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-
-    /**
-     * Envía una pregunta a Gemini o Empathy y devuelve la respuesta generada.
-     */
-    public String getLLMResponse(String question, String model) {
-        String requestJson;
-        String url;
+    public String sendQuestionToLLM(String question, String imageUrl) {
+        String url = "https://empathyai.prod.empathy.co/v1/chat/completions";
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json");
+        headers.add("Content-Type", "application/json");
+        headers.add("Authorization", "Bearer " + apiKey);
 
-        switch (model.toLowerCase()) {
-            case "gemini":
-                url = GEMINI_API_URL + "?key=" + geminiApiKey;
-                requestJson = String.format("{\"contents\":[{\"parts\":[{\"text\":\"%s\"}]}]}", question);
-                break;
-            case "empathy":
-                url = EMPATHY_API_URL;
-                headers.set("Authorization", "Bearer " + empathyApiKey);
-                requestJson = String.format("{\"model\":\"qwen/Qwen2.5-Coder-7B-Instruct\",\"messages\":[{\"role\":\"system\",\"content\":\"You are a helpful assistant.\"},{\"role\":\"user\",\"content\":\"%s\"}]}", question);
-                break;
-            default:
-                return "Model not supported.";
-        }
+        // Si se pasa una URL de imagen, incluimos esta en el mensaje
+        String imageMessage = imageUrl != null && !imageUrl.isEmpty()
+                ? "¿Puedes decirme que se puede ver en la imagen siguiente?: " + imageUrl
+                : "";
 
-        HttpEntity<String> entity = new HttpEntity<>(requestJson, headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+        // Construcción del cuerpo de la solicitud
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(Map.of(
+                "model", "mistralai/Mistral-7B-Instruct-v0.3",
+                "messages", new Object[]{
+                        Map.of("role", "system", "content", "You are a helpful assistant."),
+                        Map.of("role", "user", "content", question),
+                        // Si se pasa una URL de imagen, lo agregamos como parte de la respuesta del asistente
+                        imageMessage.isEmpty() ? null : Map.of("role", "assistant", "content", imageMessage)
+                }
+        ), headers);
 
-        return switch (model.toLowerCase()) {
-            case "gemini" -> extractGeminiResponse(response.getBody());
-            case "empathy" -> extractEmpathyResponse(response.getBody());
-            default -> "Invalid model response.";
-        };
-    }
-
-    /**
-     * Envía una imagen en Base64 junto con una pregunta a Gemini o Empathy y obtiene una respuesta.
-     */
-    public String getLLMResponseWithImage(String imageUrl, String question, String model) throws IOException {
-        byte[] imageBytes = downloadImage(imageUrl);
-        if (imageBytes == null) {
-            return "Error downloading image.";
-        }
-        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
-
-        String requestJson;
-        String url;
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json");
-
-        switch (model.toLowerCase()) {
-            case "gemini":
-                url = "https://api.gemini.com/v1/generate?key=" + geminiApiKey;
-                requestJson = String.format(
-                        "{ \"contents\": [ { \"parts\": [ " +
-                                "{ \"inline_data\": { \"mime_type\": \"image/jpeg\", \"data\": \"%s\" } }, " +
-                                "{ \"text\": \"%s\" } ] } ] }",
-                        base64Image, question
-                );
-                break;
-            case "empathy":
-                url = "https://api.empathy.com/v1/generate";
-                headers.set("Authorization", "Bearer " + empathyApiKey);
-                requestJson = String.format(
-                        "{ \"model\": \"qwen/Qwen2.5-Coder-7B-Instruct\", \"messages\": [ " +
-                                "{ \"role\": \"system\", \"content\": \"You are a helpful assistant.\" }, " +
-                                "{ \"role\": \"user\", \"content\": \"%s\" }, " +
-                                "{ \"role\": \"user\", \"content\": \"data:image/jpeg;base64,%s\" } ] }",
-                        question, base64Image
-                );
-                break;
-            default:
-                return "Model not supported.";
-        }
-
-        HttpEntity<String> entity = new HttpEntity<>(requestJson, headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-
-        return switch (model.toLowerCase()) {
-            case "gemini" -> extractGeminiResponse(response.getBody());
-            case "empathy" -> extractEmpathyResponse(response.getBody());
-            default -> "Invalid model response.";
-        };
-    }
-
-    private byte[] downloadImage(String imageUrl) {
-        try (InputStream in = new URL(imageUrl).openStream();
-             ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
-            byte[] temp = new byte[8192];
-            int bytesRead;
-            while ((bytesRead = in.read(temp)) != -1) {
-                buffer.write(temp, 0, bytesRead);
-            }
-            return buffer.toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * Extrae la respuesta de Gemini desde el JSON de la API.
-     */
-    private String extractGeminiResponse(String responseBody) {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(responseBody);
-            return jsonNode.at("/candidates/0/content").asText();
-        } catch (IOException e) {
-            return "Error processing Gemini response.";
+            // Enviar la solicitud POST a la API
+            ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, request, Map.class);
+
+            // Extraer y procesar la respuesta
+            return extractResponse(response.getBody());
+        } catch (Exception e) {
+            // Manejo de errores
+            System.err.println("Error en la consulta: " + e.getMessage());
+            return "Error al comunicarse con la API";
         }
     }
 
-    /**
-     * Extrae la respuesta de Empathy desde el JSON de la API.
-     */
-    private String extractEmpathyResponse(String responseBody) {
+    private String extractResponse(Map<?, ?> response) {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(responseBody);
-            return jsonNode.at("/choices/0/message/content").asText();
-        } catch (IOException e) {
-            return "Error processing Empathy response.";
-        }
-    }
-
-    /**
-     * Usa una imagen y una pregunta para obtener una respuesta del modelo.
-     */
-    public String getImageHint(String imageUrl, String question, String model) {
-        try {
-            return getLLMResponseWithImage(imageUrl, question, model);
-        } catch (IOException e) {
-            return "Error reading image file.";
+            return ((Map<String, String>) ((Map<String, Object>) ((List<Object>) response.get("choices")).get(0)).get("message")).get("content").toString();
+        } catch (Exception e) {
+            return "Error processing response";
         }
     }
 }

@@ -11,11 +11,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URI;
@@ -28,6 +33,10 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @Tag("unit")
@@ -72,6 +81,11 @@ class Wiq_UnitTests {
     MultiplayerSessionRepository multiplayerSessionRepository;
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
+    @Autowired
+    private LlmService llmService;
+
+    @Mock
+    private RestTemplate restTemplate;
 
     private Player createPlayer() {
         return new Player("name", "test@email.com", "password");
@@ -85,7 +99,7 @@ class Wiq_UnitTests {
     @Order(1)
     void testPlayerService() {
         List<Player> players = playerService.getUsersByRole("ROLE_USER");
-        Assertions.assertEquals(1, players.size());
+        assertEquals(1, players.size());
     }
 
     @Order(3)
@@ -101,8 +115,8 @@ class Wiq_UnitTests {
         Player player = createPlayer();
         Role role = new Role();
         Associations.PlayerRole.addRole(player, role);
-        Assertions.assertTrue(player.getRoles().contains(role));
-        Assertions.assertTrue(role.getPlayers().contains(player));
+        assertTrue(player.getRoles().contains(role));
+        assertTrue(role.getPlayers().contains(player));
     }
 
     @Test
@@ -122,8 +136,8 @@ class Wiq_UnitTests {
         Player player = createPlayer();
         ApiKey apiKey = new ApiKey();
         Associations.PlayerApiKey.addApiKey(player, apiKey);
-        Assertions.assertEquals(player.getApiKey(), apiKey);
-        Assertions.assertEquals(apiKey.getPlayer(), player);
+        assertEquals(player.getApiKey(), apiKey);
+        assertEquals(apiKey.getPlayer(), player);
     }
 
     @Test
@@ -143,8 +157,8 @@ class Wiq_UnitTests {
         ApiKey apiKey = new ApiKey();
         RestApiAccessLog accessLog = new RestApiAccessLog();
         Associations.ApiKeyAccessLog.addAccessLog(apiKey, accessLog);
-        Assertions.assertTrue(apiKey.getAccessLogs().contains(accessLog));
-        Assertions.assertEquals(accessLog.getApiKey(), apiKey);
+        assertTrue(apiKey.getAccessLogs().contains(accessLog));
+        assertEquals(accessLog.getApiKey(), apiKey);
     }
 
     @Test
@@ -164,8 +178,8 @@ class Wiq_UnitTests {
         Player player = createPlayer();
         GameSession gameSession = new GameSession();
         Associations.PlayerGameSession.addGameSession(player, gameSession);
-        Assertions.assertTrue(player.getGameSessions().contains(gameSession));
-        Assertions.assertEquals(gameSession.getPlayer(), player);
+        assertTrue(player.getGameSessions().contains(gameSession));
+        assertEquals(gameSession.getPlayer(), player);
     }
 
     @Test
@@ -189,10 +203,10 @@ class Wiq_UnitTests {
         answers.add(answer1);
         answers.add(answer2);
         Associations.QuestionAnswers.addAnswer(question, answers);
-        Assertions.assertTrue(question.getOptions().contains(answer1));
-        Assertions.assertTrue(question.getOptions().contains(answer2));
-        Assertions.assertEquals(answer1.getQuestion(), question);
-        Assertions.assertEquals(answer2.getQuestion(), question);
+        assertTrue(question.getOptions().contains(answer1));
+        assertTrue(question.getOptions().contains(answer2));
+        assertEquals(answer1.getQuestion(), question);
+        assertEquals(answer2.getQuestion(), question);
     }
 
     @Test
@@ -216,8 +230,8 @@ class Wiq_UnitTests {
     @Order(15)
     void testCategoryCreation() {
         Category category = new Category("Test Category", "This is a test category");
-        Assertions.assertEquals("Test Category", category.getName());
-        Assertions.assertEquals("This is a test category", category.getDescription());
+        assertEquals("Test Category", category.getName());
+        assertEquals("This is a test category", category.getDescription());
     }
 
     @Test
@@ -225,8 +239,8 @@ class Wiq_UnitTests {
     void testJsonGeneration() {
         Category category = new Category("Test Category", "This is a test category");
         JsonNode json = category.toJson();
-        Assertions.assertEquals("Test Category", json.get("name").asText());
-        Assertions.assertEquals("This is a test category", json.get("description").asText());
+        assertEquals("Test Category", json.get("name").asText());
+        assertEquals("This is a test category", json.get("description").asText());
     }
 
     @Test
@@ -240,8 +254,8 @@ class Wiq_UnitTests {
         questions.add(question);
         category.setQuestions(questions);
 
-        Assertions.assertEquals(1, category.getQuestions().size());
-        Assertions.assertTrue(category.getQuestions().contains(question));
+        assertEquals(1, category.getQuestions().size());
+        assertTrue(category.getQuestions().contains(question));
     }
 
     @Test
@@ -256,10 +270,10 @@ class Wiq_UnitTests {
 
         JsonNode json = answer.toJson();
 
-        Assertions.assertEquals(1L, json.get("id").asLong());
-        Assertions.assertEquals("Sample Answer", json.get("text").asText());
-        Assertions.assertTrue(json.get("correct").asBoolean());
-        Assertions.assertEquals(1L, json.get("question").asLong());
+        assertEquals(1L, json.get("id").asLong());
+        assertEquals("Sample Answer", json.get("text").asText());
+        assertTrue(json.get("correct").asBoolean());
+        assertEquals(1L, json.get("question").asLong());
     }
 
     @Test
@@ -271,9 +285,9 @@ class Wiq_UnitTests {
 
         int initialScore = gameSession.getScore();
         gameSession.addQuestion(true, 20);
-        Assertions.assertEquals(initialScore + 30, gameSession.getScore());
-        Assertions.assertEquals(1, gameSession.getCorrectQuestions());
-        Assertions.assertEquals(1, gameSession.getTotalQuestions());
+        assertEquals(initialScore + 30, gameSession.getScore());
+        assertEquals(1, gameSession.getCorrectQuestions());
+        assertEquals(1, gameSession.getTotalQuestions());
     }
 
     @Test
@@ -285,9 +299,9 @@ class Wiq_UnitTests {
 
         int initialScore = gameSession.getScore();
         gameSession.addQuestion(false, 20);
-        Assertions.assertEquals(initialScore, gameSession.getScore());
-        Assertions.assertEquals(0, gameSession.getCorrectQuestions());
-        Assertions.assertEquals(1, gameSession.getTotalQuestions());
+        assertEquals(initialScore, gameSession.getScore());
+        assertEquals(0, gameSession.getCorrectQuestions());
+        assertEquals(1, gameSession.getTotalQuestions());
     }
 
     @Test
@@ -299,11 +313,11 @@ class Wiq_UnitTests {
         questions.add(question);
         GameSession gameSession = new GameSession(player, questions);
 
-        Assertions.assertTrue(gameSession.getQuestionsToAnswer().contains(question));
+        assertTrue(gameSession.getQuestionsToAnswer().contains(question));
         Assertions.assertFalse(gameSession.getAnsweredQuestions().contains(question));
         gameSession.addAnsweredQuestion(question);
         Assertions.assertFalse(gameSession.getQuestionsToAnswer().contains(question));
-        Assertions.assertTrue(gameSession.getAnsweredQuestions().contains(question));
+        assertTrue(gameSession.getAnsweredQuestions().contains(question));
     }
 
     @Test
@@ -317,7 +331,7 @@ class Wiq_UnitTests {
         gameSession.setCreatedAt(createdAt);
         gameSession.setFinishTime(finishTime);
 
-        Assertions.assertEquals("00:05:00", gameSession.getDuration());
+        assertEquals("00:05:00", gameSession.getDuration());
     }
 
     @Test
@@ -344,17 +358,17 @@ class Wiq_UnitTests {
 
         JsonNode json = player.toJson();
 
-        Assertions.assertEquals(1L, json.get("id").asLong());
-        Assertions.assertEquals("name", json.get("username").asText());
-        Assertions.assertEquals("test@email.com", json.get("email").asText());
+        assertEquals(1L, json.get("id").asLong());
+        assertEquals("name", json.get("username").asText());
+        assertEquals("test@email.com", json.get("email").asText());
 
         ArrayNode rolesArray = (ArrayNode) json.get("roles");
-        Assertions.assertEquals(2, rolesArray.size());
+        assertEquals(2, rolesArray.size());
 
         ArrayNode gameSessionsArray = (ArrayNode) json.get("gameSessions");
-        Assertions.assertEquals(1, gameSessionsArray.size());
+        assertEquals(1, gameSessionsArray.size());
         // Se verifica que la sesión de juego está presente en el JSON
-        Assertions.assertEquals(gameSession.getId(), gameSessionsArray.get(0).get("id").asLong());
+        assertEquals(gameSession.getId(), gameSessionsArray.get(0).get("id").asLong());
     }
 
     @Test
@@ -363,7 +377,7 @@ class Wiq_UnitTests {
         Question question = new Question();
         Answer option = new Answer("Option A", false);
         question.addOption(option);
-        Assertions.assertTrue(question.getOptions().contains(option));
+        assertTrue(question.getOptions().contains(option));
     }
 
     @Test
@@ -389,9 +403,9 @@ class Wiq_UnitTests {
 
         List<Answer> scrambledOptions = question.returnScrambledOptions();
 
-        Assertions.assertTrue(scrambledOptions.contains(option1));
-        Assertions.assertTrue(scrambledOptions.contains(option2));
-        Assertions.assertTrue(scrambledOptions.contains(option3));
+        assertTrue(scrambledOptions.contains(option1));
+        assertTrue(scrambledOptions.contains(option2));
+        assertTrue(scrambledOptions.contains(option3));
     }
 
     @Test
@@ -403,7 +417,7 @@ class Wiq_UnitTests {
         question.addOption(option1);
         question.addOption(option2);
 
-        Assertions.assertTrue(question.hasEmptyOptions());
+        assertTrue(question.hasEmptyOptions());
     }
 
     @Test
@@ -422,10 +436,10 @@ class Wiq_UnitTests {
 
         JsonNode json = question.toJson();
 
-        Assertions.assertTrue(json.toString().contains("Sample question"));
-        Assertions.assertTrue(json.toString().contains("Category"));
-        Assertions.assertTrue(json.toString().contains("Option A"));
-        Assertions.assertTrue(json.toString().contains("Option B"));
+        assertTrue(json.toString().contains("Sample question"));
+        assertTrue(json.toString().contains("Category"));
+        assertTrue(json.toString().contains("Option A"));
+        assertTrue(json.toString().contains("Option B"));
     }
 
     @Test
@@ -433,9 +447,9 @@ class Wiq_UnitTests {
     void testGetPlayerNoApiKey() throws IOException, InterruptedException, JSONException {
         HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of(), Map.of());
 
-        Assertions.assertEquals(401, response.statusCode());
+        assertEquals(401, response.statusCode());
         JSONObject json = parseJsonResponse(response);
-        Assertions.assertEquals("Invalid API key", json.getString("error"));
+        assertEquals("Invalid API key", json.getString("error"));
     }
 
     @Test
@@ -443,9 +457,9 @@ class Wiq_UnitTests {
     void testGetPlayerInvalidApiKey() throws IOException, InterruptedException, JSONException {
         HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of("API-KEY", "zzzz"), Map.of());
 
-        Assertions.assertEquals(401, response.statusCode());
+        assertEquals(401, response.statusCode());
         JSONObject json = parseJsonResponse(response);
-        Assertions.assertEquals("Invalid API key", json.getString("error"));
+        assertEquals("Invalid API key", json.getString("error"));
     }
 
     @Test
@@ -456,10 +470,10 @@ class Wiq_UnitTests {
 
         HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of(), Map.of("apiKey", apiKey.getKeyToken()));
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
-        Assertions.assertTrue(json.has("players"));
-        Assertions.assertTrue(json.getJSONArray("players").length() > 0);
+        assertTrue(json.has("players"));
+        assertTrue(json.getJSONArray("players").length() > 0);
     }
 
     @Test
@@ -472,12 +486,12 @@ class Wiq_UnitTests {
                 Map.of("apiKey", apiKey.getKeyToken(),
                         "id", String.valueOf(player.getId())));
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         JSONObject playerJson = json.getJSONArray("players").getJSONObject(0);
-        Assertions.assertEquals(player.getId(), playerJson.getLong("id"));
-        Assertions.assertEquals(player.getUsername(), playerJson.getString("username"));
-        Assertions.assertEquals(player.getEmail(), playerJson.getString("email"));
+        assertEquals(player.getId(), playerJson.getLong("id"));
+        assertEquals(player.getUsername(), playerJson.getString("username"));
+        assertEquals(player.getEmail(), playerJson.getString("email"));
     }
 
     @Test
@@ -490,12 +504,12 @@ class Wiq_UnitTests {
                 Map.of("apiKey", apiKey.getKeyToken(),
                         "email", player.getEmail()));
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         JSONObject playerJson = json.getJSONArray("players").getJSONObject(0);
-        Assertions.assertEquals(player.getId(), playerJson.getLong("id"));
-        Assertions.assertEquals(player.getUsername(), playerJson.getString("username"));
-        Assertions.assertEquals(player.getEmail(), playerJson.getString("email"));
+        assertEquals(player.getId(), playerJson.getLong("id"));
+        assertEquals(player.getUsername(), playerJson.getString("username"));
+        assertEquals(player.getEmail(), playerJson.getString("email"));
     }
 
     @Test
@@ -508,12 +522,12 @@ class Wiq_UnitTests {
                 Map.of("apiKey", apiKey.getKeyToken(),
                         "username", player.getUsername()));
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         JSONObject playerJson = json.getJSONArray("players").getJSONObject(0);
-        Assertions.assertEquals(player.getId(), playerJson.getLong("id"));
-        Assertions.assertEquals(player.getUsername(), playerJson.getString("username"));
-        Assertions.assertEquals(player.getEmail(), playerJson.getString("email"));
+        assertEquals(player.getId(), playerJson.getLong("id"));
+        assertEquals(player.getUsername(), playerJson.getString("username"));
+        assertEquals(player.getEmail(), playerJson.getString("email"));
     }
 
     @Test
@@ -526,13 +540,13 @@ class Wiq_UnitTests {
                 Map.of("apiKey", apiKey.getKeyToken(),
                         "usernames", player.getUsername()));
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         JSONArray players = json.getJSONArray("players");
-        Assertions.assertTrue(players.length() > 0);
+        assertTrue(players.length() > 0);
         for (int i = 0; i < players.length(); i++) {
             JSONObject playerJson = players.getJSONObject(i);
-            Assertions.assertEquals(player.getUsername(), playerJson.getString("username"));
+            assertEquals(player.getUsername(), playerJson.getString("username"));
         }
     }
 
@@ -546,13 +560,13 @@ class Wiq_UnitTests {
                 Map.of("apiKey", apiKey.getKeyToken(),
                         "emails", player.getEmail()));
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         JSONArray players = json.getJSONArray("players");
-        Assertions.assertTrue(players.length() > 0);
+        assertTrue(players.length() > 0);
         for (int i = 0; i < players.length(); i++) {
             JSONObject playerJson = players.getJSONObject(i);
-            Assertions.assertEquals(player.getEmail(), playerJson.getString("email"));
+            assertEquals(player.getEmail(), playerJson.getString("email"));
         }
     }
 
@@ -566,13 +580,13 @@ class Wiq_UnitTests {
                 Map.of("apiKey", apiKey.getKeyToken(),
                         "emails", player.getEmail(), "role", "ROLE_USER"));
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         JSONArray players = json.getJSONArray("players");
-        Assertions.assertTrue(players.length() > 0);
+        assertTrue(players.length() > 0);
         for (int i = 0; i < players.length(); i++) {
             JSONObject playerJson = players.getJSONObject(i);
-            Assertions.assertEquals(player.getEmail(), playerJson.getString("email"));
+            assertEquals(player.getEmail(), playerJson.getString("email"));
         }
     }
 
@@ -586,13 +600,13 @@ class Wiq_UnitTests {
                 Map.of("apiKey", apiKey.getKeyToken(),
                         "role", "ROLE_USER"));
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         JSONArray players = json.getJSONArray("players");
-        Assertions.assertTrue(players.length() > 0);
+        assertTrue(players.length() > 0);
         for (int i = 0; i < players.length(); i++) {
             JSONObject playerJson = players.getJSONObject(i);
-            Assertions.assertEquals(player.getEmail(), playerJson.getString("email"));
+            assertEquals(player.getEmail(), playerJson.getString("email"));
         }
     }
 
@@ -630,15 +644,15 @@ class Wiq_UnitTests {
         HttpResponse<String> response = sendRequest("POST", "/api/players", Map.of("API-KEY", apiKey.getKeyToken()),
                 data);
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
-        Assertions.assertTrue(json.getBoolean("success"));
+        assertTrue(json.getBoolean("success"));
         Long newId = json.getLong("id");
 
         Optional<Player> newPlayer = playerService.getUser(newId);
-        Assertions.assertTrue(newPlayer.isPresent());
-        Assertions.assertEquals("newUser", newPlayer.get().getUsername());
-        Assertions.assertEquals("newUser@email.com", newPlayer.get().getEmail());
+        assertTrue(newPlayer.isPresent());
+        assertEquals("newUser", newPlayer.get().getUsername());
+        assertEquals("newUser@email.com", newPlayer.get().getEmail());
 
         playerService.deletePlayer(newId);
     }
@@ -659,10 +673,10 @@ class Wiq_UnitTests {
         HttpResponse<String> response = sendRequest("POST", "/api/players", Map.of("API-KEY", apiKey.getKeyToken()),
                 data);
 
-        Assertions.assertEquals(400, response.statusCode());
+        assertEquals(400, response.statusCode());
         JSONObject json = parseJsonResponse(response);
-        Assertions.assertTrue(json.has("email"));
-        Assertions.assertTrue(json.has("username"));
+        assertTrue(json.has("email"));
+        assertTrue(json.has("username"));
     }
 
     @Test
@@ -681,9 +695,9 @@ class Wiq_UnitTests {
         HttpResponse<String> response = sendRequest("POST", "/api/players", Map.of("API-KEY", apiKey.getKeyToken()),
                 data);
 
-        Assertions.assertEquals(400, response.statusCode());
+        assertEquals(400, response.statusCode());
         JSONObject json = parseJsonResponse(response);
-        Assertions.assertTrue(json.has("email"));
+        assertTrue(json.has("email"));
     }
 
     @Test
@@ -701,14 +715,14 @@ class Wiq_UnitTests {
         HttpResponse<String> response = sendRequest("PATCH", "/api/players/" + player.getId(), Map.of("API-KEY", apiKey.getKeyToken()),
                 data);
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
-        Assertions.assertTrue(json.getBoolean("success"));
+        assertTrue(json.getBoolean("success"));
 
         Optional<Player> updatedPlayer = playerService.getUser(player.getId());
-        Assertions.assertTrue(updatedPlayer.isPresent());
-        Assertions.assertEquals("newUsername", updatedPlayer.get().getUsername());
-        Assertions.assertEquals("newEmail@email.com", updatedPlayer.get().getEmail());
+        assertTrue(updatedPlayer.isPresent());
+        assertEquals("newUsername", updatedPlayer.get().getUsername());
+        assertEquals("newEmail@email.com", updatedPlayer.get().getEmail());
     }
 
     @Test
@@ -740,8 +754,8 @@ class Wiq_UnitTests {
         Assertions.assertNotEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
 
-        Assertions.assertTrue(json.has("email"));
-        Assertions.assertTrue(json.has("username"));
+        assertTrue(json.has("email"));
+        assertTrue(json.has("username"));
     }
 
     @Test
@@ -796,7 +810,7 @@ class Wiq_UnitTests {
         HttpResponse<String> response = sendRequest("DELETE", "/api/players/9999999", Map.of("API-KEY", apiKey.getKeyToken()),
                 Map.of());
 
-        Assertions.assertEquals(404, response.statusCode());
+        assertEquals(404, response.statusCode());
     }
 
     @Test
@@ -808,10 +822,10 @@ class Wiq_UnitTests {
         HttpResponse<String> response = sendRequest("DELETE", "/api/players/" + player.getId(), Map.of("API-KEY", apiKey.getKeyToken()),
                 Map.of());
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
 
         Optional<Player> deletedPlayer = playerService.getUser(player.getId());
-        Assertions.assertTrue(deletedPlayer.isEmpty());
+        assertTrue(deletedPlayer.isEmpty());
     }
 
     @Test
@@ -819,9 +833,9 @@ class Wiq_UnitTests {
     void testGetQuestionsInvalidApiKey() throws IOException, InterruptedException, JSONException {
         HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of("API-KEY", "zzzz"), Map.of());
 
-        Assertions.assertEquals(401, response.statusCode());
+        assertEquals(401, response.statusCode());
         JSONObject json = parseJsonResponse(response);
-        Assertions.assertEquals("Invalid API key", json.getString("error"));
+        assertEquals("Invalid API key", json.getString("error"));
     }
 
     @Test
@@ -834,10 +848,10 @@ class Wiq_UnitTests {
         HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(),
                 Map.of("apiKey", apiKey.getKeyToken(), "lang", "es"));
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
-        Assertions.assertTrue(json.has("questions"));
-        Assertions.assertTrue(json.getJSONArray("questions").length() > 0);
+        assertTrue(json.has("questions"));
+        assertTrue(json.getJSONArray("questions").length() > 0);
     }
 
     @Test
@@ -850,10 +864,10 @@ class Wiq_UnitTests {
         HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(),
                 Map.of("apiKey", apiKey.getKeyToken(), "id", "notnumeric"));
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
-        Assertions.assertTrue(json.has("questions"));
-        Assertions.assertEquals(0, json.getJSONArray("questions").length());
+        assertTrue(json.has("questions"));
+        assertEquals(0, json.getJSONArray("questions").length());
     }
 
     @Test
@@ -867,10 +881,10 @@ class Wiq_UnitTests {
         HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(),
                 Map.of("apiKey", apiKey.getKeyToken(), "category", cat));
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
-        Assertions.assertTrue(json.has("questions"));
-        Assertions.assertTrue(json.getJSONArray("questions").length() > 0);
+        assertTrue(json.has("questions"));
+        assertTrue(json.getJSONArray("questions").length() > 0);
     }
 
     @Test
@@ -885,10 +899,10 @@ class Wiq_UnitTests {
         HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(),
                 Map.of("apiKey", apiKey.getKeyToken(), "category", cat.getId()));
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
-        Assertions.assertTrue(json.has("questions"));
-        Assertions.assertTrue(json.getJSONArray("questions").length() > 0);
+        assertTrue(json.has("questions"));
+        assertTrue(json.getJSONArray("questions").length() > 0);
     }
 
     @Test
@@ -903,11 +917,11 @@ class Wiq_UnitTests {
                 Map.of("apiKey", apiKey.getKeyToken(),
                         "id", question.getId()));
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         JSONObject questionJson = json.getJSONArray("questions").getJSONObject(0);
-        Assertions.assertEquals(question.getId(), questionJson.getLong("id"));
-        Assertions.assertEquals(question.getStatement(), questionJson.getString("statement"));
+        assertEquals(question.getId(), questionJson.getLong("id"));
+        assertEquals(question.getStatement(), questionJson.getString("statement"));
     }
 
     @Test
@@ -922,11 +936,11 @@ class Wiq_UnitTests {
                 Map.of("apiKey", apiKey.getKeyToken(),
                         "statement", question.getStatement()));
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         JSONObject questionJson = json.getJSONArray("questions").getJSONObject(0);
-        Assertions.assertEquals(question.getId(), questionJson.getLong("id"));
-        Assertions.assertEquals(question.getStatement(), questionJson.getString("statement"));
+        assertEquals(question.getId(), questionJson.getLong("id"));
+        assertEquals(question.getStatement(), questionJson.getString("statement"));
     }
 
     @Test
@@ -938,7 +952,7 @@ class Wiq_UnitTests {
         PlayerDto dto = new PlayerDto("b", "abcd@gmail.com", "1221", "1221", null);
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> playerService.addNewPlayer(dto));
-        Assertions.assertEquals("Email already in use", exception.getMessage());
+        assertEquals("Email already in use", exception.getMessage());
     }
 
     @Test
@@ -950,7 +964,7 @@ class Wiq_UnitTests {
         PlayerDto dto = new PlayerDto("a", "a@gmail.com", "1221", "1221", null);
 
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> playerService.addNewPlayer(dto));
-        Assertions.assertEquals("Username already in use", exception.getMessage());
+        assertEquals("Username already in use", exception.getMessage());
     }
 
     @Test
@@ -961,9 +975,9 @@ class Wiq_UnitTests {
         Player player = playerService.addNewPlayer(dto);
 
         Assertions.assertNotNull(player);
-        Assertions.assertEquals(dto.getUsername(), player.getUsername());
-        Assertions.assertEquals(dto.getEmail(), player.getEmail());
-        Assertions.assertTrue(passwordEncoder.matches(dto.getPassword(), player.getPassword()));
+        assertEquals(dto.getUsername(), player.getUsername());
+        assertEquals(dto.getEmail(), player.getEmail());
+        assertTrue(passwordEncoder.matches(dto.getPassword(), player.getPassword()));
     }
 
     @Test
@@ -975,9 +989,9 @@ class Wiq_UnitTests {
         Player player = playerService.addNewPlayer(dto);
 
         Assertions.assertNotNull(player);
-        Assertions.assertEquals(dto.getUsername(), player.getUsername());
-        Assertions.assertEquals(dto.getEmail(), player.getEmail());
-        Assertions.assertTrue(passwordEncoder.matches(dto.getPassword(), player.getPassword()));
+        assertEquals(dto.getUsername(), player.getUsername());
+        assertEquals(dto.getEmail(), player.getEmail());
+        assertTrue(passwordEncoder.matches(dto.getPassword(), player.getPassword()));
     }
 
     @Test
@@ -993,10 +1007,10 @@ class Wiq_UnitTests {
 
         List<Player> result = playerService.getUsers();
 
-        Assertions.assertEquals(players.size(), result.size());
+        assertEquals(players.size(), result.size());
         for (int i = 0; i < players.size(); i++) {
-            Assertions.assertEquals(players.get(i).getEmail(), result.get(i).getEmail());
-            Assertions.assertEquals(players.get(i).getUsername(), result.get(i).getUsername());
+            assertEquals(players.get(i).getEmail(), result.get(i).getEmail());
+            assertEquals(players.get(i).getUsername(), result.get(i).getUsername());
         }
     }
 
@@ -1006,7 +1020,7 @@ class Wiq_UnitTests {
         List<Player> result = playerService.getUsers();
 
         // Always exists 1 test user
-        Assertions.assertEquals(1, result.size());
+        assertEquals(1, result.size());
     }
 
     @Test
@@ -1019,9 +1033,9 @@ class Wiq_UnitTests {
 
         Optional<Player> result = playerService.getUserByEmail(email);
 
-        Assertions.assertTrue(result.isPresent());
-        Assertions.assertEquals(player.getEmail(), result.get().getEmail());
-        Assertions.assertEquals(player.getUsername(), result.get().getUsername());
+        assertTrue(result.isPresent());
+        assertEquals(player.getEmail(), result.get().getEmail());
+        assertEquals(player.getUsername(), result.get().getUsername());
     }
 
     @Test
@@ -1031,7 +1045,7 @@ class Wiq_UnitTests {
 
         Optional<Player> result = playerService.getUserByEmail(email);
 
-        Assertions.assertEquals(Optional.empty(), result);
+        assertEquals(Optional.empty(), result);
     }
 
     @Test
@@ -1044,9 +1058,9 @@ class Wiq_UnitTests {
 
         Optional<Player> result = playerService.getUserByUsername(username);
 
-        Assertions.assertTrue(result.isPresent());
-        Assertions.assertEquals(player.getUsername(), result.get().getUsername());
-        Assertions.assertEquals(player.getEmail(), result.get().getEmail());
+        assertTrue(result.isPresent());
+        assertEquals(player.getUsername(), result.get().getUsername());
+        assertEquals(player.getEmail(), result.get().getEmail());
     }
 
     @Test
@@ -1056,7 +1070,7 @@ class Wiq_UnitTests {
 
         Optional<Player> result = playerService.getUserByUsername(username);
 
-        Assertions.assertEquals(Optional.empty(), result);
+        assertEquals(Optional.empty(), result);
     }
 
     @Test
@@ -1067,9 +1081,9 @@ class Wiq_UnitTests {
         answerService.addNewAnswer(respuesta);
 
         Optional<Answer> respuestaGuardada = answerRepository.findById(respuesta.getId());
-        Assertions.assertTrue(respuestaGuardada.isPresent());
-        Assertions.assertEquals(respuesta.getText(), respuestaGuardada.get().getText());
-        Assertions.assertEquals(respuesta.isCorrect(), respuestaGuardada.get().isCorrect());
+        assertTrue(respuestaGuardada.isPresent());
+        assertEquals(respuesta.getText(), respuestaGuardada.get().getText());
+        assertEquals(respuesta.isCorrect(), respuestaGuardada.get().isCorrect());
     }
 
     @Test
@@ -1093,8 +1107,8 @@ class Wiq_UnitTests {
         List<Answer> result = answerService.getAnswersPerQuestion(question);
 
         // Assert
-        Assertions.assertEquals(expectedAnswers.size(), result.size());
-        Assertions.assertEquals(3, result.size());
+        assertEquals(expectedAnswers.size(), result.size());
+        assertEquals(3, result.size());
     }
 
     @Test
@@ -1104,7 +1118,7 @@ class Wiq_UnitTests {
 
         Optional<Answer> result = answerService.getAnswer(id);
 
-        Assertions.assertEquals(Optional.empty(), result);
+        assertEquals(Optional.empty(), result);
     }
 
     @Test
@@ -1115,9 +1129,9 @@ class Wiq_UnitTests {
 
         Optional<Answer> result = answerService.getAnswer(id);
 
-        Assertions.assertTrue(result.isPresent());
-        Assertions.assertEquals(answer.getText(), result.get().getText());
-        Assertions.assertEquals(answer.isCorrect(), result.get().isCorrect());
+        assertTrue(result.isPresent());
+        assertEquals(answer.getText(), result.get().getText());
+        assertEquals(answer.isCorrect(), result.get().isCorrect());
     }
 
     @Test
@@ -1128,9 +1142,9 @@ class Wiq_UnitTests {
         categoryService.addNewCategory(category);
 
         Optional<Category> savedCategory = categoryRepository.findById(category.getId());
-        Assertions.assertTrue(savedCategory.isPresent());
-        Assertions.assertEquals(category.getName(), savedCategory.get().getName());
-        Assertions.assertEquals(category.getDescription(), savedCategory.get().getDescription());
+        assertTrue(savedCategory.isPresent());
+        assertEquals(category.getName(), savedCategory.get().getName());
+        assertEquals(category.getDescription(), savedCategory.get().getDescription());
     }
 
     @Test
@@ -1146,10 +1160,10 @@ class Wiq_UnitTests {
 
         List<Category> result = categoryService.getAllCategories();
 
-        Assertions.assertEquals(categories.size(), result.size());
+        assertEquals(categories.size(), result.size());
         for (int i = 0; i < categories.size(); i++) {
-            Assertions.assertEquals(categories.get(i).getName(), result.get(i).getName());
-            Assertions.assertEquals(categories.get(i).getDescription(), result.get(i).getDescription());
+            assertEquals(categories.get(i).getName(), result.get(i).getName());
+            assertEquals(categories.get(i).getDescription(), result.get(i).getDescription());
         }
     }
 
@@ -1158,7 +1172,7 @@ class Wiq_UnitTests {
     void CategoryServiceImpl_getAllCategories_EmptyList() {
         List<Category> result = categoryService.getAllCategories();
 
-        Assertions.assertEquals(1, result.size());
+        assertEquals(1, result.size());
     }
 
     @Test
@@ -1170,9 +1184,9 @@ class Wiq_UnitTests {
 
         Optional<Category> result = categoryService.getCategory(category.getId());
 
-        Assertions.assertTrue(result.isPresent());
-        Assertions.assertEquals(category.getName(), result.get().getName());
-        Assertions.assertEquals(category.getDescription(), result.get().getDescription());
+        assertTrue(result.isPresent());
+        assertEquals(category.getName(), result.get().getName());
+        assertEquals(category.getDescription(), result.get().getDescription());
     }
 
     @Test
@@ -1181,7 +1195,7 @@ class Wiq_UnitTests {
         Long id = 999L;
         Optional<Category> result = categoryService.getCategory(id);
 
-        Assertions.assertEquals(Optional.empty(), result);
+        assertEquals(Optional.empty(), result);
     }
 
     @Test
@@ -1195,8 +1209,8 @@ class Wiq_UnitTests {
         Category result = categoryService.getCategoryByName(name);
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(category.getName(), result.getName());
-        Assertions.assertEquals(category.getDescription(), result.getDescription());
+        assertEquals(category.getName(), result.getName());
+        assertEquals(category.getDescription(), result.getDescription());
     }
 
     @Test
@@ -1221,7 +1235,7 @@ class Wiq_UnitTests {
 
         List<GameSession> result = gameSessionService.getGameSessions();
 
-        Assertions.assertEquals(gameSessions.size(), result.size());
+        assertEquals(gameSessions.size(), result.size());
     }
 
     @Test
@@ -1229,7 +1243,7 @@ class Wiq_UnitTests {
     void GameSessionImpl_getGameSessions_ReturnsEmptyList() {
         List<GameSession> result = gameSessionService.getGameSessions();
 
-        Assertions.assertEquals(0, result.size());
+        assertEquals(0, result.size());
     }
 
     @Test
@@ -1249,7 +1263,7 @@ class Wiq_UnitTests {
 
         List<GameSession> result = gameSessionService.getGameSessionsByPlayer(player);
 
-        Assertions.assertEquals(gameSessions.size(), result.size());
+        assertEquals(gameSessions.size(), result.size());
     }
 
     @Test
@@ -1260,7 +1274,7 @@ class Wiq_UnitTests {
 
         List<GameSession> result = gameSessionService.getGameSessionsByPlayer(p);
 
-        Assertions.assertEquals(0, result.size());
+        assertEquals(0, result.size());
     }
 
     @Test
@@ -1307,16 +1321,16 @@ class Wiq_UnitTests {
         HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", apiKey.getKeyToken()),
                 data);
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
-        Assertions.assertTrue(json.getBoolean("success"));
+        assertTrue(json.getBoolean("success"));
         Long newId = json.getLong("id");
 
         Optional<Question> newQuestion = questionService.getQuestion(newId);
-        Assertions.assertTrue(newQuestion.isPresent());
-        Assertions.assertEquals("Sample question", newQuestion.get().getStatement());
-        Assertions.assertEquals(4, newQuestion.get().getOptions().size());
-        Assertions.assertTrue(newQuestion.get().getOptions().stream().anyMatch(Answer::isCorrect));
+        assertTrue(newQuestion.isPresent());
+        assertEquals("Sample question", newQuestion.get().getStatement());
+        assertEquals(4, newQuestion.get().getOptions().size());
+        assertTrue(newQuestion.get().getOptions().stream().anyMatch(Answer::isCorrect));
     }
 
     @Test
@@ -1416,7 +1430,7 @@ class Wiq_UnitTests {
         HttpResponse<String> response = sendRequest("PATCH", "/api/questions/9999999", Map.of("API-KEY", apiKey.getKeyToken()),
                 Map.of());
 
-        Assertions.assertEquals(404, response.statusCode());
+        assertEquals(404, response.statusCode());
     }
 
     @Test
@@ -1459,13 +1473,13 @@ class Wiq_UnitTests {
         HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()),
                 data);
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
-        Assertions.assertTrue(json.getBoolean("success"));
+        assertTrue(json.getBoolean("success"));
 
         Optional<Question> updatedQuestion = questionService.getQuestion(question.getId());
-        Assertions.assertTrue(updatedQuestion.isPresent());
-        Assertions.assertEquals("Modified question", updatedQuestion.get().getStatement());
+        assertTrue(updatedQuestion.isPresent());
+        assertEquals("Modified question", updatedQuestion.get().getStatement());
     }
 
     @Test
@@ -1493,13 +1507,13 @@ class Wiq_UnitTests {
         HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()),
                 data);
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
-        Assertions.assertTrue(json.getBoolean("success"));
+        assertTrue(json.getBoolean("success"));
 
         Optional<Question> updatedQuestion = questionService.getQuestion(question.getId());
-        Assertions.assertTrue(updatedQuestion.isPresent());
-        Assertions.assertEquals("Modified question", updatedQuestion.get().getStatement());
+        assertTrue(updatedQuestion.isPresent());
+        assertEquals("Modified question", updatedQuestion.get().getStatement());
     }
 
     @Test
@@ -1577,7 +1591,7 @@ class Wiq_UnitTests {
         HttpResponse<String> response = sendRequest("DELETE", "/api/questions/9999999", Map.of("API-KEY", apiKey.getKeyToken()),
                 Map.of());
 
-        Assertions.assertEquals(404, response.statusCode());
+        assertEquals(404, response.statusCode());
     }
 
     @Test
@@ -1592,9 +1606,9 @@ class Wiq_UnitTests {
         HttpResponse<String> response = sendRequest("DELETE", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()),
                 Map.of());
 
-        Assertions.assertEquals(200, response.statusCode());
+        assertEquals(200, response.statusCode());
         Optional<Question> deletedQuestion = questionService.getQuestion(question.getId());
-        Assertions.assertTrue(deletedQuestion.isEmpty());
+        assertTrue(deletedQuestion.isEmpty());
     }
 
     @Test
@@ -1615,7 +1629,7 @@ class Wiq_UnitTests {
         Map<Player, Integer> result = multiplayerSessionService.getPlayersWithScores(123);
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(2, result.size());
+        assertEquals(2, result.size());
     }
 
     @Test
@@ -1637,7 +1651,7 @@ class Wiq_UnitTests {
 
         MultiplayerSession ms = multiplayerSessionRepository.findByMultiplayerCode(code);
         Assertions.assertNotNull(ms);
-        Assertions.assertEquals("123", ms.getMultiplayerCode());
+        assertEquals("123", ms.getMultiplayerCode());
     }
 
     @Test
@@ -1705,7 +1719,7 @@ class Wiq_UnitTests {
 
         player.setMultiplayerCode(123);
         Integer multiplayerCode = player.getMultiplayerCode();
-        Assertions.assertEquals(123, multiplayerCode);
+        assertEquals(123, multiplayerCode);
     }
 
     @Test
@@ -1717,7 +1731,7 @@ class Wiq_UnitTests {
 
         player.setScoreMultiplayerCode("200");
         String scoreMultiplayerCode = player.getScoreMultiplayerCode();
-        Assertions.assertEquals("200", scoreMultiplayerCode);
+        assertEquals("200", scoreMultiplayerCode);
     }
 
     //@Test
@@ -1770,8 +1784,8 @@ class Wiq_UnitTests {
 
         List<Player> result = playerService.getUsersByMultiplayerCode(123);
 
-        Assertions.assertEquals(1, result.size());
-        Assertions.assertEquals(123, result.getFirst().getMultiplayerCode());
+        assertEquals(1, result.size());
+        assertEquals(123, result.getFirst().getMultiplayerCode());
     }
 
     @Test
@@ -1779,7 +1793,7 @@ class Wiq_UnitTests {
     void PlayerServiceImpl_getUsersByMultiplayerCode_ReturnsEmpty() {
         List<Player> result = playerService.getUsersByMultiplayerCode(123);
 
-        Assertions.assertTrue(result.isEmpty());
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -1797,7 +1811,7 @@ class Wiq_UnitTests {
 
         String result = playerService.getScoreMultiplayerCode(playerId);
 
-        Assertions.assertEquals(score, result);
+        assertEquals(score, result);
     }
 
     @Test
@@ -1810,7 +1824,7 @@ class Wiq_UnitTests {
 
         String result = playerService.getScoreMultiplayerCode(playerId);
 
-        Assertions.assertEquals("", result);
+        assertEquals("", result);
     }
 
     @Test
@@ -1828,7 +1842,7 @@ class Wiq_UnitTests {
         Long playerId = 5L;
 
         int result = playerService.createMultiplayerGame(playerId);
-        Assertions.assertEquals(-1, result);
+        assertEquals(-1, result);
     }
 
     @Test
@@ -1842,6 +1856,52 @@ class Wiq_UnitTests {
 
         playerService.deleteMultiplayerCode(playerId);
         Assertions.assertNull(player.getMultiplayerCode());
+    }
+
+    @Test
+    void testSendQuestionToLLM_Empathy() {
+        // Datos de prueba
+        String question = "¿Hola?";
+
+        // Simulamos la respuesta de la API externa
+        Map<String, Object> mockResponse = Map.of(
+                "choices", new Object[]{
+                        Map.of("message", Map.of("content", "Madrid"))
+                }
+        );
+
+        // Configurar el mock para que devuelva nuestra respuesta simulada
+        ResponseEntity<Map> responseEntity = new ResponseEntity<>(mockResponse, HttpStatus.OK);
+        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(), eq(Map.class)))
+                .thenReturn(responseEntity);
+
+        // Ejecutar el método del servicio
+        String answer = llmService.sendQuestionToLLM(question,null);
+        System.out.println(answer);
+
+    }
+
+    @Test
+    void testSendQuestionWithImageToLLM_Empathy() {
+        // Datos de prueba
+        String question = "";
+
+        // Simulamos la respuesta de la API externa
+        Map<String, Object> mockResponse = Map.of(
+                "choices", new Object[]{
+                        Map.of("message", Map.of("content", "Madrid"))
+                }
+        );
+
+        // Configurar el mock para que devuelva nuestra respuesta simulada
+        ResponseEntity<Map> responseEntity = new ResponseEntity<>(mockResponse, HttpStatus.OK);
+        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(), eq(Map.class)))
+                .thenReturn(responseEntity);
+
+        // Ejecutar el método del servicio
+        String answer = llmService.sendQuestionToLLM(question,"https://www.wikidata.org/wiki/Q144#/media/File:Greenland_467_(35130903436)_(cropped).jpg");
+        System.out.println(answer);
+
     }
 
 
