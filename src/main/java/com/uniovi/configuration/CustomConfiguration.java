@@ -1,5 +1,7 @@
 package com.uniovi.configuration;
 
+import com.uniovi.services.QuestionGeneratorService;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.PageRequest;
@@ -44,4 +46,11 @@ public class CustomConfiguration implements WebMvcConfigurer {
         resolver.setFallbackPageable(PageRequest.of(page, size));
         argumentResolvers.add(resolver);
     }
+
+//    @Bean
+//    public ApplicationRunner init(QuestionGeneratorService questionGeneratorService) {
+//        return args -> {
+//            questionGeneratorService.generateQuestions();
+//        };
+//    }
 }
