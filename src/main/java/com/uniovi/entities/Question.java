@@ -44,13 +44,11 @@ public class Question implements JsonEntity {
 
     private String language;
 
-    public Question(String statement, List<Answer> options, Answer correctAnswer, Category category, String language) {
-        Assert.isTrue(options.contains(correctAnswer), "Correct answer must be one of the options");
+    public Question(String statement, List<Answer> options, Category category, String language) {
         this.statement = statement;
-        Associations.QuestionAnswers.addAnswer(this, options);
-        this.correctAnswer = correctAnswer;
-        this.category = category;
         this.language = language;
+        Associations.QuestionsCategory.addCategory(this, category);
+        Associations.QuestionAnswers.addAnswer(this, options);
     }
 
     public void addOption(Answer option) {

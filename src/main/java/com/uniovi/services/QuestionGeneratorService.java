@@ -9,6 +9,7 @@ import com.uniovi.entities.Answer;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
 import com.uniovi.services.impl.QuestionServiceImpl;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,34 +20,26 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class QuestionGeneratorService {
 
     private final QuestionService questionService;
-
     public static final String JSON_FILE_PATH = "static/JSON/QuestionTemplates.json";
-
-    private Deque<QuestionType> types = new ArrayDeque<>();
-
+    private final Deque<QuestionType> types = new ArrayDeque<>();
     private JsonNode json;
-
-    private Environment environment;
-
+    private final Environment environment;
     private final Logger log = LoggerFactory.getLogger(QuestionGeneratorService.class);
-
     private boolean started;
 
     public QuestionGeneratorService(QuestionService questionService, Environment environment) throws IOException {
         this.questionService = questionService;
         this.environment = environment;
-        ((QuestionServiceImpl)questionService).setQuestionGeneratorService(this);
+        ((QuestionServiceImpl) questionService).setQuestionGeneratorService(this);
         parseQuestionTypes();
         this.started = true;
     }
@@ -57,24 +50,29 @@ public class QuestionGeneratorService {
             ObjectMapper objectMapper = new ObjectMapper();
             json = objectMapper.readTree(resource.getInputStream());
         }
+
         JsonNode categories = json.findValue("categories");
+        if (categories == null) {
+            throw new IOException("El JSON de preguntas no contiene la clave 'categories'.");
+        }
+
         for (JsonNode category : categories) {
             String categoryName = category.get("name").textValue();
             Category cat = new Category(categoryName);
             JsonNode questionsNode = category.findValue("questions");
-            for (JsonNode question : questionsNode) {
-                types.push(new QuestionType(question, cat));
+            if (questionsNode != null) {
+                for (JsonNode question : questionsNode) {
+                    types.push(new QuestionType(question, cat));
+                }
             }
         }
     }
 
-    @Scheduled(fixedRate = 86400000, initialDelay = 86400000)
     public void generateAllQuestions() throws IOException {
         started = true;
         resetGeneration();
     }
 
-    @Scheduled(fixedRate = 150000)
     @Transactional
     public void generateQuestions() throws IOException, InterruptedException {
         if (types.isEmpty()) {
@@ -86,52 +84,56 @@ public class QuestionGeneratorService {
             questionService.deleteAllQuestions();
         }
 
-        if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> (env.equalsIgnoreCase("test")))) {
+        if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> env.equalsIgnoreCase("test"))) {
             log.info("Test profile active, skipping sample data insertion");
             return;
         }
 
-        QuestionGenerator qgen = new QuestionGeneratorV2(json);
-        List<QuestionDto> questions;
-        for(QuestionType type : types) {
+        QuestionGeneratorV2 qgen = new QuestionGeneratorV2(json);
 
-            List<Question> qsp = qgen.getQuestions(Question.SPANISH, type.getQuestion(), type.getCategory());
-            questions = qsp.stream().map(QuestionDto::new).toList();
-            questions.forEach(questionService::addNewQuestion);
-
-            List<Question> qen = qgen.getQuestions(Question.ENGLISH,  type.getQuestion(), type.getCategory());
-            questions = qen.stream().map(QuestionDto::new).toList();
-            questions.forEach(questionService::addNewQuestion);
-
-            List<Question> qfr = qgen.getQuestions(Question.FRENCH,  type.getQuestion(), type.getCategory());
-            questions = qfr.stream().map(QuestionDto::new).toList();
-            questions.forEach(questionService::addNewQuestion);
-
-            List<Question> qDe = qgen.getQuestions(Question.DEUCH,  type.getQuestion(), type.getCategory());
-            questions = qDe.stream().map(QuestionDto::new).toList();
-            questions.forEach(questionService::addNewQuestion);
-            types.remove(type);
+        while (!types.isEmpty()) {
+            QuestionType type = types.pop();
+            addQuestions(qgen, type);
         }
-
     }
 
     @Transactional
     public void generateTestQuestions() throws IOException, InterruptedException {
+        if (types.isEmpty()) {
+            log.warn("No hay más tipos de preguntas para generar.");
+            return;
+        }
+
         QuestionGenerator qgen = new QuestionGeneratorV2(json);
         QuestionType type = types.pop();
-        List<QuestionDto> questions;
-
-        List<Question> qsp = qgen.getQuestions(Question.SPANISH, type.getQuestion(), type.getCategory());
-        questions = qsp.stream().map(QuestionDto::new).toList();
-        questions.forEach(questionService::addNewQuestion);
+        addQuestions(qgen, type);
     }
 
     @Transactional
     public void generateTestQuestions(String cat) {
         Answer a1 = new Answer("1", true);
         List<Answer> answers = List.of(a1, new Answer("2", false), new Answer("3", false), new Answer("4", false));
-        Question q = new Question("Statement", answers, a1, new Category(cat), "es");
+        Question q = new Question("Statement", answers, new Category(cat), "es");
         questionService.addNewQuestion(new QuestionDto(q));
+    }
+
+    private void addQuestions(QuestionGenerator qgen, QuestionType type) throws IOException, InterruptedException {
+        List<QuestionDto> questions;
+        List<Question> qsp = qgen.getQuestions(Question.SPANISH, type.getQuestion(), type.getCategory());
+        questions = qsp.stream().map(QuestionDto::new).toList();
+        questions.forEach(questionService::addNewQuestion);
+
+        List<Question> qen = qgen.getQuestions(Question.ENGLISH, type.getQuestion(), type.getCategory());
+        questions = qen.stream().map(QuestionDto::new).toList();
+        questions.forEach(questionService::addNewQuestion);
+
+        List<Question> qfr = qgen.getQuestions(Question.FRENCH, type.getQuestion(), type.getCategory());
+        questions = qfr.stream().map(QuestionDto::new).toList();
+        questions.forEach(questionService::addNewQuestion);
+
+        List<Question> qDe = qgen.getQuestions(Question.DEUCH, type.getQuestion(), type.getCategory()); // Corregido
+        questions = qDe.stream().map(QuestionDto::new).toList();
+        questions.forEach(questionService::addNewQuestion);
     }
 
     public void setJsonGeneration(JsonNode json) {
