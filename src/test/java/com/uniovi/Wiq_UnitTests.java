@@ -431,7 +431,7 @@ class Wiq_UnitTests {
         options.add(option1);
         options.add(option2);
 
-        Question question = new Question("Sample question", options, option1, category, "en");
+        Question question = new Question("Sample question", options, category, "en");
         question.setId(1L);
 
         JsonNode json = question.toJson();
@@ -1099,7 +1099,7 @@ class Wiq_UnitTests {
         categoryRepository.save(category);
 
         String language = "en";
-        Question question = new Question(statement, options, correctAnswer, category, language);
+        Question question = new Question(statement, options, category, language);
 
         List<Answer> expectedAnswers = question.getOptions();
         questionService.addNewQuestion(question);

@@ -72,11 +72,7 @@ public class QuestionServiceImpl implements QuestionService {
             answers.add(a);
         }
 
-        Question q = new Question();
-        q.setStatement(question.getStatement());
-        q.setLanguage(question.getLanguage());
-        Associations.QuestionsCategory.addCategory(q, category);
-        Associations.QuestionAnswers.addAnswer(q, answers);
+        Question q = new Question(question.getStatement(),answers,category,question.getLanguage());
         addNewQuestion(q);
 
         return q;

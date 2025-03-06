@@ -93,7 +93,7 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
                 String questionStatement = statement.replace(questionPlaceholder, result.path(questionLabel).path("value").asText());
 
                 // Generate the question
-                Question q = new Question(questionStatement, options, correct, cat, language);
+                Question q = new Question(questionStatement, options, cat, language);
 
                 // Add the question to the list
                 questions.add(q);
@@ -108,7 +108,7 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
         int size = results.size();
         int tries = 0;
 
-       while (options.size() < 3 && tries < 10) {
+       while (options.size() < 3 && tries < 100) {
             int randomIdx = random.nextInt(size);
             String option = results.get(randomIdx).path(answerLabel).path("value").asText();
             if (!option.equals(correctAnswer) && !usedOptions.contains(option) ) {
