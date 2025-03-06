@@ -2,14 +2,14 @@ package com.uniovi.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.uniovi.components.generators.ImageQuestionGenerator;
 import com.uniovi.components.generators.QuestionGenerator;
 import com.uniovi.components.generators.QuestionGeneratorV2;
-import com.uniovi.dto.QuestionDto;
+import com.uniovi.dto.ImageQuestionDto;
 import com.uniovi.entities.Answer;
 import com.uniovi.entities.Category;
+import com.uniovi.entities.ImageQuestion;
 import com.uniovi.entities.Question;
-import com.uniovi.services.impl.QuestionServiceImpl;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,30 +20,32 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.List;
 
 @Service
-public class QuestionGeneratorService {
+public class ImageQuestionGeneratorService {
 
-    private final QuestionService questionService;
-    public static final String JSON_FILE_PATH = "static/JSON/QuestionTemplates.json";
+    private final ImageQuestionService imageQuestionService;
+    public static final String JSON_FILE_PATH = "static/JSON/ImageQuestionTemplates.json";
     private final Deque<QuestionType> types = new ArrayDeque<>();
     private JsonNode json;
     private final Environment environment;
-    private final Logger log = LoggerFactory.getLogger(QuestionGeneratorService.class);
+    private final Logger log = LoggerFactory.getLogger(ImageQuestionGeneratorService.class);
     private boolean started;
 
-    public QuestionGeneratorService(QuestionService questionService, Environment environment) throws IOException {
-        this.questionService = questionService;
+    public ImageQuestionGeneratorService(ImageQuestionService imageQuestionService, Environment environment) throws IOException {
         this.environment = environment;
-        ((QuestionServiceImpl) questionService).setQuestionGeneratorService(this);
+        this.imageQuestionService = imageQuestionService;
+        this.imageQuestionService.setQuestionGeneratorService(this);
         parseQuestionTypes();
         this.started = true;
+
     }
 
     private void parseQuestionTypes() throws IOException {
@@ -70,14 +72,14 @@ public class QuestionGeneratorService {
         }
     }
 
-    @EventListener(ApplicationReadyEvent.class)
+    //@EventListener(ApplicationReadyEvent.class)
     public void generateAllQuestions() throws IOException {
         started = true;
         resetGeneration();
     }
 
     @Transactional
-    @EventListener(ApplicationReadyEvent.class)
+    //@EventListener(ApplicationReadyEvent.class)
     public void generateQuestions() throws IOException, InterruptedException {
         if (types.isEmpty()) {
             return;
@@ -85,7 +87,7 @@ public class QuestionGeneratorService {
 
         if (started) {
             started = false;
-            questionService.deleteAllQuestions();
+            imageQuestionService.deleteAllImageQuestions();
         }
 
         if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> env.equalsIgnoreCase("test"))) {
@@ -93,12 +95,12 @@ public class QuestionGeneratorService {
             return;
         }
 
-        QuestionGeneratorV2 qgen = new QuestionGeneratorV2(json);
+        ImageQuestionGenerator qgen = new ImageQuestionGenerator(json);
 
         while (!types.isEmpty()) {
             QuestionType type = types.pop();
-            addQuestions(qgen, type);
-        }
+            addImageQuestions(qgen,type);
+            }
     }
 
     @Transactional
@@ -110,34 +112,35 @@ public class QuestionGeneratorService {
 
         QuestionGenerator qgen = new QuestionGeneratorV2(json);
         QuestionType type = types.pop();
-        addQuestions(qgen, type);
+        type.getQuestion().has("image_placeholder");
     }
 
     @Transactional
     public void generateTestQuestions(String cat) {
         Answer a1 = new Answer("1", true);
         List<Answer> answers = List.of(a1, new Answer("2", false), new Answer("3", false), new Answer("4", false));
-        Question q = new Question("Statement", answers, new Category(cat), "es");
-        questionService.addNewQuestion(new QuestionDto(q));
+        ImageQuestion q = new ImageQuestion("Statement", answers, new Category(cat), "es", "No image");
+        imageQuestionService.addNewImageQuestion(new ImageQuestionDto(q));
     }
 
-    private void addQuestions(QuestionGenerator qgen, QuestionType type) throws IOException, InterruptedException {
-        List<QuestionDto> questions;
-        List<Question> qsp = qgen.getQuestions(Question.SPANISH, type.getQuestion(), type.getCategory());
-        questions = qsp.stream().map(QuestionDto::new).toList();
-        questions.forEach(questionService::addNewQuestion);
 
-        List<Question> qen = qgen.getQuestions(Question.ENGLISH, type.getQuestion(), type.getCategory());
-        questions = qen.stream().map(QuestionDto::new).toList();
-        questions.forEach(questionService::addNewQuestion);
+    private void addImageQuestions(ImageQuestionGenerator qgen, QuestionType type) throws IOException, InterruptedException {
+        List<ImageQuestionDto> questions;
+        List<ImageQuestion> qsp = qgen.getImageQuestions(Question.SPANISH, type.getQuestion(), type.getCategory());
+        questions = qsp.stream().map(ImageQuestionDto::new).toList();
+        questions.forEach(imageQuestionService::addNewImageQuestion);
 
-        List<Question> qfr = qgen.getQuestions(Question.FRENCH, type.getQuestion(), type.getCategory());
-        questions = qfr.stream().map(QuestionDto::new).toList();
-        questions.forEach(questionService::addNewQuestion);
+        List<ImageQuestion> qen = qgen.getImageQuestions(Question.ENGLISH, type.getQuestion(), type.getCategory());
+        questions = qen.stream().map(ImageQuestionDto::new).toList();
+        questions.forEach(imageQuestionService::addNewImageQuestion);
 
-        List<Question> qDe = qgen.getQuestions(Question.DEUCH, type.getQuestion(), type.getCategory()); // Corregido
-        questions = qDe.stream().map(QuestionDto::new).toList();
-        questions.forEach(questionService::addNewQuestion);
+        List<ImageQuestion> qfr = qgen.getImageQuestions(Question.FRENCH, type.getQuestion(), type.getCategory());
+        questions = qfr.stream().map(ImageQuestionDto::new).toList();
+        questions.forEach(imageQuestionService::addNewImageQuestion);
+
+        List<ImageQuestion> qDe = qgen.getImageQuestions(Question.DEUCH, type.getQuestion(), type.getCategory()); // Corregido
+        questions = qDe.stream().map(ImageQuestionDto::new).toList();
+        questions.forEach(imageQuestionService::addNewImageQuestion);
     }
 
     public void setJsonGeneration(JsonNode json) {

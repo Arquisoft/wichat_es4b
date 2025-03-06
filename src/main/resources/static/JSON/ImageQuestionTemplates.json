@@ -28,6 +28,7 @@
           ],
           "question": "countryLabel",
           "answer": "capitalLabel",
+          "image": "image",
           "sparqlQuery": "select distinct ?country ?[QUESTION] ?capital ?[ANSWER] ?image where {\n  ?country wdt:P31 wd:Q6256 .\n  ?capital wdt:P31 wd:Q5119 .\n  ?country wdt:P36 ?capital .\n  ?country rdfs:label ?[QUESTION] .\n  ?capital rdfs:label ?[ANSWER] .\n  OPTIONAL {\n    ?capital wdt:P18 ?image .\n  }\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\" && LANG(?[ANSWER])=\"[LANGUAGE]\")\n}"
         },
         {
@@ -52,6 +53,7 @@
           ],
           "question": "countryLabel",
           "answer": "currencyLabel",
+          "image": "image",
           "sparqlQuery": "select distinct ?country ?[QUESTION] ?currency ?[ANSWER] ?image where {\n  ?country wdt:P31 wd:Q6256 .\n  ?currency wdt:P31 wd:Q8142 .\n  ?country wdt:P38 ?currency .\n  ?country rdfs:label ?[QUESTION] .\n  ?currency rdfs:label ?[ANSWER] .\n  OPTIONAL {\n    ?currency wdt:P18 ?image .\n  }\n  FILTER NOT EXISTS {?country wdt:P31 wd:Q3024240} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\" && LANG(?[ANSWER])=\"[LANGUAGE]\")\n}"
         }
       ]
@@ -81,6 +83,7 @@
           ],
           "question": "elementLabel",
           "answer": "symbol",
+          "image": "image",
           "sparqlQuery": "select distinct ?element ?[QUESTION] ?[ANSWER] ?image where {\n  ?element wdt:P31 wd:Q11344 .\n  ?element wdt:P246 ?[ANSWER] .\n  ?element rdfs:label ?[QUESTION] .\n  OPTIONAL {\n    ?element wdt:P18 ?image .\n  }\n  FILTER NOT EXISTS {?element wdt:P31 wd:Q1299291} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\")\n}"
         },
         {
@@ -105,6 +108,7 @@
           ],
           "question": "elementLabel",
           "answer": "atomicNumber",
+          "image": "image",
           "sparqlQuery": "select distinct ?element ?[QUESTION] ?[ANSWER] ?image where {\n  ?element wdt:P31 wd:Q11344 .\n  ?element wdt:P1086 ?[ANSWER] .\n  ?element rdfs:label ?[QUESTION] .\n  OPTIONAL {\n    ?element wdt:P18 ?image .\n  }\n  FILTER NOT EXISTS {?element wdt:P31 wd:Q1299291} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\")\n}"
         }
       ]

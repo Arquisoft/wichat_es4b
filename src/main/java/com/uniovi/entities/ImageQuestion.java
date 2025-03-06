@@ -47,14 +47,12 @@ public class ImageQuestion implements JsonEntity {
     @Column(unique = false)
     private String imageUrl;
 
-    public ImageQuestion(String statement, List<Answer> options, Answer correctAnswer, Category category, String language, String imageUrl) {
-        Assert.isTrue(options.contains(correctAnswer), "Correct answer must be one of the options");
+    public ImageQuestion(String statement, List<Answer> options, Category category, String language, String imageUrl) {
         this.statement = statement;
-        Associations.ImageQuestionAnswers.addAnswer(this, options);
-        this.correctAnswer = correctAnswer;
-        this.category = category;
         this.language = language;
         this.imageUrl = imageUrl;
+        Associations.ImageQuestionAnswers.addAnswer(this, options);
+        Associations.ImageQuestionCategory.addCategory(this, category);
     }
 
     public void addOption(Answer option) {

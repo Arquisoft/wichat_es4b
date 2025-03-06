@@ -16,6 +16,9 @@ public interface ImageQuestionRepository extends CrudRepository<ImageQuestion, L
     // Obtener todas las preguntas de imagen
     List<ImageQuestion> findAll();
 
+    @Query("SELECT iq FROM ImageQuestion iq WHERE iq.language = ?1")
+    List<ImageQuestion> findAllByLanguage(String language);
+
     // Obtener preguntas por idioma
     @Query("SELECT iq FROM ImageQuestion iq WHERE iq.language = ?1")
     Page<ImageQuestion> findByLanguage(Pageable pageable, String language);

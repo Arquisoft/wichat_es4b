@@ -5,6 +5,7 @@ import com.uniovi.dto.ImageQuestionDto;
 import com.uniovi.entities.*;
 import com.uniovi.repositories.AnswerRepository;
 import com.uniovi.repositories.ImageQuestionRepository;
+import com.uniovi.services.impl.QuestionServiceImpl;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.Setter;
@@ -29,7 +30,7 @@ public class ImageQuestionService {
     private final LlmService llmService;
 
     @Setter
-    private QuestionGeneratorService questionGeneratorService;
+    private ImageQuestionGeneratorService questionGeneratorService;
 
     private final Random random = new SecureRandom();
 
