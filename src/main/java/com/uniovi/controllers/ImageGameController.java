@@ -3,13 +3,11 @@ package com.uniovi.controllers;
 import com.uniovi.entities.GameSession;
 import com.uniovi.entities.ImageQuestion;
 import com.uniovi.entities.Player;
-import com.uniovi.entities.Question;
 import com.uniovi.services.GameSessionService;
 import com.uniovi.services.ImageQuestionService;
 import com.uniovi.services.MultiplayerSessionService;
 import com.uniovi.services.PlayerService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,15 +18,15 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Controller
-public class ImageQuestionController {
+public class ImageGameController {
     private static final String GAMESESSION_STR = "gameSession";
     private final ImageQuestionService imageQuestionService;
     private final GameSessionService gameSessionService;
     private final PlayerService playerService;
     private final MultiplayerSessionService multiplayerSessionService;
 
-    public ImageQuestionController(ImageQuestionService imageQuestionService, GameSessionService gameSessionService,
-                                   PlayerService playerService, MultiplayerSessionService multiplayerSessionService) {
+    public ImageGameController(ImageQuestionService imageQuestionService, GameSessionService gameSessionService,
+                               PlayerService playerService, MultiplayerSessionService multiplayerSessionService) {
         this.imageQuestionService = imageQuestionService;
         this.gameSessionService = gameSessionService;
         this.playerService = playerService;
@@ -53,9 +51,9 @@ public class ImageQuestionController {
             playerService.deleteMultiplayerCode(gameSession.getPlayer().getId());
         }
 
-        model.addAttribute("question", gameSession.getCurrentImageQuestion());
+        model.addAttribute("imageQuestion", gameSession.getCurrentImageQuestion());
         model.addAttribute("questionDuration", getRemainingTime(gameSession));
-        return "game/image";
+        return "game/imageGame";
     }
 
     /**
