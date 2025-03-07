@@ -1,6 +1,6 @@
 package com.uniovi.steps;
 
-import com.uniovi.Wiq_IntegrationTests;
+import com.uniovi.Wichat_IntegrationTests;
 import com.uniovi.util.SeleniumUtils;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
@@ -10,7 +10,7 @@ import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
-public class LogInStep extends Wiq_IntegrationTests {
+public class LogInStep extends Wichat_IntegrationTests {
     @And("I press the login button")
     public void iPressTheLoginButton() {
         By button = By.className("btn");

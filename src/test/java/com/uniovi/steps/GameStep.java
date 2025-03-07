@@ -1,6 +1,6 @@
 package com.uniovi.steps;
 
-import com.uniovi.Wiq_IntegrationTests;
+import com.uniovi.Wichat_IntegrationTests;
 import com.uniovi.services.InsertSampleDataService;
 import com.uniovi.services.QuestionGeneratorService;
 import com.uniovi.util.PropertiesExtractor;
@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.List;
 
-public class GameStep extends Wiq_IntegrationTests {
+public class GameStep extends Wichat_IntegrationTests {
     @Autowired
     private InsertSampleDataService dataService;
     @Autowired

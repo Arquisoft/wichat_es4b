@@ -1,6 +1,6 @@
 package com.uniovi.steps;
 
-import com.uniovi.Wiq_IntegrationTests;
+import com.uniovi.Wichat_IntegrationTests;
 import com.uniovi.util.PropertiesExtractor;
 import com.uniovi.util.SeleniumUtils;
 import io.cucumber.java.en.And;
@@ -12,7 +12,7 @@ import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
-public class AdminTasksStep extends Wiq_IntegrationTests {
+public class AdminTasksStep extends Wichat_IntegrationTests {
     @Then("I should see the admin zone button")
     public void iShouldSeeTheAdminZoneButton() {
         List<WebElement> elems = SeleniumUtils.waitLoadElements(driver, By.cssSelector("a.btn.btn-primary[href='/player/admin']"), 5);

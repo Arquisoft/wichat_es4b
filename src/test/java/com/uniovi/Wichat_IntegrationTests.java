@@ -15,7 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles("test")
 @CucumberContextConfiguration
-public class Wiq_IntegrationTests {
+public class Wichat_IntegrationTests {
     protected static final String URL = "http://localhost:3000/";
 
     protected PropertiesExtractor p = new PropertiesExtractor("messages");

@@ -34,7 +34,7 @@ import static org.junit.Assert.assertNotNull;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles("test")
-class Wiq_UnitTests {
+class Wichat_UnitTests {
     @Autowired
     private PlayerService playerService;
     @Autowired
@@ -1861,7 +1861,7 @@ class Wiq_UnitTests {
                                              Map<String, Object> data) throws IOException, InterruptedException {
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
 
-        uri = Wiq_IntegrationTests.URL.substring(0, Wiq_IntegrationTests.URL.length() - 1) + uri;
+        uri = Wichat_IntegrationTests.URL.substring(0, Wichat_IntegrationTests.URL.length() - 1) + uri;
 
         if ("GET".equalsIgnoreCase(method)) {
             if (!data.isEmpty()) {
