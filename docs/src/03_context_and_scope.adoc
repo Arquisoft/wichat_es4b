@@ -112,10 +112,10 @@ database database [
 
 user ...> WebApp: Plays
 admin ...> WebApp: Administrate
-WebApp ---> PlayerService : Handles\nlogin and signup
 WebApp -left-> QuestionService : Retrieves generated\nquestions for game
+WebApp ---> PlayerService : Handles\nlogin and signup
 WebApp ---> HintService : Requests hints\nbased on LLM analysis
-WebApp ---> RewardService : Manages user rewards
+WebApp ---> RewardService : Manages\nuser rewards
 WebApp ---> OwnAPIService : Manages game history
 
 HintService --> LLmService : Generates hints from LLM
@@ -123,12 +123,10 @@ HintService --> LLmService : Generates hints from LLM
 ExternalAPIService --> LLmService : Provides metadata for questions
 ExternalAPIService --> HintService : Provides metadata for hints
 
-extDevelopers .right.> QuestionService : Modify questions
-extDevelopers <.right. QuestionService : Retrieve question list
-extDevelopers .right.> OwnAPIService : Retrieve user history
+extDevelopers .right.> OwnAPIService : Retrieve question list
 
-database <-right- PlayerService : Stores user data
-database <-left- QuestionService : Stores questions
+database <--> PlayerService : Stores user data
+database <--> QuestionService : Stores questions
 database <-down- RewardService : Stores rewards
 OwnAPIService <-down- database
 @enduml
@@ -245,8 +243,8 @@ WebApp ---> PlayerService : Handles\nlogin, signup\nand game history
 WebApp -left-> QuestionService : Retrieves generated\nquestions for game
 QuestionGenerator <-up- WikiData : Get entity info\nfrom SPARQL HTTP
 QuestionGenerator --> QuestionService : Generate questions\nwith entity data
-QuestionService --> Database: Save\nquestion\nentities
-QuestionService <-- Database: Retrieve\nsaved\nquestions
+QuestionService <--> Database: Save\nquestion\nentities
+QuestionService <--> Database: Retrieve\nsaved\nquestions
 developers .up---.> RestApiService : HTTP request
 developers <.up. RestApiService : HTTP GET
 RestApiService -up-> QuestionService: Retrieve/Modify questions
@@ -274,8 +272,20 @@ RestApiService ---> PlayerService: Retrieve/Modify player data
 | Frontend | User interactions, game display | HTTPS
 | Database | User data, game history, questions | Specific database driver (MySQL)
 | WikiData | Data for question generation | HTTP
+| LLM Service | Hint generation, AI responses |  HTTPS
 | Question Generator | Generated questions | In-memory
 | Question Service | Questions for game | In-memory
 | Player Service | Player data | In-memory
-| LLM Service | Hint generation, AI responses | REST API via HTTPS
+| Own API Service | External Developers | HTTP
+|===
+
+[options="header",cols="1,2,2"]
+|===
+| Participant | Communication Channel | Purpose
+| Player | HTTPS (Web App) | Interacts with the system (login, play, receive questions)
+| External Developers | HTTP (External API Service) | Access question database
+| Web Application | HTTPS | Connects to backend services
+| Question Generator | HTTP (WikiData) | Retrieves entity information
+| LLM API | HTTPS (LLM Service) | Requests hints for questions
+| Database | SQL Connection | Stores user and game data
 |===
