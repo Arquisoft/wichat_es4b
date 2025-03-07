@@ -1,0 +1,84 @@
+{
+  "language_placeholder": "[LANGUAGE]",
+  "question_placeholder": "[QUESTION]",
+  "answer_placeholder": "[ANSWER]",
+  "categories": [
+    {
+      "name": "Batería",
+      "questions": [
+        {
+          "type": "capital",
+          "statements": [
+            { "language": "es", "statement": "¿Cuál es la capital de [QUESTION]?" },
+            { "language": "en", "statement": "What is the capital of [QUESTION]?" },
+            { "language": "fr", "statement": "Quelle est la capitale de [QUESTION] ?" },
+            { "language": "de", "statement": "Was ist die Hauptstadt von [QUESTION]?" }
+          ],
+          "question": "countryLabel",
+          "answer": "capitalLabel",
+          "sparqlQuery": "SELECT DISTINCT ?country ?[QUESTION] ?capital ?[ANSWER] WHERE { ?country wdt:P31 wd:Q6256 . ?capital wdt:P31 wd:Q5119 . ?country wdt:P36 ?capital . ?country rdfs:label ?[QUESTION] . ?capital rdfs:label ?[ANSWER] . FILTER(LANG(?[QUESTION])='[LANGUAGE]' && LANG(?[ANSWER])='[LANGUAGE]') }"
+        },
+        {
+          "type": "historical_event",
+          "statements": [
+            { "language": "es", "statement": "¿En qué año ocurrió [QUESTION]?" },
+            { "language": "en", "statement": "In what year did [QUESTION] happen?" },
+            { "language": "fr", "statement": "En quelle année a eu lieu [QUESTION] ?" },
+            { "language": "de", "statement": "In welchem Jahr geschah [QUESTION]?" }
+          ],
+          "question": "eventLabel",
+          "answer": "year",
+          "sparqlQuery": "SELECT DISTINCT ?event ?[QUESTION] ?[ANSWER] WHERE { ?event wdt:P31 wd:Q1656682 . ?event wdt:P585 ?[ANSWER] . ?event rdfs:label ?[QUESTION] . FILTER(LANG(?[QUESTION])='[LANGUAGE]') }"
+        },
+        {
+          "type": "physics_law",
+          "statements": [
+            { "language": "es", "statement": "¿Quién formuló la ley de [QUESTION]?" },
+            { "language": "en", "statement": "Who formulated the law of [QUESTION]?" },
+            { "language": "fr", "statement": "Qui a formulé la loi de [QUESTION] ?" },
+            { "language": "de", "statement": "Wer hat das Gesetz von [QUESTION] formuliert?" }
+          ],
+          "question": "lawLabel",
+          "answer": "scientistLabel",
+          "sparqlQuery": "SELECT DISTINCT ?law ?[QUESTION] ?scientist ?[ANSWER] WHERE { ?law wdt:P31 wd:Q59199015 . ?law wdt:P50 ?scientist . ?law rdfs:label ?[QUESTION] . ?scientist rdfs:label ?[ANSWER] . FILTER(LANG(?[QUESTION])='[LANGUAGE]' && LANG(?[ANSWER])='[LANGUAGE]') }"
+        },
+        {
+          "type": "math_constant",
+          "statements": [
+            { "language": "es", "statement": "¿Cuál es el valor de [QUESTION]?" },
+            { "language": "en", "statement": "What is the value of [QUESTION]?" },
+            { "language": "fr", "statement": "Quelle est la valeur de [QUESTION] ?" },
+            { "language": "de", "statement": "Welchen Wert hat [QUESTION]?" }
+          ],
+          "question": "constantLabel",
+          "answer": "value",
+          "sparqlQuery": "SELECT DISTINCT ?constant ?[QUESTION] ?[ANSWER] WHERE { ?constant wdt:P31 wd:Q81879 . ?constant wdt:P1181 ?[ANSWER] . ?constant rdfs:label ?[QUESTION] . FILTER(LANG(?[QUESTION])='[LANGUAGE]') }"
+        },
+        {
+          "type": "nobel_prize",
+          "statements": [
+            { "language": "es", "statement": "¿Quién ganó el Premio Nobel de [QUESTION] en [YEAR]?" },
+            { "language": "en", "statement": "Who won the Nobel Prize in [QUESTION] in [YEAR]?" },
+            { "language": "fr", "statement": "Qui a remporté le prix Nobel de [QUESTION] en [YEAR] ?" },
+            { "language": "de", "statement": "Wer gewann den Nobelpreis für [QUESTION] im Jahr [YEAR]?" }
+          ],
+          "question": "nobelPrizeCategoryLabel",
+          "answer": "winnerLabel",
+          "sparqlQuery": "SELECT DISTINCT ?nobelPrize ?[QUESTION] ?winner ?[ANSWER] WHERE { ?nobelPrize wdt:P31 wd:Q7191 . ?nobelPrize wdt:P166 ?winner . ?nobelPrize wdt:P585 ?[YEAR] . ?nobelPrize rdfs:label ?[QUESTION] . ?winner rdfs:label ?[ANSWER] . FILTER(LANG(?[QUESTION])='[LANGUAGE]' && LANG(?[ANSWER])='[LANGUAGE]') }"
+        },
+        {
+          "type": "chemical_element",
+          "statements": [
+            { "language": "es", "statement": "¿Cuál es el número atómico de [QUESTION]?" },
+            { "language": "en", "statement": "What is the atomic number of [QUESTION]?" },
+            { "language": "fr", "statement": "Quel est le numéro atomique de [QUESTION] ?" },
+            { "language": "de", "statement": "Was ist die Ordnungszahl von [QUESTION]?" }
+          ],
+          "question": "elementLabel",
+          "answer": "atomicNumber",
+          "sparqlQuery": "SELECT DISTINCT ?element ?[QUESTION] ?[ANSWER] WHERE { ?element wdt:P31 wd:Q11344 . ?element wdt:P1086 ?[ANSWER] . ?element rdfs:label ?[QUESTION] . FILTER(LANG(?[QUESTION])='[LANGUAGE]') }"
+        }
+      ]
+    }
+  ]
+}

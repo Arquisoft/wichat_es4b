@@ -10,12 +10,11 @@ import com.uniovi.repositories.AnswerRepository;
 import com.uniovi.repositories.QuestionRepository;
 import com.uniovi.services.AnswerService;
 import com.uniovi.services.CategoryService;
-import com.uniovi.services.QuestionGeneratorService;
+import com.uniovi.services.QuestionBateriaGeneratorService;
 import com.uniovi.services.QuestionService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.Setter;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,9 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-@Primary
+
 @Service
-public class QuestionServiceImpl implements QuestionService {
+public class QuestionBateriaServiceImpl implements QuestionService {
+
     private final QuestionRepository questionRepository;
     private final CategoryService categoryService;
     private final AnswerService answerService;
@@ -37,13 +37,13 @@ public class QuestionServiceImpl implements QuestionService {
     private final EntityManager entityManager;
 
     @Setter
-    private QuestionGeneratorService questionGeneratorService;
+    private QuestionBateriaGeneratorService questionBateriaGeneratorService;
 
     private final Random random = new SecureRandom();
 
-    public QuestionServiceImpl(QuestionRepository questionRepository, CategoryService categoryService,
-                               AnswerService answerService, AnswerRepository answerRepository,
-                               EntityManager entityManager) {
+    public QuestionBateriaServiceImpl(QuestionRepository questionRepository, CategoryService categoryService,
+                                      AnswerService answerService, AnswerRepository answerRepository,
+                                      EntityManager entityManager) {
         this.questionRepository = questionRepository;
         this.categoryService = categoryService;
         this.answerService = answerService;
@@ -175,18 +175,17 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void deleteAllQuestions() throws IOException {
-        questionGeneratorService.resetGeneration();
+        questionBateriaGeneratorService.resetGeneration();
         questionRepository.deleteAll();
     }
 
     @Override
     public void setJsonGenerator(JsonNode json) {
-        questionGeneratorService.setJsonGeneration(json);
+        questionBateriaGeneratorService.setJsonGeneration(json);
     }
 
     @Override
     public JsonNode getJsonGenerator() {
-        return questionGeneratorService.getJsonGeneration();
+        return questionBateriaGeneratorService.getJsonGeneration();
     }
-
 }
