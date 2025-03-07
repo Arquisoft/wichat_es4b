@@ -49,7 +49,7 @@ jobs:
         run: |
             ./mvnw spring-boot:run > logs.txt 2>&1 &
             echo $! > spring-boot-app.pid
-            sleep 10
+            sleep 5
         env:
           SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/test_database
           SPRING_DATASOURCE_USERNAME: root
@@ -58,7 +58,7 @@ jobs:
           SPRING_PROFILES_ACTIVE: test
 
       - name: Check listening ports
-        run: ss -lpntu
+        run: ss -tuln
 
       - name: Run tests
         run: |

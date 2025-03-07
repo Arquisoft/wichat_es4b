@@ -53,7 +53,7 @@ jobs:
           SPRING_PROFILES_ACTIVE: test
 
       - name: Check listening ports
-        run: ss -lpntu
+        run: ss -tuln
 
       - name: Run tests
         run: |
