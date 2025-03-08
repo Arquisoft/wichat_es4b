@@ -157,135 +157,123 @@ OwnAPIService <-down- database
 | External Developers | API requests for player and question data | Retrieved player information, question lists, game history
 |===
 
+
 === Technical Context
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Contents
-Technical interfaces (channels and transmission media) linking your system to its environment. In addition a mapping of domain specific input/output to the channels, i.e. an explanation which I/O uses which channel.
+The system consists of several services developed in Java using Spring Boot, utilizing Spring Security for authentication
+and authorization. The frontend is developed using HTML, and the backend communicates through direct method calls for
+internal service interactions, while external communication is handled via REST API over HTTPS. A relational database
+(MySQL) is used for data persistence
 
-.Motivation
-Many stakeholders make architectural decision based on the technical interfaces between the system and its context. Especially infrastructure or hardware designers decide these technical interfaces.
-
-.Form
-E.g. UML deployment diagram describing channels to neighboring systems,
-together with a mapping table showing the relationships between channels and input/output.
-
-**<Diagram or Table>**
-
-**<optionally: Explanation of technical interfaces>**
-
-**<Mapping Input/Output to Channels>**
-
-****
-endif::arc42help[]
-
-The system consists of several services developed in Java using Spring Boot, a web frontend using HTML, and a relational database. Communication between services is handled via REST API and HTTPS.
 
 ==== Technical Interfaces
 
-[plantuml,"Technical Context Diagram",png]
+[plantuml]
 ----
-actor Player as user
-actor "External Developers" as developers
-component WebApp [
-  <<System>>
-  Web App
-]
+@startuml
 
-component PlayerService [
-  <<System>>
-  PlayerService
-]
+actor User
+participant "Web Application" as WebApp
+participant "Spring Security" as SecurityService
+participant "User Service" as UserService
+participant "Question Service" as QuestionService
+participant "LLM Service" as LLMService
+participant "WikiData Service" as WikiDataService
+participant "MySQL Database" as DB
+participant "External API" as ExtAPI
 
-component QuestionService [
-  <<System>>
-  QuestionService
-]
+User -> WebApp: Login Request
+WebApp -> SecurityService: Authenticate User (Direct Method)
+SecurityService -> UserService: Validate Credentials (Direct Method)
+UserService -> DB: Fetch User Data (SQL)
+DB --> UserService: Return User Data
+UserService --> SecurityService: Return Authentication Status
+SecurityService --> WebApp: Authentication Success/Failure
 
-component WikiData [
-    <<extern>>
-    Wikidata
-]
+User -> WebApp: Request Question
+WebApp -> QuestionService: Get New Question (Direct Method)
+QuestionService -> WikiDataService: Fetch Question Metadata (REST API)
+WikiDataService --> QuestionService: Return Metadata
+QuestionService -> LLMService: Generate Hints (REST API)
+LLMService --> QuestionService: Return Hints
+QuestionService -> DB: Store Question Data (SQL)
+DB --> QuestionService: Acknowledge Storage
+QuestionService --> WebApp: Return Question & Hints
 
-component LLMService [
-    <<extern>>
-    LLMService
-]
+User -> WebApp: Submit Answer
+WebApp -> QuestionService: Validate Answer (Direct Method)
+QuestionService -> DB: Store Answer Result (SQL)
+DB --> QuestionService: Acknowledge Storage
+QuestionService --> WebApp: Return Result & Score Update
 
-component LLMAPI [
-    <<system>>
-    LLM API
-]
-
-component QuestionGenerator [
-    <<system>>
-    QuestionGenerator
-]
-
-component QuestionGenerator [
-    <<system>>
-    QuestionGenerator
-]
-
-component RestApiService [
-    <<system>>
-    RestApiService
-]
-
-database Database [
-    Database
-]
-
-user .left.> WebApp: HTTPS
-WebApp ---> PlayerService : Handles\nlogin, signup\nand game history
-WebApp -left-> QuestionService : Retrieves generated\nquestions for game
-QuestionGenerator <-up- WikiData : Get entity info\nfrom SPARQL HTTP
-QuestionGenerator --> QuestionService : Generate questions\nwith entity data
-QuestionService <--> Database: Save\nquestion\nentities
-QuestionService <--> Database: Retrieve\nsaved\nquestions
-developers .up---.> RestApiService : HTTP request
-developers <.up. RestApiService : HTTP GET
-RestApiService -up-> QuestionService: Retrieve/Modify questions
-RestApiService ---> PlayerService: Retrieve/Modify player data
-
+@enduml
 ----
 
-[options="header",cols="1,2,2"]
-|===
-| Component | Technology | Interface
-| Web Application | HTML, Spring (Java) | Connects to backend services via HTTPS
-| User Service | Spring (Java) | REST API for managing user data (login, history)
-| Question Service | Spring (Java) | REST API to retrieve and display questions and images
-| LLM Service | External (REST API) | Connects to external LLM provider for dynamic hints
-| WikiData Service | External (REST API) | Retrieves image and question metadata from Wikidata
-| Database | MySQL | Stores user data, game history, and question data
-|===
+
+[plantuml]
+----
+@startuml
+
+rectangle "Application" {
+ "Web Application" as WebApp
+ "User Service" as UserService
+ "Question Service" as QuestionService
+ "Spring Security" as SecurityService
+}
+
+rectangle "Database" {
+  "MySQL Database" as DB
+}
+
+rectangle "External APIs" {
+  "LLM Service" as LLMService
+  "WikiData Service" as WikiDataService
+  "External API" as ExtAPI
+}
+
+actor User
+actor Admin
+actor "External Developers" as ExtDev
+
+User --> WebApp : Interacts via UI (HTTPS)
+Admin --> WebApp : Manages system
+WebApp --> SecurityService : Authentication & Authorization (Method Call)
+WebApp --> UserService : Direct Method Calls
+WebApp --> QuestionService : Direct Method Calls
+QuestionService --> LLMService : Requests hints (REST API)
+QuestionService --> WikiDataService : Fetches metadata (REST API)
+UserService --> DB : Stores/Retrieves user data (SQL)
+QuestionService --> DB : Stores/Retrieves question data (SQL)
+ExtDev --> ExtAPI : Accesses API (HTTP)
+
+@enduml
+----
+
+
+
+
+* **User Interface (Web Application)**: Provides access to the game and player interactions.
+* **Spring Security**: Manages authentication and authorization for user access.
+* **User Service**: Handles user authentication, history retrieval, and profile management.
+* **Question Service**: Manages question generation, retrieval, and displays images.
+* **LLM Service**: External API providing dynamically generated hints based on input data.
+* **WikiData Service**: External API fetching metadata and images for questions.
+* **Database (MySQL)**: Stores user data, game history, and question information.
+* **External API**: Provides access for third-party developers to retrieve question data.
 
 ==== Mapping Input/Output to Channels
 
-[options="header",cols="1,2,2"]
+[options="header"]
 |===
-| Component | Input/Output | Channel/Protocol
-| RestApiService | External developer interactions | HTTPS
-| Frontend | User interactions, game display | HTTPS
-| Database | User data, game history, questions | Specific database driver (MySQL)
-| WikiData | Data for question generation | HTTP
-| LLM Service | Hint generation, AI responses |  HTTPS
-| Question Generator | Generated questions | In-memory
-| Question Service | Questions for game | In-memory
-| Player Service | Player data | In-memory
-| Own API Service | External Developers | HTTP
-|===
-
-[options="header",cols="1,2,2"]
-|===
-| Participant | Communication Channel | Purpose
-| Player | HTTPS (Web App) | Interacts with the system (login, play, receive questions)
-| External Developers | HTTP (External API Service) | Access question database
-| Web Application | HTTPS | Connects to backend services
-| Question Generator | HTTP (WikiData) | Retrieves entity information
-| LLM API | HTTPS (LLM Service) | Requests hints for questions
-| Database | SQL Connection | Stores user and game data
+| Participants        | Input/Output                                            | Channel/Protocol
+| User                | Login credentials, game interactions, answer selections | HTTPS (WebApp)
+| Admin               | System configurations, user management requests         | HTTPS (WebApp)
+| Web Application     | User actions, API requests to services                  | Direct Method Calls
+| Spring Security     | Authentication requests, authorization checks           | Direct Method Calls
+| User Service        | Authentication requests, history retrieval              | Direct Method Calls
+| Question Service    | Question retrieval, image requests                      | Direct Method Calls
+| LLM Service         | Hint generation requests, AI responses                  | REST API (HTTPS)
+| WikiData Service    | Data requests for metadata and images                   | REST API (HTTPS)
+| Database (MySQL)    | Stores user data, game history, and questions           | SQL Connection
+| External Developers | API requests for player and question data               | HTTP (ExtAPI)
 |===
