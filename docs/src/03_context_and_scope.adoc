@@ -59,80 +59,180 @@ endif::arc42help[]
 
 WIChat is an interactive web-based quiz game application, inspired by "Saber y Ganar". Users can register, log in, and play the game, where they are presented with images and have to guess the associated place or object. The novelty lies in the integration of a conversational language model (LLM), which allows users to interact with the game and get hints for the answers dynamically. The questions and images are generated from Wikidata, providing an automated, real-time experience.
 
+[plantuml,"Business Context Diagram",png]
+----
+@startuml
+actor Player as user
+actor Admin as admin
+actor "External Developers" as extDevelopers
+
+component WebApp [
+  <<System>>
+  Web App
+]
+
+component PlayerService [
+  <<System>>
+  Player Management
+]
+
+component QuestionService [
+  <<System>>
+  Question Management
+]
+
+component HintService [
+    <<System>>
+    Hint Generation
+]
+
+component RewardService [
+    <<System>>
+    Reward Management
+]
+
+component OwnAPIService [
+    <<System>>
+    History API Management
+]
+
+component LLmService [
+    <<System>>
+    LLM Management
+]
+
+component ExternalAPIService [
+    <<extern>>
+    External APIs (LLM, Wikidata, etc.)
+]
+
+database database [
+    Database
+]
+
+user ...> WebApp: Plays
+admin ...> WebApp: Administrate
+WebApp -left-> QuestionService : Retrieves generated\nquestions for game
+WebApp ---> PlayerService : Handles\nlogin and signup
+WebApp ---> HintService : Requests hints\nbased on LLM analysis
+WebApp ---> RewardService : Manages\nuser rewards
+WebApp ---> OwnAPIService : Manages game history
+
+HintService --> LLmService : Generates hints from LLM
+
+ExternalAPIService --> LLmService : Provides metadata for questions
+ExternalAPIService --> HintService : Provides metadata for hints
+
+extDevelopers .right.> OwnAPIService : Retrieve question list
+
+database <--> PlayerService : Stores user data
+database <--> QuestionService : Stores questions
+database <-down- RewardService : Stores rewards
+OwnAPIService <-down- database
+@enduml
+
+----
+
 ==== Involved Actors
 
-[options="header",cols="1,2"]
-|===
-| Actor | Description
-| User | A person who accesses the application to play the quiz game.
-| Administrator | Responsible for managing system infrastructure and security.
-| LLM Provider | External service that provides AI-generated quiz questions and hints.
-| Database | MySQL used to store user information, game history, and question data.
-| WikiData | External service used to retrieve image and metadata for question generation.
-|===
+* **User**: Person who accesses the application to play one of the multiple games, review their history, manage their data, etc.
+* **Administrator**: Responsible for managing system infrastructure and security.
+* **WebApp**:Main interface of the system that connects with internal services.
+* **Database**: MySQL used to store user information, game history, and question data.
+* **External APIs**: External service used to retrieve image and metadata for question generation, provides AI-generated quiz questions and hints, etc.
+* **External developers**:  Developers who interact with the API to retrieve and modify player data, questions, and game history.
 
 ==== Business Context Table
 
 [options="header",cols="1,2,2"]
 |===
 | Communication Partner | Inputs | Outputs
-| User | Login credentials, game interactions | Quiz questions, score updates
-| LLM Provider | Quiz prompts | AI-generated questions and answers
-| Database | User data, game records | Stored authentication and game history
-| WikiData | Data requests for images and metadata | Retrieved image and metadata for questions
+| User | Login credentials, game interactions, answer selections | Quiz questions, score updates, hints, rewards
+| Admin | System configurations, user management requests | System status updates, logs, user management responses
+| Database | User data, game records, question storage | Stored authentication, game history, retrieved player and question data
+| WebApp | User actions, API requests to internal services | UI responses, game content, interaction processing
+| ExternalAPIService (LLM, Wikidata, etc.) | Quiz prompts, data requests for images and metadata | AI-generated questions, retrieved images, metadata, and hints
+| LLM Provider | Quiz prompts, hint generation requests | AI-generated questions, answers, and hints
+| WikiData | Data requests for images and metadata | Retrieved images and metadata for questions
+| External Developers | API requests for player and question data | Retrieved player information, question lists, game history
 |===
 
 
 === Technical Context
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Contents
-Technical interfaces (channels and transmission media) linking your system to its environment. In addition a mapping of domain specific input/output to the channels, i.e. an explanation which I/O uses which channel.
+The system consists of several services developed in Java using Spring Boot, utilizing Spring Security for authentication
+and authorization. The frontend is developed using HTML, and the backend communicates through direct method calls for
+internal service interactions, while external communication is handled via REST API over HTTPS. A relational database
+(MySQL) is used for data persistence
 
-.Motivation
-Many stakeholders make architectural decision based on the technical interfaces between the system and its context. Especially infrastructure or hardware designers decide these technical interfaces.
-
-.Form
-E.g. UML deployment diagram describing channels to neighboring systems,
-together with a mapping table showing the relationships between channels and input/output.
-
-**<Diagram or Table>**
-
-**<optionally: Explanation of technical interfaces>**
-
-**<Mapping Input/Output to Channels>**
-
-****
-endif::arc42help[]
-
-The system consists of several services developed in Java using Spring Boot, a web frontend using HTML, and a relational database. Communication between services is handled via REST API and HTTPS.
 
 ==== Technical Interfaces
 
-[options="header",cols="1,2,2"]
-|===
-| Component | Technology | Interface
-| Web Application | HTML, Spring (Java) | Connects to backend services via HTTPS
-| User Service | Spring (Java) | REST API for managing user data (login, history)
-| Question Service | Spring (Java) | REST API to retrieve and display questions and images
-| LLM Service | External (REST API) | Connects to external LLM provider for dynamic hints
-| WikiData Service | External (REST API) | Retrieves image and question metadata from Wikidata
-| Database | MySQL | Stores user data, game history, and question data
-|===
+
+[plantuml]
+----
+@startuml
+
+rectangle "Application" {
+ "Web Application" as WebApp
+ "User Service" as UserService
+ "Question Service" as QuestionService
+ "Spring Security" as SecurityService
+}
+
+rectangle "Database" {
+  "MySQL Database" as DB
+}
+
+rectangle "External APIs" {
+  "LLM Service" as LLMService
+  "WikiData Service" as WikiDataService
+  "External API" as ExtAPI
+}
+
+actor User
+actor Admin
+actor "External Developers" as ExtDev
+
+User --> WebApp : Interacts via UI (HTTPS)
+Admin --> WebApp : Manages system
+WebApp --> SecurityService : Authentication & Authorization (Method Call)
+WebApp --> UserService : Direct Method Calls
+WebApp --> QuestionService : Direct Method Calls
+QuestionService --> LLMService : Requests hints (REST API)
+QuestionService --> WikiDataService : Fetches metadata (REST API)
+UserService --> DB : Stores/Retrieves user data (SQL)
+QuestionService --> DB : Stores/Retrieves question data (SQL)
+ExtDev --> ExtAPI : Accesses API (HTTP)
+
+@enduml
+----
+
+
+
+
+* **User Interface (Web Application)**: Provides access to the game and player interactions.
+* **Spring Security**: Manages authentication and authorization for user access.
+* **User Service**: Handles user authentication, history retrieval, and profile management.
+* **Question Service**: Manages question generation, retrieval, and displays images.
+* **LLM Service**: External API providing dynamically generated hints based on input data.
+* **WikiData Service**: External API fetching metadata and images for questions.
+* **Database (MySQL)**: Stores user data, game history, and question information.
+* **External API**: Provides access for third-party developers to retrieve question data.
 
 ==== Mapping Input/Output to Channels
 
-[options="header",cols="1,2,2"]
+[options="header"]
 |===
-| Component | Input/Output | Channel/Protocol
-| RestApiService | External developer interactions | HTTPS
-| Frontend | User interactions, game display | HTTPS
-| Database | User data, game history, questions | Specific database driver (MySQL)
-| WikiData | Data for question generation | HTTP
-| Question Generator | Generated questions | In-memory
-| Question Service | Questions for game | In-memory
-| Player Service | Player data | In-memory
-| LLM Service | Hint generation, AI responses | REST API via HTTPS
+| Participants        | Input/Output                                            | Channel/Protocol
+| User                | Login credentials, game interactions, answer selections | HTTPS (WebApp)
+| Admin               | System configurations, user management requests         | HTTPS (WebApp)
+| Web Application     | User actions, API requests to services                  | Direct Method Calls
+| Spring Security     | Authentication requests, authorization checks           | Direct Method Calls
+| User Service        | Authentication requests, history retrieval              | Direct Method Calls
+| Question Service    | Question retrieval, image requests                      | Direct Method Calls
+| LLM Service         | Hint generation requests, AI responses                  | REST API (HTTPS)
+| WikiData Service    | Data requests for metadata and images                   | REST API (HTTPS)
+| Database (MySQL)    | Stores user data, game history, and questions           | SQL Connection
+| External Developers | API requests for player and question data               | HTTP (ExtAPI)
 |===
