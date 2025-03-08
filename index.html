@@ -1489,303 +1489,121 @@ internal service interactions, while external communication is handled via REST 
 <div class="sect1">
 <h2 id="section-building-block-view">5. Building Block View</h2>
 <div class="sectionbody">
-<div class="sidebarblock arc42help">
-<div class="content">
 <div class="paragraph">
-<div class="title">Content</div>
-<p>The building block view shows the static decomposition of the system into building blocks (modules, components, subsystems, classes, interfaces, packages, libraries, frameworks, layers, partitions, tiers, functions, macros, operations, data structures, &#8230;&#8203;) as well as their dependencies (relationships, associations, &#8230;&#8203;)</p>
-</div>
-<div class="paragraph">
-<p>This view is mandatory for every architecture documentation.
-In analogy to a house this is the <em>floor plan</em>.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>Maintain an overview of your source code by making its structure understandable through
-abstraction.</p>
-</div>
-<div class="paragraph">
-<p>This allows you to communicate with your stakeholder on an abstract level without disclosing implementation details.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>The building block view is a hierarchical collection of black boxes and white boxes
-(see figure below) and their descriptions.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="./images/05_building_blocks-EN.png" alt="Hierarchy of building blocks">
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Level 1</strong> is the white box description of the overall system together with black
-box descriptions of all contained building blocks.</p>
-</div>
-<div class="paragraph">
-<p><strong>Level 2</strong> zooms into some building blocks of level 1.
-Thus it contains the white box description of selected building blocks of level 1, together with black box descriptions of their internal building blocks.</p>
-</div>
-<div class="paragraph">
-<p><strong>Level 3</strong> zooms into selected building blocks of level 2, and so on.</p>
-</div>
-<div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-5/">Building Block View</a> in the arc42 documentation.</p>
-</div>
-</div>
+<p>The Building Block View elaborates on the static structure of the system. It decomposes the system into building blocks like modules, components, subsystems, and others, detailing their responsibilities and relationships.</p>
 </div>
 <div class="sect2">
 <h3 id="_whitebox_overall_system">5.1. Whitebox Overall System</h3>
-<div class="sidebarblock arc42help">
+<div class="paragraph">
+<p>This section provides an overview of the main components of the system and their interactions. The core of the system is the WIChat (WIChatEs04bApplication) component, which interfaces with Users, Wikidata for question generation, a LLM API for hint generation, a Database for persistence, and offers a REST API for External Developers.</p>
+</div>
+<div class="imageblock">
 <div class="content">
+<img src="./images/Whitebox-overall.png" alt="Whitebox overall" width="433" height="348">
+</div>
+</div>
+<div class="sect3">
+<h4 id="_motivation">5.1.1. Motivation</h4>
 <div class="paragraph">
-<p>Here you describe the decomposition of the overall system using the following white box template. It contains</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>an overview diagram</p>
-</li>
-<li>
-<p>a motivation for the decomposition</p>
-</li>
-<li>
-<p>black box descriptions of the contained building blocks. For these we offer you alternatives:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>use <em>one</em> table for a short and pragmatic overview of all contained building blocks and their interfaces</p>
-</li>
-<li>
-<p>use a list of black box descriptions of the building blocks according to the black box template (see below).
-Depending on your choice of tool this list could be sub-chapters (in text files), sub-pages (in a Wiki) or nested elements (in a modeling tool).</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>(optional:) important interfaces, that are not explained in the black box templates of a building block, but are very important for understanding the white box.
-Since there are so many ways to specify interfaces why do not provide a specific template for them.
- In the worst case you have to specify and describe syntax, semantics, protocols, error handling,
- restrictions, versions, qualities, necessary compatibilities and many things more.
-In the best case you will get away with examples or simple signatures.</p>
-</li>
-</ul>
+<p>The decomposition provides a clear, high-level overview of how the WIChat system interacts with users, external services (Wikidata), stores data (Database), and interfaces with external developers through the REST API. This modularity supports scalability and maintainability.</p>
 </div>
 </div>
-</div>
-<div class="paragraph">
-<p><em><strong>&lt;Overview Diagram&gt;</strong></em></p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Motivation</dt>
-<dd>
-<p><em>&lt;text explanation&gt;</em></p>
-</dd>
-<dt class="hdlist1">Contained Building Blocks</dt>
-<dd>
-<p><em>&lt;Description of contained building block (black boxes)&gt;</em></p>
-</dd>
-<dt class="hdlist1">Important Interfaces</dt>
-<dd>
-<p><em>&lt;Description of important interfaces&gt;</em></p>
-</dd>
-</dl>
-</div>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<p>Insert your explanations of black boxes from level 1:</p>
-</div>
-<div class="paragraph">
-<p>If you use tabular form you will only describe your black boxes with name and
-responsibility according to the following schema:</p>
-</div>
+<div class="sect3">
+<h4 id="_contained_building_blocks">5.1.2. Contained Building Blocks</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
+<col style="width: 50%;">
+<col style="width: 50%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top"><strong>Name</strong></th>
-<th class="tableblock halign-left valign-top"><strong>Responsibility</strong></th>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;black box 1&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"> <em>&lt;Text&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the end users of the WIChat application, interacting with the system to play games and view their history.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;black box 2&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"> <em>&lt;Text&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">WIChat (WIChatEs04bApplication)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The central component that manages gameplay logic, user interactions, and integrates external data for question generation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wikidata</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An external service utilized by the WIChat system to retrieve data for dynamically generating quiz questions.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maintains persistent storage for user data, game history, and generated questions, ensuring data integrity and availability.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">External Developers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Developers or systems that interact with the WIChat system via the REST API to access or modify player and question data.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LLM API</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An external service employed by the WIChat system to retrieve data for generating hints for questions.</p></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>If you use a list of black box descriptions then you fill in a separate black box template for every important building block .
-Its headline is the name of the black box.</p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_black_box_1">5.1.1. &lt;Name black box 1&gt;</h4>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<p>Here you describe &lt;black box 1&gt;
-according the the following black box template:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Purpose/Responsibility</p>
-</li>
-<li>
-<p>Interface(s), when they are not extracted as separate paragraphs. This interfaces may include qualities and performance characteristics.</p>
-</li>
-<li>
-<p>(Optional) Quality-/Performance characteristics of the black box, e.g.availability, run time behavior, &#8230;&#8203;.</p>
-</li>
-<li>
-<p>(Optional) directory/file location</p>
-</li>
-<li>
-<p>(Optional) Fulfilled requirements (if you need traceability to requirements).</p>
-</li>
-<li>
-<p>(Optional) Open issues/problems/risks</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p><em>&lt;Purpose/Responsibility&gt;</em></p>
-</div>
-<div class="paragraph">
-<p><em>&lt;Interface(s)&gt;</em></p>
-</div>
-<div class="paragraph">
-<p><em>&lt;(Optional) Quality/Performance Characteristics&gt;</em></p>
-</div>
-<div class="paragraph">
-<p><em>&lt;(Optional) Directory/File Location&gt;</em></p>
-</div>
-<div class="paragraph">
-<p><em>&lt;(Optional) Fulfilled Requirements&gt;</em></p>
-</div>
-<div class="paragraph">
-<p><em>&lt;(optional) Open Issues/Problems/Risks&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_black_box_2">5.1.2. &lt;Name black box 2&gt;</h4>
-<div class="paragraph">
-<p><em>&lt;black box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_black_box_n">5.1.3. &lt;Name black box n&gt;</h4>
-<div class="paragraph">
-<p><em>&lt;black box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_interface_1">5.1.4. &lt;Name interface 1&gt;</h4>
-<div class="paragraph">
-<p>&#8230;&#8203;</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_interface_m">5.1.5. &lt;Name interface m&gt;</h4>
-
 </div>
 </div>
 <div class="sect2">
 <h3 id="_level_2">5.2. Level 2</h3>
-<div class="sidebarblock arc42help">
+<div class="paragraph">
+<p>For Level 2 of the Building Block View, the WIChat (QuestionGame) system is further decomposed into four primary components that define its operational structure. Each component is designed to fulfill specific roles within the architecture, ensuring the system&#8217;s functionality and responsiveness to user interactions.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>GameService:</strong> This component acts as the core of the QuestionGame, orchestrating the flow of games, managing question selection, enforcing game rules, and tracking scores. It ensures that gameplay proceeds smoothly and according to the predefined logic, offering a seamless experience for the user.</p>
+</li>
+<li>
+<p><strong>PlayerService:</strong> Responsible for handling user accounts, this component manages registration, authentication, and profile management. It safeguards user data while providing a personalized experience through game history tracking and preference settings.</p>
+</li>
+<li>
+<p><strong>QuestionService:</strong> This component interacts directly with the Wikidata service to fetch data for question generation. It processes and curates content to produce relevant, challenging questions for the game, thereby ensuring a varied and educational experience.</p>
+</li>
+<li>
+<p><strong>RestApiService:</strong> Serving as the gateway for external developers, this component exposes a set of RESTful APIs that allow access to player information and question data. It handles request processing, authentication, and data delivery, facilitating third-party integrations and extensions of the WIChat platform.</p>
+</li>
+<li>
+<p><strong>LLMService:</strong> This component interacts directly with the LLM API to fetch data for question generation. It processes and curates content to produce relevant, challenging questions for the game, thereby ensuring a varied and educational experience.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
 <div class="content">
-<div class="paragraph">
-<p>Here you can specify the inner structure of (some) building blocks from level 1 as white boxes.</p>
-</div>
-<div class="paragraph">
-<p>You have to decide which building blocks of your system are important enough to justify such a detailed description.
-Please prefer relevance over completeness. Specify important, surprising, risky, complex or volatile building blocks.
-Leave out normal, simple, boring or standardized parts of your system</p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_1">5.2.1. White Box <em>&lt;building block 1&gt;</em></h4>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<p>&#8230;&#8203;describes the internal structure of <em>building block 1</em>.</p>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_2">5.2.2. White Box <em>&lt;building block 2&gt;</em></h4>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
-<div class="paragraph">
-<p>&#8230;&#8203;</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_m">5.2.3. White Box <em>&lt;building block m&gt;</em></h4>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
+<img src="./images/level2.png" alt="level2" width="680" height="777">
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_level_3">5.3. Level 3</h3>
-<div class="sidebarblock arc42help">
+<div class="paragraph">
+<p>In Level 3, we take a closer look at the API Management component, breaking it down into two essential services: the Player Information API and the Question Information API. These services are fundamental to the system&#8217;s ability to interact with external applications, providing necessary functionalities with a focus on usability and security.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Player Information API:</strong> This API serves as the gateway for external applications to access and manage player data. It allows for operations such as retrieving player profiles, updating personal information, and viewing game history. The design prioritizes data security, ensuring safe and secure access to sensitive information. The interface is straightforward, designed for ease of use while maintaining comprehensive functionality.</p>
+</li>
+<li>
+<p><strong>Question Information API:</strong> Dedicated to the dynamic world of quiz questions, this API facilitates the retrieval of questions and submission of answers. It stands as a bridge between the system&#8217;s vast question repository and external applications, enabling a seamless flow of information. The API adheres to clear and logical request and response structures, ensuring efficient and effective communication. Security measures are in place to protect the integrity of the question data and the fairness of the game.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This level of documentation provides a structured and clear view of the system&#8217;s architecture, particularly focusing on its integration points. By balancing formal language with accessibility, we aim to communicate effectively with a broad audience of stakeholders, ensuring understanding and transparency in the system&#8217;s design.</p>
+</div>
+<div class="imageblock">
 <div class="content">
-<div class="paragraph">
-<p>Here you can specify the inner structure of (some) building blocks from level 2 as white boxes.</p>
+<img src="./images/level3.png" alt="level3" width="518" height="114">
 </div>
-<div class="paragraph">
-<p>When you need more detailed levels of your architecture please copy this
-part of arc42 for additional levels.</p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_x_1">5.3.1. White Box &lt;_building block x.1_&gt;</h4>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<p>Specifies the internal structure of <em>building block x.1</em>.</p>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_x_2">5.3.2. White Box &lt;_building block x.2_&gt;</h4>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_y_1">5.3.3. White Box &lt;_building block y.1_&gt;</h4>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
 </div>
 <div style="page-break-after: always;"></div>
-</div>
 </div>
 </div>
 </div>
@@ -1796,7 +1614,7 @@ part of arc42 for additional levels.</p>
 <h3 id="_user_authentication">6.1. User Authentication</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Sequence%20diagram%201.png" alt="Sequence diagram 1" width="466" height="365">
+<img src="./images/Sequence%20diagram%201.png" alt="Sequence diagram 1" width="517" height="355">
 </div>
 </div>
 </div>
@@ -1804,7 +1622,7 @@ part of arc42 for additional levels.</p>
 <h3 id="_question_generation">6.2. Question Generation</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Sequence%20diagram%202.png" alt="Sequence diagram 2" width="716" height="439">
+<img src="./images/Sequence%20diagram%202.png" alt="Sequence diagram 2" width="794" height="427">
 </div>
 </div>
 </div>
@@ -1812,7 +1630,7 @@ part of arc42 for additional levels.</p>
 <h3 id="_user_responds_to_a_question">6.3. User Responds to a Question</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Sequence%20diagram%203.png" alt="Sequence diagram 3" width="447" height="378">
+<img src="./images/Sequence%20diagram%203.png" alt="Sequence diagram 3" width="490" height="368">
 </div>
 </div>
 </div>
@@ -1820,7 +1638,7 @@ part of arc42 for additional levels.</p>
 <h3 id="_user_checks_their_history">6.4. User Checks their History</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Sequence%20diagram%204.png" alt="Sequence diagram 4" width="418" height="335">
+<img src="./images/Sequence%20diagram%204.png" alt="Sequence diagram 4" width="458" height="326">
 </div>
 </div>
 </div>
@@ -1828,7 +1646,7 @@ part of arc42 for additional levels.</p>
 <h3 id="_access_to_user_information_via_an_api">6.5. Access to User Information via an API</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Sequence%20diagram%205.png" alt="Sequence diagram 5" width="586" height="396">
+<img src="./images/Sequence%20diagram%205.png" alt="Sequence diagram 5" width="644" height="385">
 </div>
 </div>
 </div>
@@ -1836,7 +1654,7 @@ part of arc42 for additional levels.</p>
 <h3 id="_access_to_generated_questions_information_via_an_api">6.6. Access to Generated Questions Information via an API</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Sequence%20diagram%206.png" alt="Sequence diagram 6" width="692" height="396">
+<img src="./images/Sequence%20diagram%206.png" alt="Sequence diagram 6" width="766" height="385">
 </div>
 </div>
 </div>
@@ -1844,7 +1662,7 @@ part of arc42 for additional levels.</p>
 <h3 id="_user_interacts_with_the_game_and_requests_a_hint">6.7. User Interacts with the Game and Requests a Hint</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Sequence%20diagram%207.png" alt="Sequence diagram 7" width="654" height="803">
+<img src="./images/Sequence%20diagram%207.png" alt="Sequence diagram 7" width="719" height="776">
 </div>
 </div>
 <div class="sect3">
@@ -1971,7 +1789,7 @@ The infrastructure features a Docker container running the Java Spring Boot appl
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Docker%20Container%20Setup.png" alt="Docker Container Setup" width="1022" height="638">
+<img src="./images/Docker%20Container%20Setup.png" alt="Docker Container Setup" width="962" height="610">
 </div>
 <div class="title">Figure 1. Diagram: Docker Container Setup</div>
 </div>
@@ -2691,7 +2509,7 @@ The infrastructure features a Docker container running the Java Spring Boot appl
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2025-02-26 18:14:31 +0100
+Last updated 2025-03-08 18:41:03 UTC
 </div>
 </div>
 </body>
