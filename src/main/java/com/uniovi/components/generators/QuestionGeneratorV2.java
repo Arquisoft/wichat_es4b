@@ -1,5 +1,6 @@
 package com.uniovi.components.generators;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uniovi.entities.Answer;
@@ -73,7 +74,15 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
                 replace(answerPlaceholder, answerLabel);
 
         // Execute the query and get the results
-        JsonNode results = getQueryResult(query);
+        JsonNode results = null;
+        boolean pass = false;
+        do {
+            try {
+                results = getQueryResult(query);
+                pass = true;
+            } catch (Exception e) {
+            }
+        }while (!pass);
         List<Question> questions = new ArrayList<>();
 
         // Prepare the statement base based on the language
@@ -152,7 +161,7 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
 
         // Process the JSON response using Jackson ObjectMapper
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonResponse = objectMapper.readTree(response.body());
+        JsonNode jsonResponse =objectMapper.readTree(response.body());
 
         // Access the data from the JSON response
         resultsNode = jsonResponse.path("results").path("bindings");
