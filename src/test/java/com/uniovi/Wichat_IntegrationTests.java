@@ -5,6 +5,7 @@ import com.uniovi.util.PropertiesExtractor;
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.events.WebDriverListener;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,18 +23,20 @@ public class Wichat_IntegrationTests {
 
     protected static WebDriver driver;
 
-    @BeforeAll
-    public static void setUp() {
-        if (driver == null) {
-            driver = FirefoxWebDriver.getDriver();
-        }
+    public Wichat_IntegrationTests() {
+        driver = webDriver(new CustomWebDriverListener());
     }
 
-    @AfterAll
-    public static void tearDown() {
+    public WebDriver webDriver(WebDriverListener listener) {
         if (driver != null) {
-            driver.quit();
-            driver = null;
+            return driver;
         }
+
+        driver = FirefoxWebDriver.getWebDriver(listener);
+        return driver;
+    }
+
+    private static class CustomWebDriverListener implements WebDriverListener {
+        // Implement listener methods as needed
     }
 }
