@@ -168,47 +168,6 @@ internal service interactions, while external communication is handled via REST 
 
 ==== Technical Interfaces
 
-[plantuml]
-----
-@startuml
-
-actor User
-participant "Web Application" as WebApp
-participant "Spring Security" as SecurityService
-participant "User Service" as UserService
-participant "Question Service" as QuestionService
-participant "LLM Service" as LLMService
-participant "WikiData Service" as WikiDataService
-participant "MySQL Database" as DB
-participant "External API" as ExtAPI
-
-User -> WebApp: Login Request
-WebApp -> SecurityService: Authenticate User (Direct Method)
-SecurityService -> UserService: Validate Credentials (Direct Method)
-UserService -> DB: Fetch User Data (SQL)
-DB --> UserService: Return User Data
-UserService --> SecurityService: Return Authentication Status
-SecurityService --> WebApp: Authentication Success/Failure
-
-User -> WebApp: Request Question
-WebApp -> QuestionService: Get New Question (Direct Method)
-QuestionService -> WikiDataService: Fetch Question Metadata (REST API)
-WikiDataService --> QuestionService: Return Metadata
-QuestionService -> LLMService: Generate Hints (REST API)
-LLMService --> QuestionService: Return Hints
-QuestionService -> DB: Store Question Data (SQL)
-DB --> QuestionService: Acknowledge Storage
-QuestionService --> WebApp: Return Question & Hints
-
-User -> WebApp: Submit Answer
-WebApp -> QuestionService: Validate Answer (Direct Method)
-QuestionService -> DB: Store Answer Result (SQL)
-DB --> QuestionService: Acknowledge Storage
-QuestionService --> WebApp: Return Result & Score Update
-
-@enduml
-----
-
 
 [plantuml]
 ----
