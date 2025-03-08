@@ -59,79 +59,7 @@ endif::arc42help[]
 
 WIChat is an interactive web-based quiz game application, inspired by "Saber y Ganar". Users can register, log in, and play the game, where they are presented with images and have to guess the associated place or object. The novelty lies in the integration of a conversational language model (LLM), which allows users to interact with the game and get hints for the answers dynamically. The questions and images are generated from Wikidata, providing an automated, real-time experience.
 
-[plantuml,"Business Context Diagram",png]
-----
-@startuml
-actor Player as user
-actor Admin as admin
-actor "External Developers" as extDevelopers
-
-component WebApp [
-  <<System>>
-  Web App
-]
-
-component PlayerService [
-  <<System>>
-  Player Management
-]
-
-component QuestionService [
-  <<System>>
-  Question Management
-]
-
-component HintService [
-    <<System>>
-    Hint Generation
-]
-
-component RewardService [
-    <<System>>
-    Reward Management
-]
-
-component OwnAPIService [
-    <<System>>
-    History API Management
-]
-
-component LLmService [
-    <<System>>
-    LLM Management
-]
-
-component ExternalAPIService [
-    <<extern>>
-    External APIs (LLM, Wikidata, etc.)
-]
-
-database database [
-    Database
-]
-
-user ...> WebApp: Plays
-admin ...> WebApp: Administrate
-WebApp -left-> QuestionService : Retrieves generated\nquestions for game
-WebApp ---> PlayerService : Handles\nlogin and signup
-WebApp ---> HintService : Requests hints\nbased on LLM analysis
-WebApp ---> RewardService : Manages\nuser rewards
-WebApp ---> OwnAPIService : Manages game history
-
-HintService --> LLmService : Generates hints from LLM
-
-ExternalAPIService --> LLmService : Provides metadata for questions
-ExternalAPIService --> HintService : Provides metadata for hints
-
-extDevelopers .right.> OwnAPIService : Retrieve question list
-
-database <--> PlayerService : Stores user data
-database <--> QuestionService : Stores questions
-database <-down- RewardService : Stores rewards
-OwnAPIService <-down- database
-@enduml
-
-----
+===== image:03.1_diagram.svg[WIChat System Context Diagram]
 
 ==== Involved Actors
 
@@ -168,48 +96,7 @@ internal service interactions, while external communication is handled via REST 
 
 ==== Technical Interfaces
 
-
-[plantuml]
-----
-@startuml
-
-rectangle "Application" {
- "Web Application" as WebApp
- "User Service" as UserService
- "Question Service" as QuestionService
- "Spring Security" as SecurityService
-}
-
-rectangle "Database" {
-  "MySQL Database" as DB
-}
-
-rectangle "External APIs" {
-  "LLM Service" as LLMService
-  "WikiData Service" as WikiDataService
-  "External API" as ExtAPI
-}
-
-actor User
-actor Admin
-actor "External Developers" as ExtDev
-
-User --> WebApp : Interacts via UI (HTTPS)
-Admin --> WebApp : Manages system
-WebApp --> SecurityService : Authentication & Authorization (Method Call)
-WebApp --> UserService : Direct Method Calls
-WebApp --> QuestionService : Direct Method Calls
-QuestionService --> LLMService : Requests hints (REST API)
-QuestionService --> WikiDataService : Fetches metadata (REST API)
-UserService --> DB : Stores/Retrieves user data (SQL)
-QuestionService --> DB : Stores/Retrieves question data (SQL)
-ExtDev --> ExtAPI : Accesses API (HTTP)
-
-@enduml
-----
-
-
-
+===== image:03.2_diagram.svg[WIChat Technical Context Diagram]
 
 * **User Interface (Web Application)**: Provides access to the game and player interactions.
 * **Spring Security**: Manages authentication and authorization for user access.
