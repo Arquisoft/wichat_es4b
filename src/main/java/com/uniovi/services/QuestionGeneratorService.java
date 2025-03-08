@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -74,7 +76,7 @@ public class QuestionGeneratorService {
         resetGeneration();
     }
 
-    @Scheduled(fixedRate = 150000)
+    @EventListener(ApplicationReadyEvent.class)
     @Transactional
     public void generateQuestions() throws IOException, InterruptedException {
         if (types.isEmpty()) {
@@ -92,24 +94,27 @@ public class QuestionGeneratorService {
         }
 
         QuestionGenerator qgen = new QuestionGeneratorV2(json);
-        QuestionType type = types.pop();
-        List<QuestionDto> questions;
+        do{
+            QuestionType type = types.pop();
+            List<QuestionDto> questions;
 
-        List<Question> qsp = qgen.getQuestions(Question.SPANISH, type.getQuestion(), type.getCategory());
-        questions = qsp.stream().map(QuestionDto::new).toList();
-        questions.forEach(questionService::addNewQuestion);
+            List<Question> qsp = qgen.getQuestions(Question.SPANISH, type.getQuestion(), type.getCategory());
+            questions = qsp.stream().map(QuestionDto::new).toList();
+            questions.forEach(questionService::addNewQuestion);
 
-        List<Question> qen = qgen.getQuestions(Question.ENGLISH,  type.getQuestion(), type.getCategory());
-        questions = qen.stream().map(QuestionDto::new).toList();
-        questions.forEach(questionService::addNewQuestion);
+            List<Question> qen = qgen.getQuestions(Question.ENGLISH,  type.getQuestion(), type.getCategory());
+            questions = qen.stream().map(QuestionDto::new).toList();
+            questions.forEach(questionService::addNewQuestion);
 
-        List<Question> qfr = qgen.getQuestions(Question.FRENCH,  type.getQuestion(), type.getCategory());
-        questions = qfr.stream().map(QuestionDto::new).toList();
-        questions.forEach(questionService::addNewQuestion);
+            List<Question> qfr = qgen.getQuestions(Question.FRENCH,  type.getQuestion(), type.getCategory());
+            questions = qfr.stream().map(QuestionDto::new).toList();
+            questions.forEach(questionService::addNewQuestion);
 
-        List<Question> qDe = qgen.getQuestions(Question.DEUCH,  type.getQuestion(), type.getCategory());
-        questions = qDe.stream().map(QuestionDto::new).toList();
-        questions.forEach(questionService::addNewQuestion);
+            List<Question> qDe = qgen.getQuestions(Question.DEUCH,  type.getQuestion(), type.getCategory());
+            questions = qDe.stream().map(QuestionDto::new).toList();
+            questions.forEach(questionService::addNewQuestion);
+        }while (!types.isEmpty());
+
     }
 
     @Transactional
