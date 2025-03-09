@@ -1861,7 +1861,7 @@ class Wiq_UnitTests {
     @Test
     void testSendQuestionToLLM_Empathy() {
         // Datos de prueba
-        String question = "¿Hola?";
+        String question = "¿Si te paso el enlace de una imagen eres capaz de analizar su contenido visual de alguna manera?";
 
         // Simulamos la respuesta de la API externa
         Map<String, Object> mockResponse = Map.of(
@@ -1876,34 +1876,10 @@ class Wiq_UnitTests {
                 .thenReturn(responseEntity);
 
         // Ejecutar el método del servicio
-        String answer = llmService.sendQuestionToLLM(question,null);
+        String answer = llmService.sendQuestionToLLM(question);
         System.out.println(answer);
 
     }
-
-    @Test
-    void testSendQuestionWithImageToLLM_Empathy() {
-        // Datos de prueba
-        String question = "";
-
-        // Simulamos la respuesta de la API externa
-        Map<String, Object> mockResponse = Map.of(
-                "choices", new Object[]{
-                        Map.of("message", Map.of("content", "Madrid"))
-                }
-        );
-
-        // Configurar el mock para que devuelva nuestra respuesta simulada
-        ResponseEntity<Map> responseEntity = new ResponseEntity<>(mockResponse, HttpStatus.OK);
-        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(), eq(Map.class)))
-                .thenReturn(responseEntity);
-
-        // Ejecutar el método del servicio
-        String answer = llmService.sendQuestionToLLM(question,"https://www.wikidata.org/wiki/Q144#/media/File:Greenland_467_(35130903436)_(cropped).jpg");
-        System.out.println(answer);
-
-    }
-
 
     /**
      * Sends an HTTP request to the API

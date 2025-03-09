@@ -30,25 +30,18 @@ public class LlmService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public String sendQuestionToLLM(String question, String imageUrl) {
+    public String sendQuestionToLLM(String question) {
         String url = "https://empathyai.prod.empathy.co/v1/chat/completions";
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         headers.add("Authorization", "Bearer " + apiKey);
-
-        // Si se pasa una URL de imagen, incluimos esta en el mensaje
-        String imageMessage = imageUrl != null && !imageUrl.isEmpty()
-                ? "¿Puedes decirme que se puede ver en la imagen siguiente?: " + imageUrl
-                : "";
 
         // Construcción del cuerpo de la solicitud
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(Map.of(
                 "model", "mistralai/Mistral-7B-Instruct-v0.3",
                 "messages", new Object[]{
                         Map.of("role", "system", "content", "You are a helpful assistant."),
-                        Map.of("role", "user", "content", question),
-                        // Si se pasa una URL de imagen, lo agregamos como parte de la respuesta del asistente
-                        imageMessage.isEmpty() ? null : Map.of("role", "assistant", "content", imageMessage)
+                        Map.of("role", "user", "content", question)
                 }
         ), headers);
 

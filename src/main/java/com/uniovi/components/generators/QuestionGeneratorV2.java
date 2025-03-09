@@ -73,7 +73,17 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
                 replace(answerPlaceholder, answerLabel);
 
         // Execute the query and get the results
-        JsonNode results = getQueryResult(query);
+        boolean pass=false;
+        JsonNode results=null;
+        do{
+        try {
+            results = getQueryResult(query);
+            pass=true;
+        }catch (Exception e){
+
+        }
+        }while(!pass);
+
         List<Question> questions = new ArrayList<>();
 
         // Prepare the statement base based on the language
