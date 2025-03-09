@@ -27,8 +27,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static org.junit.Assert.assertNotNull;
-
 @SpringBootTest
 @Tag("unit")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
