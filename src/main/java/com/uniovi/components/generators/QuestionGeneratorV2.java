@@ -73,17 +73,15 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
                 replace(answerPlaceholder, answerLabel);
 
         // Execute the query and get the results
-        boolean pass=false;
-        JsonNode results=null;
-        do{
-        try {
-            results = getQueryResult(query);
-            pass=true;
-        }catch (Exception e){
-
-        }
-        }while(!pass);
-
+        JsonNode results = null;
+        boolean pass = false;
+        do {
+            try {
+                results = getQueryResult(query);
+                pass = true;
+            } catch (Exception e) {
+            }
+        }while (!pass);
         List<Question> questions = new ArrayList<>();
 
         // Prepare the statement base based on the language
@@ -118,7 +116,7 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
         int size = results.size();
         int tries = 0;
 
-       while (options.size() < 3 && tries < 100) {
+       while (options.size() < 3 && tries < 10) {
             int randomIdx = random.nextInt(size);
             String option = results.get(randomIdx).path(answerLabel).path("value").asText();
             if (!option.equals(correctAnswer) && !usedOptions.contains(option) ) {

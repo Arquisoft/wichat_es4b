@@ -1,6 +1,6 @@
 package com.uniovi.steps;
 
-import com.uniovi.Wiq_IntegrationTests;
+import com.uniovi.Wichat_IntegrationTests;
 import com.uniovi.util.PropertiesExtractor;
 import com.uniovi.util.SeleniumUtils;
 import io.cucumber.java.en.And;
@@ -12,7 +12,7 @@ import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
-public class SignUpStep extends Wiq_IntegrationTests {
+public class SignUpStep extends Wichat_IntegrationTests {
 
     @Given("I am not registered or logged in")
     public void i_am_not_registered_or_logged_in() {

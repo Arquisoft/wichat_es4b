@@ -2,224 +2,135 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 [[section-building-block-view]]
 
-
 == Building Block View
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Content
-The building block view shows the static decomposition of the system into building blocks (modules, components, subsystems, classes, interfaces, packages, libraries, frameworks, layers, partitions, tiers, functions, macros, operations, data structures, ...) as well as their dependencies (relationships, associations, ...)
-
-This view is mandatory for every architecture documentation.
-In analogy to a house this is the _floor plan_.
-
-.Motivation
-Maintain an overview of your source code by making its structure understandable through
-abstraction.
-
-This allows you to communicate with your stakeholder on an abstract level without disclosing implementation details.
-
-.Form
-The building block view is a hierarchical collection of black boxes and white boxes
-(see figure below) and their descriptions.
-
-image::05_building_blocks-EN.png["Hierarchy of building blocks"]
-
-*Level 1* is the white box description of the overall system together with black
-box descriptions of all contained building blocks.
-
-*Level 2* zooms into some building blocks of level 1.
-Thus it contains the white box description of selected building blocks of level 1, together with black box descriptions of their internal building blocks.
-
-*Level 3* zooms into selected building blocks of level 2, and so on.
-
-
-.Further Information
-
-See https://docs.arc42.org/section-5/[Building Block View] in the arc42 documentation.
-
-****
-endif::arc42help[]
+The Building Block View elaborates on the static structure of the system. It decomposes the system into building blocks like modules, components, subsystems, and others, detailing their responsibilities and relationships.
 
 === Whitebox Overall System
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-Here you describe the decomposition of the overall system using the following white box template. It contains
+This section provides an overview of the main components of the system and their interactions. The core of the system is the WIChat (WIChatEs04bApplication) component, which interfaces with Users, Wikidata for question generation, a LLM API for hint generation, a Database for persistence, and offers a REST API for External Developers.
 
- * an overview diagram
- * a motivation for the decomposition
- * black box descriptions of the contained building blocks. For these we offer you alternatives:
+[plantuml,"Whitebox-overall",png]
+----
+@startuml
+!theme plain
 
-   ** use _one_ table for a short and pragmatic overview of all contained building blocks and their interfaces
-   ** use a list of black box descriptions of the building blocks according to the black box template (see below).
-   Depending on your choice of tool this list could be sub-chapters (in text files), sub-pages (in a Wiki) or nested elements (in a modeling tool).
+actor User
+actor "External Developers" as Dev
+component "com.uniovi.WIChatEs04bApplication" as WIChat {
 
+}
+database "Database" as DB
+[WikiData] as WikiData
+[LLM Service] as LLM
 
- * (optional:) important interfaces, that are not explained in the black box templates of a building block, but are very important for understanding the white box.
-Since there are so many ways to specify interfaces why do not provide a specific template for them.
- In the worst case you have to specify and describe syntax, semantics, protocols, error handling,
- restrictions, versions, qualities, necessary compatibilities and many things more.
-In the best case you will get away with examples or simple signatures.
+User --> WIChat : Interacts
+WIChat --> WikiData : Fetches data
+WIChat --> LLM : Fetches data
+WIChat --> DB : Reads/Writes Data
+Dev --> WIChat : Uses APIs
 
-****
-endif::arc42help[]
+@enduml
+----
 
-_**<Overview Diagram>**_
+==== Motivation
 
-Motivation::
+The decomposition provides a clear, high-level overview of how the WIChat system interacts with users, external services (Wikidata), stores data (Database), and interfaces with external developers through the REST API. This modularity supports scalability and maintainability.
 
-_<text explanation>_
+==== Contained Building Blocks
 
-
-Contained Building Blocks::
-_<Description of contained building block (black boxes)>_
-
-Important Interfaces::
-_<Description of important interfaces>_
-
-ifdef::arc42help[]
-[role="arc42help"]
-****
-Insert your explanations of black boxes from level 1:
-
-If you use tabular form you will only describe your black boxes with name and
-responsibility according to the following schema:
-
-[cols="1,2" options="header"]
+[options="header"]
 |===
-| **Name** | **Responsibility**
-| _<black box 1>_ | _<Text>_
-| _<black box 2>_ | _<Text>_
+| Name | Description
+
+| User
+| Represents the end users of the WIChat application, interacting with the system to play games and view their history.
+
+| WIChat (WIChatEs04bApplication)
+| The central component that manages gameplay logic, user interactions, and integrates external data for question generation.
+
+| Wikidata
+| An external service utilized by the WIChat system to retrieve data for dynamically generating quiz questions.
+
+| Database
+| Maintains persistent storage for user data, game history, and generated questions, ensuring data integrity and availability.
+
+| External Developers
+| Developers or systems that interact with the WIChat system via the REST API to access or modify player and question data.
+
+| LLM API
+| An external service employed by the WIChat system to retrieve data for generating hints for questions.
 |===
-
-
-
-If you use a list of black box descriptions then you fill in a separate black box template for every important building block .
-Its headline is the name of the black box.
-****
-endif::arc42help[]
-
-==== <Name black box 1>
-
-ifdef::arc42help[]
-[role="arc42help"]
-****
-Here you describe <black box 1>
-according the the following black box template:
-
-* Purpose/Responsibility
-* Interface(s), when they are not extracted as separate paragraphs. This interfaces may include qualities and performance characteristics.
-* (Optional) Quality-/Performance characteristics of the black box, e.g.availability, run time behavior, ....
-* (Optional) directory/file location
-* (Optional) Fulfilled requirements (if you need traceability to requirements).
-* (Optional) Open issues/problems/risks
-
-****
-endif::arc42help[]
-
-_<Purpose/Responsibility>_
-
-_<Interface(s)>_
-
-_<(Optional) Quality/Performance Characteristics>_
-
-_<(Optional) Directory/File Location>_
-
-_<(Optional) Fulfilled Requirements>_
-
-_<(optional) Open Issues/Problems/Risks>_
-
-
-
-
-==== <Name black box 2>
-
-_<black box template>_
-
-==== <Name black box n>
-
-_<black box template>_
-
-
-==== <Name interface 1>
-
-...
-
-==== <Name interface m>
-
-
 
 === Level 2
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-Here you can specify the inner structure of (some) building blocks from level 1 as white boxes.
+For Level 2 of the Building Block View, the WIChat (QuestionGame) system is further decomposed into four primary components that define its operational structure. Each component is designed to fulfill specific roles within the architecture, ensuring the system's functionality and responsiveness to user interactions.
 
-You have to decide which building blocks of your system are important enough to justify such a detailed description.
-Please prefer relevance over completeness. Specify important, surprising, risky, complex or volatile building blocks.
-Leave out normal, simple, boring or standardized parts of your system
-****
-endif::arc42help[]
+* *GameService:* This component acts as the core of the QuestionGame, orchestrating the flow of games, managing question selection, enforcing game rules, and tracking scores. It ensures that gameplay proceeds smoothly and according to the predefined logic, offering a seamless experience for the user.
 
-==== White Box _<building block 1>_
+* *PlayerService:* Responsible for handling user accounts, this component manages registration, authentication, and profile management. It safeguards user data while providing a personalized experience through game history tracking and preference settings.
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-...describes the internal structure of _building block 1_.
-****
-endif::arc42help[]
+* *QuestionService:* This component interacts directly with the Wikidata service to fetch data for question generation. It processes and curates content to produce relevant, challenging questions for the game, thereby ensuring a varied and educational experience.
 
-_<white box template>_
+* *RestApiService:* Serving as the gateway for external developers, this component exposes a set of RESTful APIs that allow access to player information and question data. It handles request processing, authentication, and data delivery, facilitating third-party integrations and extensions of the WIChat platform.
 
-==== White Box _<building block 2>_
+* *LLMService:* This component interacts directly with the LLM API to fetch data for question generation. It processes and curates content to produce relevant, challenging questions for the game, thereby ensuring a varied and educational experience.
 
+[plantuml,"level2",png]
+----
+@startuml
+!theme plain
 
-_<white box template>_
+actor User
+actor "External Developers" as Dev
+component "com.uniovi.WIChatEs04bApplication" {
+    package "com.uniovi.services" {
+      component "[GameSession\nService]" as Logic
+      component "[PlayerService]" as UserMgmt
+      component "[QuestionService]" as QuestMgmt
+      component "[LLMService]" as LLMMgmt
+      component "[RestApi\nService]" as APIMgmt
 
-...
+      UserMgmt -[hidden]-> Logic : <<uses>>
+      QuestMgmt -[hidden]-> Logic : <<uses>>
+      APIMgmt -[hidden]-> UserMgmt : <<interfaces>>
+      APIMgmt -[hidden]-> QuestMgmt : <<interfaces>>
 
-==== White Box _<building block m>_
+      Logic ..> UserMgmt : Uses
+      Logic ..> QuestMgmt : Uses
+      Logic ..> LLMMgmt : Uses
+      UserMgmt ..> APIMgmt : Interfaces
+      QuestMgmt ..> APIMgmt : Interfaces
+    }
+}
 
-
-_<white box template>_
-
-
+User --> [com.uniovi.WIChatEs04bApplication] : Interacts
+Dev --> APIMgmt : Uses APIs
+@enduml
+----
 
 === Level 3
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-Here you can specify the inner structure of (some) building blocks from level 2 as white boxes.
+In Level 3, we take a closer look at the API Management component, breaking it down into two essential services: the Player Information API and the Question Information API. These services are fundamental to the system's ability to interact with external applications, providing necessary functionalities with a focus on usability and security.
 
-When you need more detailed levels of your architecture please copy this
-part of arc42 for additional levels.
-****
-endif::arc42help[]
+* *Player Information API:* This API serves as the gateway for external applications to access and manage player data. It allows for operations such as retrieving player profiles, updating personal information, and viewing game history. The design prioritizes data security, ensuring safe and secure access to sensitive information. The interface is straightforward, designed for ease of use while maintaining comprehensive functionality.
 
-==== White Box <_building block x.1_>
+* *Question Information API:* Dedicated to the dynamic world of quiz questions, this API facilitates the retrieval of questions and submission of answers. It stands as a bridge between the system's vast question repository and external applications, enabling a seamless flow of information. The API adheres to clear and logical request and response structures, ensuring efficient and effective communication. Security measures are in place to protect the integrity of the question data and the fairness of the game.
 
-ifdef::arc42help[]
-[role="arc42help"]
-****
-Specifies the internal structure of _building block x.1_.
-****
-endif::arc42help[]
+This level of documentation provides a structured and clear view of the system's architecture, particularly focusing on its integration points. By balancing formal language with accessibility, we aim to communicate effectively with a broad audience of stakeholders, ensuring understanding and transparency in the system's design.
 
-_<white box template>_
+[plantuml,"level3",png]
+----
+@startuml
+!theme plain
 
+package "com.uniovi.services.RestApiService" {
+  interface "Player Information API" as PlayerAPI
+  interface "Question Information API" as QuestAPI
 
-==== White Box <_building block x.2_>
+  [External Developers] -right-> PlayerAPI : Uses
+  [External Developers] -left-> QuestAPI : Uses
+}
 
-_<white box template>_
-
-
-
-==== White Box <_building block y.1_>
-
-_<white box template>_
+@enduml
+----

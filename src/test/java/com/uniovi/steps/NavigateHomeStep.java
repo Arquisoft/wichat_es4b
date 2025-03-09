@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-public class NavigateHomeStep extends Wiq_IntegrationTests {
+public class NavigateHomeStep extends Wichat_IntegrationTests {
 
     @Autowired
     private RoleService roleService;

@@ -9,7 +9,6 @@ import com.uniovi.entities.Answer;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
 import com.uniovi.services.impl.QuestionServiceImpl;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,10 +21,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.List;
 
 @Service
 public class QuestionGeneratorService {
@@ -36,6 +37,7 @@ public class QuestionGeneratorService {
     private JsonNode json;
     private final Environment environment;
     private final Logger log = LoggerFactory.getLogger(QuestionGeneratorService.class);
+
     private boolean started;
 
     public QuestionGeneratorService(QuestionService questionService, Environment environment) throws IOException {
@@ -52,20 +54,13 @@ public class QuestionGeneratorService {
             ObjectMapper objectMapper = new ObjectMapper();
             json = objectMapper.readTree(resource.getInputStream());
         }
-
         JsonNode categories = json.findValue("categories");
-        if (categories == null) {
-            throw new IOException("El JSON de preguntas no contiene la clave 'categories'.");
-        }
-
         for (JsonNode category : categories) {
             String categoryName = category.get("name").textValue();
             Category cat = new Category(categoryName);
             JsonNode questionsNode = category.findValue("questions");
-            if (questionsNode != null) {
-                for (JsonNode question : questionsNode) {
-                    types.push(new QuestionType(question, cat));
-                }
+            for (JsonNode question : questionsNode) {
+                types.push(new QuestionType(question, cat));
             }
         }
     }
@@ -88,7 +83,7 @@ public class QuestionGeneratorService {
             questionService.deleteAllQuestions();
         }
 
-        if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> env.equalsIgnoreCase("test"))) {
+        if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> (env.equalsIgnoreCase("test")))) {
             log.info("Test profile active, skipping sample data insertion");
             return;
         }

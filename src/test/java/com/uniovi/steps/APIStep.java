@@ -1,6 +1,6 @@
 package com.uniovi.steps;
 
-import com.uniovi.Wiq_IntegrationTests;
+import com.uniovi.Wichat_IntegrationTests;
 import com.uniovi.util.SeleniumUtils;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
@@ -10,7 +10,7 @@ import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
-public class APIStep extends Wiq_IntegrationTests {
+public class APIStep extends Wichat_IntegrationTests {
 
     @And("I go to the API key page")
     public void iGoToTheAPIKeyPage() {
