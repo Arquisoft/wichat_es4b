@@ -72,14 +72,12 @@ public class ImageQuestionGeneratorService {
         }
     }
 
-    @EventListener(ApplicationReadyEvent.class)
     public void generateAllQuestions() throws IOException {
         started = true;
         resetGeneration();
     }
 
     @Transactional
-    @EventListener(ApplicationReadyEvent.class)
     public void generateQuestions() throws IOException, InterruptedException {
         if (types.isEmpty()) {
             return;

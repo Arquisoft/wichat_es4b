@@ -210,6 +210,6 @@ public class ImageQuestionService {
                 "modo de pista de la siguiente pregunta relacionada con esa misma imagen, ¿" + playerQuestion +"?";
 
         // Llamar al servicio LLM para obtener la pista usando Gemini.
-        return llmService.sendQuestionToLLM(question, imageUrl);
+        return llmService.sendQuestionToLLM(question);
     }
 }

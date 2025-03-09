@@ -47,10 +47,10 @@ public class CustomConfiguration implements WebMvcConfigurer {
         argumentResolvers.add(resolver);
     }
 
-//    @Bean
-//    public ApplicationRunner init(QuestionGeneratorService questionGeneratorService) {
-//        return args -> {
-//            questionGeneratorService.generateQuestions();
-//        };
-//    }
+    @Bean
+    public ApplicationRunner init(QuestionGeneratorService questionGeneratorService) {
+        return args -> {
+            questionGeneratorService.generateQuestions();
+        };
+    }
 }
