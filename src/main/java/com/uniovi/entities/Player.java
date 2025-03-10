@@ -46,6 +46,9 @@ public class Player implements JsonEntity {
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<GameSession> gameSessions = new HashSet<>();
 
+    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<GameSessionBateria> gameSessionsBateria = new HashSet<>();
+
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "player")
     private ApiKey apiKey;
 

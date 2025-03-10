@@ -100,6 +100,31 @@ public class Associations {
         }
     }
 
+    public static class PlayerBateriaGameSession {
+        /**
+         * Add a new association between a player and a game session
+         *
+         * @param player      The player
+         * @param gameSession The game session
+         */
+
+        public static void addGameSession(Player player, GameSessionBateria gameSession) {
+            gameSession.setPlayer(player);
+            player.getGameSessionsBateria().add(gameSession);
+        }
+
+        /**
+         * Remove an association between a player and a game session
+         *
+         * @param player      The player
+         * @param gameSession The game session
+         */
+        public static void removeGameSession(Player player, GameSessionBateria gameSession) {
+            player.getGameSessionsBateria().remove(gameSession);
+            gameSession.setPlayer(null);
+        }
+    }
+
     public static class QuestionAnswers {
         /**
          * Add a new association between a question and an answer
