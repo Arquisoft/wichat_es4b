@@ -79,7 +79,7 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
             try {
                 results = getQueryResult(query);
                 pass = true;
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }while (!pass);
         List<Question> questions = new ArrayList<>();
