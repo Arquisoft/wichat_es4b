@@ -145,18 +145,20 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
 
     private JsonNode getQueryResult(String query) throws IOException, InterruptedException {
         logger.info("Query: {}", query);
-        HttpClient client = HttpClient.newHttpClient();
         JsonNode resultsNode;
-        String endpointUrl = "https://query.wikidata.org/sparql?query=" +
-                URLEncoder.encode(query, StandardCharsets.UTF_8) +
-                "&format=json";
+        HttpResponse<String> response;
+        try (HttpClient client = HttpClient.newHttpClient()) {
+            String endpointUrl = "https://query.wikidata.org/sparql?query=" +
+                    URLEncoder.encode(query, StandardCharsets.UTF_8) +
+                    "&format=json";
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(endpointUrl))
-                .header("Accept", "application/json")
-                .build();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(endpointUrl))
+                    .header("Accept", "application/json")
+                    .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        }
 
         // Process the JSON response using Jackson ObjectMapper
         ObjectMapper objectMapper = new ObjectMapper();
