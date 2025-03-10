@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - develop
+      - hotfix/pruebas-gitActions-Test
   pull_request:
     types: [opened, synchronize, reopened]
 
