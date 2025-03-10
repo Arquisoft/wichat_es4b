@@ -66,6 +66,7 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
         // Get the question and answer words from the JSON
         String questionImageLabel = questionImage.get("question").textValue();
         String answerLabel= questionImage.get("answer").textValue();
+        String imageLabel = questionImage.get("image").textValue();
 
         // Replace the placeholders in the query with the actual values
         query = query.replace(languagePlaceholder, language).
@@ -99,8 +100,7 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
             if (statement != null) {
                 // Generate the question statement
                 String questionImageStatement = statement.replace(questionImagePlaceholder, result.path(questionImageLabel).path("value").asText());
-
-                String imageUrl = "TODO";
+                String imageUrl = result.path(imageLabel).path("value").asText();
                 // Generate the question
                 QuestionImage q = new QuestionImage(questionImageStatement, options, correct, cat, language, imageUrl);
 

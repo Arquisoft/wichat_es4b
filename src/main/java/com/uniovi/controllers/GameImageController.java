@@ -29,13 +29,15 @@ public class GameImageController {
     private final PlayerServiceImageImpl playerService;
 
     private final MultiplayerSessionImageImpl multiplayerSessionImageImpl;
+    private final QuestionServiceImageImpl questionServiceImageImpl;
 
     public GameImageController(QuestionServiceImageImpl questionImageService, GameSessionImageImpl gameSessionImageImpl,
-                               PlayerServiceImageImpl playerService, MultiplayerSessionImageImpl multiplayerSessionImageImpl) {
+                               PlayerServiceImageImpl playerService, MultiplayerSessionImageImpl multiplayerSessionImageImpl, QuestionServiceImageImpl questionServiceImageImpl) {
         this.questionService = questionImageService;
         this.gameSessionImpl = gameSessionImageImpl;
         this.playerService = playerService;
         this.multiplayerSessionImageImpl = multiplayerSessionImageImpl;
+        this.questionServiceImageImpl = questionServiceImageImpl;
     }
 
     /**
@@ -58,7 +60,7 @@ public class GameImageController {
 
         model.addAttribute("questionImage", gameSessionImage.getCurrentQuestionImage());
         model.addAttribute("questionDurationImage", getRemainingTime(gameSessionImage));
-        return "game/image";
+        return "game/image/game";
     }
 
     @GetMapping("/game/image/multiplayer")
@@ -72,7 +74,7 @@ public class GameImageController {
     public String joinMultiplayerGame(@PathVariable String code, HttpSession session, Principal principal, Model model) {
         if (!multiplayerSessionImageImpl.existsCode(code)) {
             model.addAttribute("errorKeyImage", "multi.code.invalid");
-            return "game/image/multiplayerGameImage";
+            return "game/image/multiplayerGame";
         }
 
         Optional<PlayerImage> player = playerService.getUserByUsername(principal.getName());
@@ -99,11 +101,11 @@ public class GameImageController {
 
     @GetMapping("/image/startMultiplayerGame")
     public String startMultiplayerGame(HttpSession session, Model model, Principal principal) {
-        GameSessionImage gameSessionImage = (GameSessionImage) session.getAttribute("gameSessionImage");
+        GameSessionImage gameSessionImage = (GameSessionImage) session.getAttribute(GAMESESSION_STR);
 
         if (gameSessionImage != null) {
             if (! gameSessionImage.isMultiplayer()) {
-                session.removeAttribute("gameSessionImage");
+                session.removeAttribute(GAMESESSION_STR);
                 return "redirect:/image/startMultiplayerGame";
             }
 
@@ -124,12 +126,12 @@ public class GameImageController {
                     player.get().getMultiplayerCode());
             if (gameSessionImage == null)
                 return "redirect:/image/multiplayerGame";
-            session.setAttribute("gameSessionImage", gameSessionImage);
+            session.setAttribute(GAMESESSION_STR, gameSessionImage);
         }
 
         model.addAttribute("questionImage", gameSessionImage.getCurrentQuestionImage());
         model.addAttribute("questionDurationImage", getRemainingTime(gameSessionImage));
-        return "game/image";
+        return "game/image/game";
     }
 
     @GetMapping("/image/multiplayerGame/endGame/{code}")
@@ -190,13 +192,13 @@ public class GameImageController {
     public String getCheckResult(@PathVariable Long idQuestion, @PathVariable Long idAnswer, Model model, HttpSession session, Principal principal) {
         GameSessionImage gameSessionImage = (GameSessionImage) session.getAttribute(GAMESESSION_STR);
         if (gameSessionImage == null) {
-            return "redirect:/game/image";
+            return "redirect:/game/image/game";
         }
 
         if (!gameSessionImage.hasQuestionImageId(idQuestion)) {
             model.addAttribute("scoreImage", gameSessionImage.getScore());
             session.removeAttribute(GAMESESSION_STR);
-            return "redirect:/game/image"; // if someone wants to exploit the game, just redirect to the game page
+            return "redirect:/game/image/game"; // if someone wants to exploit the game, just redirect to the game page
         }
 
         if(idAnswer == -1
@@ -244,7 +246,7 @@ public class GameImageController {
             }
 
             model.addAttribute("codeImage", session.getAttribute("multiplayerCodeImage"));
-            return "image/ranking/multiplayerRanking";
+            return "game/image/ranking/multiplayerRanking";
         }
 
         if (nextQuestionImage == null) {
@@ -268,7 +270,7 @@ public class GameImageController {
         return "game/image/fragments/gameFrame";
     }
 
-    @GetMapping("/game/pointsImage")
+    @GetMapping("/game/image/points")
     @ResponseBody
     public String getPoints(HttpSession session) {
         GameSessionImage gameSessionImage = (GameSessionImage) session.getAttribute(GAMESESSION_STR);
@@ -278,7 +280,7 @@ public class GameImageController {
             return "0";
     }
 
-    @GetMapping("/game/currentQuestionImage")
+    @GetMapping("/game/image/currentQuestion")
     @ResponseBody
     public String getCurrentQuestion(HttpSession session) {
         GameSessionImage gameSessionImage = (GameSessionImage) session.getAttribute(GAMESESSION_STR);
@@ -286,6 +288,17 @@ public class GameImageController {
             return String.valueOf(Math.min(gameSessionImage.getAnsweredQuestions().size()+1, GameSessionImageImpl.NORMAL_GAME_QUESTION_NUM));
         else
             return "0";
+    }
+
+    @GetMapping("/game/image/hint/{id}")
+    @ResponseBody
+    public String getImageQuestionHint(@PathVariable Long id) {
+        Optional<QuestionImage> questionOpt = questionServiceImageImpl.getQuestion(id);
+        if (questionOpt.isPresent()) {
+            QuestionImage question = questionOpt.get();
+            return questionServiceImageImpl.getHintForImageQuestion(question); // Devuelve solo la pista como String
+        }
+        return "No se encontró ninguna pista para esta pregunta.";
     }
 
     private PlayerImage getLoggedInPlayer(Principal principal) {

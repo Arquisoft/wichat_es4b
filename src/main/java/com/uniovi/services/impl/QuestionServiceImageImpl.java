@@ -10,6 +10,7 @@ import com.uniovi.services.*;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,8 @@ public class QuestionServiceImageImpl {
     private final AnswerServiceImageImpl answerService;
     private final AnswerImageRepository answerRepository;
     private final EntityManager entityManager;
+    @Autowired
+    private LlmService llmService;
 
     @Setter
     private QuestionImageGeneratorService questionGeneratorService;
@@ -182,6 +185,14 @@ public class QuestionServiceImageImpl {
 
     public JsonNode getJsonGenerator() {
         return questionGeneratorService.getJsonGeneration();
+    }
+
+    public String getHintForImageQuestion(QuestionImage question) {
+
+        String llmHint =  ("Hola, tengo esta imagen: <" + question.getImageUrl() + ">, estas opciones de respuesta: "
+                + question.getOptions().toString()+".\nY quiero que me respondas en el idioma de este acrónimo: " + question.getLanguage().toString());
+        // Llamar al servicio LLM para obtener la pista usando Gemini.
+        return llmService.sendQuestionToLLM(llmHint);
     }
 
 }

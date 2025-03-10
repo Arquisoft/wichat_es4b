@@ -28,7 +28,8 @@
           ],
           "question": "elementLabel",
           "answer": "symbol",
-          "sparqlQuery": "select distinct ?element ?[QUESTION] ?[ANSWER] where {\n  ?element wdt:P31 wd:Q11344 .\n  ?element wdt:P246 ?[ANSWER] .\n  ?element rdfs:label ?[QUESTION] .\n  FILTER NOT EXISTS {?element wdt:P31 wd:Q1299291} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\")\n  }"
+          "image": "image",
+          "sparqlQuery": "select distinct ?element ?[QUESTION] ?[ANSWER] ?image where {\n  ?element wdt:P31 wd:Q11344 .\n  ?element wdt:P246 ?[ANSWER] .\n  ?element rdfs:label ?[QUESTION] .\n  OPTIONAL {\n    ?element wdt:P18 ?image .\n  }\n  FILTER NOT EXISTS {?element wdt:P31 wd:Q1299291} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\")\n}"
         },
         {
           "type": "atomic_number",
@@ -52,7 +53,8 @@
           ],
           "question": "elementLabel",
           "answer": "atomicNumber",
-          "sparqlQuery": "select distinct ?element ?[QUESTION] ?[ANSWER] where {\n  ?element wdt:P31 wd:Q11344 .\n  ?element wdt:P1086 ?[ANSWER] .\n  ?element rdfs:label ?[QUESTION] .\n  FILTER NOT EXISTS {?element wdt:P31 wd:Q1299291} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\")\n  }"
+          "image": "image",
+          "sparqlQuery": "select distinct ?element ?[QUESTION] ?[ANSWER] ?image where {\n  ?element wdt:P31 wd:Q11344 .\n  ?element wdt:P1086 ?[ANSWER] .\n  ?element rdfs:label ?[QUESTION] .\n  OPTIONAL {\n    ?element wdt:P18 ?image .\n  }\n  FILTER NOT EXISTS {?element wdt:P31 wd:Q1299291} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\")\n}"
         }
       ]
     }

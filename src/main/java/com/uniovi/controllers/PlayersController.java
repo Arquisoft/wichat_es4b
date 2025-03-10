@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.uniovi.configuration.SecurityConfig;
+import com.uniovi.dto.PlayerImageDto;
 import com.uniovi.dto.RoleDto;
 import com.uniovi.entities.Associations;
 import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Role;
 import com.uniovi.services.*;
+import com.uniovi.services.impl.PlayerServiceImageImpl;
 import com.uniovi.validators.SignUpValidator;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,6 +38,7 @@ import java.util.List;
 public class PlayersController {
     private final PlayerService playerService;
     private final RoleService roleService;
+    private final PlayerServiceImageImpl playerServiceImageImpl;
     private QuestionService questionService;
     private final SignUpValidator signUpValidator;
 
@@ -43,12 +46,13 @@ public class PlayersController {
 
     @Autowired
     public PlayersController(PlayerService playerService, SignUpValidator signUpValidator, GameSessionService gameSessionService,
-                             RoleService roleService, QuestionService questionService) {
+                             RoleService roleService, QuestionService questionService, PlayerServiceImageImpl playerServiceImageImpl) {
         this.playerService = playerService;
         this.signUpValidator =  signUpValidator;
         this.gameSessionService = gameSessionService;
         this.roleService = roleService;
         this.questionService = questionService;
+        this.playerServiceImageImpl = playerServiceImageImpl;
     }
 
     @GetMapping("/signup")
@@ -62,6 +66,7 @@ public class PlayersController {
         }
 
         model.addAttribute("user", new PlayerDto());
+
         return "player/signup";
     }
 
@@ -78,6 +83,7 @@ public class PlayersController {
         }
 
         playerService.addNewPlayer(user);
+        playerServiceImageImpl.addNewPlayer(user);
 
         try {
             request.login(user.getUsername(), user.getPassword());

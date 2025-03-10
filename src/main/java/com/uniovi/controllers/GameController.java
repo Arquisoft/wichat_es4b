@@ -64,11 +64,6 @@ public class GameController {
         return "redirect:/multiplayerGame/createGame";
     }
 
-    @GetMapping("/game/image/multiplayer")
-    public String getImageMultiplayerGame() {
-        return "redirect:/multiplayerGame/createGame";
-    }
-
     @GetMapping("/multiplayerGame/{code}")
     public String joinMultiplayerGame(@PathVariable String code, HttpSession session, Principal principal, Model model) {
         if (!multiplayerSessionService.existsCode(code)) {
