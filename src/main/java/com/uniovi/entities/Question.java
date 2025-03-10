@@ -21,10 +21,6 @@ import java.util.Objects;
 @Entity
 @NoArgsConstructor
 public class Question implements JsonEntity {
-    public static final String ENGLISH = "en";
-    public static final String SPANISH = "es";
-    public static final String FRENCH = "fr";
-    public static final String DEUCH = "de";
 
     @Id
     @GeneratedValue
@@ -51,6 +47,15 @@ public class Question implements JsonEntity {
         this.correctAnswer = correctAnswer;
         this.category = category;
         this.language = language;
+    }
+
+    public Question(String statement, List<Answer> options, Answer correctAnswer, Category category, Language language) {
+        Assert.isTrue(options.contains(correctAnswer), "Correct answer must be one of the options");
+        this.statement = statement;
+        Associations.QuestionAnswers.addAnswer(this, options);
+        this.correctAnswer = correctAnswer;
+        this.category = category;
+        this.language = language.getCode();
     }
 
     public void addOption(Answer option) {
@@ -81,6 +86,15 @@ public class Question implements JsonEntity {
     public List<Answer> returnScrambledOptions(){
         Collections.shuffle(options);
         return options;
+    }
+
+    public boolean hasEmptyOptions() {
+        for (Answer a : options) {
+            if (a.getText().isEmpty() || a.getText().isBlank() || a.getText() == null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -118,14 +132,5 @@ public class Question implements JsonEntity {
         options.forEach(option -> optionsArray.add(option.toJson()));
         obj         .put("options", optionsArray);
         return obj;
-    }
-
-    public boolean hasEmptyOptions() {
-        for(Answer a : options) {
-            if(a.getText().isEmpty() || a.getText().isBlank() || a.getText() == null) {
-                return true;
-            }
-        }
-        return false;
     }
 }

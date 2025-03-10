@@ -7,6 +7,7 @@ import com.uniovi.components.generators.QuestionGeneratorV2;
 import com.uniovi.dto.QuestionDto;
 import com.uniovi.entities.Answer;
 import com.uniovi.entities.Category;
+import com.uniovi.entities.Language;
 import com.uniovi.entities.Question;
 import com.uniovi.services.impl.QuestionServiceImpl;
 import jakarta.transaction.Transactional;
@@ -14,12 +15,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -35,11 +33,11 @@ public class QuestionGeneratorService {
 
     public static final String JSON_FILE_PATH = "static/JSON/QuestionTemplates.json";
 
-    private Deque<QuestionType> types = new ArrayDeque<>();
+    private final Deque<QuestionType> types = new ArrayDeque<>();
 
     private JsonNode json;
 
-    private Environment environment;
+    private final Environment environment;
 
     private final Logger log = LoggerFactory.getLogger(QuestionGeneratorService.class);
 
@@ -96,19 +94,19 @@ public class QuestionGeneratorService {
             QuestionType type = types.pop();
             List<QuestionDto> questions;
 
-            List<Question> qsp = qgen.getQuestions(Question.SPANISH, type.getQuestion(), type.getCategory());
+            List<Question> qsp = qgen.getQuestions(Language.ES.getCode(), type.getQuestion(), type.getCategory());
             questions = qsp.stream().map(QuestionDto::new).toList();
             questions.forEach(questionService::addNewQuestion);
 
-            List<Question> qen = qgen.getQuestions(Question.ENGLISH,  type.getQuestion(), type.getCategory());
+            List<Question> qen = qgen.getQuestions(Language.EN.getCode(),  type.getQuestion(), type.getCategory());
             questions = qen.stream().map(QuestionDto::new).toList();
             questions.forEach(questionService::addNewQuestion);
 
-            List<Question> qfr = qgen.getQuestions(Question.FRENCH,  type.getQuestion(), type.getCategory());
+            List<Question> qfr = qgen.getQuestions(Language.FR.getCode(),  type.getQuestion(), type.getCategory());
             questions = qfr.stream().map(QuestionDto::new).toList();
             questions.forEach(questionService::addNewQuestion);
 
-            List<Question> qDe = qgen.getQuestions(Question.DEUCH,  type.getQuestion(), type.getCategory());
+            List<Question> qDe = qgen.getQuestions(Language.DE.getCode(),  type.getQuestion(), type.getCategory());
             questions = qDe.stream().map(QuestionDto::new).toList();
             questions.forEach(questionService::addNewQuestion);
         }while (!types.isEmpty());
@@ -121,7 +119,7 @@ public class QuestionGeneratorService {
         QuestionType type = types.pop();
         List<QuestionDto> questions;
 
-        List<Question> qsp = qgen.getQuestions(Question.SPANISH, type.getQuestion(), type.getCategory());
+        List<Question> qsp = qgen.getQuestions(Language.ES.getCode(), type.getQuestion(), type.getCategory());
         questions = qsp.stream().map(QuestionDto::new).toList();
         questions.forEach(questionService::addNewQuestion);
     }
@@ -130,7 +128,7 @@ public class QuestionGeneratorService {
     public void generateTestQuestions(String cat) {
         Answer a1 = new Answer("1", true);
         List<Answer> answers = List.of(a1, new Answer("2", false), new Answer("3", false), new Answer("4", false));
-        Question q = new Question("Statement", answers, a1, new Category(cat), "es");
+        Question q = new Question("Statement", answers, a1, new Category(cat), Language.ES);
         questionService.addNewQuestion(new QuestionDto(q));
     }
 
