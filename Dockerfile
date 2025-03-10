@@ -1,5 +1,5 @@
 # Build stage with Maven and JDK 21
-FROM maven:3.9.5-openjdk-21-slim as build
+FROM maven:3.9.5-eclipse-temurin-21-slim AS build
 WORKDIR ./app
 COPY pom.xml .
 COPY src src/
