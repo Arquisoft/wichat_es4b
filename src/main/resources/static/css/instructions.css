@@ -1,0 +1,89 @@
+/* Estilos para el contenedor de las instrucciones */
+.instructions-container {
+    max-width: 100%; /* Ocupar el 100% del ancho disponible */
+    width: 90%; /* Ancho máximo para dar un margen */
+    margin: 40px auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: justify;
+}
+
+/* Títulos */
+.instructions-container h2,
+.instructions-container h3 {
+    font-size: 2em;
+    font-weight: bold;
+    text-align: left; /* Mantener título alineado a la izquierda */
+    margin-bottom: 20px;
+    color: #f8f9fa;
+}
+
+/* Párrafos y texto */
+.instructions-container p,
+.instructions-steps li {
+    font-size: 1.2em;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    text-align: justify; /* Asegura la justificación del texto */
+}
+
+/* Lista de pasos */
+.instructions-steps {
+    list-style-type: none;
+    padding: 0;
+}
+
+.instructions-steps li {
+    font-size: 1.1em;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+.instructions-steps li:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Botón de Volver */
+.back-button {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.back-button .btn {
+    background-color: #f39c12;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 12px 20px;
+    transition: all 0.3s ease-in-out;
+}
+
+.back-button .btn:hover {
+    background-color: #e67e22;
+    transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .instructions-container {
+        padding: 15px;
+    }
+
+    .instructions-container h2 {
+        font-size: 1.5em;
+    }
+
+    .instructions-container p {
+        font-size: 1em;
+    }
+}

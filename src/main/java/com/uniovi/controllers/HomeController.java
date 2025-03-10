@@ -55,7 +55,7 @@ public class HomeController{
 
     @GetMapping("/about-us")
     public String authors(){
-        return "/authors";
+        return "about-us";
     }
 
 }

@@ -1,29 +1,83 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/head}"></head>
 <body class="d-flex flex-column min-vh-100">
 <nav th:replace="~{fragments/nav}"></nav>
 <canvas th:replace="~{fragments/background}"></canvas>
-<div class="mb-4 container-fluid d-flex justify-content-center align-items-center text-center text-white" style="height: 80vh;">
-    <div class="row">
-        <div class="col-md-12" id="textBlock">
-            <h2 class="display-3 mb-4" th:text="#{instructions.heading}"></h2>
-            <p class="lead mb-4" th:text="#{instructions.subtitle}"></p>
-        </div>
-    </div>
-</div>
-<footer th:replace="~{fragments/footer}"></footer>
-<script th:inline="javascript">
-/*<![CDATA[*/
-    $(document).ready(function(){
-        let message = /*[[#{instructions.text}]]*/ 'default message';
-        message.split('\n').forEach(function (line) {
-            $('#textBlock').append($('<p></p>').text(line));
-        });
 
-        $('#textBlock p:last').addClass('mb-4');
-    });
-/*]]>*/
-</script>
+<div class="instructions-container text-white py-5">
+    <h2 class="display-3 mb-3">
+        <span th:text="#{instructions.heading}"></span>
+    </h2>
+    <p class="lead mb-4">
+        <span th:text="#{instructions.subtitle}"></span>
+    </p>
+    <p class="mb-4">
+        <span th:text="#{app.name}"></span> <span th:text="#{instructions.intro}"></span>
+    </p>
+
+    <!-- Sección: Cómo jugar -->
+    <div class="mb-5 mx-auto" style="max-width: 700px;">
+        <h3 class="mb-3">
+            <span th:text="#{instructions.play.title}"></span>
+        </h3>
+        <p>
+            <span th:text="#{app.name}"></span> <span th:text="#{instructions.play.steps}"></span>
+        </p>
+        <ul class="list-group list-group-flush instructions-steps">
+            <li class="list-group-item bg-transparent text-white" th:text="#{instructions.play.step1}"></li>
+            <li class="list-group-item bg-transparent text-white" th:text="#{instructions.play.step2}"></li>
+            <li class="list-group-item bg-transparent text-white" th:text="#{instructions.play.step3}"></li>
+            <li class="list-group-item bg-transparent text-white" th:text="#{instructions.play.step4}"></li>
+            <li class="list-group-item bg-transparent text-white" th:text="#{instructions.play.step5}"></li>
+        </ul>
+        <p class="mt-3" th:text="#{instructions.play.scoring}"></p>
+    </div>
+
+    <!-- Sección: Modos de Juego -->
+    <div class="mb-5 mx-auto" style="max-width: 700px;">
+        <h3 class="mb-3">
+            <span th:text="#{instructions.modes.title}"></span>
+        </h3>
+        <ul class="list-group list-group-flush instructions-steps">
+            <li class="list-group-item bg-transparent text-white" th:text="#{instructions.modes.trivial}"></li>
+            <li class="list-group-item bg-transparent text-white" th:text="#{instructions.modes.trivial.multiplayer}"></li>
+            <li class="list-group-item bg-transparent text-white" th:text="#{instructions.modes.image}"></li>
+            <li class="list-group-item bg-transparent text-white" th:text="#{instructions.modes.image.multiplayer}"></li>
+        </ul>
+    </div>
+
+    <!-- Sección: Otras Funcionalidades -->
+    <div class="mb-5 mx-auto" style="max-width: 700px;">
+        <h3 class="mb-3">
+            <span th:text="#{instructions.features.title}"></span>
+        </h3>
+        <ul class="list-group list-group-flush instructions-steps">
+            <li class="list-group-item bg-transparent text-white" th:text="#{instructions.features.api}"></li>
+            <li class="list-group-item bg-transparent text-white" th:text="#{instructions.features.history}"></li>
+            <li class="list-group-item bg-transparent text-white" th:text="#{instructions.features.ranking}"></li>
+            <li class="list-group-item bg-transparent text-white" th:text="#{instructions.features.hints}"></li>
+            <li class="list-group-item bg-transparent text-white" th:text="#{instructions.features.autogenerate}"></li>
+            <li class="list-group-item bg-transparent text-white" th:text="#{instructions.features.account}"></li>
+        </ul>
+    </div>
+
+    <!-- Sección: Soporte e Internacionalización -->
+    <div class="mb-5 mx-auto" style="max-width: 700px;">
+        <h3 class="mb-3">
+            <span th:text="#{instructions.support.title}"></span>
+        </h3>
+        <p>
+            <span th:text="#{app.name}"></span> <span th:text="#{instructions.support.lang}"></span>
+        </p>
+        <p th:text="#{instructions.support.contact}"></p>
+    </div>
+
+    <p class="mt-4 fw-bold">
+        <span th:text="#{instructions.goodluck}"></span>
+    </p>
+</div>
+
+<footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>
