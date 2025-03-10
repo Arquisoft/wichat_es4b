@@ -8,6 +8,7 @@ import com.uniovi.services.MultiplayerSessionService;
 import com.uniovi.services.PlayerService;
 import com.uniovi.services.QuestionService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,19 +23,16 @@ import java.util.*;
 @Controller
 public class GameController {
     private static final String GAMESESSION_STR = "gameSession";
-    private final QuestionService questionService;
-    private final GameSessionService gameSessionService;
-    private final PlayerService playerService;
+    @Autowired
+    private QuestionService questionService;
+    @Autowired //modificar para implemetar la que corresponda
+    private GameSessionService gameSessionService;
+    @Autowired //modificar para implemetar la que corresponda
+    private PlayerService playerService;
+    @Autowired
+    private MultiplayerSessionService multiplayerSessionService;
 
-    private final MultiplayerSessionService multiplayerSessionService;
 
-    public GameController(QuestionService questionService, GameSessionService gameSessionService,
-                          PlayerService playerService, MultiplayerSessionService multiplayerSessionService) {
-        this.questionService = questionService;
-        this.gameSessionService = gameSessionService;
-        this.playerService = playerService;
-        this.multiplayerSessionService = multiplayerSessionService;
-    }
 
     /**
      * This method is used to get the game view and to start the game

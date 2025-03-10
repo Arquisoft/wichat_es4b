@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface GameSessionService {
     Integer NORMAL_GAME_QUESTION_NUM = 4;
-
+    Integer INFINITE_GAME_QUESTION_NUM = Integer.MAX_VALUE;
     /**
      * Return the list of GameSessions
      *
