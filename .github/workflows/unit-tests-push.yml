@@ -75,7 +75,10 @@ jobs:
 
       - name: Shut down the application
         run: |
-            kill $(cat spring-boot-app.pid)
+          PID=$(cat "$PID_FILE")
+          if ps -p "$PID" > /dev/null; then
+            kill "$PID"
+          fi
 
       - name: Collect Jacoco report and send to Sonar
         run: |
