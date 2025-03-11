@@ -75,7 +75,7 @@ jobs:
 
       - name: Shut down the application
         run: |
-          PID=$(cat "$PID_FILE")
+          PID="$(cat spring-boot-app.pid)"
           if ps -p "$PID" > /dev/null; then
             kill "$PID"
           fi
