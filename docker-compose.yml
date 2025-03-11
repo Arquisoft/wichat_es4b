@@ -18,7 +18,7 @@ services:
   wichat_es4b:
     image: ${WICHAT_IMAGE:-ghcr.io/arquisoft/wichat_es4b:latest}
     environment:
-      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_HOST: ${MYSQL_HOST:-db}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-wichat_es4b}
       MYSQL_USER: ${MYSQL_USER:-wichat_es4b}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-wichat_es4b}

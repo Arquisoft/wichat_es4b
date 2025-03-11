@@ -112,6 +112,8 @@ jobs:
           user: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           command: |
+            export KEYSTORE_PATH=${{ secrets.KEYSTORE_PATH }}
+            export KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
             wget https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/docker-compose.yml -O docker-compose.yml
             wget https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/prometheus.yml -O prometheus.yml
             docker compose down
