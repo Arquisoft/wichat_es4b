@@ -79,6 +79,9 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
             try {
                 results = getQueryResult(query);
                 pass = true;
+            }  catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // Re-interrupt the thread
+                throw e; // Rethrow the InterruptedException
             } catch (Exception ignored) {
             }
         }while (!pass);
