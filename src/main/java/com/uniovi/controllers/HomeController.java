@@ -27,6 +27,11 @@ public class HomeController{
         return "index";
     }
 
+    @GetMapping("/game")
+    public String game(){
+        return "player/game";
+    }
+
     @GetMapping("/home/apikey")
     public String apiKeyHome(Authentication auth, Model model) {
         Optional<Player> playerOpt = playerService.getUserByUsername(auth.getName());
