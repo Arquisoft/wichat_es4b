@@ -101,7 +101,13 @@ public class PlayersController {
     }
 
     @GetMapping("/home")
-    public String home(Model model, Principal principal) {
+    public String home(Pageable pageable,Model model) {
+        Page<Object[]> ranking = gameSessionService.getGlobalRanking(pageable);
+
+        model.addAttribute("ranking", ranking.getContent());
+        model.addAttribute("page", ranking);
+        model.addAttribute("num", pageable.getPageSize());
+
         return "player/home";
     }
 
