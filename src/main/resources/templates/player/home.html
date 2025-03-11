@@ -1,22 +1,39 @@
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head th:replace="~{fragments/head}"></head>
+
 <body class="d-flex flex-column min-vh-100">
 <nav th:replace="~{fragments/nav}"></nav>
-
 <canvas th:replace="~{fragments/background}"></canvas>
 
-<div class="container" style="text-align: center">
-    <h2 th:text="#{home.heading}"></h2>
-    <p>
-        <span th:text="#{home.authenticated_as}"></span>
-        <b th:inline="text" sec:authentication="principal.username"></b>
-    </p>
+<!-- Sección superior (30% de la pantalla) -->
+<div class="container-fluid d-flex justify-content-center align-items-center text-center text-white" style="height: 30vh;">
+    <div>
+        <img src="/images/logo.png" alt="Player" height="200">
+    </div>
+</div>
 
-    <div class="button-container">
-        <a class="btn btn-primary" href="/ranking/playerRanking" th:text="#{navbar.ranking.player}"></a>
-        <a class="btn btn-primary" href="/ranking/globalRanking" th:text="#{navbar.ranking.global}"></a>
-        <a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-primary" href="/player/admin" th:text="#{navbar.section.admin}"></a>
+<!-- Sección inferior (70% de la pantalla) -->
+<div class="container-fluid" style="height: 70vh;">
+    <div class="row h-100">
+
+        <!-- Ranking Global -->
+        <div class="col-md-5 d-flex flex-column align-items-center text-center text-white">
+            <h3>Ranking Global</h3>
+            <div th:replace="~{ranking/globalRanking_table}"></div> <!-- Aquí se incluye la tabla -->
+            <footer th:replace="~{fragments/pagination}"/>
+        </div>
+
+        <!-- Espacio vacío -->
+        <div class="col-md-2"></div>
+
+        <!-- Lista de modos de juego -->
+        <div class="col-md-5 d-flex flex-column align-items-center text-center text-white">
+            <h3>Modos de juego</h3>
+            <div th:replace="~{fragments/gameModeTable}"></div> <!-- Aquí se incluye la tabla -->
+        </div>
     </div>
 </div>
 

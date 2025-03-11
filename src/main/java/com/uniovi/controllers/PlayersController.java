@@ -65,6 +65,28 @@ public class PlayersController {
         return "player/signup";
     }
 
+
+    @RequestMapping(value = "/player/edit/{id}")
+    public String getEdit(Model model, @PathVariable Long id) {
+        Optional<Player> player = playerService.getUser(id);
+        if (player.isPresent()) {
+            model.addAttribute("user", player.get());
+            return "player/edit";
+        }
+        return "/player/home";
+    }
+
+    @RequestMapping(value = "/player/edit/{id}", method = RequestMethod.POST)
+    public String setEdit(@PathVariable Long id, @ModelAttribute Player user) {
+        Optional<Player> originalUser = playerService.getUser(id);
+        if (originalUser.isPresent()) {
+            originalUser.get().setUsername(user.getUsername());
+            originalUser.get().setEmail(user.getEmail());
+            playerService.savePlayer(originalUser.get());
+        }
+        return "redirect:/home";
+    }
+
     @PostMapping("/signup")
     public String registerUserAccount(HttpServletRequest request, @Validated @ModelAttribute("user") PlayerDto user, BindingResult result, Model model){
         if (SecurityConfig.isAuthenticated())
@@ -101,7 +123,13 @@ public class PlayersController {
     }
 
     @GetMapping("/home")
-    public String home(Model model, Principal principal) {
+    public String home(Pageable pageable,Model model) {
+        Page<Object[]> ranking = gameSessionService.getGlobalRanking(pageable);
+
+        model.addAttribute("ranking", ranking.getContent());
+        model.addAttribute("page", ranking);
+        model.addAttribute("num", pageable.getPageSize());
+
         return "player/home";
     }
 
