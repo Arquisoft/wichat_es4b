@@ -68,6 +68,16 @@ public class PlayersController {
     }
 
 
+    @RequestMapping(value = "player/details/{username}")
+    public String getDetails(Model model, @PathVariable String username) {
+        Optional<Player> player = playerService.getUserByUsername(username);
+        if (player.isPresent()) {
+            model.addAttribute("user", player.get());
+            return "player/details";
+        }
+        return "/player/home";
+    }
+
     @RequestMapping(value = "/player/edit/{username}")
     public String getEdit(Model model, @PathVariable String username) {
         Optional<Player> player = playerService.getUserByUsername(username);

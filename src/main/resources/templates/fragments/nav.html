@@ -234,7 +234,7 @@
                         aria-labelledby="navbarDropdown"
                 >
                     <!--Enlace al perfil personal del usuario-->
-                    <a class="dropdown-item" id="btnUserProfile" href="/home">
+                    <a class="dropdown-item" id="btnUserProfile" th:href="@{'/player/details/' + ${#authentication.principal.username}}">
                         <span th:text="#{navbar.profile}"></span>
                     </a>
                     <!--Enlace a la APIKEY del usuario-->
