@@ -66,9 +66,9 @@ public class PlayersController {
     }
 
 
-    @RequestMapping(value = "/player/edit/{id}")
-    public String getEdit(Model model, @PathVariable Long id) {
-        Optional<Player> player = playerService.getUser(id);
+    @RequestMapping(value = "/player/edit/{username}")
+    public String getEdit(Model model, @PathVariable String username) {
+        Optional<Player> player = playerService.getUserByUsername(username);
         if (player.isPresent()) {
             model.addAttribute("user", player.get());
             return "player/edit";
@@ -76,15 +76,15 @@ public class PlayersController {
         return "/player/home";
     }
 
-    @RequestMapping(value = "/player/edit/{id}", method = RequestMethod.POST)
-    public String setEdit(@PathVariable Long id, @ModelAttribute Player user) {
-        Optional<Player> originalUser = playerService.getUser(id);
+    @RequestMapping(value = "/player/edit/{username}", method = RequestMethod.POST)
+    public String setEdit(@PathVariable String username, @ModelAttribute Player user) {
+        Optional<Player> originalUser = playerService.getUserByUsername(username);
         if (originalUser.isPresent()) {
             originalUser.get().setUsername(user.getUsername());
             originalUser.get().setEmail(user.getEmail());
             playerService.savePlayer(originalUser.get());
         }
-        return "redirect:/home";
+        return "redirect:/logout";
     }
 
     @PostMapping("/signup")

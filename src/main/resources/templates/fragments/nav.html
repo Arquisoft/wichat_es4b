@@ -241,9 +241,11 @@
                     <a class="dropdown-item" id="btnUserApiKey" href="/home/apikey">
                         <span th:text="#{navbar.profile.apikey}"></span>
                     </a>
-                    <a class="dropdown-item" href="/player/edit/1">
+                    <a class="dropdown-item" th:href="@{'/player/edit/' + ${#authentication.principal.username}}">
                         <span th:text="#{navbar.profile.edit}"></span>
                     </a>
+
+
                     <!--Enlace a la zona de administración-->
                     <a
                             class="dropdown-item"
