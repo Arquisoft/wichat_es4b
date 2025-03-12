@@ -10,6 +10,7 @@ import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Role;
 import com.uniovi.services.*;
+import com.uniovi.validators.EditUserValidator;
 import com.uniovi.validators.SignUpValidator;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,17 +39,18 @@ public class PlayersController {
     private final RoleService roleService;
     private QuestionService questionService;
     private final SignUpValidator signUpValidator;
-
+    private final EditUserValidator editUserValidator;
     private final GameSessionService gameSessionService;
 
     @Autowired
     public PlayersController(PlayerService playerService, SignUpValidator signUpValidator, GameSessionService gameSessionService,
-                             RoleService roleService, QuestionService questionService) {
+                             RoleService roleService, QuestionService questionService, EditUserValidator editUserValidator) {
         this.playerService = playerService;
         this.signUpValidator =  signUpValidator;
         this.gameSessionService = gameSessionService;
         this.roleService = roleService;
         this.questionService = questionService;
+        this.editUserValidator = editUserValidator;
     }
 
     @GetMapping("/signup")
@@ -66,9 +68,19 @@ public class PlayersController {
     }
 
 
-    @RequestMapping(value = "/player/edit/{id}")
-    public String getEdit(Model model, @PathVariable Long id) {
-        Optional<Player> player = playerService.getUser(id);
+    @RequestMapping(value = "player/details/{username}")
+    public String getDetails(Model model, @PathVariable String username) {
+        Optional<Player> player = playerService.getUserByUsername(username);
+        if (player.isPresent()) {
+            model.addAttribute("user", player.get());
+            return "player/details";
+        }
+        return "/player/home";
+    }
+
+    @RequestMapping(value = "/player/edit/{username}")
+    public String getEdit(Model model, @PathVariable String username) {
+        Optional<Player> player = playerService.getUserByUsername(username);
         if (player.isPresent()) {
             model.addAttribute("user", player.get());
             return "player/edit";
@@ -76,15 +88,27 @@ public class PlayersController {
         return "/player/home";
     }
 
-    @RequestMapping(value = "/player/edit/{id}", method = RequestMethod.POST)
-    public String setEdit(@PathVariable Long id, @ModelAttribute Player user) {
-        Optional<Player> originalUser = playerService.getUser(id);
+    @RequestMapping(value = "/player/edit/{username}", method = RequestMethod.POST)
+    public String setEdit(@PathVariable String username, @Validated @ModelAttribute("user") PlayerDto user,
+                          BindingResult result, Model model) {
+
+        editUserValidator.setOriginalUsername(username);
+        editUserValidator.validate(user, result);
+
+        if(result.hasErrors()) {
+            // Añade explícitamente el objeto user con el nombre "user"
+            model.addAttribute("user", user);
+            return "player/edit";
+        }
+
+        Optional<Player> originalUser = playerService.getUserByUsername(username);
         if (originalUser.isPresent()) {
             originalUser.get().setUsername(user.getUsername());
             originalUser.get().setEmail(user.getEmail());
             playerService.savePlayer(originalUser.get());
         }
-        return "redirect:/home";
+
+        return "redirect:/logout";
     }
 
     @PostMapping("/signup")
