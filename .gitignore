@@ -1,5 +1,6 @@
 HELP.md
 target/
+.env
 !.mvn/wrapper/maven-wrapper.jar
 pom.xml.versionsBackup
 !**/src/main/**/target/
