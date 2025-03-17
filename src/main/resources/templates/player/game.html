@@ -1,0 +1,17 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="~{fragments/head}"></head>
+<body class="d-flex flex-column min-vh-100">
+<nav th:replace="~{fragments/nav}"></nav>
+
+<canvas th:replace="~{fragments/background}"></canvas>
+
+<div class="container" style="text-align: center">
+    <h2 th:text="#{game.title}"></h2>
+    <div th:replace="~{fragments/gameModeTable}"></div> <!-- Aquí se incluye la tabla -->
+
+</div>
+
+<footer th:replace="~{fragments/footer}"></footer>
+</body>
+</html>

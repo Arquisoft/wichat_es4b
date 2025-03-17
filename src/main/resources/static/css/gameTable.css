@@ -1,0 +1,45 @@
+/* Estilos generales para la tabla */
+.games-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+    background-color: transparent; /* Fondo transparente */
+}
+
+/* Estilos para las cabeceras de la tabla */
+.games-table thead tr {
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semitransparente */
+    color: #ffffff; /* Texto blanco para contraste */
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Estilos para las filas de la tabla */
+.games-table th, .games-table td {
+    padding: 12px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Bordes más sutiles */
+    color: #ffffff; /* Texto blanco para mejor visibilidad */
+}
+
+/* Estilos para las filas impares */
+.games-table tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.1); /* Fondo semitransparente */
+}
+
+/* Estilos para las filas pares */
+.games-table tbody tr:nth-of-type(even) {
+    background-color: rgba(255, 255, 255, 0.2); /* Fondo semitransparente */
+}
+
+/* Estilos para los enlaces */
+.games-table a {
+    color: #FFD700; /* Amarillo dorado para destacar sobre fondo morado/azul */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.games-table a:hover {
+    text-decoration: underline;
+}

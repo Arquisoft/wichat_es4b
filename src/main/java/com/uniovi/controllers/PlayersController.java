@@ -12,6 +12,7 @@ import com.uniovi.entities.Player;
 import com.uniovi.entities.Role;
 import com.uniovi.services.*;
 import com.uniovi.services.impl.PlayerServiceImageImpl;
+import com.uniovi.validators.EditUserValidator;
 import com.uniovi.validators.SignUpValidator;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,19 +40,20 @@ public class PlayersController {
     private final PlayerService playerService;
     private final RoleService roleService;
     private final PlayerServiceImageImpl playerServiceImageImpl;
-    private QuestionService questionService;
+    private final QuestionService questionService;
     private final SignUpValidator signUpValidator;
-
+    private final EditUserValidator editUserValidator;
     private final GameSessionService gameSessionService;
 
     @Autowired
     public PlayersController(PlayerService playerService, SignUpValidator signUpValidator, GameSessionService gameSessionService,
-                             RoleService roleService, QuestionService questionService, PlayerServiceImageImpl playerServiceImageImpl) {
+                             RoleService roleService, QuestionService questionService, EditUserValidator editUserValidator, PlayerServiceImageImpl playerServiceImageImpl) {
         this.playerService = playerService;
         this.signUpValidator =  signUpValidator;
         this.gameSessionService = gameSessionService;
         this.roleService = roleService;
         this.questionService = questionService;
+        this.editUserValidator = editUserValidator;
         this.playerServiceImageImpl = playerServiceImageImpl;
     }
 
@@ -66,8 +68,51 @@ public class PlayersController {
         }
 
         model.addAttribute("user", new PlayerDto());
-
         return "player/signup";
+    }
+
+
+    @RequestMapping(value = "player/details/{username}")
+    public String getDetails(Model model, @PathVariable String username) {
+        Optional<Player> player = playerService.getUserByUsername(username);
+        if (player.isPresent()) {
+            model.addAttribute("user", player.get());
+            return "player/details";
+        }
+        return "/player/home";
+    }
+
+    @RequestMapping(value = "/player/edit/{username}")
+    public String getEdit(Model model, @PathVariable String username) {
+        Optional<Player> player = playerService.getUserByUsername(username);
+        if (player.isPresent()) {
+            model.addAttribute("user", player.get());
+            return "player/edit";
+        }
+        return "/player/home";
+    }
+
+    @RequestMapping(value = "/player/edit/{username}", method = RequestMethod.POST)
+    public String setEdit(@PathVariable String username, @Validated @ModelAttribute("user") PlayerDto user,
+                          BindingResult result, Model model) {
+
+        editUserValidator.setOriginalUsername(username);
+        editUserValidator.validate(user, result);
+
+        if(result.hasErrors()) {
+            // Añade explícitamente el objeto user con el nombre "user"
+            model.addAttribute("user", user);
+            return "player/edit";
+        }
+
+        Optional<Player> originalUser = playerService.getUserByUsername(username);
+        if (originalUser.isPresent()) {
+            originalUser.get().setUsername(user.getUsername());
+            originalUser.get().setEmail(user.getEmail());
+            playerService.savePlayer(originalUser.get());
+        }
+
+        return "redirect:/logout";
     }
 
     @PostMapping("/signup")
@@ -107,7 +152,13 @@ public class PlayersController {
     }
 
     @GetMapping("/home")
-    public String home(Model model, Principal principal) {
+    public String home(Pageable pageable,Model model) {
+        Page<Object[]> ranking = gameSessionService.getGlobalRanking(pageable);
+
+        model.addAttribute("ranking", ranking.getContent());
+        model.addAttribute("page", ranking);
+        model.addAttribute("num", pageable.getPageSize());
+
         return "player/home";
     }
 

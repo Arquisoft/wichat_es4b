@@ -79,7 +79,10 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
             try {
                 results = getQueryResult(query);
                 pass = true;
-            } catch (Exception e) {
+            }  catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // Re-interrupt the thread
+                throw e; // Rethrow the InterruptedException
+            } catch (Exception ignored) {
             }
         }while (!pass);
         List<Question> questions = new ArrayList<>();
