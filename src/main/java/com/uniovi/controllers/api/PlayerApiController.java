@@ -98,7 +98,7 @@ public class PlayerApiController {
                             value = "{\"error\":\"Invalid API key\"}"
                     )}))
     })
-    @GetMapping("/api/players")
+    @RequestMapping("/api/players")
     public String getPlayers(HttpServletResponse response, @RequestParam @Parameter(hidden = true) Map<String, String> params) throws JsonProcessingException {
         response.setContentType("application/json");
         ApiKey apiKey = getApiKeyFromParams(params);
@@ -138,7 +138,7 @@ public class PlayerApiController {
                             value = "{\"field1\":\"Error description in field 1\", \"field2\":\"Error description in field 2\"}"
                     )}))
     })
-    @PostMapping("/api/players")
+    @RequestMapping(value="/api/players", method=RequestMethod.POST)
     public String addPlayer(@RequestHeader(name = "API-KEY") String apiKeyStr,
                             HttpServletResponse response, @RequestBody PlayerDto playerDto) throws JsonProcessingException {
         response.setContentType("application/json");

@@ -12,8 +12,9 @@ import com.uniovi.services.impl.QuestionServiceImageImpl;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
@@ -45,7 +46,7 @@ public class GameImageController {
      * @param model The model to be used
      * @return The view to be shown
      */
-    @GetMapping("/game/image")
+    @RequestMapping("/game/image")
     public String getGame(HttpSession session, Model model, Principal principal) {
         GameSessionImage gameSessionImage = (GameSessionImage) session.getAttribute(GAMESESSION_STR);
         if (gameSessionImage != null && !gameSessionImage.isFinished() && !gameSessionImage.isMultiplayer()) {
@@ -63,14 +64,14 @@ public class GameImageController {
         return "game/image/game";
     }
 
-    @GetMapping("/game/image/multiplayer")
+    @RequestMapping("/game/image/multiplayer")
     public String getImageMultiplayerGame() {
         return "redirect:/image/multiplayerGame/createGame";
     }
 
 
 
-    @GetMapping("/image/multiplayerGame/{code}")
+    @RequestMapping("/image/multiplayerGame/{code}")
     public String joinMultiplayerGame(@PathVariable String code, HttpSession session, Principal principal, Model model) {
         if (!multiplayerSessionImageImpl.existsCode(code)) {
             model.addAttribute("errorKeyImage", "multi.code.invalid");
@@ -89,7 +90,7 @@ public class GameImageController {
         }
     }
 
-    @GetMapping("/image/multiplayerGame/createGame")
+    @RequestMapping("/image/multiplayerGame/createGame")
     public String createMultiplayerGame(HttpSession session, Principal principal, Model model) {
         Optional<PlayerImage> player = playerService.getUserByUsername(principal.getName());
         PlayerImage p = player.orElse(null);
@@ -99,7 +100,7 @@ public class GameImageController {
         return "redirect:/game/lobby";
     }
 
-    @GetMapping("/image/startMultiplayerGame")
+    @RequestMapping("/image/startMultiplayerGame")
     public String startMultiplayerGame(HttpSession session, Model model, Principal principal) {
         GameSessionImage gameSessionImage = (GameSessionImage) session.getAttribute(GAMESESSION_STR);
 
@@ -134,13 +135,13 @@ public class GameImageController {
         return "game/image/game";
     }
 
-    @GetMapping("/image/multiplayerGame/endGame/{code}")
+    @RequestMapping("/image/multiplayerGame/endGame/{code}")
     public String endMultiplayerGame(Model model,@PathVariable String code) {
         model.addAttribute("codeImage",code);
         return "ranking/image/multiplayerRanking";
     }
 
-    @GetMapping("/image/endGameList/{code}")
+    @RequestMapping("/image/endGameList/{code}")
     @ResponseBody
     public Map<String, String> endMultiplayerGameTable(@PathVariable String code) {
         Map<Player, Integer> playerScores = multiplayerSessionImageImpl.getPlayersWithScores(Integer.parseInt(code));
@@ -158,7 +159,7 @@ public class GameImageController {
         return playersNameWithScore;
     }
 
-    @GetMapping("/game/image/lobby/{code}")
+    @RequestMapping("/game/image/lobby/{code}")
     @ResponseBody
     public List<String> updatePlayerList(@PathVariable String code) {
         Map<Player,Integer> players= multiplayerSessionImageImpl.getPlayersWithScores(Integer.parseInt(code));
@@ -170,7 +171,7 @@ public class GameImageController {
         return playerNames;
     }
 
-    @GetMapping("/game/image/lobby")
+    @RequestMapping("/game/image/lobby")
     public String createLobby( HttpSession session, Model model) {
         int code = Integer.parseInt((String)session.getAttribute("multiplayerCodeImage"));
         List<PlayerImage> players = playerService.getUsersByMultiplayerCode(code);
@@ -188,7 +189,7 @@ public class GameImageController {
      * @return The view to be shown, if the answer is correct, the success view is shown, otherwise the failure view is
      * shown or the timeOutFailure view is shown.
      */
-    @GetMapping("/game/image/{idQuestionImage}/{idAnswerImage}")
+    @RequestMapping("/game/image/{idQuestion}/{idAnswer}")
     public String getCheckResult(@PathVariable Long idQuestion, @PathVariable Long idAnswer, Model model, HttpSession session, Principal principal) {
         GameSessionImage gameSessionImage = (GameSessionImage) session.getAttribute(GAMESESSION_STR);
         if (gameSessionImage == null) {
@@ -221,7 +222,7 @@ public class GameImageController {
         return updateGame(model, session, principal);
     }
 
-    @GetMapping("/game/image/update")
+    @RequestMapping("/game/image/update")
     public String updateGame(Model model, HttpSession session, Principal principal) {
         GameSessionImage gameSessionImage = (GameSessionImage) session.getAttribute(GAMESESSION_STR);
         QuestionImage nextQuestionImage = gameSessionImage.getCurrentQuestionImage();
@@ -270,7 +271,7 @@ public class GameImageController {
         return "game/image/fragments/gameFrame";
     }
 
-    @GetMapping("/game/image/points")
+    @RequestMapping("/game/image/points")
     @ResponseBody
     public String getPoints(HttpSession session) {
         GameSessionImage gameSessionImage = (GameSessionImage) session.getAttribute(GAMESESSION_STR);
@@ -280,17 +281,17 @@ public class GameImageController {
             return "0";
     }
 
-    @GetMapping("/game/image/currentQuestion")
+    @RequestMapping("/game/image/currentQuestion")
     @ResponseBody
     public String getCurrentQuestion(HttpSession session) {
         GameSessionImage gameSessionImage = (GameSessionImage) session.getAttribute(GAMESESSION_STR);
-        if (gameSessionImage != null)
-            return String.valueOf(Math.min(gameSessionImage.getAnsweredQuestions().size()+1, GameSessionImageImpl.NORMAL_GAME_QUESTION_NUM));
-        else
+        if (gameSessionImage != null) {
+            return String.valueOf(Math.min(gameSessionImage.getAnsweredQuestions().size() + 1, GameSessionImageImpl.NORMAL_GAME_QUESTION_NUM));
+        }else
             return "0";
     }
 
-    @GetMapping("/game/image/hint/{id}")
+    @RequestMapping("/game/image/hint/{id}")
     @ResponseBody
     public String getImageQuestionHint(@PathVariable Long id) {
         Optional<QuestionImage> questionOpt = questionServiceImageImpl.getQuestion(id);

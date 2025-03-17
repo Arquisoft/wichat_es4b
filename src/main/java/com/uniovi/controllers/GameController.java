@@ -10,7 +10,7 @@ import com.uniovi.services.QuestionService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -41,7 +41,7 @@ public class GameController {
      * @param model The model to be used
      * @return The view to be shown
      */
-    @GetMapping("/game/trivial")
+    @RequestMapping("/game/trivial")
     public String getGame(HttpSession session, Model model, Principal principal) {
         GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSession != null && !gameSession.isFinished() && !gameSession.isMultiplayer()) {
@@ -59,12 +59,12 @@ public class GameController {
         return "game/basicGame";
     }
 
-    @GetMapping("/game/trivial/multiplayer")
+    @RequestMapping("/game/trivial/multiplayer")
     public String getTrivialMultiplayerGame() {
         return "redirect:/multiplayerGame/createGame";
     }
 
-    @GetMapping("/multiplayerGame/{code}")
+    @RequestMapping("/multiplayerGame/{code}")
     public String joinMultiplayerGame(@PathVariable String code, HttpSession session, Principal principal, Model model) {
         if (!multiplayerSessionService.existsCode(code)) {
             model.addAttribute("errorKey", "multi.code.invalid");
@@ -83,7 +83,7 @@ public class GameController {
         }
     }
 
-    @GetMapping("/multiplayerGame/createGame")
+    @RequestMapping("/multiplayerGame/createGame")
     public String createMultiplayerGame(HttpSession session, Principal principal, Model model) {
         Optional<Player> player = playerService.getUserByUsername(principal.getName());
         Player p = player.orElse(null);
@@ -93,7 +93,7 @@ public class GameController {
         return "redirect:/game/lobby";
     }
 
-    @GetMapping("/startMultiplayerGame")
+    @RequestMapping("/startMultiplayerGame")
     public String startMultiplayerGame(HttpSession session, Model model, Principal principal) {
         GameSession gameSession = (GameSession) session.getAttribute("gameSession");
 
@@ -128,13 +128,13 @@ public class GameController {
         return "game/basicGame";
     }
 
-    @GetMapping("/multiplayerGame/endGame/{code}")
+    @RequestMapping("/multiplayerGame/endGame/{code}")
     public String endMultiplayerGame(Model model,@PathVariable String code) {
         model.addAttribute("code",code);
         return "ranking/multiplayerRanking";
     }
 
-    @GetMapping("/endGameList/{code}")
+    @RequestMapping("/endGameList/{code}")
     @ResponseBody
     public Map<String, String> endMultiplayerGameTable(@PathVariable String code) {
         Map<Player, Integer> playerScores = multiplayerSessionService.getPlayersWithScores(Integer.parseInt(code));
@@ -152,7 +152,7 @@ public class GameController {
         return playersNameWithScore;
     }
 
-    @GetMapping("/game/lobby/{code}")
+    @RequestMapping("/game/lobby/{code}")
     @ResponseBody
     public List<String> updatePlayerList(@PathVariable String code) {
         Map<Player,Integer> players= multiplayerSessionService.getPlayersWithScores(Integer.parseInt(code));
@@ -164,7 +164,7 @@ public class GameController {
         return playerNames;
     }
 
-    @GetMapping("/game/lobby")
+    @RequestMapping("/game/lobby")
     public String createLobby( HttpSession session, Model model) {
         int code = Integer.parseInt((String)session.getAttribute("multiplayerCode"));
         List<Player> players = playerService.getUsersByMultiplayerCode(code);
@@ -182,7 +182,7 @@ public class GameController {
      * @return The view to be shown, if the answer is correct, the success view is shown, otherwise the failure view is
      * shown or the timeOutFailure view is shown.
      */
-    @GetMapping("/game/{idQuestion}/{idAnswer}")
+    @RequestMapping("/game/{idQuestion}/{idAnswer}")
     public String getCheckResult(@PathVariable Long idQuestion, @PathVariable Long idAnswer, Model model, HttpSession session, Principal principal) {
         GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSession == null) {
@@ -215,7 +215,7 @@ public class GameController {
         return updateGame(model, session, principal);
     }
 
-    @GetMapping("/game/update")
+    @RequestMapping("/game/update")
     public String updateGame(Model model, HttpSession session, Principal principal) {
         GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         Question nextQuestion = gameSession.getCurrentQuestion();
@@ -264,7 +264,7 @@ public class GameController {
         return "game/fragments/gameFrame";
     }
 
-    @GetMapping("/game/points")
+    @RequestMapping("/game/points")
     @ResponseBody
     public String getPoints(HttpSession session) {
         GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
@@ -274,7 +274,7 @@ public class GameController {
             return "0";
     }
 
-    @GetMapping("/game/currentQuestion")
+    @RequestMapping("/game/currentQuestion")
     @ResponseBody
     public String getCurrentQuestion(HttpSession session) {
         GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);

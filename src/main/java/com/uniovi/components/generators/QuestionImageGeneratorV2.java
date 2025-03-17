@@ -31,8 +31,8 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
     public QuestionImageGeneratorV2(JsonNode jsonNode) {
         this.jsonNode = jsonNode;
         this.languagePlaceholder = jsonNode.get("language_placeholder").textValue();
-        this.questionImagePlaceholder = jsonNode.get("question_placeholder").textValue();
-        this.answerPlaceholder = jsonNode.get("answer_placeholder").textValue();
+        this.questionImagePlaceholder = jsonNode.get("capital_placeholder").textValue();
+        this.answerPlaceholder = jsonNode.get("landmark_placeholder").textValue();
     }
 
     @Override
@@ -83,18 +83,18 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
             } catch (Exception e) {
             }
         }while (!pass);
-        List<QuestionImage> questionsImage = new ArrayList<>();
+        List<QuestionImage> questionsImage = new ArrayList<QuestionImage>();
 
         // Prepare the statement base based on the language
         String statement = this.prepareStatement(questionImage);
 
         for (JsonNode result : results) {
             // Generate the correct answer
-            String correctAnswer = result.path(answerLabel).path("value").asText();
+            String correctAnswer = result.path(questionImageLabel).path("value").asText();
             AnswerImage correct = new AnswerImage(correctAnswer, true);
 
             // Generate the options
-            List<AnswerImage> options = this.generateOptions(results, correctAnswer, answerLabel);
+            List<AnswerImage> options = this.generateOptions(results, correctAnswer, questionImageLabel);
             options.add(correct);
 
             if (statement != null) {

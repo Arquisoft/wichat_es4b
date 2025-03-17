@@ -76,6 +76,7 @@ public class QuestionServiceImageImpl {
         q.setLanguage(questionImage.getLanguage());
         Associations.QuestionsImageCategory.addCategory(q, category);
         Associations.QuestionImageAnswers.addAnswer(q, answersImage);
+        q.setImageUrl(questionImage.getImageUrl());
         addNewQuestion(q);
 
         return q;

@@ -1,60 +1,36 @@
 {
   "language_placeholder": "[LANGUAGE]",
-  "question_placeholder": "[QUESTION]",
-  "answer_placeholder": "[ANSWER]",
+  "capital_placeholder": "[CAPITAL]",
+  "landmark_placeholder": "[LANDMARK]",
+  "image_placeholder": "[IMAGE]",
   "categories": [
     {
-      "name": "Science",
+      "name": "World Capitals",
       "questions": [
         {
-          "type": "element",
+          "type": "landmark",
           "statements": [
             {
               "language": "es",
-              "statement": "¿Cuál es el símbolo químico del [QUESTION]?"
+              "statement": "¿Cuál es un monumento famoso en [CAPITAL]?"
             },
             {
               "language": "en",
-              "statement": "What is the chemical symbol of [QUESTION]?"
+              "statement": "What is a famous landmark in [CAPITAL]?"
             },
             {
               "language": "fr",
-              "statement": "Quel est le symbole chimique du [QUESTION]?"
+              "statement": "Quel est un monument célèbre à [CAPITAL]?"
             },
             {
               "language": "de",
-              "statement": "Was ist das chemische Symbol für [QUESTION]?"
+              "statement": "Was ist eine berühmte Sehenswürdigkeit in [CAPITAL]?"
             }
           ],
-          "question": "elementLabel",
-          "answer": "symbol",
+          "question": "capitalLabel",
+          "answer": "landmarkLabel",
           "image": "image",
-          "sparqlQuery": "select distinct ?element ?[QUESTION] ?[ANSWER] ?image where {\n  ?element wdt:P31 wd:Q11344 .\n  ?element wdt:P246 ?[ANSWER] .\n  ?element rdfs:label ?[QUESTION] .\n  OPTIONAL {\n    ?element wdt:P18 ?image .\n  }\n  FILTER NOT EXISTS {?element wdt:P31 wd:Q1299291} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\")\n}"
-        },
-        {
-          "type": "atomic_number",
-          "statements": [
-            {
-              "language": "es",
-              "statement": "¿Cuál es el número atómico del [QUESTION]?"
-            },
-            {
-              "language": "en",
-              "statement": "What is the atomic number of [QUESTION]?"
-            },
-            {
-              "language": "fr",
-              "statement": "Quel est le numéro atomique du [QUESTION]?"
-            },
-            {
-              "language": "de",
-              "statement": "Was ist die Ordnungszahl von [QUESTION]?"
-            }
-          ],
-          "question": "elementLabel",
-          "answer": "atomicNumber",
-          "image": "image",
-          "sparqlQuery": "select distinct ?element ?[QUESTION] ?[ANSWER] ?image where {\n  ?element wdt:P31 wd:Q11344 .\n  ?element wdt:P1086 ?[ANSWER] .\n  ?element rdfs:label ?[QUESTION] .\n  OPTIONAL {\n    ?element wdt:P18 ?image .\n  }\n  FILTER NOT EXISTS {?element wdt:P31 wd:Q1299291} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\")\n}"
+          "sparqlQuery": "PREFIX wd: <http://www.wikidata.org/entity/>\nPREFIX wdt: <http://www.wikidata.org/prop/direct/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\nSELECT DISTINCT ?capitalLabel (SAMPLE(?landmarkLabel) AS ?landmarkLabel) (SAMPLE(?image) AS ?image) WHERE {\n  # Buscar capitales del mundo\n  ?capital wdt:P31 wd:Q5119.\n\n  # Elementos representativos en la capital\n  {\n    ?landmark wdt:P131 ?capital.  # Ubicación directa en la capital\n  } UNION {\n    ?landmark wdt:P276 ?capital.  # Ubicado en la capital\n  } UNION {\n    ?region wdt:P150 ?capital.\n    ?landmark wdt:P131 ?region.  # Ubicado en la región de la capital\n  }\n\n  # Asegurar que el landmark tiene nombre\n  OPTIONAL {\n    ?landmark rdfs:label ?landmarkLabel.\n    FILTER(LANG(?landmarkLabel) = \"es\")\n  }\n  OPTIONAL {\n    ?landmark rdfs:label ?landmarkLabel_en.\n    FILTER(LANG(?landmarkLabel_en) = \"en\")\n  }\n  \n  # Si no hay nombre en español, usar inglés\n  BIND(COALESCE(?landmarkLabel, ?landmarkLabel_en) AS ?landmarkLabel)\n\n  # Obtener una imagen (si existe)\n  OPTIONAL { ?landmark wdt:P18 ?image }\n\n  SERVICE wikibase:label { bd:serviceParam wikibase:language \"es,en\" }\n}\nGROUP BY ?capitalLabel\nLIMIT 50\n"
         }
       ]
     }
