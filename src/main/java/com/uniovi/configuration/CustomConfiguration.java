@@ -48,11 +48,11 @@ public class CustomConfiguration implements WebMvcConfigurer {
         argumentResolvers.add(resolver);
     }
 
-//    @Bean
-//    public ApplicationRunner init(QuestionGeneratorService questionGeneratorService, QuestionImageGeneratorService questionImageGeneratorService) {
-//        return args -> {
-//            questionGeneratorService.generateQuestions();
-//            questionImageGeneratorService.generateQuestions();
-//        };
-//    }
+    @Bean
+    public ApplicationRunner init(QuestionGeneratorService questionGeneratorService, QuestionImageGeneratorService questionImageGeneratorService) {
+        return args -> {
+            questionGeneratorService.generateQuestions();
+            questionImageGeneratorService.generateQuestions();
+        };
+    }
 }
