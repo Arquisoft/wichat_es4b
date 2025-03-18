@@ -45,12 +45,6 @@ jobs:
       - name: Compile the application
         run: ./mvnw -B clean install -DskipTests=true
 
-      - name: Check required environment variables
-        run: |
-          echo "Checking required environment variables..."
-        env:
-          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-
       - name: Start the application
         run: |
             ./mvnw spring-boot:run > logs.txt 2>&1 &
@@ -62,6 +56,7 @@ jobs:
           SPRING_DATASOURCE_PASSWORD: root
           SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
           SPRING_PROFILES_ACTIVE: test
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
 
       - name: Check listening ports
         run: ss -tuln
@@ -73,6 +68,7 @@ jobs:
           SPRING_PROFILES_ACTIVE: test
           headless: true
           EXCLUDE_JUNIT: true
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
 
       - name: Show app logs
         if: always()
