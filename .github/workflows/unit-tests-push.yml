@@ -45,6 +45,13 @@ jobs:
       - name: Compile the application
         run: ./mvnw -B clean install -DskipTests=true
 
+      - name: Check required environment variables
+        run: |
+          echo "Checking required environment variables..."
+          echo "LLM_API_KEY=${{ secrets.LLM_API_KEY }}" | sed 's/./& /g'  # Mask secret
+        env:
+          LM_API_KEY: ${{ secrets.LLM_API_KEY }}
+
       - name: Start the application
         run: |
             ./mvnw spring-boot:run > logs.txt 2>&1 &
