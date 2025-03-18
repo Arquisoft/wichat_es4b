@@ -48,7 +48,6 @@ jobs:
       - name: Check required environment variables
         run: |
           echo "Checking required environment variables..."
-          echo "LLM_API_KEY=${{ secrets.LLM_API_KEY }}" | sed 's/./& /g'  # Mask secret
         env:
           LM_API_KEY: ${{ secrets.LLM_API_KEY }}
 
