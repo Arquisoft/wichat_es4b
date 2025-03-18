@@ -1,0 +1,38 @@
+{
+  "language_placeholder": "[LANGUAGE]",
+  "capital_placeholder": "[CAPITAL]",
+  "landmark_placeholder": "[LANDMARK]",
+  "image_placeholder": "[IMAGE]",
+  "categories": [
+    {
+      "name": "World Capitals",
+      "questions": [
+        {
+          "type": "landmark",
+          "statements": [
+            {
+              "language": "es",
+              "statement": "¿Cuál es un monumento famoso en [CAPITAL]?"
+            },
+            {
+              "language": "en",
+              "statement": "What is a famous landmark in [CAPITAL]?"
+            },
+            {
+              "language": "fr",
+              "statement": "Quel est un monument célèbre à [CAPITAL]?"
+            },
+            {
+              "language": "de",
+              "statement": "Was ist eine berühmte Sehenswürdigkeit in [CAPITAL]?"
+            }
+          ],
+          "question": "capitalLabel",
+          "answer": "landmarkLabel",
+          "image": "image",
+          "sparqlQuery": "PREFIX wd: <http://www.wikidata.org/entity/>\nPREFIX wdt: <http://www.wikidata.org/prop/direct/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\nSELECT DISTINCT ?capitalLabel (SAMPLE(?landmarkLabel) AS ?landmarkLabel) (SAMPLE(?image) AS ?image) WHERE {\n  # Buscar capitales del mundo\n  ?capital wdt:P31 wd:Q5119.\n\n  # Elementos representativos en la capital\n  {\n    ?landmark wdt:P131 ?capital.  # Ubicación directa en la capital\n  } UNION {\n    ?landmark wdt:P276 ?capital.  # Ubicado en la capital\n  } UNION {\n    ?region wdt:P150 ?capital.\n    ?landmark wdt:P131 ?region.  # Ubicado en la región de la capital\n  }\n\n  # Asegurar que el landmark tiene nombre\n  OPTIONAL {\n    ?landmark rdfs:label ?landmarkLabel.\n    FILTER(LANG(?landmarkLabel) = \"es\")\n  }\n  OPTIONAL {\n    ?landmark rdfs:label ?landmarkLabel_en.\n    FILTER(LANG(?landmarkLabel_en) = \"en\")\n  }\n  \n  # Si no hay nombre en español, usar inglés\n  BIND(COALESCE(?landmarkLabel, ?landmarkLabel_en) AS ?landmarkLabel)\n\n  # Obtener una imagen (si existe)\n  OPTIONAL { ?landmark wdt:P18 ?image }\n\n  SERVICE wikibase:label { bd:serviceParam wikibase:language \"es,en\" }\n}\nGROUP BY ?capitalLabel\nLIMIT 50\n"
+        }
+      ]
+    }
+  ]
+}

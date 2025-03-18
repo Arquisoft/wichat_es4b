@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Optional;
 
@@ -22,17 +22,17 @@ public class HomeController{
         this.apiKeyService = apiKeyService;
     }
 
-    @GetMapping("/")
+    @RequestMapping("/")
     public String home(){
         return "index";
     }
 
-    @GetMapping("/game")
+    @RequestMapping("/game")
     public String game(){
         return "player/game";
     }
 
-    @GetMapping("/home/apikey")
+    @RequestMapping("/home/apikey")
     public String apiKeyHome(Authentication auth, Model model) {
         Optional<Player> playerOpt = playerService.getUserByUsername(auth.getName());
         if (playerOpt.isPresent()) {
@@ -42,7 +42,7 @@ public class HomeController{
         return "player/apiKeyHome";
     }
 
-    @GetMapping("/home/apikey/create")
+    @RequestMapping("/home/apikey/create")
     public String createApiKey(Authentication auth) {
         if (playerService.getUserByUsername(auth.getName()).isPresent()) {
             Player player = playerService.getUserByUsername(auth.getName()).get();
@@ -53,12 +53,12 @@ public class HomeController{
         return "redirect:/home/apikey";
     }
 
-    @GetMapping("/instructions")
+    @RequestMapping("/instructions")
     public String instructions(){
         return "instructions";
     }
 
-    @GetMapping("/about-us")
+    @RequestMapping("/about-us")
     public String authors(){
         return "about-us";
     }
