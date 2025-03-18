@@ -45,6 +45,12 @@ jobs:
       - name: Compile the application
         run: ./mvnw -B clean install -DskipTests=true
 
+      - name: Check required environment variables
+        run: |
+          echo "Checking required environment variables..."
+        env:
+          LM_API_KEY: ${{ secrets.LLM_API_KEY }}
+
       - name: Start the application
         run: |
             export LLM_API_KEY=${{ secrets.LLM_API_KEY }}
