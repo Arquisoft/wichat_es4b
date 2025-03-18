@@ -49,11 +49,10 @@ jobs:
         run: |
           echo "Checking required environment variables..."
         env:
-          LM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
 
       - name: Start the application
         run: |
-            export LLM_API_KEY=${{ secrets.LLM_API_KEY }}
             ./mvnw spring-boot:run > logs.txt 2>&1 &
             echo $! > spring-boot-app.pid
             sleep 60
