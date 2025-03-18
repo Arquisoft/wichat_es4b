@@ -46,4 +46,5 @@ jobs:
             wget https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/docker-compose.yml -O docker-compose.yml
             wget https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/prometheus.yml -O prometheus.yml
             docker compose down
-            docker compose up -d --pull always
+            #docker compose up -d --pull always
+            docker compose up --pull always
