@@ -16,15 +16,15 @@ public class LlmService {
 
     private static final String API_URL = "https://empathyai.prod.empathy.co/v1/chat/completions";
 
-    @Value("${API_KEY}")
-    private String apiKey;
+    @Value("${llm.api.key}")
+    private String llmApiKey;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
     public String sendQuestionToLLM(String question) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
-        headers.add("Authorization", "Bearer " + apiKey);
+        headers.add("Authorization", "Bearer " + llmApiKey);
 
         // Construcción del cuerpo de la solicitud
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(Map.of(

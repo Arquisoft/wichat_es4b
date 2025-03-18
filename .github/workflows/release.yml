@@ -42,6 +42,7 @@ jobs:
           command: |
             export KEYSTORE_PATH=${{ secrets.KEYSTORE_PATH }}
             export KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
+            export LLM_API_KEY=${{ secrets.LLM_API_KEY }}
             wget https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/docker-compose.yml -O docker-compose.yml
             wget https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/prometheus.yml -O prometheus.yml
             docker compose down
