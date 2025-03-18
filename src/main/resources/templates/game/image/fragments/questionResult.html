@@ -1,0 +1,75 @@
+<div class="container mx-auto" id="gameFrame">
+    <h1 class="text-center" th:text="#{${messageKey}}" style="font-size: 2em;"></h1>
+    <p th:if="${correctAnswer}" class="text-center">
+        <span class="text-center" th:text="#{answer.correct}"></span>
+        <b th:inline="text" th:text="${correctAnswer.getText()}"></b>
+    </p>
+    <div class="container mb-3">
+        <img class="game-logo d-block mx-auto" th:src="${logoImage}">
+    </div>
+    <div class="container">
+        <button id="continueBtn" class="btn btn-primary flex-item m-2 rounded d-block mx-auto" th:text="#{game.continue}"></button>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            function initiateTimeout() {
+                let timeoutPeriod = 8000; // Timeout period in milliseconds (e.g., 8000ms for 8 seconds)
+                let updateInterval = 100; // How often to update the progress bar (in milliseconds)
+                let progressBar = $('#progressBar');
+
+                let activeTimeout = setTimeout(function () {
+                        clearInterval(interval); // Ensure the interval is cleared when the timeout completes
+                        $("#gameFrame").load('/game/update');
+                        updateQuestionCounter();
+                    }, timeoutPeriod);
+
+                timeoutPeriod = timeoutPeriod - updateInterval * 2; // Adjust the timeout period to account for the update interval
+                let interval = setInterval(updateProgressBar, updateInterval);
+
+                function updateProgressBar() {
+                    let currentTime = parseFloat(progressBar.attr('aria-valuenow'));
+                    let decrement = 100 * updateInterval / timeoutPeriod;
+                    let newTime = Math.max(0, currentTime - decrement);
+
+                    // Calculate the color based on the percentage
+                    let greenValue = Math.round((newTime * 255) / 100);
+                    let redValue = 255 - greenValue;
+                    let color = 'rgb(' + redValue + ',' + greenValue + ',0)';
+
+                    progressBar.css('width', newTime + '%');
+                    progressBar.css('background-color', color); // Apply the calculated color
+                    progressBar.attr('aria-valuenow', newTime);
+
+                    if(newTime <= 0) {
+                        clearInterval(interval);
+                    }
+                }
+
+                function updateQuestionCounter() {
+                    $.ajax({
+                        type: "GET",
+                        url: "/game/currentQuestion",
+                        success: function (response) {
+                            if (!isNaN(response))
+                                $("#currentQuestion").text(response);
+                        }
+                    });
+                }
+
+                $("#continueBtn").off('click').on('click', function () {
+                    if (activeTimeout) {
+                        clearTimeout(activeTimeout);
+                        clearInterval(interval);
+                    }
+                    $("#gameFrame").load("/game/update");
+                    updateQuestionCounter();
+                });
+            }
+
+            initiateTimeout();
+            /*]]>*/
+        </script>
+        <div class="progress" style="height: 30px;">
+            <div class="progress-bar" role="progressbar" style="width: 100%; background-color: #00bf00" id="progressBar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+    </div>
+</div>

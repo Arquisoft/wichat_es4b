@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.uniovi.configuration.SecurityConfig;
+import com.uniovi.dto.PlayerImageDto;
 import com.uniovi.dto.RoleDto;
 import com.uniovi.entities.Associations;
 import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Role;
 import com.uniovi.services.*;
+import com.uniovi.services.impl.PlayerServiceImageImpl;
 import com.uniovi.validators.EditUserValidator;
 import com.uniovi.validators.SignUpValidator;
 import jakarta.servlet.ServletException;
@@ -37,23 +39,25 @@ import java.util.List;
 public class PlayersController {
     private final PlayerService playerService;
     private final RoleService roleService;
-    private QuestionService questionService;
+    private final PlayerServiceImageImpl playerServiceImageImpl;
+    private final QuestionService questionService;
     private final SignUpValidator signUpValidator;
     private final EditUserValidator editUserValidator;
     private final GameSessionService gameSessionService;
 
     @Autowired
     public PlayersController(PlayerService playerService, SignUpValidator signUpValidator, GameSessionService gameSessionService,
-                             RoleService roleService, QuestionService questionService, EditUserValidator editUserValidator) {
+                             RoleService roleService, QuestionService questionService, EditUserValidator editUserValidator, PlayerServiceImageImpl playerServiceImageImpl) {
         this.playerService = playerService;
         this.signUpValidator =  signUpValidator;
         this.gameSessionService = gameSessionService;
         this.roleService = roleService;
         this.questionService = questionService;
         this.editUserValidator = editUserValidator;
+        this.playerServiceImageImpl = playerServiceImageImpl;
     }
 
-    @GetMapping("/signup")
+    @RequestMapping("/signup")
     public String showRegistrationForm(Model model){
         if (SecurityConfig.isAuthenticated())
             return "redirect:/home";
@@ -111,7 +115,7 @@ public class PlayersController {
         return "redirect:/logout";
     }
 
-    @PostMapping("/signup")
+    @RequestMapping(value="/signup", method = RequestMethod.POST)
     public String registerUserAccount(HttpServletRequest request, @Validated @ModelAttribute("user") PlayerDto user, BindingResult result, Model model){
         if (SecurityConfig.isAuthenticated())
             return "redirect:/home";
@@ -124,6 +128,7 @@ public class PlayersController {
         }
 
         playerService.addNewPlayer(user);
+        playerServiceImageImpl.addNewPlayer(user);
 
         try {
             request.login(user.getUsername(), user.getPassword());
@@ -133,7 +138,7 @@ public class PlayersController {
         return "redirect:/home";
     }
 
-    @GetMapping("/login")
+    @RequestMapping("/login")
     public String showLoginForm(Model model, @RequestParam(value = "error", required = false) String error,
                                 HttpSession session) {
         if (error != null) {
@@ -146,7 +151,7 @@ public class PlayersController {
         return "player/login";
     }
 
-    @GetMapping("/home")
+    @RequestMapping("/home")
     public String home(Pageable pageable,Model model) {
         Page<Object[]> ranking = gameSessionService.getGlobalRanking(pageable);
 
@@ -157,7 +162,7 @@ public class PlayersController {
         return "player/home";
     }
 
-    @GetMapping("/ranking/global")
+    @RequestMapping("/ranking/global")
     public String showGlobalRanking(Pageable pageable, Model model) {
         Page<Object[]> ranking = gameSessionService.getGlobalRanking(pageable);
 
@@ -168,7 +173,7 @@ public class PlayersController {
         return "ranking/globalRanking";
     }
 
-    @GetMapping("/ranking/local")
+    @RequestMapping("/ranking/local")
     public String showPlayerRanking(Pageable pageable, Model model, Principal principal) {
         Optional<Player> player = playerService.getUserByUsername(principal.getName());
         Player p = player.orElse(null);
@@ -188,12 +193,12 @@ public class PlayersController {
 
     // ----- Admin endpoints -----
 
-    @GetMapping("/player/admin")
+    @RequestMapping("/player/admin")
     public String showAdminPanel(Model model) {
         return "player/admin/admin";
     }
 
-    @GetMapping("/player/admin/userManagement")
+    @RequestMapping("/player/admin/userManagement")
     public String showUserManagementFragment(Model model, Pageable pageable) {
         model.addAttribute("endpoint", "/player/admin/userManagement");
         Page<Player> users = playerService.getPlayersPage(pageable);
@@ -203,7 +208,7 @@ public class PlayersController {
         return "player/admin/userManagement";
     }
 
-    @GetMapping("/player/admin/deleteUser")
+    @RequestMapping("/player/admin/deleteUser")
     @ResponseBody
     public String deleteUser(HttpServletResponse response, @RequestParam String username, Principal principal) {
         Player player = playerService.getUserByUsername(username).orElse(null);
@@ -221,7 +226,7 @@ public class PlayersController {
         return "User deleted";
     }
 
-    @GetMapping("/player/admin/changePassword")
+    @RequestMapping("/player/admin/changePassword")
     @ResponseBody
     public String changePassword(HttpServletResponse response, @RequestParam String username, @RequestParam String password) {
         Player player = playerService.getUserByUsername(username).orElse(null);
@@ -234,7 +239,7 @@ public class PlayersController {
         return "User password changed";
     }
 
-    @GetMapping("/player/admin/getRoles")
+    @RequestMapping("/player/admin/getRoles")
     @ResponseBody
     public String getRoles(@RequestParam String username) {
         List<Role> roles = roleService.getAllRoles();
@@ -256,7 +261,7 @@ public class PlayersController {
         return rolesJson.toString();
     }
 
-    @GetMapping("/player/admin/changeRoles")
+    @RequestMapping("/player/admin/changeRoles")
     @ResponseBody
     public String changeRoles(HttpServletResponse response, @RequestParam String username, @RequestParam String roles) {
         Player player = playerService.getUserByUsername(username).orElse(null);
@@ -294,7 +299,7 @@ public class PlayersController {
         return "User roles changed";
     }
 
-    @GetMapping("/player/admin/questionManagement")
+    @RequestMapping("/player/admin/questionManagement")
     public String showQuestionManagementFragment(Model model) throws IOException {
         Resource jsonFile = new ClassPathResource(QuestionGeneratorService.JSON_FILE_PATH);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -304,7 +309,7 @@ public class PlayersController {
         return "player/admin/questionManagement";
     }
 
-    @GetMapping("/player/admin/deleteAllQuestions")
+    @RequestMapping("/player/admin/deleteAllQuestions")
     @ResponseBody
     public String deleteAllQuestions() throws IOException {
         questionService.deleteAllQuestions();
@@ -325,13 +330,13 @@ public class PlayersController {
         }
     }
 
-    @GetMapping("/questions/getJson")
+    @RequestMapping("/questions/getJson")
     @ResponseBody
     public String getJson() {
         return questionService.getJsonGenerator().toString();
     }
 
-    @GetMapping("/player/admin/monitoring")
+    @RequestMapping("/player/admin/monitoring")
     public String showMonitoring(HttpServletResponse response) {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");

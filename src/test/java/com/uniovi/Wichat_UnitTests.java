@@ -7,15 +7,21 @@ import com.uniovi.dto.RoleDto;
 import com.uniovi.entities.*;
 import com.uniovi.repositories.*;
 import com.uniovi.services.*;
+import com.uniovi.services.impl.QuestionServiceImageImpl;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URI;
@@ -26,6 +32,9 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
+
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Tag("unit")
@@ -69,7 +78,15 @@ class Wichat_UnitTests {
     @Autowired
     MultiplayerSessionRepository multiplayerSessionRepository;
 
+    @Autowired
+    private LlmService llmService;
+
+    @Mock
+    private RestTemplate restTemplate;
+
     private final HttpClient httpClient = HttpClient.newHttpClient();
+    @Autowired
+    private QuestionServiceImageImpl questionServiceImageImpl;
 
     private Player createPlayer() {
         return new Player("name", "test@email.com", "password");
@@ -1840,6 +1857,24 @@ class Wichat_UnitTests {
 
         playerService.deleteMultiplayerCode(playerId);
         Assertions.assertNull(player.getMultiplayerCode());
+    }
+
+    @Test
+    void testSendQuestionToLLM_Empathy() {
+        AnswerImage a1 = new AnswerImage("Asturias",false);
+        AnswerImage a2 = new AnswerImage("Cataluña",false);
+        AnswerImage a3 = new AnswerImage("Madrid",false);
+        AnswerImage a4 = new AnswerImage("Benidorm",true);
+        List<AnswerImage> lanswer = Arrays.asList(a1, a2, a3, a4);
+        QuestionImage questionImage =
+                new QuestionImage("", lanswer, a4,
+                        new CategoryImage(), "es","https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
+        String answer = questionServiceImageImpl.getHintForImageQuestion(questionImage);
+        Assertions.assertNotNull(answer);
+        Assertions.assertFalse(answer.isEmpty());
+        Assertions.assertFalse(answer.isBlank());
+        System.out.println(answer);
+
     }
 
 

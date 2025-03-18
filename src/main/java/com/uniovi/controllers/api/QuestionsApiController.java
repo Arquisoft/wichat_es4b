@@ -106,7 +106,7 @@ public class QuestionsApiController {
                             value = "{\"error\":\"Invalid API key\"}"
                     )}))
     })
-    @GetMapping("/api/questions")
+    @RequestMapping("/api/questions")
     public String getQuestions(@ParameterObject Pageable pageable, HttpServletResponse response, @RequestParam @Parameter(hidden = true) Map<String, String> params) throws JsonProcessingException {
         response.setContentType("application/json");
         ApiKey apiKey = getApiKeyFromParams(params);
@@ -143,7 +143,7 @@ public class QuestionsApiController {
                             @ExampleObject(name = "Validation errors", value = "{\"field1\":\"Error description in field 1\", \"field2\":\"Error description in field 2\"}")
                     }))
     })
-    @PostMapping("/api/questions")
+    @RequestMapping(value="/api/questions",method = RequestMethod.POST)
     public String addQuestion(HttpServletResponse response, @RequestHeader("API-KEY") String apiKeyStr, @RequestBody QuestionDto questionDto) throws JsonProcessingException {
         ApiKey apiKey = apiKeyService.getApiKey(apiKeyStr);
         if (apiKey == null) {

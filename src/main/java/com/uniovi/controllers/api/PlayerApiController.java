@@ -34,10 +34,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@OpenAPIDefinition(info = @Info(title = "Wikigame API", version = "1.0", description = "API for managing players and questions\nTo get access, please generate an API key in the webpage"),
+@OpenAPIDefinition(info = @Info(title = "WIChat Game API", version = "1.0", description = "API for managing players and questions\nTo get access, please generate an API key in the webpage"),
 servers = {
-        @Server(url = "https://wikigame.es", description = "Production server"),
-        @Server(url = "http://localhost:8080", description = "Local server"),
+        @Server(url = "https://WIChat.es", description = "Production server"),
+        @Server(url = "http://localhost:3000", description = "Local server"),
 })
 @Tag(name = "Player API", description = "API for managing players")
 @RestController
@@ -98,7 +98,7 @@ public class PlayerApiController {
                             value = "{\"error\":\"Invalid API key\"}"
                     )}))
     })
-    @GetMapping("/api/players")
+    @RequestMapping("/api/players")
     public String getPlayers(HttpServletResponse response, @RequestParam @Parameter(hidden = true) Map<String, String> params) throws JsonProcessingException {
         response.setContentType("application/json");
         ApiKey apiKey = getApiKeyFromParams(params);
@@ -138,7 +138,7 @@ public class PlayerApiController {
                             value = "{\"field1\":\"Error description in field 1\", \"field2\":\"Error description in field 2\"}"
                     )}))
     })
-    @PostMapping("/api/players")
+    @RequestMapping(value="/api/players", method=RequestMethod.POST)
     public String addPlayer(@RequestHeader(name = "API-KEY") String apiKeyStr,
                             HttpServletResponse response, @RequestBody PlayerDto playerDto) throws JsonProcessingException {
         response.setContentType("application/json");

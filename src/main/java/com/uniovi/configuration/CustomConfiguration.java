@@ -1,6 +1,7 @@
 package com.uniovi.configuration;
 
 import com.uniovi.services.QuestionGeneratorService;
+import com.uniovi.services.QuestionImageGeneratorService;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,9 +49,10 @@ public class CustomConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public ApplicationRunner init(QuestionGeneratorService questionGeneratorService) {
+    public ApplicationRunner init(QuestionGeneratorService questionGeneratorService, QuestionImageGeneratorService questionImageGeneratorService) {
         return args -> {
             questionGeneratorService.generateQuestions();
+            questionImageGeneratorService.generateQuestions();
         };
     }
 }
