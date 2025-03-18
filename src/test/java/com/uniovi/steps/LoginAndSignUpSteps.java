@@ -7,24 +7,14 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
-import io.cucumber.java.After;
-import io.cucumber.datatable.DataTable;
-import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class LoginSteps extends Wichat_IntegrationTests {
+public class LoginAndSignUpSteps extends Wichat_IntegrationTests {
     @Given("I am not registered or logged in")
     public void i_am_not_registered_or_logged_in() {
         driver.manage().deleteAllCookies();
@@ -35,6 +25,13 @@ public class LoginSteps extends Wichat_IntegrationTests {
     public void iAmOnTheRegisterPage() {
         List<WebElement> elements = SeleniumUtils.waitLoadElementsByXpath(driver, "//*[@id=\"gameBtn\"]", 5);
         elements.get(0).click();
+        List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "@href", "signup", 5);
+        elems.get(0).click();
+    }
+
+
+    @And("I am on the logout register page")
+    public void iAmOnTheLogoutRegisterPage() {
         List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "@href", "signup", 5);
         elems.get(0).click();
     }
@@ -119,5 +116,10 @@ public class LoginSteps extends Wichat_IntegrationTests {
 
     }
 
+    //Signup
+    @When("I fill in the form with invalid data username: {string} email: {string} password: {string} password_confirmation: {string}")
+    public void iFillInTheFormWithInvalidDataUsernameEmailPasswordPassword_confirmation(String username, String email, String pass, String pass2) {
+        this.iFillInTheFormWithValidDataUsernameEmailPasswordPassword_confirmation(username, email, pass, pass2);
+    }
 
 }
