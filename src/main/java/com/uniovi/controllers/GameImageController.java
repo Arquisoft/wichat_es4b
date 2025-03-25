@@ -79,7 +79,11 @@ public class GameImageController {
         }
 
         Optional<PlayerImage> player = playerService.getUserByUsername(principal.getName());
-        PlayerImage p = player.orElse(null);
+        if (player.isEmpty()) {
+            // Handle the case where the player is not found
+            return "redirect:/";
+        }
+        PlayerImage p = player.get();
         if (playerService.changeMultiplayerCode(p.getId(),code)) {
             multiplayerSessionImageImpl.addToLobby(code,p.getId());
             model.addAttribute("multiplayerGameCodeImage",code);
@@ -93,7 +97,11 @@ public class GameImageController {
     @RequestMapping("/image/multiplayerGame/createGame")
     public String createMultiplayerGame(HttpSession session, Principal principal, Model model) {
         Optional<PlayerImage> player = playerService.getUserByUsername(principal.getName());
-        PlayerImage p = player.orElse(null);
+        if (player.isEmpty()) {
+            // Handle the case where the player is not found
+            return "redirect:/";
+        }
+        PlayerImage p = player.get();
         String code="" + playerService.createMultiplayerGame(p.getId());//playerService.createMultiplayerGameImage(p.getId())
         multiplayerSessionImageImpl.multiCreate(code,p.getId());
         session.setAttribute("multiplayerCodeImage",code);
