@@ -31,8 +31,7 @@ public class QuestionServiceImageImpl {
     private final AnswerServiceImageImpl answerService;
     private final AnswerImageRepository answerRepository;
     private final EntityManager entityManager;
-    @Autowired
-    private LlmService llmService;
+    private final LlmService llmService;
 
     @Setter
     private QuestionImageGeneratorService questionGeneratorService;
@@ -41,12 +40,13 @@ public class QuestionServiceImageImpl {
 
     public QuestionServiceImageImpl(QuestionImageRepository questionRepository, CategoryServiceImageImpl categoryService,
                                     AnswerServiceImageImpl answerService, AnswerImageRepository answerRepository,
-                                    EntityManager entityManager) {
+                                    EntityManager entityManager, LlmService llmService) {
         this.questionRepository = questionRepository;
         this.categoryService = categoryService;
         this.answerService = answerService;
         this.answerRepository = answerRepository;
         this.entityManager = entityManager;
+        this.llmService = llmService;
     }
 
 
