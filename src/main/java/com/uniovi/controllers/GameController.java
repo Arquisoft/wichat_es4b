@@ -72,7 +72,11 @@ public class GameController {
         }
 
         Optional<Player> player = playerService.getUserByUsername(principal.getName());
-        Player p = player.orElse(null);
+        if (player.isEmpty()) {
+            // Handle the case where the player is not found
+            return "redirect:/";
+        }
+        Player p = player.get();
         if (playerService.changeMultiplayerCode(p.getId(),code)) {
             multiplayerSessionService.addToLobby(code,p.getId());
             model.addAttribute("multiplayerGameCode",code);
@@ -86,7 +90,11 @@ public class GameController {
     @RequestMapping("/multiplayerGame/createGame")
     public String createMultiplayerGame(HttpSession session, Principal principal, Model model) {
         Optional<Player> player = playerService.getUserByUsername(principal.getName());
-        Player p = player.orElse(null);
+        if (player.isEmpty()) {
+            // Handle the case where the player is not found
+            return "redirect:/";
+        }
+        Player p = player.get();
         String code="" + playerService.createMultiplayerGame(p.getId());
         multiplayerSessionService.multiCreate(code,p.getId());
         session.setAttribute("multiplayerCode",code);
@@ -113,7 +121,7 @@ public class GameController {
             }
         } else {
             Optional<Player> player = playerService.getUserByUsername(principal.getName());
-            if (!player.isPresent()) {
+            if (player.isEmpty()) {
                 return "redirect:/";
             }
             gameSession = gameSessionService.startNewMultiplayerGame(getLoggedInPlayer(principal),
@@ -231,7 +239,11 @@ public class GameController {
                 gameSession.setFinished(true);
 
                 Optional<Player> player = playerService.getUserByUsername(principal.getName());
-                Player p = player.orElse(null);
+                if (player.isEmpty()) {
+                    // Handle the case where the player is not found
+                    return "redirect:/";
+                }
+                Player p = player.get();
                 playerService.setScoreMultiplayerCode(p.getId(),"" + gameSession.getScore());
                 multiplayerSessionService.changeScore(p.getMultiplayerCode()+"",p.getId(),gameSession.getScore());
             } else {
