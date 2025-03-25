@@ -3,11 +3,17 @@ package com.uniovi.components.generators;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uniovi.entities.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -74,52 +80,56 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
                 replace(answerPlaceholder, answerLabel);
 
         // Execute the query and get the results
-        JsonNode results = null;
+        List<QuestionImage> questionsImage = new ArrayList<>();
         boolean pass = false;
+        List<String[]> results = null;
+
         do {
             try {
-                results = getQueryResult(query);
+                results = getQueryResult();
                 pass = true;
             } catch (Exception e) {
+                e.printStackTrace(); // Agregamos logging para depuración
             }
-        }while (!pass);
-        List<QuestionImage> questionsImage = new ArrayList<QuestionImage>();
+        } while (!pass);
 
-        // Prepare the statement base based on the language
-        String statement = this.prepareStatement(questionImage);
+// Verificamos que haya resultados antes de procesarlos
+        if (results != null && !results.isEmpty()) {
+            // Preparamos la declaración base según el idioma
+            String statement = this.prepareStatement(questionImage);
 
-        for (JsonNode result : results) {
-            // Generate the correct answer
-            String correctAnswer = result.path(questionImageLabel).path("value").asText();
-            AnswerImage correct = new AnswerImage(correctAnswer, true);
+            for (String[] result : results) {
+                String correctAnswer = result[0];
+                AnswerImage correct = new AnswerImage(correctAnswer, true);
 
-            // Generate the options
-            List<AnswerImage> options = this.generateOptions(results, correctAnswer, questionImageLabel);
-            options.add(correct);
+                // Generamos las opciones de respuesta
+                List<AnswerImage> options = this.generateOptions(results, correctAnswer, questionImageLabel);
+                options.add(correct); // Añadimos la respuesta correcta
 
-            if (statement != null) {
-                // Generate the question statement
-                String questionImageStatement = statement.replace(questionImagePlaceholder, result.path(questionImageLabel).path("value").asText());
-                String imageUrl = result.path(imageLabel).path("value").asText();
-                // Generate the question
-                QuestionImage q = new QuestionImage(questionImageStatement, options, correct, cat, language, imageUrl);
+                if (statement != null) {
+                    String questionImageStatement = statement.replace(questionImagePlaceholder, correctAnswer);
+                    String imageUrl = result[1];
 
-                // Add the question to the list
-                questionsImage.add(q);
+                    // Creamos la pregunta
+                    QuestionImage q = new QuestionImage(questionImageStatement, options, correct, cat, language, imageUrl);
+
+                    // Agregamos la pregunta a la lista
+                    questionsImage.add(q);
+                }
             }
         }
         return questionsImage;
-    }
 
-    private List<AnswerImage> generateOptions(JsonNode results, String correctAnswer, String answerLabel) {
+    }
+    private List<AnswerImage> generateOptions(List<String[]> results, String correctAnswer, String answerLabel) {
         List<AnswerImage> options = new ArrayList<>();
         List<String> usedOptions = new ArrayList<>();
         int size = results.size();
         int tries = 0;
 
-       while (options.size() < 3 && tries < 10) {
+        while (options.size() < 3 && tries < 10) {
             int randomIdx = random.nextInt(size);
-            String option = results.get(randomIdx).path(answerLabel).path("value").asText();
+            String option = results.get(randomIdx)[0];
             if (!option.equals(correctAnswer) && !usedOptions.contains(option) ) {
                 usedOptions.add(option);
                 options.add(new AnswerImage(option, false));
@@ -128,6 +138,24 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
         }
         return options;
     }
+
+//    private List<AnswerImage> generateOptions(JsonNode results, String correctAnswer, String answerLabel) {
+//        List<AnswerImage> options = new ArrayList<>();
+//        List<String> usedOptions = new ArrayList<>();
+//        int size = results.size();
+//        int tries = 0;
+//
+//       while (options.size() < 3 && tries < 10) {
+//            int randomIdx = random.nextInt(size);
+//            String option = results.get(randomIdx).path(answerLabel).path("value").asText();
+//            if (!option.equals(correctAnswer) && !usedOptions.contains(option) ) {
+//                usedOptions.add(option);
+//                options.add(new AnswerImage(option, false));
+//            }
+//            tries++;
+//        }
+//        return options;
+//    }
 
     /**
      * Generates a statement based on the language of the question
@@ -144,29 +172,81 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
         return null;
     }
 
-    private JsonNode getQueryResult(String query) throws IOException, InterruptedException {
-        logger.info("Query: {}", query);
-        JsonNode resultsNode;
-        HttpResponse<String> response;
-        try (HttpClient client = HttpClient.newHttpClient()) {
-            String endpointUrl = "https://query.wikidata.org/sparql?query=" +
-                    URLEncoder.encode(query, StandardCharsets.UTF_8) +
-                    "&format=json";
+    public static List<String[]> getQueryResult() {
+        String ENDPOINT = "https://query.wikidata.org/sparql";
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(endpointUrl))
-                    .header("Accept", "application/json")
-                    .build();
+        String QUERY = """
+                SELECT DISTINCT ?capitalLabel ?image WHERE {
+                                    ?country wdt:P31 wd:Q6256;  # Es un país
+                                             wdt:P36 ?capital;  # Tiene una capital
+                                             wdt:P30 ?continent. # Pertenece a un continente
+                                    FILTER(?continent IN (wd:Q46, wd:Q49)) # Solo Europa y América
+                                    OPTIONAL {\s
+                                      ?capital wdt:P18 ?image. # Imagen representativa de la capital
+                                    }
+                                    SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
+                                  } LIMIT 50
+        """;
+        List<String[]> resultados = new ArrayList<>();
+        try {
+            String urlStr = ENDPOINT + "?query=" + URLEncoder.encode(QUERY, "UTF-8") + "&format=json";
+            URL url = new URL(urlStr);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/sparql-results+json");
 
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (conn.getResponseCode() != 200) {
+                throw new RuntimeException("Error HTTP: " + conn.getResponseCode());
+            }
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            reader.close();
+            conn.disconnect();
+
+            JSONObject jsonObject = new JSONObject(response.toString());
+            JSONArray bindings = jsonObject.getJSONObject("results").getJSONArray("bindings");
+
+            for (int i = 0; i < bindings.length(); i++) {
+                JSONObject item = bindings.getJSONObject(i);
+                String capital = item.getJSONObject("capitalLabel").getString("value");
+                String imagen = item.has("image") ? item.getJSONObject("image").getString("value") : "No disponible";
+                resultados.add(new String[]{capital, imagen});
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        // Process the JSON response using Jackson ObjectMapper
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonResponse =objectMapper.readTree(response.body());
-
-        // Access the data from the JSON response
-        resultsNode = jsonResponse.path("results").path("bindings");
-        return resultsNode;
+        return resultados;
     }
+
+//    private JsonNode getQueryResult(String query) throws IOException, InterruptedException {
+//        logger.info("Query: {}", query);
+//        JsonNode resultsNode;
+//        HttpResponse<String> response;
+//        try (HttpClient client = HttpClient.newHttpClient()) {
+//            String endpointUrl = "https://query.wikidata.org/sparql?query=" +
+//                    URLEncoder.encode(query, StandardCharsets.UTF_8) +
+//                    "&format=json";
+//
+//            HttpRequest request = HttpRequest.newBuilder()
+//                    .uri(URI.create(endpointUrl))
+//                    .header("Accept", "application/json")
+//                    .build();
+//
+//            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+//        }
+//
+//        // Process the JSON response using Jackson ObjectMapper
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        JsonNode jsonResponse =objectMapper.readTree(response.body());
+//
+//        // Access the data from the JSON response
+//        resultsNode = jsonResponse.path("results").path("bindings");
+//        return resultsNode;
+//    }
 }
