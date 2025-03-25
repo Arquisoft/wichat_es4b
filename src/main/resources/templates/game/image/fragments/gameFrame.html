@@ -2,7 +2,8 @@
 <div class="container mx-auto" id="gameFrame">
     <h1 class="text-center">La imagen es de la ciudad...</h1>
     <img th:src="${questionImage.imageUrl}" alt="Question Image"
-         class="img-fluid mx-auto d-block my-3">
+         class="img-fluid mx-auto d-block my-3" style="max-width: 500px; max-height: 300px;">
+
     <div class="container">
             <div class="row">
                 <!-- Thymeleaf loop to generate buttons -->
