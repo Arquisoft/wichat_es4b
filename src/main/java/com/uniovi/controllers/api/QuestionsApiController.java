@@ -160,9 +160,10 @@ public class QuestionsApiController {
             return objectMapper.writeValueAsString(error);
         }
 
-        if (questionDto.getOptions().stream().anyMatch(AnswerDto::isCorrect)) {
-            questionDto.setCorrectAnswer(questionDto.getOptions().stream().filter(option -> option.isCorrect()).findFirst().get());
-        }
+        questionDto.getOptions().stream()
+                .filter(AnswerDto::isCorrect)
+                .findFirst()
+                .ifPresent(questionDto::setCorrectAnswer);
 
         Errors err = new SimpleErrors(questionDto);
         questionValidator.validate(questionDto, err);
@@ -228,9 +229,10 @@ public class QuestionsApiController {
             return objectMapper.writeValueAsString(error);
         }
 
-        if (questionDto.getOptions().stream().anyMatch(AnswerDto::isCorrect)) {
-            questionDto.setCorrectAnswer(questionDto.getOptions().stream().filter(option -> option.isCorrect()).findFirst().get());
-        }
+        questionDto.getOptions().stream()
+                .filter(AnswerDto::isCorrect)
+                .findFirst()
+                .ifPresent(questionDto::setCorrectAnswer);
 
         Errors err = new SimpleErrors(questionDto);
         questionValidator.validate(questionDto, err);

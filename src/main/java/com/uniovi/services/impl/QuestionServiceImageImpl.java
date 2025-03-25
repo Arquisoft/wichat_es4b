@@ -115,10 +115,7 @@ public class QuestionServiceImageImpl {
 
     public boolean checkAnswer(Long idquestion, Long idanswer) {
         Optional<QuestionImage> q = questionRepository.findById(idquestion);
-        if (q.isPresent()) {
-            return q.get().getCorrectAnswer().getId().equals(idanswer);
-        }
-        return false;
+        return q.map(question -> question.getCorrectAnswer().getId().equals(idanswer)).orElse(false);
     }
 
 
