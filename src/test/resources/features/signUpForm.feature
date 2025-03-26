@@ -21,7 +21,7 @@ Feature: I try to register
         And I press the register button
         Then I should see the profile page
         When I logout
-        And I am on the register page
+        And I am on the logout register page
         When I fill in the form with valid data username: "user2" email: "user1@gmail.com" password: "password" password_confirmation: "password"
         And I press the register button
         Then I should see the error message "signup.error.email.already"
@@ -33,7 +33,7 @@ Feature: I try to register
         And I press the register button
         Then I should see the profile page
         When I logout
-        And I am on the register page
+        And I am on the logout register page
         When I fill in the form with valid data username: "user1" email: "user2@gmail.com" password: "password" password_confirmation: "password"
         And I press the register button
         Then I should see the error message "signup.error.username.already"
