@@ -198,7 +198,7 @@ public class GameController {
         }
 
         if (!gameSession.hasQuestionId(idQuestion)) {
-            model.addAttribute("score", gameSession.getScore());
+            model.addAttribute("score", gameSession.getCorrectQuestions());
             session.removeAttribute(GAMESESSION_STR);
             return "redirect:/game/trivial"; // if someone wants to exploit the game, just redirect to the game page
         }
@@ -208,6 +208,7 @@ public class GameController {
             gameSession.addAnsweredQuestion(gameSession.getCurrentQuestion());
             gameSession.addQuestion(false, 0);
         }
+        // if the answer is correct, add a new question
         else if(questionService.checkAnswer(idQuestion, idAnswer)) {
             if (!gameSession.isAnswered(gameSession.getCurrentQuestion())) {
                 gameSession.addQuestion(true, getRemainingTime(gameSession));
@@ -261,10 +262,21 @@ public class GameController {
                 gameSession.setFinished(true);
             } else {
                 session.removeAttribute(GAMESESSION_STR);
-                model.addAttribute("score", gameSession.getScore());
+                model.addAttribute("score", gameSession.getCorrectQuestions());
             }
             return "game/fragments/gameFinished";
         }
+        //añadido
+        int preguntasRespondidas = gameSession.getAnsweredQuestions().size();
+        int preguntasCorrectas = gameSession.getCorrectQuestions();
+        if(preguntasCorrectas-preguntasRespondidas!=0) {
+            gameSessionService.endGame(gameSession);
+            gameSession.setFinished(true);
+            model.addAttribute("score", gameSession.getCorrectQuestions());
+            return "game/fragments/gameFinished";
+        }
+        //fin añadido
+
 
         if (session.getAttribute("hasJustAnswered") != null) {
             if ((boolean) session.getAttribute("hasJustAnswered"))
@@ -281,7 +293,7 @@ public class GameController {
     public String getPoints(HttpSession session) {
         GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSession != null)
-            return String.valueOf(gameSession.getScore());
+            return String.valueOf(gameSession.getCorrectQuestions());
         else
             return "0";
     }
