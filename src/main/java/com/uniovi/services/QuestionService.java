@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Service
 public interface QuestionService {
-    public static final Integer SECONDS_PER_QUESTION = 25;
+    public static final Integer SECONDS_PER_QUESTION = 10;
     /**
      * Add a new question to the database
      *
