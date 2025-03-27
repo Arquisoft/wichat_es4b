@@ -41,7 +41,7 @@ public class GameController {
      * @param model The model to be used
      * @return The view to be shown
      */
-    @RequestMapping("/game/trivial")
+    @RequestMapping("/game/pregunta")
     public String getGame(HttpSession session, Model model, Principal principal) {
         GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSession != null && !gameSession.isFinished() && !gameSession.isMultiplayer()) {
@@ -194,13 +194,13 @@ public class GameController {
     public String getCheckResult(@PathVariable Long idQuestion, @PathVariable Long idAnswer, Model model, HttpSession session, Principal principal) {
         GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSession == null) {
-            return "redirect:/game/trivial";
+            return "redirect:/game/pregunta";
         }
 
         if (!gameSession.hasQuestionId(idQuestion)) {
             model.addAttribute("score", gameSession.getCorrectQuestions());
             session.removeAttribute(GAMESESSION_STR);
-            return "redirect:/game/trivial"; // if someone wants to exploit the game, just redirect to the game page
+            return "redirect:/game/pregunta"; // if someone wants to exploit the game, just redirect to the game page
         }
 
         if(idAnswer == -1
