@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.util.List;
 
 @Component
-public interface QuestionGenerator {
-    List<Question> getQuestions(String language) throws IOException, InterruptedException;
+public interface QuestionGenerator<T> {
+    List<T> getQuestions(String language) throws IOException, InterruptedException;
 
-    List<Question> getQuestions(String language, JsonNode question, Category cat) throws IOException, InterruptedException;
+    List<T> getQuestions(String language, JsonNode question, Category cat) throws IOException, InterruptedException;
 }

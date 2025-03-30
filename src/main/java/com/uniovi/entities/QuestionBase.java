@@ -20,7 +20,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @NoArgsConstructor
-public class Question extends QuestionBase {
+public class QuestionBase implements JsonEntity {
 
     @Id
     @GeneratedValue
@@ -40,12 +40,22 @@ public class Question extends QuestionBase {
 
     private String language;
 
-    public Question(String statement, List<Answer> options, Answer correctAnswer, Category category, String language) {
-        super(statement, options, correctAnswer, category, language);
+    public QuestionBase(String statement, List<Answer> options, Answer correctAnswer, Category category, String language) {
+        Assert.isTrue(options.contains(correctAnswer), "Correct answer must be one of the options");
+        this.statement = statement;
+        Associations.QuestionAnswers.addAnswer(this, options);
+        this.correctAnswer = correctAnswer;
+        this.category = category;
+        this.language = language;
     }
 
-    public Question(String statement, List<Answer> options, Answer correctAnswer, Category category, Language language) {
-        super(statement, options, correctAnswer, category, language);
+    public QuestionBase(String statement, List<Answer> options, Answer correctAnswer, Category category, Language language) {
+        Assert.isTrue(options.contains(correctAnswer), "Correct answer must be one of the options");
+        this.statement = statement;
+        Associations.QuestionAnswers.addAnswer(this, options);
+        this.correctAnswer = correctAnswer;
+        this.category = category;
+        this.language = language.getCode();
     }
 
     public void addOption(Answer option) {
@@ -91,7 +101,7 @@ public class Question extends QuestionBase {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Question question = (Question) o;
+        QuestionBase question = (QuestionBase) o;
         return Objects.equals(id, question.id);
     }
 

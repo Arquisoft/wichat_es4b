@@ -52,7 +52,7 @@ public class GameSessionImpl implements GameSessionService {
 
     @Override
     public GameSession startNewMultiplayerGame(Player player, int code) {
-        List<Question> qs = multiplayerSessionService.getQuestions(String.valueOf(code));
+        List<QuestionBase> qs = multiplayerSessionService.getQuestions(String.valueOf(code));
         if (qs == null)
             return null;
 

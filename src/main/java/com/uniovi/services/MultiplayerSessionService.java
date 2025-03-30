@@ -2,6 +2,7 @@ package com.uniovi.services;
 
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Question;
+import com.uniovi.entities.QuestionBase;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,5 +20,5 @@ public interface MultiplayerSessionService {
 
     boolean existsCode(String code);
 
-    List<Question> getQuestions(String code);
+    List<QuestionBase> getQuestions(String code);
 }

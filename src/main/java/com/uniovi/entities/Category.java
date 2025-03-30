@@ -26,7 +26,7 @@ public class Category implements JsonEntity {
     private String description;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
-    private Set<Question> questions = new HashSet<>();
+    private Set<QuestionBase> questions = new HashSet<>();
 
     public Category(String name, String description) {
         this.name = name;

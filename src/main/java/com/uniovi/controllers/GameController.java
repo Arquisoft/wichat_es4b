@@ -1,8 +1,10 @@
 package com.uniovi.controllers;
 
+import com.uniovi.dto.QuestionBaseDto;
 import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Question;
+import com.uniovi.entities.QuestionBase;
 import com.uniovi.services.GameSessionService;
 import com.uniovi.services.MultiplayerSessionService;
 import com.uniovi.services.PlayerService;
@@ -22,13 +24,13 @@ import java.util.*;
 @Controller
 public class GameController {
     private static final String GAMESESSION_STR = "gameSession";
-    private final QuestionService questionService;
+    private final QuestionService<QuestionBase, QuestionBaseDto> questionService;
     private final GameSessionService gameSessionService;
     private final PlayerService playerService;
 
     private final MultiplayerSessionService multiplayerSessionService;
 
-    public GameController(QuestionService questionService, GameSessionService gameSessionService,
+    public GameController(QuestionService<QuestionBase, QuestionBaseDto> questionService, GameSessionService gameSessionService,
                           PlayerService playerService, MultiplayerSessionService multiplayerSessionService) {
         this.questionService = questionService;
         this.gameSessionService = gameSessionService;
@@ -227,7 +229,7 @@ public class GameController {
     @RequestMapping("/game/update")
     public String updateGame(Model model, HttpSession session, Principal principal) {
         GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
-        Question nextQuestion = gameSession.getCurrentQuestion();
+        QuestionBase nextQuestion = gameSession.getCurrentQuestion();
         if (nextQuestion == null && gameSession.isMultiplayer()) {
             int code = Integer.parseInt((String) session.getAttribute("multiplayerCode"));
             List<Player> players = playerService.getUsersByMultiplayerCode(code);

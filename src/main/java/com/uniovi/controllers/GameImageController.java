@@ -1,20 +1,14 @@
 package com.uniovi.controllers;
 
-import com.uniovi.entities.GameSessionImage;
+import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
-import com.uniovi.entities.PlayerImage;
 import com.uniovi.entities.QuestionImage;
-import com.uniovi.services.PlayerService;
-import com.uniovi.services.impl.GameSessionImageImpl;
-import com.uniovi.services.impl.MultiplayerSessionImageImpl;
-import com.uniovi.services.impl.PlayerServiceImageImpl;
-import com.uniovi.services.impl.QuestionServiceImageImpl;
+import com.uniovi.services.impl.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
@@ -26,14 +20,14 @@ import java.util.*;
 public class GameImageController {
     private static final String GAMESESSION_STR = "gameSessionImage";
     private final QuestionServiceImageImpl questionService;
-    private final GameSessionImageImpl gameSessionImpl;
-    private final PlayerServiceImageImpl playerService;
+    private final GameSessionImpl gameSessionImpl;
+    private final PlayerServiceImpl playerService;
 
-    private final MultiplayerSessionImageImpl multiplayerSessionImageImpl;
+    private final MultiplayerSessionImpl multiplayerSessionImageImpl;
     private final QuestionServiceImageImpl questionServiceImageImpl;
 
-    public GameImageController(QuestionServiceImageImpl questionImageService, GameSessionImageImpl gameSessionImageImpl,
-                               PlayerServiceImageImpl playerService, MultiplayerSessionImageImpl multiplayerSessionImageImpl, QuestionServiceImageImpl questionServiceImageImpl) {
+    public GameImageController(QuestionServiceImageImpl questionImageService, GameSessionImpl gameSessionImageImpl,
+                               PlayerServiceImpl playerService, MultiplayerSessionImpl multiplayerSessionImageImpl, QuestionServiceImageImpl questionServiceImageImpl) {
         this.questionService = questionImageService;
         this.gameSessionImpl = gameSessionImageImpl;
         this.playerService = playerService;
@@ -48,7 +42,7 @@ public class GameImageController {
      */
     @RequestMapping("/game/image")
     public String getGame(HttpSession session, Model model, Principal principal) {
-        GameSessionImage gameSessionImage = (GameSessionImage) session.getAttribute(GAMESESSION_STR);
+        GameSession gameSessionImage = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSessionImage != null && !gameSessionImage.isFinished() && !gameSessionImage.isMultiplayer()) {
             if (checkUpdateGameSession(gameSessionImage, session)) {
                 return "game/image/fragments/gameFinished";
@@ -59,7 +53,7 @@ public class GameImageController {
             playerService.deleteMultiplayerCode(gameSessionImage.getPlayer().getId());
         }
 
-        model.addAttribute("questionImage", gameSessionImage.getCurrentQuestionImage());
+        model.addAttribute("questionImage", gameSessionImage.getCurrentQuestion());
         model.addAttribute("questionDurationImage", getRemainingTime(gameSessionImage));
         return "game/image/game";
     }
@@ -78,12 +72,12 @@ public class GameImageController {
             return "game/image/multiplayerGame";
         }
 
-        Optional<PlayerImage> player = playerService.getUserByUsername(principal.getName());
+        Optional<Player> player = playerService.getUserByUsername(principal.getName());
         if (player.isEmpty()) {
             // Handle the case where the player is not found
             return "redirect:/";
         }
-        PlayerImage p = player.get();
+        Player p = player.get();
         if (playerService.changeMultiplayerCode(p.getId(),code)) {
             multiplayerSessionImageImpl.addToLobby(code,p.getId());
             model.addAttribute("multiplayerGameCodeImage",code);
@@ -96,12 +90,12 @@ public class GameImageController {
 
     @RequestMapping("/image/multiplayerGame/createGame")
     public String createMultiplayerGame(HttpSession session, Principal principal, Model model) {
-        Optional<PlayerImage> player = playerService.getUserByUsername(principal.getName());
+        Optional<Player> player = playerService.getUserByUsername(principal.getName());
         if (player.isEmpty()) {
             // Handle the case where the player is not found
             return "redirect:/";
         }
-        PlayerImage p = player.get();
+        Player p = player.get();
         String code="" + playerService.createMultiplayerGame(p.getId());//playerService.createMultiplayerGameImage(p.getId())
         multiplayerSessionImageImpl.multiCreate(code,p.getId());
         session.setAttribute("multiplayerCodeImage",code);
@@ -110,7 +104,7 @@ public class GameImageController {
 
     @RequestMapping("/image/startMultiplayerGame")
     public String startMultiplayerGame(HttpSession session, Model model, Principal principal) {
-        GameSessionImage gameSessionImage = (GameSessionImage) session.getAttribute(GAMESESSION_STR);
+        GameSession gameSessionImage = (GameSession) session.getAttribute(GAMESESSION_STR);
 
         if (gameSessionImage != null) {
             if (! gameSessionImage.isMultiplayer()) {
@@ -127,7 +121,7 @@ public class GameImageController {
                 return "game/image/fragments/gameFinished";
             }
         } else {
-            Optional<PlayerImage> player = playerService.getUserByUsername(principal.getName());
+            Optional<Player> player = playerService.getUserByUsername(principal.getName());
             if (!player.isPresent()) {
                 return "redirect:/";
             }
@@ -138,7 +132,7 @@ public class GameImageController {
             session.setAttribute(GAMESESSION_STR, gameSessionImage);
         }
 
-        model.addAttribute("questionImage", gameSessionImage.getCurrentQuestionImage());
+        model.addAttribute("questionImage", gameSessionImage.getCurrentQuestion());
         model.addAttribute("questionDurationImage", getRemainingTime(gameSessionImage));
         return "game/image/game";
     }
@@ -182,7 +176,7 @@ public class GameImageController {
     @RequestMapping("/game/image/lobby")
     public String createLobby( HttpSession session, Model model) {
         int code = Integer.parseInt((String)session.getAttribute("multiplayerCodeImage"));
-        List<PlayerImage> players = playerService.getUsersByMultiplayerCode(code);
+        List<Player> players = playerService.getUsersByMultiplayerCode(code);
         model.addAttribute("playersImage",players);
         model.addAttribute("codeImage",session.getAttribute("multiplayerCodeImage"));
         return "game/image/lobby";
@@ -199,12 +193,12 @@ public class GameImageController {
      */
     @RequestMapping("/game/image/{idQuestion}/{idAnswer}")
     public String getCheckResult(@PathVariable Long idQuestion, @PathVariable Long idAnswer, Model model, HttpSession session, Principal principal) {
-        GameSessionImage gameSessionImage = (GameSessionImage) session.getAttribute(GAMESESSION_STR);
+        GameSession gameSessionImage = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSessionImage == null) {
             return "redirect:/game/image/game";
         }
 
-        if (!gameSessionImage.hasQuestionImageId(idQuestion)) {
+        if (!gameSessionImage.hasQuestionId(idQuestion)) {
             model.addAttribute("scoreImage", gameSessionImage.getScore());
             session.removeAttribute(GAMESESSION_STR);
             return "redirect:/game/image/game"; // if someone wants to exploit the game, just redirect to the game page
@@ -212,16 +206,16 @@ public class GameImageController {
 
         if(idAnswer == -1
             || getRemainingTime(gameSessionImage) <= 0) {
-            gameSessionImage.addAnsweredQuestion(gameSessionImage.getCurrentQuestionImage());
+            gameSessionImage.addAnsweredQuestion(gameSessionImage.getCurrentQuestion());
             gameSessionImage.addQuestion(false, 0);
         }
         else if(questionService.checkAnswer(idQuestion, idAnswer)) {
-            if (!gameSessionImage.isAnswered(gameSessionImage.getCurrentQuestionImage())) {
+            if (!gameSessionImage.isAnswered(gameSessionImage.getCurrentQuestion())) {
                 gameSessionImage.addQuestion(true, getRemainingTime(gameSessionImage));
-                gameSessionImage.addAnsweredQuestion(gameSessionImage.getCurrentQuestionImage());
+                gameSessionImage.addAnsweredQuestion(gameSessionImage.getCurrentQuestion());
             }
         } else {
-            gameSessionImage.addAnsweredQuestion(gameSessionImage.getCurrentQuestionImage());
+            gameSessionImage.addAnsweredQuestion(gameSessionImage.getCurrentQuestion());
             gameSessionImage.addQuestion(false, 0);
         }
 
@@ -232,11 +226,11 @@ public class GameImageController {
 
     @RequestMapping("/game/image/update")
     public String updateGame(Model model, HttpSession session, Principal principal) {
-        GameSessionImage gameSessionImage = (GameSessionImage) session.getAttribute(GAMESESSION_STR);
-        QuestionImage nextQuestionImage = gameSessionImage.getCurrentQuestionImage();
+        GameSession gameSessionImage = (GameSession) session.getAttribute(GAMESESSION_STR);
+        QuestionImage nextQuestionImage = (QuestionImage) gameSessionImage.getCurrentQuestion();
         if (nextQuestionImage == null && gameSessionImage.isMultiplayer()) {
             int code = Integer.parseInt((String) session.getAttribute("multiplayerCodeImage"));
-            List<PlayerImage> players = playerService.getUsersByMultiplayerCode(code);
+            List<Player> players = playerService.getUsersByMultiplayerCode(code);
 
             if (!gameSessionImage.isFinished()) {
                 gameSessionImpl.endGame(gameSessionImage);
@@ -245,8 +239,8 @@ public class GameImageController {
                 model.addAttribute("codeImage", session.getAttribute("multiplayerCodeImage"));
                 gameSessionImage.setFinished(true);
 
-                Optional<PlayerImage> player = playerService.getUserByUsername(principal.getName());
-                PlayerImage p = player.orElse(null);
+                Optional<Player> player = playerService.getUserByUsername(principal.getName());
+                Player p = player.orElse(null);
                 playerService.setScoreMultiplayerCode(p.getId(),"" + gameSessionImage.getScore());
                 multiplayerSessionImageImpl.changeScore(p.getMultiplayerCode()+"",p.getId(),gameSessionImage.getScore());
             } else {
@@ -274,7 +268,7 @@ public class GameImageController {
                 gameSessionImage.setFinishTime(LocalDateTime.now());
             session.removeAttribute("hasJustAnsweredImage");
         }
-        model.addAttribute("questionImage", gameSessionImage.getCurrentQuestionImage());
+        model.addAttribute("questionImage", gameSessionImage.getCurrentQuestion());
         model.addAttribute("questionDurationImage", getRemainingTime(gameSessionImage));
         return "game/image/fragments/gameFrame";
     }
@@ -282,7 +276,7 @@ public class GameImageController {
     @RequestMapping("/game/image/points")
     @ResponseBody
     public String getPoints(HttpSession session) {
-        GameSessionImage gameSessionImage = (GameSessionImage) session.getAttribute(GAMESESSION_STR);
+        GameSession gameSessionImage = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSessionImage != null)
             return String.valueOf(gameSessionImage.getScore());
         else
@@ -292,9 +286,9 @@ public class GameImageController {
     @RequestMapping("/game/image/currentQuestion")
     @ResponseBody
     public String getCurrentQuestion(HttpSession session) {
-        GameSessionImage gameSessionImage = (GameSessionImage) session.getAttribute(GAMESESSION_STR);
+        GameSession gameSessionImage = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSessionImage != null) {
-            return String.valueOf(Math.min(gameSessionImage.getAnsweredQuestions().size() + 1, GameSessionImageImpl.NORMAL_GAME_QUESTION_NUM));
+            return String.valueOf(Math.min(gameSessionImage.getAnsweredQuestions().size() + 1, GameSessionImpl.NORMAL_GAME_QUESTION_NUM));
         }else
             return "0";
     }
@@ -310,8 +304,8 @@ public class GameImageController {
         return "No se encontró ninguna pista para esta pregunta.";
     }
 
-    private PlayerImage getLoggedInPlayer(Principal principal) {
-        Optional<PlayerImage> player = playerService.getUserByUsername(principal.getName());
+    private Player getLoggedInPlayer(Principal principal) {
+        Optional<Player> player = playerService.getUserByUsername(principal.getName());
         return player.orElse(null);
     }
 
@@ -321,13 +315,13 @@ public class GameImageController {
      * @param session The session to be used
      * @return True if the game session has been ended, false otherwise
      */
-    private boolean checkUpdateGameSession(GameSessionImage gameSessionImage, HttpSession session) {
+    private boolean checkUpdateGameSession(GameSession gameSessionImage, HttpSession session) {
         // if time since last question started is greater than the time per question, add a new question (or check for game finish)
         if (getRemainingTime(gameSessionImage) <= 0
                 && gameSessionImage.getQuestionsToAnswer().isEmpty()
-                && gameSessionImage.getCurrentQuestionImage() != null) {
+                && gameSessionImage.getCurrentQuestion() != null) {
             gameSessionImage.addQuestion(false, 0);
-            gameSessionImage.addAnsweredQuestion(gameSessionImage.getCurrentQuestionImage());
+            gameSessionImage.addAnsweredQuestion(gameSessionImage.getCurrentQuestion());
             if (gameSessionImage.getQuestionsToAnswer().isEmpty()) {
                 gameSessionImpl.endGame(gameSessionImage);
                 session.removeAttribute(GAMESESSION_STR);
@@ -338,7 +332,7 @@ public class GameImageController {
         return false;
     }
 
-    private int getRemainingTime(GameSessionImage gameSessionImage) {
+    private int getRemainingTime(GameSession gameSessionImage) {
         return (int) Duration.between(LocalDateTime.now(),
                 gameSessionImage.getFinishTime().plusSeconds(QuestionServiceImageImpl.SECONDS_PER_QUESTION)).toSeconds();
     }

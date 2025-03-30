@@ -11,6 +11,8 @@ import com.uniovi.entities.*;
 import com.uniovi.services.ApiKeyService;
 import com.uniovi.services.QuestionService;
 import com.uniovi.services.RestApiService;
+import com.uniovi.services.impl.QuestionBaseServiceImpl;
+import com.uniovi.services.impl.QuestionServiceImpl;
 import com.uniovi.validators.QuestionValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,11 +41,11 @@ import java.util.Map;
 public class QuestionsApiController {
     private final ApiKeyService apiKeyService;
     private final RestApiService restApiService;
-    private final QuestionService questionService;
+    private final QuestionServiceImpl questionService;
     private final QuestionValidator questionValidator;
 
     @Autowired
-    public QuestionsApiController(ApiKeyService apiKeyService, RestApiService restApiService, QuestionService questionService, QuestionValidator questionValidator) {
+    public QuestionsApiController(ApiKeyService apiKeyService, RestApiService restApiService, QuestionServiceImpl questionService, QuestionValidator questionValidator) {
         this.apiKeyService = apiKeyService;
         this.restApiService = restApiService;
         this.questionService = questionService;
@@ -179,7 +181,7 @@ public class QuestionsApiController {
             return errorNode.toString();
         }
 
-        Question q = questionService.addNewQuestion(questionDto);
+        Question q = questionService.addNewQuestionDto(questionDto);
 
         restApiService.logAccess(apiKey, "/api/questions", Map.of("apiKey", apiKeyStr, "question", questionDto.toString()));
         return "{ \"success\": true, \"id\":" + q.getId() + " }";

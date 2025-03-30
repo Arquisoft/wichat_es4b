@@ -8,6 +8,7 @@ import com.uniovi.entities.*;
 import com.uniovi.repositories.*;
 import com.uniovi.services.*;
 import com.uniovi.services.impl.QuestionServiceImageImpl;
+import com.uniovi.services.impl.QuestionServiceImpl;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +48,7 @@ class Wichat_UnitTests {
     @Autowired
     private AnswerService answerService;
     @Autowired
-    private QuestionService questionService;
+    private QuestionServiceImpl questionService;
     @Autowired
     private CategoryService categoryService;
     @Autowired
@@ -251,7 +252,7 @@ class Wichat_UnitTests {
         Question question = new Question();
         question.setCategory(category);
 
-        Set<Question> questions = new HashSet<>();
+        Set<QuestionBase> questions = new HashSet<>();
         questions.add(question);
         category.setQuestions(questions);
 
@@ -281,7 +282,7 @@ class Wichat_UnitTests {
     @Order(19)
     void testAddQuestion_Correct() {
         Player player = createPlayer();
-        List<Question> questions = new ArrayList<>();
+        List<QuestionBase> questions = new ArrayList<>();
         GameSession gameSession = new GameSession(player, questions);
 
         int initialScore = gameSession.getScore();
@@ -295,7 +296,7 @@ class Wichat_UnitTests {
     @Order(20)
     void testAddQuestion_Incorrect() {
         Player player = createPlayer();
-        List<Question> questions = new ArrayList<>();
+        List<QuestionBase> questions = new ArrayList<>();
         GameSession gameSession = new GameSession(player, questions);
 
         int initialScore = gameSession.getScore();
@@ -309,7 +310,7 @@ class Wichat_UnitTests {
     @Order(20)
     void testAddAnsweredQuestion() {
         Player player = createPlayer();
-        List<Question> questions = new ArrayList<>();
+        List<QuestionBase> questions = new ArrayList<>();
         Question question = new Question();
         questions.add(question);
         GameSession gameSession = new GameSession(player, questions);
@@ -327,7 +328,7 @@ class Wichat_UnitTests {
         LocalDateTime createdAt = LocalDateTime.of(2022, 1, 1, 10, 0); // Assuming game started at 10:00 AM
         LocalDateTime finishTime = LocalDateTime.of(2022, 1, 1, 10, 5); // Assuming game finished at 10:05 AM
         Player player = createPlayer();
-        List<Question> questions = new ArrayList<>();
+        List<QuestionBase> questions = new ArrayList<>();
         GameSession gameSession = new GameSession(player, questions);
         gameSession.setCreatedAt(createdAt);
         gameSession.setFinishTime(finishTime);
@@ -1861,14 +1862,14 @@ class Wichat_UnitTests {
 
     @Test
     void testSendQuestionToLLM_Empathy() {
-        AnswerImage a1 = new AnswerImage("Asturias",false);
-        AnswerImage a2 = new AnswerImage("Cataluña",false);
-        AnswerImage a3 = new AnswerImage("Madrid",false);
-        AnswerImage a4 = new AnswerImage("Benidorm",true);
-        List<AnswerImage> lanswer = Arrays.asList(a1, a2, a3, a4);
+        Answer a1 = new Answer("Asturias",false);
+        Answer a2 = new Answer("Cataluña",false);
+        Answer a3 = new Answer("Madrid",false);
+        Answer a4 = new Answer("Benidorm",true);
+        List<Answer> lanswer = Arrays.asList(a1, a2, a3, a4);
         QuestionImage questionImage =
                 new QuestionImage("", lanswer, a4,
-                        new CategoryImage(), "es","https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
+                        new Category(), "es","https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
         String answer = questionServiceImageImpl.getHintForImageQuestion(questionImage);
         Assertions.assertNotNull(answer);
         Assertions.assertFalse(answer.isEmpty());

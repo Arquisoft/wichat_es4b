@@ -2,6 +2,7 @@ package com.uniovi.services.impl;
 
 import com.uniovi.entities.Answer;
 import com.uniovi.entities.Question;
+import com.uniovi.entities.QuestionBase;
 import com.uniovi.repositories.AnswerRepository;
 import com.uniovi.services.AnswerService;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public List<Answer> getAnswersPerQuestion(Question question) {
+    public List<Answer> getAnswersPerQuestion(QuestionBase question) {
         return answerRepository.findByQuestion(question);
     }
 

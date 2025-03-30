@@ -20,46 +20,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class QuestionGeneratorV2 implements QuestionGenerator{
-    private final JsonNode jsonNode;
-    private final String languagePlaceholder;
-    private final String questionPlaceholder;
-    private final String answerPlaceholder;
-    private String language;
+public class QuestionGeneratorImpl extends QuestionGeneratorBaseImpl<Question>{
 
-    private final Random random = new SecureRandom();
-    private Logger logger = LoggerFactory.getLogger(QuestionGeneratorV2.class);
 
-    public QuestionGeneratorV2(JsonNode jsonNode) {
-        this.jsonNode = jsonNode;
-        this.languagePlaceholder = jsonNode.get("language_placeholder").textValue();
-        this.questionPlaceholder = jsonNode.get("question_placeholder").textValue();
-        this.answerPlaceholder = jsonNode.get("answer_placeholder").textValue();
+    private Logger logger = LoggerFactory.getLogger(QuestionGeneratorImpl.class);
+
+    public QuestionGeneratorImpl(JsonNode jsonNode) {
+        super(jsonNode);
     }
+
 
     @Override
-    public List<Question> getQuestions(String language) throws IOException, InterruptedException {
-        this.language = language;
-        List<Question> questions = new ArrayList<>();
-        JsonNode categories = jsonNode.findValue("categories");
-        for(JsonNode category : categories){
-            String categoryName = category.get("name").textValue();
-            Category cat = new Category(categoryName);
-            JsonNode questionsNode = category.findValue("questions");
-            for(JsonNode question : questionsNode){
-                questions.addAll(this.generateQuestion(question, cat));
-            }
-        }
-        return questions;
-    }
-
-    @Override
-    public List<Question> getQuestions(String language, JsonNode question, Category cat) throws IOException, InterruptedException {
-        this.language = language;
-        return this.generateQuestion(question, cat);
-    }
-
-    private List<Question> generateQuestion(JsonNode question, Category cat) throws IOException, InterruptedException {
+    protected List<Question> generateQuestion(JsonNode question, Category cat) throws IOException, InterruptedException {
         // Get the SPARQL query from the JSON
         String query = question.get("sparqlQuery").textValue();
 
@@ -113,40 +85,8 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
         return questions;
     }
 
-    private List<Answer> generateOptions(JsonNode results, String correctAnswer, String answerLabel) {
-        List<Answer> options = new ArrayList<>();
-        List<String> usedOptions = new ArrayList<>();
-        int size = results.size();
-        int tries = 0;
-
-       while (options.size() < 3 && tries < 10) {
-            int randomIdx = random.nextInt(size);
-            String option = results.get(randomIdx).path(answerLabel).path("value").asText();
-            if (!option.equals(correctAnswer) && !usedOptions.contains(option) ) {
-                usedOptions.add(option);
-                options.add(new Answer(option, false));
-            }
-            tries++;
-        }
-        return options;
-    }
-
-    /**
-     * Generates a statement based on the language of the question
-     * @param question The question node
-     * @return The statement in the language of the question or null if the language is not found
-     */
-    private String prepareStatement(JsonNode question) {
-        JsonNode statementNode = question.findValue("statements");
-        for (JsonNode statement : statementNode) {
-            if (statement.get("language").textValue().equals(language)) {
-                return statement.get("statement").textValue();
-            }
-        }
-        return null;
-    }
-
-    private JsonNode getQueryResult(String query) throws IOException, InterruptedException {
+    @Override
+    protected JsonNode getQueryResult(String query) throws IOException, InterruptedException {
         logger.info("Query: {}", query);
         JsonNode resultsNode;
         HttpResponse<String> response;

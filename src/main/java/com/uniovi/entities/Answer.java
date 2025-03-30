@@ -28,7 +28,7 @@ public class Answer implements JsonEntity {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
-    private Question question;
+    private QuestionBase question;
 
     public Answer(String text, boolean correct) {
         this.text = text;

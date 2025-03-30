@@ -3,15 +3,15 @@ package com.uniovi.controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.uniovi.components.generators.QuestionGeneratorBaseImpl;
 import com.uniovi.configuration.SecurityConfig;
-import com.uniovi.dto.PlayerImageDto;
+import com.uniovi.dto.QuestionBaseDto;
 import com.uniovi.dto.RoleDto;
-import com.uniovi.entities.Associations;
-import com.uniovi.entities.GameSession;
-import com.uniovi.entities.Player;
-import com.uniovi.entities.Role;
+import com.uniovi.entities.*;
 import com.uniovi.services.*;
-import com.uniovi.services.impl.PlayerServiceImageImpl;
+import com.uniovi.services.impl.PlayerServiceImpl;
+import com.uniovi.services.impl.QuestionBaseServiceImpl;
+import com.uniovi.services.impl.QuestionServiceImpl;
 import com.uniovi.validators.EditUserValidator;
 import com.uniovi.validators.SignUpValidator;
 import jakarta.servlet.ServletException;
@@ -35,19 +35,21 @@ import java.security.Principal;
 import java.util.Optional;
 import java.util.List;
 
+import static com.uniovi.services.QuestionImageGeneratorService.JSON_FILE_PATH;
+
 @Controller
-public class PlayersController {
+public class PlayersController<T extends QuestionBase, P extends QuestionBaseDto> {
     private final PlayerService playerService;
     private final RoleService roleService;
-    private final PlayerServiceImageImpl playerServiceImageImpl;
-    private final QuestionService questionService;
+    private final PlayerServiceImpl playerServiceImageImpl;
+    private final QuestionBaseServiceImpl<T,P> questionService;
     private final SignUpValidator signUpValidator;
     private final EditUserValidator editUserValidator;
     private final GameSessionService gameSessionService;
 
     @Autowired
     public PlayersController(PlayerService playerService, SignUpValidator signUpValidator, GameSessionService gameSessionService,
-                             RoleService roleService, QuestionService questionService, EditUserValidator editUserValidator, PlayerServiceImageImpl playerServiceImageImpl) {
+                             RoleService roleService, QuestionBaseServiceImpl<T,P> questionService, EditUserValidator editUserValidator, PlayerServiceImpl playerServiceImageImpl) {
         this.playerService = playerService;
         this.signUpValidator =  signUpValidator;
         this.gameSessionService = gameSessionService;
@@ -301,7 +303,7 @@ public class PlayersController {
 
     @RequestMapping("/player/admin/questionManagement")
     public String showQuestionManagementFragment(Model model) throws IOException {
-        Resource jsonFile = new ClassPathResource(QuestionGeneratorService.JSON_FILE_PATH);
+        Resource jsonFile = new ClassPathResource(JSON_FILE_PATH);
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode json = objectMapper.readTree(jsonFile.getInputStream());
         model.addAttribute("jsonContent", json.toString());

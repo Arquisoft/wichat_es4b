@@ -3,6 +3,7 @@ package com.uniovi.services.impl;
 import com.uniovi.entities.MultiplayerSession;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Question;
+import com.uniovi.entities.QuestionBase;
 import com.uniovi.repositories.MultiplayerSessionRepository;
 import com.uniovi.repositories.PlayerRepository;
 import com.uniovi.services.GameSessionService;
@@ -17,15 +18,18 @@ import java.util.*;
 public class MultiplayerSessionImpl implements MultiplayerSessionService {
     private final PlayerRepository playerRepository;
     private final MultiplayerSessionRepository multiplayerSessionRepository;
-    private final QuestionService questionService;
+    private QuestionService questionService;
 
-    private Map<String, List<Question>> multiplayerSessionQuestions = new HashMap<>();
+    private Map<String, List<QuestionBase>> multiplayerSessionQuestions = new HashMap<>();
 
 
-    public MultiplayerSessionImpl(PlayerRepository playerRepository, MultiplayerSessionRepository multiplayerSessionRepository,
-                                  QuestionService questionService) {
+    public MultiplayerSessionImpl(PlayerRepository playerRepository, MultiplayerSessionRepository multiplayerSessionRepository) {
         this.playerRepository = playerRepository;
         this.multiplayerSessionRepository = multiplayerSessionRepository;
+
+    }
+
+    public void setQuestionService(QuestionService questionService) {
         this.questionService = questionService;
     }
 
@@ -88,7 +92,7 @@ public class MultiplayerSessionImpl implements MultiplayerSessionService {
     }
 
     @Override
-    public List<Question> getQuestions(String code) {
+    public List<QuestionBase> getQuestions(String code) {
         if (!multiplayerSessionQuestions.containsKey(code)) {
             return null;
         }

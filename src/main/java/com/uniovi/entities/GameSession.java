@@ -37,13 +37,13 @@ public class GameSession implements JsonEntity, Serializable {
     private int score;
 
     @Transient
-    private Set<Question> answeredQuestions = new HashSet<>();
+    private Set<QuestionBase> answeredQuestions = new HashSet<>();
 
     @Transient
-    private List<Question> questionsToAnswer = new ArrayList<>();
+    private List<QuestionBase> questionsToAnswer = new ArrayList<>();
 
     @Transient
-    private Question currentQuestion;
+    private QuestionBase currentQuestion;
 
     @Transient
     private boolean isMultiplayer = false;
@@ -51,7 +51,7 @@ public class GameSession implements JsonEntity, Serializable {
     @Transient
     private boolean isFinished = false;
 
-    public GameSession(Player player, List<Question> questions) {
+    public GameSession(Player player, List<QuestionBase> questions) {
         this.player = player;
         this.questionsToAnswer = questions;
         this.createdAt = LocalDateTime.now();
@@ -71,16 +71,16 @@ public class GameSession implements JsonEntity, Serializable {
         }
     }
 
-    public void addAnsweredQuestion(Question question) {
+    public void addAnsweredQuestion(QuestionBase question) {
         questionsToAnswer.remove(question);
         answeredQuestions.add(question);
     }
 
-    public boolean isAnswered(Question question) {
+    public boolean isAnswered(QuestionBase question) {
         return answeredQuestions.contains(question);
     }
 
-    public Question getNextQuestion() {
+    public QuestionBase getNextQuestion() {
         if (questionsToAnswer.isEmpty()) {
             currentQuestion = null;
             return null;
@@ -104,12 +104,12 @@ public class GameSession implements JsonEntity, Serializable {
     }
 
     public boolean hasQuestionId(Long idQuestion) {
-        for (Question q : questionsToAnswer) {
+        for (QuestionBase q : questionsToAnswer) {
             if (q.getId().equals(idQuestion))
                 return true;
         }
 
-        for (Question q : answeredQuestions) {
+        for (QuestionBase q : answeredQuestions) {
             if (q.getId().equals(idQuestion))
                 return true;
         }

@@ -2,6 +2,7 @@ package com.uniovi.services;
 
 import com.uniovi.entities.Answer;
 import com.uniovi.entities.Question;
+import com.uniovi.entities.QuestionBase;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Optional;
 
 @Service
 public interface AnswerService {
+
 
     /**
      * Add a new answer to the database
@@ -22,7 +24,7 @@ public interface AnswerService {
      *
      * @return A list with all the answers for a question
      */
-    List<Answer> getAnswersPerQuestion(Question question);
+    List<Answer> getAnswersPerQuestion(QuestionBase question);
 
     /**
      * Get an answer by its id
