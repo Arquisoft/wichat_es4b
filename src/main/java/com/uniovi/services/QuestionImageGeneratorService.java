@@ -57,7 +57,7 @@ public class QuestionImageGeneratorService {
         JsonNode categories = json.findValue("categories");
         for (JsonNode category : categories) {
             String categoryName = category.get("name").textValue();
-            CategoryImage cat = new CategoryImage(categoryName);
+            Category cat = new Category(categoryName);
             JsonNode questionsImageNode = category.findValue("questions");
             for (JsonNode questionImage : questionsImageNode) {
                 types.push(new QuestionImageType(questionImage, cat));
@@ -125,7 +125,7 @@ public class QuestionImageGeneratorService {
     public void generateTestQuestions(String cat) {
         AnswerImage a1 = new AnswerImage("1", true);
         List<AnswerImage> answers = List.of(a1, new AnswerImage("2", false), new AnswerImage("3", false), new AnswerImage("4", false));
-        QuestionImage q = new QuestionImage("Statement", answers, a1, new CategoryImage(cat), Language.ES, "URL");
+        QuestionImage q = new QuestionImage("Statement", answers, a1, new Category(cat), Language.ES, "URL");
         questionService.addNewQuestion(new QuestionImageDto(q));
     }
 
@@ -146,6 +146,6 @@ public class QuestionImageGeneratorService {
     @AllArgsConstructor
     private static class QuestionImageType {
         private final JsonNode questionImage;
-        private final CategoryImage category;
+        private final Category category;
     }
 }

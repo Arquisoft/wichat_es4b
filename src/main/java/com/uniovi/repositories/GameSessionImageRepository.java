@@ -1,8 +1,6 @@
 package com.uniovi.repositories;
 
-import com.uniovi.entities.GameSession;
 import com.uniovi.entities.GameSessionImage;
-import com.uniovi.entities.Player;
 import com.uniovi.entities.PlayerImage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

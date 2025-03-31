@@ -1,7 +1,6 @@
 package com.uniovi.components.generators;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uniovi.entities.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,13 +11,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +42,7 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
         JsonNode categories = jsonNode.findValue("categories");
         for(JsonNode category : categories){
             String categoryName = category.get("name").textValue();
-            CategoryImage cat = new CategoryImage(categoryName);
+            Category cat = new Category(categoryName);
             JsonNode questionsImageNode = category.findValue("questions");
             for(JsonNode questionImage : questionsImageNode){
                 questionsImage.addAll(this.generateQuestionImage(questionImage, cat));
@@ -60,12 +54,12 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
 
 
     @Override
-    public List<QuestionImage> getQuestions(String language, JsonNode questionImage, CategoryImage cat) throws IOException, InterruptedException {
+    public List<QuestionImage> getQuestions(String language, JsonNode questionImage, Category cat) throws IOException, InterruptedException {
         this.language = language;
         return this.generateQuestionImage(questionImage, cat);
     }
 
-    private List<QuestionImage> generateQuestionImage(JsonNode questionImage, CategoryImage cat) throws IOException, InterruptedException {
+    private List<QuestionImage> generateQuestionImage(JsonNode questionImage, Category cat) throws IOException, InterruptedException {
         // Get the SPARQL query from the JSON
         String query = questionImage.get("sparqlQuery").textValue();
 

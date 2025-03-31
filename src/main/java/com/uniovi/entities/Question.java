@@ -62,15 +62,15 @@ public class Question implements JsonEntity {
         options.add(option);
     }
 
-    public void removeOption(Answer option){
+    public void removeOption(Answer option) {
         options.remove(option);
     }
 
-    public Answer getOption(int index){
+    public Answer getOption(int index) {
         return options.get(index);
     }
 
-    public Answer getOptions(String answer){
+    public Answer getOptions(String answer) {
         for (Answer option : options) {
             if (option.getText().equals(answer)) {
                 return option;
@@ -79,11 +79,11 @@ public class Question implements JsonEntity {
         return null;
     }
 
-    public boolean isCorrectAnswer(Answer answer){
+    public boolean isCorrectAnswer(Answer answer) {
         return answer.isCorrect();
     }
 
-    public List<Answer> returnScrambledOptions(){
+    public List<Answer> returnScrambledOptions() {
         Collections.shuffle(options);
         return options;
     }
@@ -125,12 +125,12 @@ public class Question implements JsonEntity {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode
                 obj = mapper.createObjectNode()
-                    .put("id", id)
-                    .put("statement", statement);
-                obj .put("category", category.toJson());
+                .put("id", id)
+                .put("statement", statement);
+        obj.put("category", category.toJson());
         ArrayNode optionsArray = mapper.createArrayNode();
         options.forEach(option -> optionsArray.add(option.toJson()));
-        obj         .put("options", optionsArray);
+        obj.put("options", optionsArray);
         return obj;
     }
 }

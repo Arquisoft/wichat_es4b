@@ -2,10 +2,6 @@ package com.uniovi.services.impl;
 
 import com.uniovi.entities.*;
 import com.uniovi.repositories.GameSessionImageRepository;
-import com.uniovi.repositories.GameSessionRepository;
-import com.uniovi.services.GameSessionService;
-import com.uniovi.services.MultiplayerSessionService;
-import com.uniovi.services.QuestionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
