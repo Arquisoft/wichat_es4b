@@ -57,7 +57,7 @@ class Wichat_UnitTests {
     private InsertSampleDataService sampleDataService;
     @Autowired
     private MultiplayerSessionServiceImpl multiplayerSessionService;
-    //@Autowired
+    @Autowired
     private LlmService llmService;
 
     @Autowired

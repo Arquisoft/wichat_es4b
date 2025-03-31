@@ -8,6 +8,7 @@ import com.uniovi.entities.Category;
 import com.uniovi.entities.QuestionImage;
 import com.uniovi.repositories.AnswerImageRepository;
 import com.uniovi.repositories.QuestionImageRepository;
+import com.uniovi.services.LlmService;
 import com.uniovi.services.QuestionImageGeneratorService;
 import com.uniovi.services.QuestionService;
 import jakarta.persistence.EntityManager;
@@ -35,7 +36,7 @@ public class QuestionImageServiceImpl implements QuestionService<QuestionImage, 
     private final AnswerServiceImageImpl answerService;
     private final AnswerImageRepository answerRepository;
     private final EntityManager entityManager;
-    //private final LlmService llmService;
+    private final LlmService llmService;
 
     @Setter
     private QuestionImageGeneratorService questionGeneratorService;
@@ -44,14 +45,13 @@ public class QuestionImageServiceImpl implements QuestionService<QuestionImage, 
 
     public QuestionImageServiceImpl(QuestionImageRepository questionRepository, CategoryServiceImpl categoryService,
                                     AnswerServiceImageImpl answerService, AnswerImageRepository answerRepository,
-                                    EntityManager entityManager){//, LlmService llmService) {
+                                    EntityManager entityManager, LlmService llmService) {
         this.questionRepository = questionRepository;
         this.categoryService = categoryService;
         this.answerService = answerService;
         this.answerRepository = answerRepository;
         this.entityManager = entityManager;
-
-        //this.llmService = llmService;
+        this.llmService = llmService;
     }
 
     @Override
@@ -196,8 +196,7 @@ public class QuestionImageServiceImpl implements QuestionService<QuestionImage, 
         String llmHint = ("Hola, tengo esta imagen: <" + question.getImageUrl() + ">, estas opciones de respuesta: "
                 + question.getOptions().toString() + ".\nY quiero que me respondas en el idioma de este acrónimo: " + question.getLanguage());
         // Llamar al servicio LLM para obtener la pista usando Gemini.
-        return "EMPATHY CAIDO -- HARDCODEADO";
-        //return llmService.sendQuestionToLLM(llmHint);
+        return llmService.sendQuestionToLLM(llmHint);
     }
 
 }
