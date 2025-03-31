@@ -21,19 +21,17 @@ import java.util.*;
 public class GameImageController {
     private static final String GAMESESSION_STR = "gameSessionImage";
     private final QuestionServiceImageImpl questionService;
-    private final GameSessionImpl<QuestionImage, QuestionImageDto> gameSessionImpl;
+    private final GameSessionImageImpl gameSessionImpl;
     private final PlayerServiceImpl<QuestionImage,QuestionImageDto> playerService;
 
     private final MultiplayerSessionImpl<QuestionImage,QuestionImageDto> multiplayerSessionImageImpl;
 
 
-    public GameImageController(QuestionServiceImageImpl questionImageService, GameSessionImpl<QuestionImage,QuestionImageDto> gameSessionImageImpl,
+    public GameImageController(QuestionServiceImageImpl questionImageService, GameSessionImageImpl gameSessionImageImpl,
                                PlayerServiceImpl<QuestionImage,QuestionImageDto> playerService, MultiplayerSessionImpl<QuestionImage,QuestionImageDto> multiplayerSessionImageImpl) {
         this.questionService = questionImageService;
         this.playerService = playerService;
         this.multiplayerSessionImageImpl = multiplayerSessionImageImpl;
-        gameSessionImageImpl.setMultiplayerSessionService(multiplayerSessionImageImpl);
-        gameSessionImageImpl.setQuestionService(questionImageService);
         this.gameSessionImpl = gameSessionImageImpl;
 
     }

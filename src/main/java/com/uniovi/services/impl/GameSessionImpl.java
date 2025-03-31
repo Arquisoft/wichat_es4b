@@ -1,10 +1,8 @@
 package com.uniovi.services.impl;
 
 import com.uniovi.dto.QuestionBaseDto;
-import com.uniovi.entities.Associations;
-import com.uniovi.entities.GameSession;
-import com.uniovi.entities.Player;
-import com.uniovi.entities.QuestionBase;
+import com.uniovi.dto.QuestionDto;
+import com.uniovi.entities.*;
 import com.uniovi.repositories.GameSessionRepository;
 import com.uniovi.services.GameSessionService;
 import com.uniovi.services.MultiplayerSessionService;
@@ -17,24 +15,26 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class GameSessionImpl<T extends QuestionBase, P extends QuestionBaseDto> implements GameSessionService<T,P> {
+public class GameSessionImpl implements GameSessionService<Question,QuestionDto> {
 
-    private final GameSessionRepository<T> gameSessionRepository;
-    private QuestionService<T, P> questionService;
-    private MultiplayerSessionService<T,P> multiplayerSessionService;
+    private final GameSessionRepository<Question> gameSessionRepository;
+    private final QuestionServiceImpl questionService;
+    private final MultiplayerSessionService<Question, QuestionDto> multiplayerSessionService;
 
-    public GameSessionImpl(GameSessionRepository<T> gameSessionRepository) {
+    public GameSessionImpl(GameSessionRepository<Question> gameSessionRepository, MultiplayerSessionService<Question,QuestionDto> multiplayerSessionService, QuestionServiceImpl questionService) {
         this.gameSessionRepository = gameSessionRepository;
+        this.multiplayerSessionService = multiplayerSessionService;
+        this.questionService = questionService;
     }
 
 
     @Override
-    public List<GameSession<T>> getGameSessions() {
+    public List<GameSession<Question>> getGameSessions() {
         return gameSessionRepository.findAll();
     }
 
     @Override
-    public List<GameSession<T>> getGameSessionsByPlayer(Player player) {
+    public List<GameSession<Question>> getGameSessionsByPlayer(Player player) {
         return gameSessionRepository.findAllByPlayer(player);
     }
 
@@ -43,40 +43,32 @@ public class GameSessionImpl<T extends QuestionBase, P extends QuestionBaseDto> 
     }
 
     @Override
-    public Page<GameSession<T>> getPlayerRanking(Pageable pageable, Player player) {
+    public Page<GameSession<Question>> getPlayerRanking(Pageable pageable, Player player) {
         return gameSessionRepository.findAllByPlayerOrderByScoreDesc(pageable, player);
     }
 
     @Override
-    public GameSession<T> startNewGame(Player player) {
-        return new GameSession<>(player, questionService.getRandomQuestions(NORMAL_GAME_QUESTION_NUM));
+    public GameSession<Question> startNewGame(Player player) {
+        return new GameSession<Question>(player, questionService.getRandomQuestions(NORMAL_GAME_QUESTION_NUM));
     }
 
     @Override
-    public GameSession<T> startNewMultiplayerGame(Player player, int code) {
-        List<T> qs = multiplayerSessionService.getQuestions(String.valueOf(code));
+    public GameSession<Question> startNewMultiplayerGame(Player player, int code) {
+        List<Question> qs = multiplayerSessionService.getQuestions(String.valueOf(code));
         if (qs == null)
             return null;
 
-        GameSession<T> sess = new GameSession<T>(player, qs);
+        GameSession<Question> sess = new GameSession<Question>(player, qs);
         sess.setMultiplayer(true);
         return sess;
     }
 
     @Override
-    public void endGame(GameSession<T> gameSession) {
+    public void endGame(GameSession<Question> gameSession) {
         Associations.PlayerGameSession.addGameSession(gameSession.getPlayer(), gameSession);
         gameSession.setFinishTime(LocalDateTime.now());
         gameSessionRepository.save(gameSession);
     }
 
-    @Override
-    public void setQuestionService(QuestionBaseServiceImpl<T, P> questionService) {
-        this.questionService = questionService;
-    }
 
-    @Override
-    public void setMultiplayerSessionService(MultiplayerSessionService<T, P> multiplayerSessionService) {
-        this.multiplayerSessionService = multiplayerSessionService;
-    }
 }

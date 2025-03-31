@@ -49,7 +49,4 @@ public interface GameSessionService<T extends QuestionBase, P extends QuestionBa
 
     void endGame(GameSession<T> gameSession);
 
-    void setQuestionService(QuestionBaseServiceImpl<T,P> questionService);
-
-    void setMultiplayerSessionService(MultiplayerSessionService<T,P> multiplayerSessionService);
 }

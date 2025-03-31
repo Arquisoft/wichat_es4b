@@ -43,10 +43,10 @@ public class PlayersController<T extends QuestionBase, P extends QuestionBaseDto
     private final QuestionServiceImageImpl questionImageService;
     private final SignUpValidator signUpValidator;
     private final EditUserValidator editUserValidator;
-    private final GameSessionService<T,P> gameSessionService;
+    private final GameSessionService<Question,QuestionDto> gameSessionService;
 
     @Autowired
-    public PlayersController(PlayerService playerService, SignUpValidator signUpValidator, GameSessionService<T,P> gameSessionService,
+    public PlayersController(PlayerService playerService, SignUpValidator signUpValidator, GameSessionService<Question,QuestionDto> gameSessionService,
                              RoleService roleService, QuestionServiceImpl questionService, QuestionServiceImageImpl questionImageIService, EditUserValidator editUserValidator) {
         this.playerService = playerService;
         this.signUpValidator =  signUpValidator;
@@ -181,7 +181,7 @@ public class PlayersController<T extends QuestionBase, P extends QuestionBaseDto
             return "redirect:/login";
         }
 
-        Page<GameSession<T>> ranking = gameSessionService.getPlayerRanking(pageable, p);
+        Page<GameSession<Question>> ranking = gameSessionService.getPlayerRanking(pageable, p);
 
         model.addAttribute("ranking", ranking.getContent());
         model.addAttribute("page", ranking);

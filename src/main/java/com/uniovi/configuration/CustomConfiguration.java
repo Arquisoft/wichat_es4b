@@ -51,8 +51,8 @@ public class CustomConfiguration implements WebMvcConfigurer {
     @Bean
     public ApplicationRunner init(QuestionGeneratorService questionGeneratorService, QuestionImageGeneratorService questionImageGeneratorService) {
         return args -> {
-            questionGeneratorService.generateQuestions();
-            questionImageGeneratorService.generateQuestions();
+//            questionGeneratorService.generateQuestions();
+//            questionImageGeneratorService.generateQuestions();
         };
     }
 }

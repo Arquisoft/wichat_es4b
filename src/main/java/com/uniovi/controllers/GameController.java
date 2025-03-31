@@ -27,19 +27,17 @@ import java.util.*;
 public class GameController{
     private static final String GAMESESSION_STR = "gameSession";
     private final QuestionServiceImpl questionService;
-    private final GameSessionImpl<Question, QuestionDto> gameSessionService;
+    private final GameSessionImpl gameSessionService;
     private final PlayerServiceImpl<Question, QuestionDto> playerService;
 
     private final MultiplayerSessionService<Question, QuestionDto> multiplayerSessionService;
 
-    public GameController(QuestionServiceImpl questionService, GameSessionImpl<Question,QuestionDto> gameSessionService,
+    public GameController(QuestionServiceImpl questionService, GameSessionImpl gameSessionService,
                           PlayerServiceImpl<Question, QuestionDto> playerService, MultiplayerSessionService<Question, QuestionDto> multiplayerSessionService) {
         this.questionService = questionService;
         this.playerService = playerService;
         multiplayerSessionService.setQuestionService(questionService);
         this.multiplayerSessionService = multiplayerSessionService;
-        gameSessionService.setQuestionService(questionService);
-        gameSessionService.setMultiplayerSessionService(multiplayerSessionService);
         this.gameSessionService = gameSessionService;
     }
 
@@ -234,7 +232,7 @@ public class GameController{
     @RequestMapping("/game/update")
     public String updateGame(Model model, HttpSession session, Principal principal) {
         GameSession<Question> gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
-        QuestionBase nextQuestion = gameSession.getCurrentQuestion();
+        Question nextQuestion = gameSession.getCurrentQuestion();
         if (nextQuestion == null && gameSession.isMultiplayer()) {
             int code = Integer.parseInt((String) session.getAttribute("multiplayerCode"));
             List<Player> players = playerService.getUsersByMultiplayerCode(code);
