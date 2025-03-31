@@ -1,7 +1,9 @@
 package com.uniovi.components.generators;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.uniovi.entities.*;
+import com.uniovi.entities.AnswerImage;
+import com.uniovi.entities.Category;
+import com.uniovi.entities.QuestionImage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Random;
 
 public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
+
     private final JsonNode jsonNode;
     private final String languagePlaceholder;
     private final String questionImagePlaceholder;
@@ -59,7 +62,7 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
         return this.generateQuestionImage(questionImage, cat);
     }
 
-    private List<QuestionImage> generateQuestionImage(JsonNode questionImage, Category cat) throws IOException, InterruptedException {
+    private List<QuestionImage> generateQuestionImage(JsonNode questionImage, Category cat) {
         // Get the SPARQL query from the JSON
         String query = questionImage.get("sparqlQuery").textValue();
 

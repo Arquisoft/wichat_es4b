@@ -1,14 +1,14 @@
 package com.uniovi.services;
 
 import com.uniovi.entities.Player;
-import com.uniovi.entities.Question;
+import com.uniovi.entities.abstracts.AbstractQuestion;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
 @Service
-public interface MultiplayerSessionService {
+public interface MultiplayerSessionService<T extends AbstractQuestion<?>> {
 
     Map<Player, Integer> getPlayersWithScores(int multiplayerCode);
     void multiCreate(String code, Long id);
@@ -19,5 +19,5 @@ public interface MultiplayerSessionService {
 
     boolean existsCode(String code);
 
-    List<Question> getQuestions(String code);
+    List<T> getQuestions(String code);
 }

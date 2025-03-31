@@ -9,7 +9,7 @@ import org.springframework.validation.Validator;
 
 @Component
 public class SignUpValidator implements Validator {
-    private PlayerService playerService;
+    private final PlayerService playerService;
 
     public SignUpValidator(PlayerService playerService) {
         this.playerService = playerService;
