@@ -12,13 +12,13 @@
                 </div>
         </div>
         <button id="continueBtn" class="prueba btn btn-primary btn-block m-2 rounded" th:text="#{game.continue}"></button>
-    </div>
-    <div id="bottomGamePart">
-        <div id="hintContainer">
+        <div id="bottomGamePart">
+            <div id="hintContainer">
             <textarea th:fragment="hintBox" id="hintBox" class="form-control" rows="3" readonly
-              placeholder="Aquí aparecerán las pistas..."></textarea>
-            <button id="hintButton" class="btn btn-warning mt-2">Pedir pista</button>
-        </div>
+                      placeholder="Aquí aparecerán las pistas..."></textarea>
+                <button id="hintButton" class="btn btn-warning mt-2" onclick="disableHintButton()">Pedir pista</button>
+            </div>
+    </div>
         <div th:replace="~{game/image/fragments/stopwatch}"></div>
         <script th:inline="javascript" >
             /*<![CDATA[*/
@@ -32,6 +32,16 @@
                     })
                     .catch(error => console.error("Error al obtener la pista:", error));
             });
+
+            function disableHintButton() {
+                let button = document.getElementById("hintButton");
+                button.disabled = true; // Desactiva el botón
+                button.style.opacity = 0.5; // Reduce la opacidad para indicar que está deshabilitado
+                setTimeout(() => {
+                    button.disabled = false; // Lo reactiva después de 10s
+                    button.style.opacity = 1; // Restablece la opacidad
+                }, 10000);
+            }
 
             function initiateGameCounters() {
                 let timeoutId = -1;

@@ -5,11 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.uniovi.configuration.SecurityConfig;
 import com.uniovi.dto.RoleDto;
-import com.uniovi.entities.Associations;
-import com.uniovi.entities.GameSession;
-import com.uniovi.entities.Player;
-import com.uniovi.entities.Role;
+import com.uniovi.entities.*;
 import com.uniovi.services.*;
+import com.uniovi.services.impl.GameSessionImageImpl;
 import com.uniovi.services.impl.PlayerServiceImageImpl;
 import com.uniovi.validators.EditUserValidator;
 import com.uniovi.validators.SignUpValidator;
@@ -21,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,8 +30,10 @@ import com.uniovi.dto.PlayerDto;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class PlayersController {
@@ -43,10 +44,11 @@ public class PlayersController {
     private final SignUpValidator signUpValidator;
     private final EditUserValidator editUserValidator;
     private final GameSessionService gameSessionService;
+    private final GameSessionImageImpl gameSessionImageImpl;
 
     @Autowired
     public PlayersController(PlayerService playerService, SignUpValidator signUpValidator, GameSessionService gameSessionService,
-                             RoleService roleService, QuestionService questionService, EditUserValidator editUserValidator, PlayerServiceImageImpl playerServiceImageImpl) {
+                             RoleService roleService,GameSessionImageImpl gameSessionImageImpl, QuestionService questionService, EditUserValidator editUserValidator, PlayerServiceImageImpl playerServiceImageImpl) {
         this.playerService = playerService;
         this.signUpValidator =  signUpValidator;
         this.gameSessionService = gameSessionService;
@@ -54,6 +56,7 @@ public class PlayersController {
         this.questionService = questionService;
         this.editUserValidator = editUserValidator;
         this.playerServiceImageImpl = playerServiceImageImpl;
+        this.gameSessionImageImpl = gameSessionImageImpl;
     }
 
     @RequestMapping("/signup")
@@ -165,7 +168,18 @@ public class PlayersController {
     public String showGlobalRanking(Pageable pageable, Model model) {
         Page<Object[]> ranking = gameSessionService.getGlobalRanking(pageable);
 
-        model.addAttribute("ranking", ranking.getContent());
+        model.addAttribute("ranking", ranking.getContent() );
+        model.addAttribute("page", ranking);
+        model.addAttribute("num", pageable.getPageSize());
+
+        return "ranking/globalRanking";
+    }
+
+    @RequestMapping("/ranking/image/global")
+    public String showGlobalImageRanking(Pageable pageable, Model model) {
+        Page<Object[]> ranking= gameSessionImageImpl.getGlobalRanking(pageable);
+
+        model.addAttribute("ranking", ranking.getContent() );
         model.addAttribute("page", ranking);
         model.addAttribute("num", pageable.getPageSize());
 
@@ -177,9 +191,11 @@ public class PlayersController {
         Optional<Player> player = playerService.getUserByUsername(principal.getName());
         Player p = player.orElse(null);
 
+
         if (p == null) {
             return "redirect:/login";
         }
+
 
         Page<GameSession> ranking = gameSessionService.getPlayerRanking(pageable, p);
 
@@ -188,6 +204,40 @@ public class PlayersController {
         model.addAttribute("num", pageable.getPageSize());
 
         return "ranking/playerRanking";
+    }
+
+    @RequestMapping("/ranking/image/local")
+    public String showPlayerImageRanking(Pageable pageable, Model model, Principal principal) {
+        Optional<PlayerImage> playerI = playerServiceImageImpl.getUserByUsername(principal.getName());
+        PlayerImage p2 = playerI.orElse(null);
+
+
+        if (p2 == null) {
+            return "redirect:/login";
+        }
+
+        Page<GameSessionImage> ranking = gameSessionImageImpl.getPlayerRanking(pageable, p2);
+
+        model.addAttribute("ranking", ranking.getContent());
+        model.addAttribute("page", ranking);
+        model.addAttribute("num", pageable.getPageSize());
+
+        return "ranking/playerRanking";
+    }
+
+    private Page<Object[]> mergeRankings(Page<Object[]> ranking, Page<Object[]> ranking2, Pageable pageable) {
+        // Convertimos los Page en Listas
+        List<Object[]> mergedList = new ArrayList<>();
+        mergedList.addAll(ranking.getContent());
+        mergedList.addAll(ranking2.getContent());
+
+        // Ordenamos la lista (suponiendo que la columna 1 es la puntuación, ajusta según tu estructura)
+        mergedList = mergedList.stream()
+                .sorted((o1, o2) -> Integer.compare((Integer) o2[1], (Integer) o1[1])) // Orden descendente
+                .collect(Collectors.toList());
+
+        // Convertimos la lista ordenada en un nuevo Page
+        return new PageImpl<>(mergedList, pageable, mergedList.size());
     }
 
     // ----- Admin endpoints -----

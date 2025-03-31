@@ -27,7 +27,7 @@ import java.util.Random;
 
 @Service
 public class QuestionServiceImageImpl {
-    public static final Integer SECONDS_PER_QUESTION = 25;
+    public static final Integer SECONDS_PER_QUESTION = 60;
     private final QuestionImageRepository questionRepository;
     private final CategoryServiceImpl categoryService;
     private final AnswerServiceImageImpl answerService;
