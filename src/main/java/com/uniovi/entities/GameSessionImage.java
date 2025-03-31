@@ -23,7 +23,7 @@ public class GameSessionImage implements JsonEntity, Serializable {
     private Long id;
 
     @ManyToOne
-    private PlayerImage player;
+    private Player player;
 
     private Integer correctQuestions;
     private Integer totalQuestions;
@@ -51,7 +51,7 @@ public class GameSessionImage implements JsonEntity, Serializable {
     @Transient
     private boolean isFinished = false;
 
-    public GameSessionImage(PlayerImage player, List<QuestionImage> questionsImage) {
+    public GameSessionImage(Player player, List<QuestionImage> questionsImage) {
         this.player = player;
         this.questionsToAnswer = questionsImage;
         this.createdAt = LocalDateTime.now();

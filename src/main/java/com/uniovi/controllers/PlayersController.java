@@ -4,13 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.uniovi.configuration.SecurityConfig;
+import com.uniovi.dto.PlayerDto;
 import com.uniovi.dto.RoleDto;
 import com.uniovi.entities.Associations;
 import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Role;
 import com.uniovi.services.*;
-import com.uniovi.services.impl.PlayerServiceImageImpl;
 import com.uniovi.validators.EditUserValidator;
 import com.uniovi.validators.SignUpValidator;
 import jakarta.servlet.ServletException;
@@ -27,18 +27,16 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import com.uniovi.dto.PlayerDto;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class PlayersController {
     private final PlayerService playerService;
     private final RoleService roleService;
-    private final PlayerServiceImageImpl playerServiceImageImpl;
     private final QuestionService questionService;
     private final SignUpValidator signUpValidator;
     private final EditUserValidator editUserValidator;
@@ -46,14 +44,13 @@ public class PlayersController {
 
     @Autowired
     public PlayersController(PlayerService playerService, SignUpValidator signUpValidator, GameSessionService gameSessionService,
-                             RoleService roleService, QuestionService questionService, EditUserValidator editUserValidator, PlayerServiceImageImpl playerServiceImageImpl) {
+                             RoleService roleService, QuestionService questionService, EditUserValidator editUserValidator) {
         this.playerService = playerService;
         this.signUpValidator =  signUpValidator;
         this.gameSessionService = gameSessionService;
         this.roleService = roleService;
         this.questionService = questionService;
         this.editUserValidator = editUserValidator;
-        this.playerServiceImageImpl = playerServiceImageImpl;
     }
 
     @RequestMapping("/signup")
@@ -127,7 +124,6 @@ public class PlayersController {
         }
 
         playerService.addNewPlayer(user);
-        playerServiceImageImpl.addNewPlayer(user);
 
         try {
             request.login(user.getUsername(), user.getPassword());

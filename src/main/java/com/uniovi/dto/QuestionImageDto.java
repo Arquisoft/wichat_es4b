@@ -18,10 +18,10 @@ public class QuestionImageDto {
     private String statement;
 
     @Schema(description = "The options of the questionImage")
-    private List<AnswerImageDto> options;
+    private List<AnswerDto> options;
 
     @Schema(description = "The correct answer of the questionImage", hidden = true)
-    private AnswerImageDto correctAnswer;
+    private AnswerDto correctAnswer;
 
     @Schema(description = "The category of the questionImage")
     private CategoryImageDto category;
@@ -34,8 +34,8 @@ public class QuestionImageDto {
 
     public QuestionImageDto(QuestionImage questionImage) {
         statement = questionImage.getStatement();
-        options = questionImage.getOptions().stream().map(a -> new AnswerImageDto(a.getText(), a.isCorrect())).toList();
-        correctAnswer = new AnswerImageDto(questionImage.getCorrectAnswer().getText(), questionImage.getCorrectAnswer().isCorrect());
+        options = questionImage.getOptions().stream().map(a -> new AnswerDto(a.getText(), a.isCorrect())).toList();
+        correctAnswer = new AnswerDto(questionImage.getCorrectAnswer().getText(), questionImage.getCorrectAnswer().isCorrect());
         category= new CategoryImageDto(questionImage.getCategory().getName(), questionImage.getCategory().getDescription(), new ArrayList<>());
         language = questionImage.getLanguage();
         imageUrl = questionImage.getImageUrl();

@@ -1,7 +1,7 @@
 package com.uniovi.repositories;
 
 import com.uniovi.entities.GameSessionImage;
-import com.uniovi.entities.PlayerImage;
+import com.uniovi.entities.Player;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -13,9 +13,9 @@ public interface GameSessionImageRepository extends CrudRepository<GameSessionIm
 
     List<GameSessionImage> findAll();
 
-    List<GameSessionImage> findAllByPlayer(PlayerImage player);
+    List<GameSessionImage> findAllByPlayer(Player player);
 
     @Query("SELECT gs.player, SUM(gs.score) FROM GameSessionImage gs GROUP BY gs.player ORDER BY SUM(gs.score) DESC")
     Page<Object[]> findTotalScoresByPlayer(Pageable pageable);
-    Page<GameSessionImage> findAllByPlayerOrderByScoreDesc(Pageable pageable, PlayerImage player);
+    Page<GameSessionImage> findAllByPlayerOrderByScoreDesc(Pageable pageable, Player player);
 }

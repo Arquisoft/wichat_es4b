@@ -29,7 +29,7 @@ public class GameSessionImageImpl  {
     }
 
 
-    public List<GameSessionImage> getGameSessionsByPlayer(PlayerImage player) {
+    public List<GameSessionImage> getGameSessionsByPlayer(Player player) {
         return gameSessionRepository.findAllByPlayer(player);
     }
 
@@ -38,17 +38,17 @@ public class GameSessionImageImpl  {
     }
 
 
-    public Page<GameSessionImage> getPlayerRanking(Pageable pageable, PlayerImage player) {
+    public Page<GameSessionImage> getPlayerRanking(Pageable pageable, Player player) {
         return gameSessionRepository.findAllByPlayerOrderByScoreDesc(pageable, player);
     }
 
 
-    public GameSessionImage startNewGame(PlayerImage player) {
+    public GameSessionImage startNewGame(Player player) {
         return new GameSessionImage(player, questionService.getRandomQuestions(NORMAL_GAME_QUESTION_NUM));
     }
 
 
-    public GameSessionImage startNewMultiplayerGame(PlayerImage player, int code) {
+    public GameSessionImage startNewMultiplayerGame(Player player, int code) {
         List<QuestionImage> qs = multiplayerSessionService.getQuestions(String.valueOf(code));
         if (qs == null)
             return null;

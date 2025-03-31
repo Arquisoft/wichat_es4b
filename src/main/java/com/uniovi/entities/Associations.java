@@ -75,78 +75,6 @@ public class Associations {
         }
     }
 
-    public static class PlayerImageRole {
-        /**
-         * Add a new association between a player and a role
-         *
-         * @param player The player
-         * @param role   The role
-         */
-        public static void addRole(PlayerImage player, RoleImage role) {
-            role.getPlayers().add(player);
-            player.getRoles().add(role);
-        }
-
-        /**
-         * Remove an association between a player and a role
-         *
-         * @param player The player
-         * @param role   The role
-         */
-        public static void removeRole(PlayerImage player, RoleImage role) {
-            role.getPlayers().remove(player);
-            player.getRoles().remove(role);
-        }
-    }
-
-    public static class PlayerImageApiKey {
-        /**
-         * Add a new association between a player and an API key
-         *
-         * @param player The player
-         * @param apiKey The API key
-         */
-        public static void addApiKey(PlayerImage player, ApiKeyImage apiKey) {
-            apiKey.setPlayer(player);
-            player.setApiKey(apiKey);
-        }
-
-        /**
-         * Remove an association between a player and an API key
-         *
-         * @param player The player
-         * @param apiKey The API key
-         */
-        public static void removeApiKey(PlayerImage player, ApiKeyImage apiKey) {
-            apiKey.setPlayer(null);
-            player.setApiKey(null);
-        }
-    }
-
-    public static class ApiKeyImageAccessLog {
-        /**
-         * Add a new association between an API key and an access log
-         *
-         * @param apiKey    The API key
-         * @param accessLog The access log
-         */
-        public static void addAccessLog(ApiKeyImage apiKey, RestApiAccessLogImage accessLog) {
-            accessLog.setApiKey(apiKey);
-            apiKey.getAccessLogs().add(accessLog);
-        }
-
-        /**
-         * Remove an association between an API key and an access log
-         *
-         * @param apiKey    The API key
-         * @param accessLog The access log
-         */
-        public static void removeAccessLog(ApiKeyImage apiKey, RestApiAccessLogImage accessLog) {
-            apiKey.getAccessLogs().remove(accessLog);
-            accessLog.setApiKey(null);
-        }
-    }
-
     public static class PlayerGameSession {
         /**
          * Add a new association between a player and a game session
@@ -180,9 +108,9 @@ public class Associations {
          * @param gameSession The game session
          */
 
-        public static void addGameSession(PlayerImage player, GameSessionImage gameSession) {
+        public static void addGameSession(Player player, GameSessionImage gameSession) {
             gameSession.setPlayer(player);
-            player.getGameSessions().add(gameSession);
+            player.getGameSessionsImage().add(gameSession);
         }
 
         /**
@@ -191,8 +119,8 @@ public class Associations {
          * @param player      The player
          * @param gameSession The game session
          */
-        public static void removeGameSession(PlayerImage player, GameSessionImage gameSession) {
-            player.getGameSessions().remove(gameSession);
+        public static void removeGameSession(Player player, GameSessionImage gameSession) {
+            player.getGameSessionsImage().remove(gameSession);
             gameSession.setPlayer(null);
         }
     }

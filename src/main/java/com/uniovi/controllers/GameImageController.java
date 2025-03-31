@@ -2,11 +2,11 @@ package com.uniovi.controllers;
 
 import com.uniovi.entities.GameSessionImage;
 import com.uniovi.entities.Player;
-import com.uniovi.entities.PlayerImage;
 import com.uniovi.entities.QuestionImage;
+import com.uniovi.services.PlayerService;
 import com.uniovi.services.impl.GameSessionImageImpl;
 import com.uniovi.services.impl.MultiplayerSessionImageImpl;
-import com.uniovi.services.impl.PlayerServiceImageImpl;
+import com.uniovi.services.impl.PlayerServiceImpl;
 import com.uniovi.services.impl.QuestionServiceImageImpl;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -23,20 +23,19 @@ import java.util.*;
 @Controller
 public class GameImageController {
     private static final String GAMESESSION_STR = "gameSessionImage";
-    private final QuestionServiceImageImpl questionService;
-    private final GameSessionImageImpl gameSessionImpl;
-    private final PlayerServiceImageImpl playerService;
 
+
+    private final GameSessionImageImpl gameSessionImpl;
+    private final QuestionServiceImageImpl questionService;
+    private final PlayerService playerService;
     private final MultiplayerSessionImageImpl multiplayerSessionImageImpl;
-    private final QuestionServiceImageImpl questionServiceImageImpl;
 
     public GameImageController(QuestionServiceImageImpl questionImageService, GameSessionImageImpl gameSessionImageImpl,
-                               PlayerServiceImageImpl playerService, MultiplayerSessionImageImpl multiplayerSessionImageImpl, QuestionServiceImageImpl questionServiceImageImpl) {
+                               PlayerServiceImpl playerService, MultiplayerSessionImageImpl multiplayerSessionImageImpl) {
         this.questionService = questionImageService;
         this.gameSessionImpl = gameSessionImageImpl;
         this.playerService = playerService;
         this.multiplayerSessionImageImpl = multiplayerSessionImageImpl;
-        this.questionServiceImageImpl = questionServiceImageImpl;
     }
 
     /**
@@ -76,12 +75,12 @@ public class GameImageController {
             return "game/image/multiplayerGame";
         }
 
-        Optional<PlayerImage> player = playerService.getUserByUsername(principal.getName());
+        Optional<Player> player = playerService.getUserByUsername(principal.getName());
         if (player.isEmpty()) {
             // Handle the case where the player is not found
             return "redirect:/";
         }
-        PlayerImage p = player.get();
+        Player p = player.get();
         if (playerService.changeMultiplayerCode(p.getId(),code)) {
             multiplayerSessionImageImpl.addToLobby(code,p.getId());
             model.addAttribute("multiplayerGameCodeImage",code);
@@ -94,12 +93,12 @@ public class GameImageController {
 
     @RequestMapping("/image/multiplayerGame/createGame")
     public String createMultiplayerGame(HttpSession session, Principal principal, Model model) {
-        Optional<PlayerImage> player = playerService.getUserByUsername(principal.getName());
+        Optional<Player> player = playerService.getUserByUsername(principal.getName());
         if (player.isEmpty()) {
             // Handle the case where the player is not found
             return "redirect:/";
         }
-        PlayerImage p = player.get();
+        Player p = player.get();
         String code="" + playerService.createMultiplayerGame(p.getId());//playerService.createMultiplayerGameImage(p.getId())
         multiplayerSessionImageImpl.multiCreate(code,p.getId());
         session.setAttribute("multiplayerCodeImage",code);
@@ -125,7 +124,7 @@ public class GameImageController {
                 return "game/image/fragments/gameFinished";
             }
         } else {
-            Optional<PlayerImage> player = playerService.getUserByUsername(principal.getName());
+            Optional<Player> player = playerService.getUserByUsername(principal.getName());
             if (!player.isPresent()) {
                 return "redirect:/";
             }
@@ -180,7 +179,7 @@ public class GameImageController {
     @RequestMapping("/game/image/lobby")
     public String createLobby( HttpSession session, Model model) {
         int code = Integer.parseInt((String)session.getAttribute("multiplayerCodeImage"));
-        List<PlayerImage> players = playerService.getUsersByMultiplayerCode(code);
+        List<Player> players = playerService.getUsersByMultiplayerCode(code);
         model.addAttribute("playersImage",players);
         model.addAttribute("codeImage",session.getAttribute("multiplayerCodeImage"));
         return "game/image/lobby";
@@ -234,7 +233,7 @@ public class GameImageController {
         QuestionImage nextQuestionImage = gameSessionImage.getCurrentQuestionImage();
         if (nextQuestionImage == null && gameSessionImage.isMultiplayer()) {
             int code = Integer.parseInt((String) session.getAttribute("multiplayerCodeImage"));
-            List<PlayerImage> players = playerService.getUsersByMultiplayerCode(code);
+            List<Player> players = playerService.getUsersByMultiplayerCode(code);
 
             if (!gameSessionImage.isFinished()) {
                 gameSessionImpl.endGame(gameSessionImage);
@@ -243,8 +242,8 @@ public class GameImageController {
                 model.addAttribute("codeImage", session.getAttribute("multiplayerCodeImage"));
                 gameSessionImage.setFinished(true);
 
-                Optional<PlayerImage> player = playerService.getUserByUsername(principal.getName());
-                PlayerImage p = player.orElse(null);
+                Optional<Player> player = playerService.getUserByUsername(principal.getName());
+                Player p = player.orElse(null);
                 playerService.setScoreMultiplayerCode(p.getId(),"" + gameSessionImage.getScore());
                 multiplayerSessionImageImpl.changeScore(p.getMultiplayerCode()+"",p.getId(),gameSessionImage.getScore());
             } else {
@@ -300,16 +299,16 @@ public class GameImageController {
     @RequestMapping("/game/image/hint/{id}")
     @ResponseBody
     public String getImageQuestionHint(@PathVariable Long id) {
-        Optional<QuestionImage> questionOpt = questionServiceImageImpl.getQuestion(id);
+        Optional<QuestionImage> questionOpt = questionService.getQuestion(id);
         if (questionOpt.isPresent()) {
             QuestionImage question = questionOpt.get();
-            return questionServiceImageImpl.getHintForImageQuestion(question); // Devuelve solo la pista como String
+            return questionService.getHintForImageQuestion(question); // Devuelve solo la pista como String
         }
         return "No se encontró ninguna pista para esta pregunta.";
     }
 
-    private PlayerImage getLoggedInPlayer(Principal principal) {
-        Optional<PlayerImage> player = playerService.getUserByUsername(principal.getName());
+    private Player getLoggedInPlayer(Principal principal) {
+        Optional<Player> player = playerService.getUserByUsername(principal.getName());
         return player.orElse(null);
     }
 
