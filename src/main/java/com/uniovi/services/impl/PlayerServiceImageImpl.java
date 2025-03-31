@@ -2,14 +2,9 @@ package com.uniovi.services.impl;
 
 import com.uniovi.dto.PlayerDto;
 import com.uniovi.dto.PlayerImageDto;
-import com.uniovi.dto.RoleDto;
 import com.uniovi.dto.RoleImageDto;
 import com.uniovi.entities.*;
 import com.uniovi.repositories.PlayerImageRepository;
-import com.uniovi.repositories.PlayerRepository;
-import com.uniovi.services.MultiplayerSessionService;
-import com.uniovi.services.PlayerService;
-import com.uniovi.services.RoleService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;

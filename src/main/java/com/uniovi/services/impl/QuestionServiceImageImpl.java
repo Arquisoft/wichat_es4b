@@ -1,16 +1,18 @@
 package com.uniovi.services.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.uniovi.dto.QuestionDto;
 import com.uniovi.dto.QuestionImageDto;
-import com.uniovi.entities.*;
+import com.uniovi.entities.AnswerImage;
+import com.uniovi.entities.Associations;
+import com.uniovi.entities.Category;
+import com.uniovi.entities.QuestionImage;
 import com.uniovi.repositories.AnswerImageRepository;
 import com.uniovi.repositories.QuestionImageRepository;
-import com.uniovi.services.*;
+import com.uniovi.services.LlmService;
+import com.uniovi.services.QuestionImageGeneratorService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +29,7 @@ import java.util.Random;
 public class QuestionServiceImageImpl {
     public static final Integer SECONDS_PER_QUESTION = 25;
     private final QuestionImageRepository questionRepository;
-    private final CategoryServiceImageImpl categoryService;
+    private final CategoryServiceImpl categoryService;
     private final AnswerServiceImageImpl answerService;
     private final AnswerImageRepository answerRepository;
     private final EntityManager entityManager;
@@ -38,7 +40,7 @@ public class QuestionServiceImageImpl {
 
     private final Random random = new SecureRandom();
 
-    public QuestionServiceImageImpl(QuestionImageRepository questionRepository, CategoryServiceImageImpl categoryService,
+    public QuestionServiceImageImpl(QuestionImageRepository questionRepository, CategoryServiceImpl categoryService,
                                     AnswerServiceImageImpl answerService, AnswerImageRepository answerRepository,
                                     EntityManager entityManager, LlmService llmService) {
         this.questionRepository = questionRepository;
