@@ -1,10 +1,7 @@
 package com.uniovi.services.impl;
 
 import com.uniovi.entities.Category;
-import com.uniovi.entities.CategoryImage;
-import com.uniovi.repositories.CategoryImageRepository;
 import com.uniovi.repositories.CategoryRepository;
-import com.uniovi.services.CategoryService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
@@ -13,31 +10,31 @@ import java.util.*;
 @Service
 public class CategoryServiceImageImpl {
 
-    private final CategoryImageRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-    public CategoryServiceImageImpl(CategoryImageRepository categoryRepository) {
+    public CategoryServiceImageImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
 
 
-    public void addNewCategory(CategoryImage category) {
+    public void addNewCategory(Category category) {
         categoryRepository.save(category);
     }
 
 
-    public List<CategoryImage> getAllCategories() {
-        List<CategoryImage> l = new ArrayList<>();
+    public List<Category> getAllCategories() {
+        List<Category> l = new ArrayList<>();
         categoryRepository.findAll().forEach(l::add);
         return l;
     }
 
 
-    public Optional<CategoryImage> getCategory(Long id) {
+    public Optional<Category> getCategory(Long id) {
         return categoryRepository.findById(id);
     }
 
 
-    public CategoryImage getCategoryByName(String name) {
+    public Category getCategoryByName(String name) {
         return categoryRepository.findByName(name);
     }
 
@@ -50,7 +47,7 @@ public class CategoryServiceImageImpl {
         // Add categories, ensuring there's only 1 of them always
         for (Map.Entry<String, String> category : CATEGORIES) {
             if (categoryRepository.findByName(category.getKey())==null) {
-                addNewCategory(new CategoryImage(category.getKey(), category.getValue()));
+                addNewCategory(new Category(category.getKey(), category.getValue()));
             }
         }
     }

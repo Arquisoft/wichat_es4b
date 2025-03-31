@@ -48,7 +48,7 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
         JsonNode categories = jsonNode.findValue("categories");
         for(JsonNode category : categories){
             String categoryName = category.get("name").textValue();
-            CategoryImage cat = new CategoryImage(categoryName);
+            Category cat = new Category(categoryName);
             JsonNode questionsImageNode = category.findValue("questions");
             for(JsonNode questionImage : questionsImageNode){
                 questionsImage.addAll(this.generateQuestionImage(questionImage, cat));
@@ -60,12 +60,12 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
 
 
     @Override
-    public List<QuestionImage> getQuestions(String language, JsonNode questionImage, CategoryImage cat) throws IOException, InterruptedException {
+    public List<QuestionImage> getQuestions(String language, JsonNode questionImage, Category cat) throws IOException, InterruptedException {
         this.language = language;
         return this.generateQuestionImage(questionImage, cat);
     }
 
-    private List<QuestionImage> generateQuestionImage(JsonNode questionImage, CategoryImage cat) throws IOException, InterruptedException {
+    private List<QuestionImage> generateQuestionImage(JsonNode questionImage, Category cat) throws IOException, InterruptedException {
         // Get the SPARQL query from the JSON
         String query = questionImage.get("sparqlQuery").textValue();
 

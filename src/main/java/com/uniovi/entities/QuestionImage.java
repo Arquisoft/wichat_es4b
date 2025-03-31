@@ -36,28 +36,28 @@ public class QuestionImage implements JsonEntity {
     private AnswerImage correctAnswer;
 
     @ManyToOne
-    private CategoryImage category;
+    private Category category;
 
     private String language;
 
     private String imageUrl;
 
-    public QuestionImage(String statement, List<AnswerImage> optionsImage, AnswerImage correctAnswerImage, CategoryImage categoryImage, String language, String imageUrl) {
+    public QuestionImage(String statement, List<AnswerImage> optionsImage, AnswerImage correctAnswerImage, Category category, String language, String imageUrl) {
         Assert.isTrue(optionsImage.contains(correctAnswerImage), "Correct answer must be one of the options");
         this.statement = statement;
         Associations.QuestionImageAnswers.addAnswer(this, optionsImage);
         this.correctAnswer = correctAnswerImage;
-        this.category = categoryImage;
+        this.category = category;
         this.language = language;
         this.imageUrl = imageUrl;
     }
 
-    public QuestionImage(String statement, List<AnswerImage> optionsImage, AnswerImage correctAnswerImage, CategoryImage categoryImage, Language language,String imageUrl) {
+    public QuestionImage(String statement, List<AnswerImage> optionsImage, AnswerImage correctAnswerImage, Category category, Language language, String imageUrl) {
         Assert.isTrue(optionsImage.contains(correctAnswerImage), "Correct answer must be one of the options");
         this.statement = statement;
         Associations.QuestionImageAnswers.addAnswer(this, optionsImage);
         this.correctAnswer = correctAnswerImage;
-        this.category = categoryImage;
+        this.category = category;
         this.language = language.getCode();
         this.imageUrl = imageUrl;
     }
@@ -66,15 +66,15 @@ public class QuestionImage implements JsonEntity {
         options.add(optionImage);
     }
 
-    public void removeOption(AnswerImage optionImage){
+    public void removeOption(AnswerImage optionImage) {
         options.remove(optionImage);
     }
 
-    public AnswerImage getOption(int index){
+    public AnswerImage getOption(int index) {
         return options.get(index);
     }
 
-    public AnswerImage getOptions(String answerImage){
+    public AnswerImage getOptions(String answerImage) {
         for (AnswerImage optionImage : options) {
             if (optionImage.getText().equals(answerImage)) {
                 return optionImage;
@@ -83,11 +83,11 @@ public class QuestionImage implements JsonEntity {
         return null;
     }
 
-    public boolean isCorrectAnswer(AnswerImage answerImage){
+    public boolean isCorrectAnswer(AnswerImage answerImage) {
         return answerImage.isCorrect();
     }
 
-    public List<AnswerImage> returnScrambledOptions(){
+    public List<AnswerImage> returnScrambledOptions() {
         Collections.shuffle(options);
         return options;
     }
@@ -130,13 +130,13 @@ public class QuestionImage implements JsonEntity {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode
                 obj = mapper.createObjectNode()
-                    .put("id", id)
-                    .put("statement", statement)
-                    .put("imageUrl", imageUrl);
-                obj .put("category", category.toJson());
+                .put("id", id)
+                .put("statement", statement)
+                .put("imageUrl", imageUrl);
+        obj.put("category", category.toJson());
         ArrayNode optionsArray = mapper.createArrayNode();
         options.forEach(optionImage -> optionsArray.add(optionImage.toJson()));
-        obj         .put("options", optionsArray);
+        obj.put("options", optionsArray);
         return obj;
     }
 }

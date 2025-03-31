@@ -56,9 +56,9 @@ public class QuestionServiceImageImpl {
 
 
     public QuestionImage addNewQuestion(QuestionImageDto questionImage) {
-        CategoryImage category = categoryService.getCategoryByName(questionImage.getCategory().getName());
+        Category category = categoryService.getCategoryByName(questionImage.getCategory().getName());
         if (category == null) {
-            categoryService.addNewCategory(new CategoryImage(questionImage.getCategory().getName(), questionImage.getCategory().getDescription()));
+            categoryService.addNewCategory(new Category(questionImage.getCategory().getName(), questionImage.getCategory().getDescription()));
             category = categoryService.getCategoryByName(questionImage.getCategory().getName());
         }
 
@@ -119,7 +119,7 @@ public class QuestionServiceImageImpl {
     }
 
 
-    public List<QuestionImage> getQuestionsByCategory(Pageable pageable, CategoryImage category, String lang) {
+    public List<QuestionImage> getQuestionsByCategory(Pageable pageable, Category category, String lang) {
         return questionRepository.findByCategoryAndLanguage(pageable, category, lang).toList();
     }
 
@@ -136,9 +136,9 @@ public class QuestionServiceImageImpl {
             QuestionImage question = q.get();
             question.setStatement(questionDto.getStatement());
             question.setLanguage(questionDto.getLanguage());
-            CategoryImage category = categoryService.getCategoryByName(questionDto.getCategory().getName());
+            Category category = categoryService.getCategoryByName(questionDto.getCategory().getName());
             if (category == null) {
-                categoryService.addNewCategory(new CategoryImage(questionDto.getCategory().getName(), questionDto.getCategory().getDescription()));
+                categoryService.addNewCategory(new Category(questionDto.getCategory().getName(), questionDto.getCategory().getDescription()));
                 category = categoryService.getCategoryByName(questionDto.getCategory().getName());
             }
 

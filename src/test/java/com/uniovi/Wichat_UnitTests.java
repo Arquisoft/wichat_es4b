@@ -1868,7 +1868,7 @@ class Wichat_UnitTests {
         List<AnswerImage> lanswer = Arrays.asList(a1, a2, a3, a4);
         QuestionImage questionImage =
                 new QuestionImage("", lanswer, a4,
-                        new CategoryImage(), "es","https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
+                        new Category(), "es","https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
         String answer = questionServiceImageImpl.getHintForImageQuestion(questionImage);
         Assertions.assertNotNull(answer);
         Assertions.assertFalse(answer.isEmpty());

@@ -1,6 +1,6 @@
 package com.uniovi.entities;
 
-import java.util.*;
+import java.util.List;
 
 public class Associations {
     public static class PlayerRole {
@@ -290,21 +290,21 @@ public class Associations {
          * Add a new association between a question and a category
          *
          * @param questionImage The question
-         * @param categoryImage The category
+         * @param category The category
          */
-        public static void addCategory(QuestionImage questionImage, CategoryImage categoryImage) {
-            questionImage.setCategory(categoryImage);
-            categoryImage.getQuestions().add(questionImage);
+        public static void addCategory(QuestionImage questionImage, Category category) {
+            questionImage.setCategory(category);
+            category.getQuestionsImageGame().add(questionImage);
         }
 
         /**
          * Remove an association between a question and a category
          *
          * @param questionImage The question
-         * @param categoryImage The category
+         * @param category The category
          */
-        public static void removeCategory(QuestionImage questionImage, CategoryImage categoryImage) {
-            categoryImage.getQuestions().remove(questionImage);
+        public static void removeCategory(QuestionImage questionImage, Category category) {
+            category.getQuestions().remove(questionImage);
             questionImage.setCategory(null);
         }
     }
