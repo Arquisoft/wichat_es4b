@@ -6,14 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.uniovi.dto.AnswerDto;
-import com.uniovi.dto.QuestionBaseDto;
 import com.uniovi.dto.QuestionDto;
 import com.uniovi.entities.*;
 import com.uniovi.services.ApiKeyService;
-import com.uniovi.services.QuestionService;
 import com.uniovi.services.RestApiService;
 import com.uniovi.services.impl.QuestionServiceImpl;
-import com.uniovi.services.impl.RestApiServiceImpl;
 import com.uniovi.validators.QuestionValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,18 +36,20 @@ import java.util.Map;
 
 @Tag(name = "Questions API", description = "API for managing questions")
 @RestController
-public class QuestionsApiController {
+public class QuestionsApiController<T extends QuestionBase> {
     private final ApiKeyService apiKeyService;
-    private final RestApiServiceImpl<Question, QuestionDto> restApiService;
+    private RestApiService<T> restApiService;
     private final QuestionServiceImpl questionService;
     private final QuestionValidator questionValidator;
 
     @Autowired
-    public QuestionsApiController(ApiKeyService apiKeyService, QuestionServiceImpl questionService, QuestionValidator questionValidator, RestApiServiceImpl<Question, QuestionDto> restApiService) {
+    public QuestionsApiController(ApiKeyService apiKeyService, QuestionServiceImpl questionService, QuestionValidator questionValidator) {
         this.apiKeyService = apiKeyService;
         this.questionService = questionService;
         this.questionValidator = questionValidator;
-        restApiService.setQuestionService(questionService);
+    }
+
+    protected void setRestApiService(RestApiService<T> restApiService) {
         this.restApiService = restApiService;
     }
 
@@ -124,8 +123,8 @@ public class QuestionsApiController {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode root = objectMapper.createObjectNode();
         ArrayNode arrayNode = objectMapper.createArrayNode();
-        List<Question> questions = restApiService.getQuestions(params, pageable);
-        for (Question question : questions) {
+        List<T> questions = restApiService.getQuestions(params, pageable);
+        for (T question : questions) {
             arrayNode.add(question.toJson());
         }
         root.set("questions", arrayNode);
