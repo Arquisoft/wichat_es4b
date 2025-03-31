@@ -3,10 +3,12 @@ package com.uniovi;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.uniovi.dto.PlayerDto;
+import com.uniovi.dto.QuestionDto;
 import com.uniovi.dto.RoleDto;
 import com.uniovi.entities.*;
 import com.uniovi.repositories.*;
 import com.uniovi.services.*;
+import com.uniovi.services.impl.MultiplayerSessionImpl;
 import com.uniovi.services.impl.QuestionServiceImageImpl;
 import com.uniovi.services.impl.QuestionServiceImpl;
 import org.json.JSONArray;
@@ -54,11 +56,11 @@ class Wichat_UnitTests {
     @Autowired
     private RoleService roleService;
     @Autowired
-    private GameSessionService gameSessionService;
+    private GameSessionService<Question, QuestionDto> gameSessionService;
     @Autowired
     private InsertSampleDataService sampleDataService;
     @Autowired
-    private MultiplayerSessionService multiplayerSessionService;
+    private MultiplayerSessionImpl<Question, QuestionDto> multiplayerSessionService;
     @Autowired
     private QuestionGeneratorService questionGeneratorService;
 
@@ -73,7 +75,7 @@ class Wichat_UnitTests {
     @Autowired
     CategoryRepository categoryRepository;
     @Autowired
-    GameSessionRepository gameSessionRepository;
+    GameSessionRepository<Question> gameSessionRepository;
     @Autowired
     QuestionRepository questionRepository;
     @Autowired
@@ -1235,7 +1237,7 @@ class Wichat_UnitTests {
         gameSessionRepository.save(gameSession1);
         gameSessionRepository.save(gameSession2);
 
-        List<GameSession> result = gameSessionService.getGameSessions();
+        List<GameSession<Question>> result = gameSessionService.getGameSessions();
 
         Assertions.assertEquals(gameSessions.size(), result.size());
     }
@@ -1243,7 +1245,7 @@ class Wichat_UnitTests {
     @Test
     @Order(75)
     void GameSessionImpl_getGameSessions_ReturnsEmptyList() {
-        List<GameSession> result = gameSessionService.getGameSessions();
+        List<GameSession<Question>> result = gameSessionService.getGameSessions();
 
         Assertions.assertEquals(0, result.size());
     }
@@ -1263,7 +1265,7 @@ class Wichat_UnitTests {
         gameSessionRepository.save(gameSession1);
         gameSessionRepository.save(gameSession2);
 
-        List<GameSession> result = gameSessionService.getGameSessionsByPlayer(player);
+        List<GameSession<Question>> result = gameSessionService.getGameSessionsByPlayer(player);
 
         Assertions.assertEquals(gameSessions.size(), result.size());
     }
@@ -1274,7 +1276,7 @@ class Wichat_UnitTests {
         Player p = new Player("nonExists", "aabb@gmail.com", "abbacdc");
         playerRepository.save(p);
 
-        List<GameSession> result = gameSessionService.getGameSessionsByPlayer(p);
+        List<GameSession<Question>> result = gameSessionService.getGameSessionsByPlayer(p);
 
         Assertions.assertEquals(0, result.size());
     }
