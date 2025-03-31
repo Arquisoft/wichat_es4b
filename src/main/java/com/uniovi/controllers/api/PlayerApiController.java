@@ -6,10 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.uniovi.dto.PlayerDto;
+import com.uniovi.dto.QuestionBaseDto;
 import com.uniovi.entities.*;
 import com.uniovi.services.ApiKeyService;
 import com.uniovi.services.PlayerService;
 import com.uniovi.services.RestApiService;
+import com.uniovi.services.impl.PlayerServiceImpl;
+import com.uniovi.services.impl.RestApiServiceImpl;
 import com.uniovi.validators.SignUpValidator;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,25 +44,21 @@ servers = {
 })
 @Tag(name = "Player API", description = "API for managing players")
 @RestController
-public class PlayerApiBaseController<T extends QuestionBase> {
+public class PlayerApiController<T extends QuestionBase, P extends QuestionBaseDto> {
     private final ApiKeyService apiKeyService;
-    private RestApiService<T> restApiService;
+    private final RestApiServiceImpl<T,P> restApiService;
     private final SignUpValidator signUpValidator;
-    private PlayerService playerService;
+    private final PlayerServiceImpl<T,P> playerService;
+
 
     @Autowired
-    public PlayerApiBaseController(ApiKeyService apiKeyService, SignUpValidator signUpValidator) {
+    public PlayerApiController(ApiKeyService apiKeyService, SignUpValidator signUpValidator, PlayerServiceImpl<T,P> playerService, RestApiServiceImpl<T,P> restApiService) {
         this.apiKeyService = apiKeyService;
         this.signUpValidator = signUpValidator;
-    }
-
-    protected void setPlayerService(PlayerService playerService) {
         this.playerService = playerService;
-    }
-
-    protected void setRestApiService(RestApiService<T> restApiService) {
         this.restApiService = restApiService;
     }
+
 
     @Operation(summary = "Get players by various filters", description = "Fetch players based on the provided parameters such as username, email, id, roles.")
     @Parameters({
