@@ -1,12 +1,8 @@
 package com.uniovi.services.impl;
 
-import com.uniovi.entities.Answer;
 import com.uniovi.entities.AnswerImage;
-import com.uniovi.entities.Question;
 import com.uniovi.entities.QuestionImage;
 import com.uniovi.repositories.AnswerImageRepository;
-import com.uniovi.repositories.AnswerRepository;
-import com.uniovi.services.AnswerService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

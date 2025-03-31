@@ -15,9 +15,6 @@ import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -32,9 +29,6 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
-
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Tag("unit")
@@ -1868,7 +1862,7 @@ class Wichat_UnitTests {
         List<AnswerImage> lanswer = Arrays.asList(a1, a2, a3, a4);
         QuestionImage questionImage =
                 new QuestionImage("", lanswer, a4,
-                        new CategoryImage(), "es","https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
+                        new Category(), "es","https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
         String answer = questionServiceImageImpl.getHintForImageQuestion(questionImage);
         Assertions.assertNotNull(answer);
         Assertions.assertFalse(answer.isEmpty());

@@ -1,12 +1,8 @@
 package com.uniovi.services.impl;
 
-import com.uniovi.dto.RoleDto;
 import com.uniovi.dto.RoleImageDto;
-import com.uniovi.entities.Role;
 import com.uniovi.entities.RoleImage;
 import com.uniovi.repositories.RoleImageRepository;
-import com.uniovi.repositories.RoleRepository;
-import com.uniovi.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
