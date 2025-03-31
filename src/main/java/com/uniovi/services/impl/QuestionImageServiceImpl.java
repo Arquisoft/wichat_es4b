@@ -29,7 +29,7 @@ import java.util.Random;
 @Service
 public class QuestionImageServiceImpl implements QuestionService<QuestionImage, QuestionImageDto> {
 
-    public static final Integer SECONDS_PER_QUESTION = 25;
+    public static final Integer SECONDS_PER_QUESTION = 60;
 
     private final QuestionImageRepository questionRepository;
     private final CategoryServiceImpl categoryService;
@@ -189,7 +189,6 @@ public class QuestionImageServiceImpl implements QuestionService<QuestionImage, 
     public JsonNode getJsonGenerator() {
         return questionGeneratorService.getJsonGeneration();
     }
-
 
     public String getHintForImageQuestion(QuestionImage question) {
 
