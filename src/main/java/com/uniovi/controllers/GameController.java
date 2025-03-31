@@ -48,7 +48,7 @@ public class GameController{
      */
     @RequestMapping("/game/pregunta")
     public String getGame(HttpSession session, Model model, Principal principal) {
-        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
+        GameSession<Question> gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSession != null && !gameSession.isFinished() && !gameSession.isMultiplayer()) {
             if (checkUpdateGameSession(gameSession, session)) {
                 return "game/fragments/gameFinished";
@@ -108,7 +108,7 @@ public class GameController{
 
     @RequestMapping("/startMultiplayerGame")
     public String startMultiplayerGame(HttpSession session, Model model, Principal principal) {
-        GameSession gameSession = (GameSession) session.getAttribute("gameSession");
+        GameSession<Question> gameSession = (GameSession) session.getAttribute("gameSession");
 
         if (gameSession != null) {
             if (! gameSession.isMultiplayer()) {
@@ -197,7 +197,7 @@ public class GameController{
      */
     @RequestMapping("/game/{idQuestion}/{idAnswer}")
     public String getCheckResult(@PathVariable Long idQuestion, @PathVariable Long idAnswer, Model model, HttpSession session, Principal principal) {
-        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
+        GameSession<Question> gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSession == null) {
             return "redirect:/game/pregunta";
         }
@@ -231,7 +231,7 @@ public class GameController{
 
     @RequestMapping("/game/update")
     public String updateGame(Model model, HttpSession session, Principal principal) {
-        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
+        GameSession<Question> gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         QuestionBase nextQuestion = gameSession.getCurrentQuestion();
         if (nextQuestion == null && gameSession.isMultiplayer()) {
             int code = Integer.parseInt((String) session.getAttribute("multiplayerCode"));
@@ -296,7 +296,7 @@ public class GameController{
     @RequestMapping("/game/points")
     @ResponseBody
     public String getPoints(HttpSession session) {
-        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
+        GameSession<Question> gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSession != null)
             return String.valueOf(gameSession.getCorrectQuestions());
         else
@@ -306,7 +306,7 @@ public class GameController{
     @RequestMapping("/game/currentQuestion")
     @ResponseBody
     public String getCurrentQuestion(HttpSession session) {
-        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
+        GameSession<Question> gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSession != null)
             return String.valueOf(Math.min(gameSession.getAnsweredQuestions().size()+1, GameSessionService.NORMAL_GAME_QUESTION_NUM));
         else
@@ -324,7 +324,7 @@ public class GameController{
      * @param session The session to be used
      * @return True if the game session has been ended, false otherwise
      */
-    private boolean checkUpdateGameSession(GameSession gameSession, HttpSession session) {
+    private boolean checkUpdateGameSession(GameSession<Question> gameSession, HttpSession session) {
         // if time since last question started is greater than the time per question, add a new question (or check for game finish)
         if (getRemainingTime(gameSession) <= 0
                 && gameSession.getQuestionsToAnswer().isEmpty()
@@ -341,7 +341,7 @@ public class GameController{
         return false;
     }
 
-    private int getRemainingTime(GameSession gameSession) {
+    private int getRemainingTime(GameSession<Question> gameSession) {
         return (int) Duration.between(LocalDateTime.now(),
                 gameSession.getFinishTime().plusSeconds(QuestionService.SECONDS_PER_QUESTION)).toSeconds();
     }

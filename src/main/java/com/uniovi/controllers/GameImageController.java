@@ -1,5 +1,6 @@
 package com.uniovi.controllers;
 
+import com.uniovi.dto.QuestionImageDto;
 import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.QuestionImage;
@@ -20,19 +21,19 @@ import java.util.*;
 public class GameImageController {
     private static final String GAMESESSION_STR = "gameSessionImage";
     private final QuestionServiceImageImpl questionService;
-    private final GameSessionImpl gameSessionImpl;
-    private final PlayerServiceImpl playerService;
+    private final GameSessionImpl<QuestionImage, QuestionImageDto> gameSessionImpl;
+    private final PlayerServiceImpl<QuestionImage,QuestionImageDto> playerService;
 
-    private final MultiplayerSessionImpl multiplayerSessionImageImpl;
-    private final QuestionServiceImageImpl questionServiceImageImpl;
+    private final MultiplayerSessionImpl<QuestionImage,QuestionImageDto> multiplayerSessionImageImpl;
 
-    public GameImageController(QuestionServiceImageImpl questionImageService, GameSessionImpl gameSessionImageImpl,
-                               PlayerServiceImpl playerService, MultiplayerSessionImpl multiplayerSessionImageImpl, QuestionServiceImageImpl questionServiceImageImpl) {
+
+    public GameImageController(QuestionServiceImageImpl questionImageService, GameSessionImpl<QuestionImage,QuestionImageDto> gameSessionImageImpl,
+                               PlayerServiceImpl<QuestionImage,QuestionImageDto> playerService, MultiplayerSessionImpl<QuestionImage,QuestionImageDto> multiplayerSessionImageImpl) {
         this.questionService = questionImageService;
         this.gameSessionImpl = gameSessionImageImpl;
         this.playerService = playerService;
         this.multiplayerSessionImageImpl = multiplayerSessionImageImpl;
-        this.questionServiceImageImpl = questionServiceImageImpl;
+
     }
 
     /**
@@ -42,7 +43,7 @@ public class GameImageController {
      */
     @RequestMapping("/game/image")
     public String getGame(HttpSession session, Model model, Principal principal) {
-        GameSession gameSessionImage = (GameSession) session.getAttribute(GAMESESSION_STR);
+        GameSession<QuestionImage> gameSessionImage = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSessionImage != null && !gameSessionImage.isFinished() && !gameSessionImage.isMultiplayer()) {
             if (checkUpdateGameSession(gameSessionImage, session)) {
                 return "game/image/fragments/gameFinished";
@@ -104,7 +105,7 @@ public class GameImageController {
 
     @RequestMapping("/image/startMultiplayerGame")
     public String startMultiplayerGame(HttpSession session, Model model, Principal principal) {
-        GameSession gameSessionImage = (GameSession) session.getAttribute(GAMESESSION_STR);
+        GameSession<QuestionImage> gameSessionImage = (GameSession) session.getAttribute(GAMESESSION_STR);
 
         if (gameSessionImage != null) {
             if (! gameSessionImage.isMultiplayer()) {
@@ -193,7 +194,7 @@ public class GameImageController {
      */
     @RequestMapping("/game/image/{idQuestion}/{idAnswer}")
     public String getCheckResult(@PathVariable Long idQuestion, @PathVariable Long idAnswer, Model model, HttpSession session, Principal principal) {
-        GameSession gameSessionImage = (GameSession) session.getAttribute(GAMESESSION_STR);
+        GameSession<QuestionImage> gameSessionImage = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSessionImage == null) {
             return "redirect:/game/image/game";
         }
@@ -226,7 +227,7 @@ public class GameImageController {
 
     @RequestMapping("/game/image/update")
     public String updateGame(Model model, HttpSession session, Principal principal) {
-        GameSession gameSessionImage = (GameSession) session.getAttribute(GAMESESSION_STR);
+        GameSession<QuestionImage> gameSessionImage = (GameSession) session.getAttribute(GAMESESSION_STR);
         QuestionImage nextQuestionImage = (QuestionImage) gameSessionImage.getCurrentQuestion();
         if (nextQuestionImage == null && gameSessionImage.isMultiplayer()) {
             int code = Integer.parseInt((String) session.getAttribute("multiplayerCodeImage"));
@@ -276,7 +277,7 @@ public class GameImageController {
     @RequestMapping("/game/image/points")
     @ResponseBody
     public String getPoints(HttpSession session) {
-        GameSession gameSessionImage = (GameSession) session.getAttribute(GAMESESSION_STR);
+        GameSession<QuestionImage> gameSessionImage = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSessionImage != null)
             return String.valueOf(gameSessionImage.getScore());
         else
@@ -286,7 +287,7 @@ public class GameImageController {
     @RequestMapping("/game/image/currentQuestion")
     @ResponseBody
     public String getCurrentQuestion(HttpSession session) {
-        GameSession gameSessionImage = (GameSession) session.getAttribute(GAMESESSION_STR);
+        GameSession<QuestionImage> gameSessionImage = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSessionImage != null) {
             return String.valueOf(Math.min(gameSessionImage.getAnsweredQuestions().size() + 1, GameSessionImpl.NORMAL_GAME_QUESTION_NUM));
         }else
@@ -296,10 +297,10 @@ public class GameImageController {
     @RequestMapping("/game/image/hint/{id}")
     @ResponseBody
     public String getImageQuestionHint(@PathVariable Long id) {
-        Optional<QuestionImage> questionOpt = questionServiceImageImpl.getQuestion(id);
+        Optional<QuestionImage> questionOpt = questionService.getQuestion(id);
         if (questionOpt.isPresent()) {
             QuestionImage question = questionOpt.get();
-            return questionServiceImageImpl.getHintForImageQuestion(question); // Devuelve solo la pista como String
+            return questionService.getHintForImageQuestion(question); // Devuelve solo la pista como String
         }
         return "No se encontró ninguna pista para esta pregunta.";
     }
@@ -315,7 +316,7 @@ public class GameImageController {
      * @param session The session to be used
      * @return True if the game session has been ended, false otherwise
      */
-    private boolean checkUpdateGameSession(GameSession gameSessionImage, HttpSession session) {
+    private boolean checkUpdateGameSession(GameSession<QuestionImage> gameSessionImage, HttpSession session) {
         // if time since last question started is greater than the time per question, add a new question (or check for game finish)
         if (getRemainingTime(gameSessionImage) <= 0
                 && gameSessionImage.getQuestionsToAnswer().isEmpty()
@@ -332,7 +333,7 @@ public class GameImageController {
         return false;
     }
 
-    private int getRemainingTime(GameSession gameSessionImage) {
+    private int getRemainingTime(GameSession<QuestionImage> gameSessionImage) {
         return (int) Duration.between(LocalDateTime.now(),
                 gameSessionImage.getFinishTime().plusSeconds(QuestionServiceImageImpl.SECONDS_PER_QUESTION)).toSeconds();
     }
