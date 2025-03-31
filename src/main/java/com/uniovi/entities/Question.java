@@ -23,6 +23,11 @@ public class Question extends AbstractQuestion<Answer> {
     }
 
     @Override
+    protected void doOptionsAssociation(List<Answer> options) {
+        Associations.QuestionAnswers.addAnswer(this, options);
+    }
+
+    @Override
     public String toString() {
         return "Question{" +
                 "statement='" + getStatement() + '\'' +

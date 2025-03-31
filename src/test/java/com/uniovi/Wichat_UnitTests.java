@@ -7,7 +7,7 @@ import com.uniovi.dto.RoleDto;
 import com.uniovi.entities.*;
 import com.uniovi.repositories.*;
 import com.uniovi.services.*;
-import com.uniovi.services.impl.QuestionServiceImageImpl;
+import com.uniovi.services.impl.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,24 +36,29 @@ import java.util.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles("test")
 class Wichat_UnitTests {
+
     @Autowired
-    private PlayerService playerService;
+    private PlayerServiceImpl playerService;
     @Autowired
-    private AnswerService answerService;
+    private QuestionServiceImpl questionService;
     @Autowired
-    private QuestionService questionService;
+    private QuestionImageServiceImpl questionImageService;
     @Autowired
-    private CategoryService categoryService;
+    private QuestionGeneratorService questionGeneratorService;
     @Autowired
-    private RoleService roleService;
+    private AnswerServiceImpl answerService;
     @Autowired
-    private GameSessionService gameSessionService;
+    private CategoryServiceImpl categoryService;
+    @Autowired
+    private GameSessionServiceImpl gameSessionService;
+    @Autowired
+    private RoleServiceImpl roleService;
     @Autowired
     private InsertSampleDataService sampleDataService;
     @Autowired
-    private MultiplayerSessionService multiplayerSessionService;
-    @Autowired
-    private QuestionGeneratorService questionGeneratorService;
+    private MultiplayerSessionServiceImpl multiplayerSessionService;
+    //@Autowired
+    private LlmService llmService;
 
     @Autowired
     PlayerRepository playerRepository;
@@ -72,15 +77,12 @@ class Wichat_UnitTests {
     @Autowired
     MultiplayerSessionRepository multiplayerSessionRepository;
 
-    @Autowired
-    private LlmService llmService;
+
 
     @Mock
     private RestTemplate restTemplate;
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
-    @Autowired
-    private QuestionServiceImageImpl questionServiceImageImpl;
 
     private Player createPlayer() {
         return new Player("name", "test@email.com", "password");
@@ -1863,12 +1865,11 @@ class Wichat_UnitTests {
         QuestionImage questionImage =
                 new QuestionImage("", lanswer, a4,
                         new Category(), "es","https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
-        String answer = questionServiceImageImpl.getHintForImageQuestion(questionImage);
+        String answer = questionImageService.getHintForImageQuestion(questionImage);
         Assertions.assertNotNull(answer);
         Assertions.assertFalse(answer.isEmpty());
         Assertions.assertFalse(answer.isBlank());
         System.out.println(answer);
-
     }
 
 

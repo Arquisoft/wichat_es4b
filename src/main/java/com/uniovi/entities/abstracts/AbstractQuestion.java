@@ -44,7 +44,7 @@ public abstract class AbstractQuestion<T extends AbstractAnswer> implements Json
     public AbstractQuestion(String statement, List<T> options, T correctAnswer, Category category, String language) {
         Assert.isTrue(options.contains(correctAnswer), "Correct answer must be one of the options");
         this.statement = statement;
-        this.options.addAll(options);
+        doOptionsAssociation(options);
         this.correctAnswer = correctAnswer;
         this.category = category;
         this.language = language;
@@ -53,6 +53,8 @@ public abstract class AbstractQuestion<T extends AbstractAnswer> implements Json
     public AbstractQuestion(String statement, List<T> options, T correctAnswer, Category category, Language language) {
         this(statement, options, correctAnswer, category, language.getCode());
     }
+
+    protected abstract void doOptionsAssociation(List<T> options);
 
     public void addOption(T option) {
         options.add(option);

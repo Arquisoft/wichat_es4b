@@ -1,26 +1,27 @@
 package com.uniovi.services.impl;
 
-import com.uniovi.entities.*;
+import com.uniovi.entities.Associations;
+import com.uniovi.entities.GameSession;
+import com.uniovi.entities.Player;
+import com.uniovi.entities.Question;
 import com.uniovi.repositories.GameSessionRepository;
 import com.uniovi.services.GameSessionService;
-import com.uniovi.services.MultiplayerSessionService;
-import com.uniovi.services.QuestionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
 
 @Service
-public class GameSessionImpl implements GameSessionService {
+public class GameSessionServiceImpl implements GameSessionService<GameSession> {
 
     private final GameSessionRepository gameSessionRepository;
-    private final QuestionService questionService;
-    private final MultiplayerSessionService multiplayerSessionService;
+    private final QuestionServiceImpl questionService;
+    private final MultiplayerSessionServiceImpl multiplayerSessionService;
 
-    public GameSessionImpl(GameSessionRepository gameSessionRepository, QuestionService questionService,
-                           MultiplayerSessionService multiplayerSessionService) {
+    public GameSessionServiceImpl(GameSessionRepository gameSessionRepository, QuestionServiceImpl questionService,
+                                  MultiplayerSessionServiceImpl multiplayerSessionService) {
         this.gameSessionRepository = gameSessionRepository;
         this.questionService = questionService;
         this.multiplayerSessionService = multiplayerSessionService;

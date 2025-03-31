@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AnswerServiceImpl implements AnswerService {
+public class AnswerServiceImpl implements AnswerService<Answer, Question> {
 
     private final AnswerRepository answerRepository;
 

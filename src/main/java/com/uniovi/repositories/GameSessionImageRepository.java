@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface GameSessionImageRepository extends CrudRepository<GameSessionImage, Long> {
 
+    List<GameSessionImage> findAll();
     List<GameSessionImage> findAllByPlayer(Player player);
 
     @Query("SELECT gs.player, SUM(gs.score) FROM GameSessionImage gs GROUP BY gs.player ORDER BY SUM(gs.score) DESC")

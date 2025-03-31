@@ -11,6 +11,8 @@ import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Role;
 import com.uniovi.services.*;
+import com.uniovi.services.impl.GameSessionServiceImpl;
+import com.uniovi.services.impl.QuestionServiceImpl;
 import com.uniovi.validators.EditUserValidator;
 import com.uniovi.validators.SignUpValidator;
 import jakarta.servlet.ServletException;
@@ -38,14 +40,14 @@ public class PlayersController {
 
     private final PlayerService playerService;
     private final RoleService roleService;
-    private final QuestionService questionService;
-    private final SignUpValidator signUpValidator;
+    private final GameSessionServiceImpl gameSessionService;
+    private final QuestionServiceImpl questionService;
     private final EditUserValidator editUserValidator;
-    private final GameSessionService gameSessionService;
+    private final SignUpValidator signUpValidator;
 
     @Autowired
-    public PlayersController(PlayerService playerService, SignUpValidator signUpValidator, GameSessionService gameSessionService,
-                             RoleService roleService, QuestionService questionService, EditUserValidator editUserValidator) {
+    public PlayersController(PlayerService playerService, SignUpValidator signUpValidator, GameSessionServiceImpl gameSessionService,
+                             RoleService roleService, QuestionServiceImpl questionService, EditUserValidator editUserValidator) {
         this.playerService = playerService;
         this.signUpValidator =  signUpValidator;
         this.gameSessionService = gameSessionService;

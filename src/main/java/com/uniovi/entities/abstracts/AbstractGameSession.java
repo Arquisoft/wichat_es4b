@@ -88,7 +88,7 @@ public abstract class AbstractGameSession<T extends AbstractQuestion<?>> impleme
         }
         Collections.shuffle(questionsToAnswer);
         currentQuestion = questionsToAnswer.get(0);
-        return questionsToAnswer.get(0);
+        return currentQuestion;
     }
 
     @Override

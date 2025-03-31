@@ -6,7 +6,6 @@ import com.uniovi.entities.ApiKey;
 import com.uniovi.entities.Associations;
 import com.uniovi.entities.Player;
 import com.uniovi.repositories.PlayerRepository;
-import com.uniovi.services.MultiplayerSessionService;
 import com.uniovi.services.PlayerService;
 import com.uniovi.services.RoleService;
 import org.springframework.data.domain.Page;
@@ -26,10 +25,10 @@ public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
-    private final MultiplayerSessionService multiplayerSessionService;
+    private final MultiplayerSessionServiceImpl multiplayerSessionService;
     private final Random random = new SecureRandom();
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, RoleService roleService, MultiplayerSessionService multiplayerSessionService,PasswordEncoder passwordEncoder) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, RoleService roleService, MultiplayerSessionServiceImpl multiplayerSessionService,PasswordEncoder passwordEncoder) {
         this.playerRepository = playerRepository;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;

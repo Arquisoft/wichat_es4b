@@ -4,10 +4,10 @@ import com.uniovi.entities.GameSessionImage;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.QuestionImage;
 import com.uniovi.services.PlayerService;
-import com.uniovi.services.impl.GameSessionImageImpl;
-import com.uniovi.services.impl.MultiplayerSessionImageImpl;
+import com.uniovi.services.impl.GameSessionImageServiceImpl;
+import com.uniovi.services.impl.MultiplayerSessionImageServiceImpl;
 import com.uniovi.services.impl.PlayerServiceImpl;
-import com.uniovi.services.impl.QuestionServiceImageImpl;
+import com.uniovi.services.impl.QuestionImageServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,13 +25,13 @@ public class GameImageController {
     private static final String GAMESESSION_STR = "gameSessionImage";
 
 
-    private final GameSessionImageImpl gameSessionImpl;
-    private final QuestionServiceImageImpl questionService;
+    private final GameSessionImageServiceImpl gameSessionImpl;
+    private final QuestionImageServiceImpl questionService;
     private final PlayerService playerService;
-    private final MultiplayerSessionImageImpl multiplayerSessionImageImpl;
+    private final MultiplayerSessionImageServiceImpl multiplayerSessionImageImpl;
 
-    public GameImageController(QuestionServiceImageImpl questionImageService, GameSessionImageImpl gameSessionImageImpl,
-                               PlayerServiceImpl playerService, MultiplayerSessionImageImpl multiplayerSessionImageImpl) {
+    public GameImageController(QuestionImageServiceImpl questionImageService, GameSessionImageServiceImpl gameSessionImageImpl,
+                               PlayerServiceImpl playerService, MultiplayerSessionImageServiceImpl multiplayerSessionImageImpl) {
         this.questionService = questionImageService;
         this.gameSessionImpl = gameSessionImageImpl;
         this.playerService = playerService;
@@ -291,7 +291,7 @@ public class GameImageController {
     public String getCurrentQuestion(HttpSession session) {
         GameSessionImage gameSessionImage = (GameSessionImage) session.getAttribute(GAMESESSION_STR);
         if (gameSessionImage != null) {
-            return String.valueOf(Math.min(gameSessionImage.getAnsweredQuestions().size() + 1, GameSessionImageImpl.NORMAL_GAME_QUESTION_NUM));
+            return String.valueOf(Math.min(gameSessionImage.getAnsweredQuestions().size() + 1, GameSessionImageServiceImpl.NORMAL_GAME_QUESTION_NUM));
         }else
             return "0";
     }
@@ -337,6 +337,6 @@ public class GameImageController {
 
     private int getRemainingTime(GameSessionImage gameSessionImage) {
         return (int) Duration.between(LocalDateTime.now(),
-                gameSessionImage.getFinishTime().plusSeconds(QuestionServiceImageImpl.SECONDS_PER_QUESTION)).toSeconds();
+                gameSessionImage.getFinishTime().plusSeconds(QuestionImageServiceImpl.SECONDS_PER_QUESTION)).toSeconds();
     }
 }

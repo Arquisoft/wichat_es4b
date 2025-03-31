@@ -29,6 +29,11 @@ public class QuestionImage extends AbstractQuestion<AnswerImage> {
     }
 
     @Override
+    protected void doOptionsAssociation(List<AnswerImage> options) {
+        Associations.QuestionImageAnswers.addAnswer(this, options);
+    }
+
+    @Override
     public String toString() {
         return "QuestionImage{" +
                 "statement='" + getStatement() + '\'' +

@@ -7,8 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
+
 public interface QuestionImageRepository extends CrudRepository<QuestionImage, Long> {
 
+    List<QuestionImage> findAll();
     QuestionImage findByStatement(String statement);
 
     @Query("SELECT q FROM QuestionImage q WHERE q.language = ?1")

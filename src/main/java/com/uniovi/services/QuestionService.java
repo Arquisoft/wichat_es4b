@@ -3,7 +3,7 @@ package com.uniovi.services;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.uniovi.dto.QuestionDto;
 import com.uniovi.entities.Category;
-import com.uniovi.entities.Question;
+import com.uniovi.entities.abstracts.AbstractQuestion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,28 +13,28 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public interface QuestionService {
+public interface QuestionService<Q extends AbstractQuestion<?>, D extends QuestionDto> {
     public static final Integer SECONDS_PER_QUESTION = 10;
     /**
      * Add a new question to the database
      *
      * @param question Question to be added
      */
-    void addNewQuestion(Question question);
+    void addNewQuestion(Q question);
 
     /**
      * Add a new question to the database
      *
      * @param question Question to be added
      */
-    Question addNewQuestion(QuestionDto question);
+    Q addNewQuestion(D question);
 
     /**
      * Get all the questions in the database
      *
      * @return A list with all the questions
      */
-    List<Question> getAllQuestions();
+    List<Q> getAllQuestions();
 
     /**
      * Get a page with all the questions in the database
@@ -42,7 +42,7 @@ public interface QuestionService {
      * @param pageable The page to get
      * @return A page with all the questions
      */
-    Page<Question> getQuestions(Pageable pageable);
+    Page<Q> getQuestions(Pageable pageable);
 
     /**
      * Get a question by its id
@@ -50,7 +50,7 @@ public interface QuestionService {
      * @param id The id of the question
      * @return The question with the given id
      */
-    Optional<Question> getQuestion(Long id);
+    Optional<Q> getQuestion(Long id);
 
     /**
      * Get a random question from any category
@@ -58,7 +58,7 @@ public interface QuestionService {
      * @param num The number of questions to get
      * @return The questions selected
      */
-    List<Question> getRandomQuestions(int num);
+    List<Q> getRandomQuestions(int num);
 
     /**
      * Check if the answer is correct
@@ -75,7 +75,7 @@ public interface QuestionService {
      * @param lang The language of the questions
      * @return The questions of the category
      */
-    List<Question> getQuestionsByCategory(Pageable pageable, Category category, String lang);
+    List<Q> getQuestionsByCategory(Pageable pageable, Category category, String lang);
 
     /**
      * Get the questions with a statement that contains the given string
@@ -84,14 +84,14 @@ public interface QuestionService {
      * @param lang The language of the questions
      * @return The questions with the statement that contains the string
      */
-    List<Question> getQuestionsByStatement(Pageable pageable, String statement, String lang);
+    List<Q> getQuestionsByStatement(Pageable pageable, String statement, String lang);
 
     /**
      * Update a question
      * @param id The id of the question to update
      * @param questionDto The new data of the question
      */
-    void updateQuestion(Long id, QuestionDto questionDto);
+    void updateQuestion(Long id, D questionDto);
 
     /**
      * Delete a question

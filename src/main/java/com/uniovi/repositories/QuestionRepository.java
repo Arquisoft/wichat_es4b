@@ -7,7 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
+
 public interface QuestionRepository extends CrudRepository<Question, Long> {
+
+    List<Question> findAll();
     Question findByStatement(String statement);
 
     @Query("SELECT q FROM Question q WHERE q.language = ?1")
