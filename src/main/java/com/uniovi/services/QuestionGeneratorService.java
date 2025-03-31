@@ -29,7 +29,7 @@ import java.util.List;
 @Service
 public class QuestionGeneratorService {
 
-    private final QuestionService questionService;
+    private final QuestionServiceImpl questionService;
 
     public static final String JSON_FILE_PATH = "static/JSON/QuestionTemplates.json";
 
@@ -43,7 +43,7 @@ public class QuestionGeneratorService {
 
     private boolean started;
 
-    public QuestionGeneratorService(QuestionService questionService, Environment environment) throws IOException {
+    public QuestionGeneratorService(QuestionServiceImpl questionService, Environment environment) throws IOException {
         this.questionService = questionService;
         this.environment = environment;
         ((QuestionServiceImpl)questionService).setQuestionGeneratorService(this);

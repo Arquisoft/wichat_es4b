@@ -10,6 +10,7 @@ import com.uniovi.repositories.AnswerImageRepository;
 import com.uniovi.repositories.QuestionImageRepository;
 import com.uniovi.services.LlmService;
 import com.uniovi.services.QuestionImageGeneratorService;
+import com.uniovi.services.QuestionService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.Setter;
@@ -26,8 +27,10 @@ import java.util.Optional;
 import java.util.Random;
 
 @Service
-public class QuestionServiceImageImpl {
+public class QuestionImageServiceImpl implements QuestionService<QuestionImage, QuestionImageDto> {
+
     public static final Integer SECONDS_PER_QUESTION = 60;
+
     private final QuestionImageRepository questionRepository;
     private final CategoryServiceImpl categoryService;
     private final AnswerServiceImageImpl answerService;
@@ -40,7 +43,7 @@ public class QuestionServiceImageImpl {
 
     private final Random random = new SecureRandom();
 
-    public QuestionServiceImageImpl(QuestionImageRepository questionRepository, CategoryServiceImpl categoryService,
+    public QuestionImageServiceImpl(QuestionImageRepository questionRepository, CategoryServiceImpl categoryService,
                                     AnswerServiceImageImpl answerService, AnswerImageRepository answerRepository,
                                     EntityManager entityManager, LlmService llmService) {
         this.questionRepository = questionRepository;
@@ -51,12 +54,12 @@ public class QuestionServiceImageImpl {
         this.llmService = llmService;
     }
 
-
+    @Override
     public void addNewQuestion(QuestionImage questionImage) {
         questionRepository.save(questionImage);
     }
 
-
+    @Override
     public QuestionImage addNewQuestion(QuestionImageDto questionImage) {
         Category category = categoryService.getCategoryByName(questionImage.getCategory().getName());
         if (category == null) {
@@ -84,29 +87,29 @@ public class QuestionServiceImageImpl {
         return q;
     }
 
-
+    @Override
     public List<QuestionImage> getAllQuestions() {
         return new ArrayList<>(questionRepository.findAll());
     }
 
-
+    @Override
     public Page<QuestionImage> getQuestions(Pageable pageable) {
         return questionRepository.findByLanguage(pageable, LocaleContextHolder.getLocale().getLanguage());
     }
 
-
+    @Override
     public Optional<QuestionImage> getQuestion(Long id) {
         return questionRepository.findById(id);
     }
 
-
+    @Override
     public List<QuestionImage> getRandomQuestions(int num) {
         List<QuestionImage> allQuestions = questionRepository.findAll().stream()
                 .filter(question -> question.getLanguage().equals(LocaleContextHolder.getLocale().getLanguage())).toList();
         List<QuestionImage> res = new ArrayList<>();
         for (int i = 0; i < num; i++) {
             int idx = random.nextInt(allQuestions.size());
-            while (allQuestions.get(idx).hasEmptyOptions() || res.contains(allQuestions.get(idx))){
+            while (allQuestions.get(idx).hasEmptyOptions() || res.contains(allQuestions.get(idx))) {
                 idx = random.nextInt(allQuestions.size());
             }
             res.add(allQuestions.get(idx));
@@ -114,23 +117,23 @@ public class QuestionServiceImageImpl {
         return res;
     }
 
-
+    @Override
     public boolean checkAnswer(Long idquestion, Long idanswer) {
         Optional<QuestionImage> q = questionRepository.findById(idquestion);
         return q.map(question -> question.getCorrectAnswer().getId().equals(idanswer)).orElse(false);
     }
 
-
+    @Override
     public List<QuestionImage> getQuestionsByCategory(Pageable pageable, Category category, String lang) {
         return questionRepository.findByCategoryAndLanguage(pageable, category, lang).toList();
     }
 
-
+    @Override
     public List<QuestionImage> getQuestionsByStatement(Pageable pageable, String statement, String lang) {
         return questionRepository.findByStatementAndLanguage(pageable, statement, lang).toList();
     }
 
-
+    @Override
     public void updateQuestion(Long id, QuestionImageDto questionDto) {
         Optional<QuestionImage> q = questionRepository.findById(id);
         if (q.isPresent()) {
@@ -157,7 +160,7 @@ public class QuestionServiceImageImpl {
         }
     }
 
-
+    @Override
     @Transactional
     public void deleteQuestion(Long id) {
         Optional<QuestionImage> q = questionRepository.findById(id);
@@ -171,26 +174,26 @@ public class QuestionServiceImageImpl {
         }
     }
 
-
+    @Override
     public void deleteAllQuestions() throws IOException {
         questionGeneratorService.resetGeneration();
         questionRepository.deleteAll();
     }
 
-
+    @Override
     public void setJsonGenerator(JsonNode json) {
         questionGeneratorService.setJsonGeneration(json);
     }
 
-
+    @Override
     public JsonNode getJsonGenerator() {
         return questionGeneratorService.getJsonGeneration();
     }
 
     public String getHintForImageQuestion(QuestionImage question) {
 
-        String llmHint =  ("Hola, tengo esta imagen: <" + question.getImageUrl() + ">, estas opciones de respuesta: "
-                + question.getOptions().toString()+".\nY quiero que me respondas en el idioma de este acrónimo: " + question.getLanguage().toString());
+        String llmHint = ("Hola, tengo esta imagen: <" + question.getImageUrl() + ">, estas opciones de respuesta: "
+                + question.getOptions().toString() + ".\nY quiero que me respondas en el idioma de este acrónimo: " + question.getLanguage());
         // Llamar al servicio LLM para obtener la pista usando Gemini.
         return llmService.sendQuestionToLLM(llmHint);
     }

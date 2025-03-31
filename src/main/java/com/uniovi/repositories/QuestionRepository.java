@@ -8,9 +8,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+
 public interface QuestionRepository extends CrudRepository<Question, Long> {
-    Question findByStatement(String statement);
+
     List<Question> findAll();
+    Question findByStatement(String statement);
 
     @Query("SELECT q FROM Question q WHERE q.language = ?1")
     Page<Question> findByLanguage(Pageable pageable, String language);

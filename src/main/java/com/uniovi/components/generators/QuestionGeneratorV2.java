@@ -59,7 +59,7 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
         return this.generateQuestion(question, cat);
     }
 
-    private List<Question> generateQuestion(JsonNode question, Category cat) throws IOException, InterruptedException {
+    private List<Question> generateQuestion(JsonNode question, Category cat) throws InterruptedException {
         // Get the SPARQL query from the JSON
         String query = question.get("sparqlQuery").textValue();
 

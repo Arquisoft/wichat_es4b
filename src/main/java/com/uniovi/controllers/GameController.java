@@ -4,14 +4,15 @@ import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Question;
 import com.uniovi.services.GameSessionService;
-import com.uniovi.services.MultiplayerSessionService;
 import com.uniovi.services.PlayerService;
 import com.uniovi.services.QuestionService;
+import com.uniovi.services.impl.MultiplayerSessionServiceImpl;
+import com.uniovi.services.impl.QuestionServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
@@ -21,15 +22,17 @@ import java.util.*;
 
 @Controller
 public class GameController {
+
     private static final String GAMESESSION_STR = "gameSession";
-    private final QuestionService questionService;
-    private final GameSessionService gameSessionService;
+
+    private final QuestionServiceImpl questionService;
+    private final GameSessionService<GameSession> gameSessionService;
     private final PlayerService playerService;
 
-    private final MultiplayerSessionService multiplayerSessionService;
+    private final MultiplayerSessionServiceImpl multiplayerSessionService;
 
-    public GameController(QuestionService questionService, GameSessionService gameSessionService,
-                          PlayerService playerService, MultiplayerSessionService multiplayerSessionService) {
+    public GameController(QuestionServiceImpl questionService, GameSessionService<GameSession> gameSessionService,
+                          PlayerService playerService, MultiplayerSessionServiceImpl multiplayerSessionService) {
         this.questionService = questionService;
         this.gameSessionService = gameSessionService;
         this.playerService = playerService;
@@ -88,7 +91,7 @@ public class GameController {
     }
 
     @RequestMapping("/multiplayerGame/createGame")
-    public String createMultiplayerGame(HttpSession session, Principal principal, Model model) {
+    public String createMultiplayerGame(HttpSession session, Principal principal) {
         Optional<Player> player = playerService.getUserByUsername(principal.getName());
         if (player.isEmpty()) {
             // Handle the case where the player is not found

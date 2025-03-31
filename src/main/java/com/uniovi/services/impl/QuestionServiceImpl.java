@@ -8,7 +8,6 @@ import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
 import com.uniovi.repositories.AnswerRepository;
 import com.uniovi.repositories.QuestionRepository;
-import com.uniovi.services.AnswerService;
 import com.uniovi.services.CategoryService;
 import com.uniovi.services.QuestionGeneratorService;
 import com.uniovi.services.QuestionService;
@@ -28,10 +27,11 @@ import java.util.Optional;
 import java.util.Random;
 
 @Service
-public class QuestionServiceImpl implements QuestionService {
+public class QuestionServiceImpl implements QuestionService<Question, QuestionDto> {
+
     private final QuestionRepository questionRepository;
     private final CategoryService categoryService;
-    private final AnswerService answerService;
+    private final AnswerServiceImpl answerService;
     private final AnswerRepository answerRepository;
     private final EntityManager entityManager;
 
@@ -41,7 +41,7 @@ public class QuestionServiceImpl implements QuestionService {
     private final Random random = new SecureRandom();
 
     public QuestionServiceImpl(QuestionRepository questionRepository, CategoryService categoryService,
-                               AnswerService answerService, AnswerRepository answerRepository,
+                               AnswerServiceImpl answerService, AnswerRepository answerRepository,
                                EntityManager entityManager) {
         this.questionRepository = questionRepository;
         this.categoryService = categoryService;

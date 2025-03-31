@@ -6,7 +6,7 @@ import com.uniovi.components.generators.QuestionImageGenerator;
 import com.uniovi.components.generators.QuestionImageGeneratorV2;
 import com.uniovi.dto.QuestionImageDto;
 import com.uniovi.entities.*;
-import com.uniovi.services.impl.QuestionServiceImageImpl;
+import com.uniovi.services.impl.QuestionImageServiceImpl;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,7 +26,7 @@ import java.util.List;
 @Service
 public class QuestionImageGeneratorService {
 
-    private final QuestionServiceImageImpl questionService;
+    private final QuestionImageServiceImpl questionService;
 
     public static final String JSON_FILE_PATH = "static/JSON/QuestionImageTemplates.json";
 
@@ -40,7 +40,7 @@ public class QuestionImageGeneratorService {
 
     private boolean started;
 
-    public QuestionImageGeneratorService(QuestionServiceImageImpl questionService, Environment environment) throws IOException {
+    public QuestionImageGeneratorService(QuestionImageServiceImpl questionService, Environment environment) throws IOException {
         this.questionService = questionService;
         this.environment = environment;
         questionService.setQuestionGeneratorService(this);
