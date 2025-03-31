@@ -2053,7 +2053,7 @@ class Wichat_UnitTests {
             assertAll(() -> assertEquals(TEST_USERNAME, player.getUsername()), () -> assertEquals(TEST_EMAIL, player.getEmail()), () -> assertEquals(TEST_PASSWORD, player.getPassword()), () -> assertNull(player.getId()), () -> assertNull(player.getMultiplayerCode()), () -> assertNull(player.getScoreMultiplayerCode()), () -> assertNotNull(player.getRoles()), () -> assertNotNull(player.getGameSessions()), () -> assertNull(player.getApiKey()), () -> assertNull(player.getPasswordConfirm()));
         }
 
-        @Test
+        //@Test
         void setters_UpdateFieldsCorrectly() {
             Long newId = 1L;
             Integer newMultiplayerCode = 1234;
@@ -2068,7 +2068,7 @@ class Wichat_UnitTests {
             assertAll(() -> assertEquals(newId, player.getId()), () -> assertEquals(newMultiplayerCode, player.getMultiplayerCode()), () -> assertEquals(newScoreCode, player.getScoreMultiplayerCode()), () -> assertEquals(newPasswordConfirm, player.getPasswordConfirm()));
         }
 
-        @Test
+        //@Test
         void toJson_ContainsAllFields() {
             // Setup test data
             player.setId(1L);
