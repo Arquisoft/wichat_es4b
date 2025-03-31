@@ -35,10 +35,12 @@ public class GameController{
     public GameController(QuestionServiceImpl questionService, GameSessionImpl<Question,QuestionDto> gameSessionService,
                           PlayerServiceImpl<Question, QuestionDto> playerService, MultiplayerSessionService<Question, QuestionDto> multiplayerSessionService) {
         this.questionService = questionService;
-        this.gameSessionService = gameSessionService;
         this.playerService = playerService;
         multiplayerSessionService.setQuestionService(questionService);
         this.multiplayerSessionService = multiplayerSessionService;
+        gameSessionService.setQuestionService(questionService);
+        gameSessionService.setMultiplayerSessionService(multiplayerSessionService);
+        this.gameSessionService = gameSessionService;
     }
 
     /**

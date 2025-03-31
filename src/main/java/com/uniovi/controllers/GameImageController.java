@@ -30,9 +30,11 @@ public class GameImageController {
     public GameImageController(QuestionServiceImageImpl questionImageService, GameSessionImpl<QuestionImage,QuestionImageDto> gameSessionImageImpl,
                                PlayerServiceImpl<QuestionImage,QuestionImageDto> playerService, MultiplayerSessionImpl<QuestionImage,QuestionImageDto> multiplayerSessionImageImpl) {
         this.questionService = questionImageService;
-        this.gameSessionImpl = gameSessionImageImpl;
         this.playerService = playerService;
         this.multiplayerSessionImageImpl = multiplayerSessionImageImpl;
+        gameSessionImageImpl.setMultiplayerSessionService(multiplayerSessionImageImpl);
+        gameSessionImageImpl.setQuestionService(questionImageService);
+        this.gameSessionImpl = gameSessionImageImpl;
 
     }
 

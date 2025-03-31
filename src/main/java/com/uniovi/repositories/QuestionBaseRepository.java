@@ -13,6 +13,7 @@ import java.util.List;
 
 public interface QuestionBaseRepository<T extends QuestionBase> extends CrudRepository<T, Long> {
     T findByStatement(String statement);
+
     List<T> findAll();
 
     @Query("SELECT q FROM #{#entityName} q WHERE q.language = ?1")

@@ -19,6 +19,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
 public class QuestionBase implements JsonEntity {
 

@@ -17,22 +17,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class GameSessionImpl<T extends QuestionBase, P extends QuestionBaseDto> implements GameSessionService<T> {
+public class GameSessionImpl<T extends QuestionBase, P extends QuestionBaseDto> implements GameSessionService<T,P> {
 
     private final GameSessionRepository<T> gameSessionRepository;
-    private  QuestionService<T, P> questionService;
+    private QuestionService<T, P> questionService;
     private MultiplayerSessionService<T,P> multiplayerSessionService;
 
     public GameSessionImpl(GameSessionRepository<T> gameSessionRepository) {
         this.gameSessionRepository = gameSessionRepository;
     }
-    protected  void setMultiplayerSessionService(MultiplayerSessionService<T,P> multiplayerSessionService) {
-        this.multiplayerSessionService = multiplayerSessionService;
-    }
 
-    protected void setQuestionService(QuestionService<T, P> questionService) {
-        this.questionService = questionService;
-    }
 
     @Override
     public List<GameSession<T>> getGameSessions() {
@@ -74,5 +68,15 @@ public class GameSessionImpl<T extends QuestionBase, P extends QuestionBaseDto> 
         Associations.PlayerGameSession.addGameSession(gameSession.getPlayer(), gameSession);
         gameSession.setFinishTime(LocalDateTime.now());
         gameSessionRepository.save(gameSession);
+    }
+
+    @Override
+    public void setQuestionService(QuestionBaseServiceImpl<T, P> questionService) {
+        this.questionService = questionService;
+    }
+
+    @Override
+    public void setMultiplayerSessionService(MultiplayerSessionService<T, P> multiplayerSessionService) {
+        this.multiplayerSessionService = multiplayerSessionService;
     }
 }

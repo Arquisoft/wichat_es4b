@@ -36,6 +36,8 @@ public abstract class QuestionGeneratorBaseImpl<T extends QuestionBase> implemen
         this.answerPlaceholder = jsonNode.get("answer_placeholder").textValue();
     }
 
+
+
     @Override
     public List<T> getQuestions(String language) throws IOException, InterruptedException {
         this.language = language;

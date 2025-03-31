@@ -9,10 +9,7 @@ import com.uniovi.dto.QuestionDto;
 import com.uniovi.dto.RoleDto;
 import com.uniovi.entities.*;
 import com.uniovi.services.*;
-import com.uniovi.services.impl.PlayerServiceImpl;
-import com.uniovi.services.impl.QuestionBaseServiceImpl;
-import com.uniovi.services.impl.QuestionServiceImageImpl;
-import com.uniovi.services.impl.QuestionServiceImpl;
+import com.uniovi.services.impl.*;
 import com.uniovi.validators.EditUserValidator;
 import com.uniovi.validators.SignUpValidator;
 import jakarta.servlet.ServletException;
@@ -46,18 +43,18 @@ public class PlayersController<T extends QuestionBase, P extends QuestionBaseDto
     private final QuestionServiceImageImpl questionImageService;
     private final SignUpValidator signUpValidator;
     private final EditUserValidator editUserValidator;
-    private final GameSessionService<T> gameSessionService;
+    private final GameSessionService<T,P> gameSessionService;
 
     @Autowired
-    public PlayersController(PlayerService playerService, SignUpValidator signUpValidator, GameSessionService<T> gameSessionService,
+    public PlayersController(PlayerService playerService, SignUpValidator signUpValidator, GameSessionService<T,P> gameSessionService,
                              RoleService roleService, QuestionServiceImpl questionService, QuestionServiceImageImpl questionImageIService, EditUserValidator editUserValidator) {
         this.playerService = playerService;
         this.signUpValidator =  signUpValidator;
-        this.gameSessionService = gameSessionService;
         this.roleService = roleService;
         this.questionService = questionService;
         this.questionImageService = questionImageIService;
         this.editUserValidator = editUserValidator;
+        this.gameSessionService = gameSessionService;
     }
 
     @RequestMapping("/signup")

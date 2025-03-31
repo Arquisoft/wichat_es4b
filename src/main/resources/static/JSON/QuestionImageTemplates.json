@@ -1,7 +1,7 @@
 {
   "language_placeholder": "[LANGUAGE]",
-  "capital_placeholder": "[CAPITAL]",
-  "landmark_placeholder": "[LANDMARK]",
+  "question_placeholder": "[CAPITAL]",
+  "answer_placeholder": "[LANDMARK]",
   "image_placeholder": "[IMAGE]",
   "categories": [
     {

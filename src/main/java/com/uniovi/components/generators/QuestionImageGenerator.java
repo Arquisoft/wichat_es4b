@@ -21,7 +21,8 @@ public class QuestionImageGenerator extends QuestionGeneratorBaseImpl<QuestionIm
     private Logger logger = LoggerFactory.getLogger(QuestionImageGenerator.class);
 
     public QuestionImageGenerator(JsonNode jsonNode) {
-       super(jsonNode);
+        super(jsonNode);
+
     }
 
     @Override
