@@ -35,6 +35,7 @@ import java.util.Optional;
 
 @Controller
 public class PlayersController {
+
     private final PlayerService playerService;
     private final RoleService roleService;
     private final QuestionService questionService;
@@ -189,7 +190,7 @@ public class PlayersController {
     // ----- Admin endpoints -----
 
     @RequestMapping("/player/admin")
-    public String showAdminPanel(Model model) {
+    public String showAdminPanel() {
         return "player/admin/admin";
     }
 
@@ -313,7 +314,7 @@ public class PlayersController {
 
     @PutMapping("/player/admin/saveQuestions")
     @ResponseBody
-    public String saveQuestions(HttpServletResponse response, @RequestBody String json) throws IOException {
+    public String saveQuestions(HttpServletResponse response, @RequestBody String json) {
         try {
             JsonNode node = new ObjectMapper().readTree(json);
             questionService.setJsonGenerator(node);

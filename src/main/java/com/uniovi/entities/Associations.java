@@ -232,7 +232,7 @@ public class Associations {
          * @param category The category
          */
         public static void removeCategory(QuestionImage questionImage, Category category) {
-            category.getQuestions().remove(questionImage);
+            category.getQuestionsImageGame().remove(questionImage);
             questionImage.setCategory(null);
         }
     }

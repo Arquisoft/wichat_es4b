@@ -22,4 +22,14 @@ public class CategoryDto {
 
     @Schema(description = "The list of questions in the category", hidden = true)
     private List<QuestionDto> questions;
+
+    @Schema(description = "The list of questions in the category", hidden = true)
+    private List<QuestionImageDto> questionsImage;
+
+    public CategoryDto(String name, String description) {
+        setName(name);
+        setDescription(description);
+        setQuestions(List.of());
+        setQuestionsImage(List.of());
+    }
 }
