@@ -1,7 +1,7 @@
 package com.uniovi.services.impl;
 
 import com.uniovi.entities.*;
-import com.uniovi.repositories.MultiplayerSessionImageRepository;
+import com.uniovi.repositories.MultiplayerSessionRepository;
 import com.uniovi.repositories.PlayerRepository;
 import com.uniovi.services.GameSessionService;
 import jakarta.transaction.Transactional;
@@ -12,13 +12,13 @@ import java.util.*;
 @Service
 public class MultiplayerSessionImageImpl  {
     private final PlayerRepository playerRepository;
-    private final MultiplayerSessionImageRepository multiplayerSessionRepository;
+    private final MultiplayerSessionRepository multiplayerSessionRepository;
     private final QuestionServiceImageImpl questionService;
 
     private Map<String, List<QuestionImage>> multiplayerSessionQuestions = new HashMap<>();
 
 
-    public MultiplayerSessionImageImpl(PlayerRepository playerRepository, MultiplayerSessionImageRepository multiplayerSessionRepository,
+    public MultiplayerSessionImageImpl(PlayerRepository playerRepository, MultiplayerSessionRepository multiplayerSessionRepository,
                                        QuestionServiceImageImpl questionService) {
         this.playerRepository = playerRepository;
         this.multiplayerSessionRepository = multiplayerSessionRepository;
@@ -28,7 +28,7 @@ public class MultiplayerSessionImageImpl  {
 
     @Transactional
     public Map<Player, Integer> getPlayersWithScores(int multiplayerCode) {
-        MultiplayerSessionImage session = multiplayerSessionRepository.findByMultiplayerCode(String.valueOf(multiplayerCode));
+        MultiplayerSession session = multiplayerSessionRepository.findByMultiplayerCode(String.valueOf(multiplayerCode));
         Map<Player, Integer> playerScores = session.getPlayerScores();
 
         // Ordenar los jugadores por puntuación de mayor a menor
@@ -49,7 +49,7 @@ public class MultiplayerSessionImageImpl  {
         Player p = playerRepository.findById(id).orElse(null);
 
         if (p != null) {
-            multiplayerSessionRepository.save(new MultiplayerSessionImage(code, p));
+            multiplayerSessionRepository.save(new MultiplayerSession(code, p));
             multiplayerSessionQuestions.put(code, questionService.getRandomQuestions(GameSessionService.NORMAL_GAME_QUESTION_NUM));
         }
     }
@@ -60,7 +60,7 @@ public class MultiplayerSessionImageImpl  {
         Player p = playerRepository.findById(id).orElse(null);
 
         if (p != null) {
-            MultiplayerSessionImage ms = multiplayerSessionRepository.findByMultiplayerCode(code);
+            MultiplayerSession ms = multiplayerSessionRepository.findByMultiplayerCode(code);
             ms.addPlayer(p);
             multiplayerSessionRepository.save(ms);
         }
@@ -72,7 +72,7 @@ public class MultiplayerSessionImageImpl  {
         Player p = playerRepository.findById(id).orElse(null);
 
         if (p != null) {
-            MultiplayerSessionImage ms = multiplayerSessionRepository.findByMultiplayerCode(code);
+            MultiplayerSession ms = multiplayerSessionRepository.findByMultiplayerCode(code);
             ms.getPlayerScores().put(p, score);
             multiplayerSessionRepository.save(ms);
         }

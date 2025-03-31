@@ -88,7 +88,7 @@ public class GameController {
     }
 
     @RequestMapping("/multiplayerGame/createGame")
-    public String createMultiplayerGame(HttpSession session, Principal principal, Model model) {
+    public String createMultiplayerGame(HttpSession session, Principal principal) {
         Optional<Player> player = playerService.getUserByUsername(principal.getName());
         if (player.isEmpty()) {
             // Handle the case where the player is not found
