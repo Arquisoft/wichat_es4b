@@ -1,5 +1,6 @@
 package com.uniovi.services;
 
+import com.uniovi.dto.QuestionBaseDto;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Question;
 import com.uniovi.entities.QuestionBase;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public interface MultiplayerSessionService {
+public interface MultiplayerSessionService<T extends QuestionBase, P extends QuestionBaseDto> {
 
     Map<Player, Integer> getPlayersWithScores(int multiplayerCode);
     void multiCreate(String code, Long id);
@@ -20,5 +21,7 @@ public interface MultiplayerSessionService {
 
     boolean existsCode(String code);
 
-    List<QuestionBase> getQuestions(String code);
+    List<T> getQuestions(String code);
+
+    void setQuestionService(QuestionService<T, P> questionService);
 }

@@ -1,10 +1,9 @@
 package com.uniovi.services.impl;
 
 import com.uniovi.dto.PlayerDto;
+import com.uniovi.dto.QuestionBaseDto;
 import com.uniovi.dto.RoleDto;
-import com.uniovi.entities.ApiKey;
-import com.uniovi.entities.Associations;
-import com.uniovi.entities.Player;
+import com.uniovi.entities.*;
 import com.uniovi.repositories.PlayerRepository;
 import com.uniovi.services.MultiplayerSessionService;
 import com.uniovi.services.PlayerService;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.uniovi.entities.Role;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -22,14 +20,14 @@ import java.util.Optional;
 import java.util.Random;
 
 @Service
-public class PlayerServiceImpl implements PlayerService {
+public class PlayerServiceImpl<T extends QuestionBase, P extends QuestionBaseDto> implements PlayerService {
     private final PlayerRepository playerRepository;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
-    private final MultiplayerSessionService multiplayerSessionService;
+    private final MultiplayerSessionService<T,P> multiplayerSessionService;
     private final Random random = new SecureRandom();
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, RoleService roleService, MultiplayerSessionService multiplayerSessionService,PasswordEncoder passwordEncoder) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, RoleService roleService, MultiplayerSessionService<T, P> multiplayerSessionService, PasswordEncoder passwordEncoder) {
         this.playerRepository = playerRepository;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;

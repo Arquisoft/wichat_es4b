@@ -1,14 +1,16 @@
 package com.uniovi.controllers;
 
-import com.uniovi.dto.QuestionBaseDto;
+import com.uniovi.dto.QuestionDto;
 import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Question;
 import com.uniovi.entities.QuestionBase;
 import com.uniovi.services.GameSessionService;
 import com.uniovi.services.MultiplayerSessionService;
-import com.uniovi.services.PlayerService;
 import com.uniovi.services.QuestionService;
+import com.uniovi.services.impl.GameSessionImpl;
+import com.uniovi.services.impl.PlayerServiceImpl;
+import com.uniovi.services.impl.QuestionServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,19 +24,20 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Controller
-public class GameController {
+public class GameController{
     private static final String GAMESESSION_STR = "gameSession";
-    private final QuestionService<QuestionBase, QuestionBaseDto> questionService;
-    private final GameSessionService gameSessionService;
-    private final PlayerService playerService;
+    private final QuestionServiceImpl questionService;
+    private final GameSessionImpl<Question, QuestionDto> gameSessionService;
+    private final PlayerServiceImpl<Question, QuestionDto> playerService;
 
-    private final MultiplayerSessionService multiplayerSessionService;
+    private final MultiplayerSessionService<Question, QuestionDto> multiplayerSessionService;
 
-    public GameController(QuestionService<QuestionBase, QuestionBaseDto> questionService, GameSessionService gameSessionService,
-                          PlayerService playerService, MultiplayerSessionService multiplayerSessionService) {
+    public GameController(QuestionServiceImpl questionService, GameSessionImpl<Question,QuestionDto> gameSessionService,
+                          PlayerServiceImpl<Question, QuestionDto> playerService, MultiplayerSessionService<Question, QuestionDto> multiplayerSessionService) {
         this.questionService = questionService;
         this.gameSessionService = gameSessionService;
         this.playerService = playerService;
+        multiplayerSessionService.setQuestionService(questionService);
         this.multiplayerSessionService = multiplayerSessionService;
     }
 

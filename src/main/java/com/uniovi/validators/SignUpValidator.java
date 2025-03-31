@@ -11,7 +11,7 @@ import org.springframework.validation.Validator;
 public class SignUpValidator implements Validator {
     private PlayerService playerService;
 
-    public SignUpValidator(PlayerService playerService) {
+    protected void setPlayerService(PlayerService playerService) {
         this.playerService = playerService;
     }
 

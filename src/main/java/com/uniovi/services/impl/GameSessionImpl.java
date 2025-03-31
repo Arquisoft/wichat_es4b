@@ -1,6 +1,10 @@
 package com.uniovi.services.impl;
 
-import com.uniovi.entities.*;
+import com.uniovi.dto.QuestionBaseDto;
+import com.uniovi.entities.Associations;
+import com.uniovi.entities.GameSession;
+import com.uniovi.entities.Player;
+import com.uniovi.entities.QuestionBase;
 import com.uniovi.repositories.GameSessionRepository;
 import com.uniovi.services.GameSessionService;
 import com.uniovi.services.MultiplayerSessionService;
@@ -10,29 +14,33 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
 
 @Service
-public class GameSessionImpl implements GameSessionService {
+public class GameSessionImpl<T extends QuestionBase, P extends QuestionBaseDto> implements GameSessionService<T> {
 
-    private final GameSessionRepository gameSessionRepository;
-    private final QuestionService questionService;
-    private final MultiplayerSessionService multiplayerSessionService;
+    private final GameSessionRepository<T> gameSessionRepository;
+    private  QuestionService<T, P> questionService;
+    private MultiplayerSessionService<T,P> multiplayerSessionService;
 
-    public GameSessionImpl(GameSessionRepository gameSessionRepository, QuestionService questionService,
-                           MultiplayerSessionService multiplayerSessionService) {
+    public GameSessionImpl(GameSessionRepository<T> gameSessionRepository) {
         this.gameSessionRepository = gameSessionRepository;
-        this.questionService = questionService;
+    }
+    protected  void setMultiplayerSessionService(MultiplayerSessionService<T,P> multiplayerSessionService) {
         this.multiplayerSessionService = multiplayerSessionService;
     }
 
+    protected void setQuestionService(QuestionService<T, P> questionService) {
+        this.questionService = questionService;
+    }
+
     @Override
-    public List<GameSession> getGameSessions() {
+    public List<GameSession<T>> getGameSessions() {
         return gameSessionRepository.findAll();
     }
 
     @Override
-    public List<GameSession> getGameSessionsByPlayer(Player player) {
+    public List<GameSession<T>> getGameSessionsByPlayer(Player player) {
         return gameSessionRepository.findAllByPlayer(player);
     }
 
@@ -41,28 +49,28 @@ public class GameSessionImpl implements GameSessionService {
     }
 
     @Override
-    public Page<GameSession> getPlayerRanking(Pageable pageable, Player player) {
+    public Page<GameSession<T>> getPlayerRanking(Pageable pageable, Player player) {
         return gameSessionRepository.findAllByPlayerOrderByScoreDesc(pageable, player);
     }
 
     @Override
-    public GameSession startNewGame(Player player) {
-        return new GameSession(player, questionService.getRandomQuestions(NORMAL_GAME_QUESTION_NUM));
+    public GameSession<T> startNewGame(Player player) {
+        return new GameSession<>(player, questionService.getRandomQuestions(NORMAL_GAME_QUESTION_NUM));
     }
 
     @Override
-    public GameSession startNewMultiplayerGame(Player player, int code) {
-        List<QuestionBase> qs = multiplayerSessionService.getQuestions(String.valueOf(code));
+    public GameSession<T> startNewMultiplayerGame(Player player, int code) {
+        List<T> qs = multiplayerSessionService.getQuestions(String.valueOf(code));
         if (qs == null)
             return null;
 
-        GameSession sess = new GameSession(player, qs);
+        GameSession<T> sess = new GameSession<T>(player, qs);
         sess.setMultiplayer(true);
         return sess;
     }
 
     @Override
-    public void endGame(GameSession gameSession) {
+    public void endGame(GameSession<T> gameSession) {
         Associations.PlayerGameSession.addGameSession(gameSession.getPlayer(), gameSession);
         gameSession.setFinishTime(LocalDateTime.now());
         gameSessionRepository.save(gameSession);

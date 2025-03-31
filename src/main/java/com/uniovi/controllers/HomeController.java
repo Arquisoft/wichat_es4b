@@ -1,8 +1,10 @@
 package com.uniovi.controllers;
 
+import com.uniovi.dto.QuestionBaseDto;
 import com.uniovi.entities.Player;
+import com.uniovi.entities.QuestionBase;
 import com.uniovi.services.ApiKeyService;
-import com.uniovi.services.PlayerService;
+import com.uniovi.services.impl.PlayerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -12,14 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Optional;
 
 @Controller
-public class HomeController{
-    private final PlayerService playerService;
+public class HomeController<T extends QuestionBase, P extends QuestionBaseDto> {
+    private final PlayerServiceImpl<T,P> playerService;
     private final ApiKeyService apiKeyService;
 
+
     @Autowired
-    public HomeController(PlayerService playerService, ApiKeyService apiKeyService) {
+    public HomeController(PlayerServiceImpl<T,P> playerService, ApiKeyService apiKeyService) {
         this.playerService = playerService;
         this.apiKeyService = apiKeyService;
+
     }
 
     @RequestMapping("/")

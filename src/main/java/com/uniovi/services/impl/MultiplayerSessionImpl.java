@@ -1,8 +1,8 @@
 package com.uniovi.services.impl;
 
+import com.uniovi.dto.QuestionBaseDto;
 import com.uniovi.entities.MultiplayerSession;
 import com.uniovi.entities.Player;
-import com.uniovi.entities.Question;
 import com.uniovi.entities.QuestionBase;
 import com.uniovi.repositories.MultiplayerSessionRepository;
 import com.uniovi.repositories.PlayerRepository;
@@ -15,12 +15,13 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class MultiplayerSessionImpl implements MultiplayerSessionService {
+public class MultiplayerSessionImpl<T extends QuestionBase, P extends QuestionBaseDto> implements MultiplayerSessionService<T,P> {
     private final PlayerRepository playerRepository;
     private final MultiplayerSessionRepository multiplayerSessionRepository;
-    private QuestionService questionService;
 
-    private Map<String, List<QuestionBase>> multiplayerSessionQuestions = new HashMap<>();
+    private QuestionService<T,P> questionService;
+
+    private final  Map<String, List<T>> multiplayerSessionQuestions = new HashMap<>();
 
 
     public MultiplayerSessionImpl(PlayerRepository playerRepository, MultiplayerSessionRepository multiplayerSessionRepository) {
@@ -29,9 +30,9 @@ public class MultiplayerSessionImpl implements MultiplayerSessionService {
 
     }
 
-    public void setQuestionService(QuestionService questionService) {
-        this.questionService = questionService;
-    }
+
+
+
 
     @Override
     @Transactional
@@ -92,10 +93,15 @@ public class MultiplayerSessionImpl implements MultiplayerSessionService {
     }
 
     @Override
-    public List<QuestionBase> getQuestions(String code) {
+    public List<T> getQuestions(String code) {
         if (!multiplayerSessionQuestions.containsKey(code)) {
             return null;
         }
         return new ArrayList<>(multiplayerSessionQuestions.get(code));
+    }
+
+    @Override
+    public void setQuestionService(QuestionService<T, P> questionService) {
+        this.questionService = questionService;
     }
 }

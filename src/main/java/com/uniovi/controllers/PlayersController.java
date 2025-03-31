@@ -3,14 +3,15 @@ package com.uniovi.controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.uniovi.components.generators.QuestionGeneratorBaseImpl;
 import com.uniovi.configuration.SecurityConfig;
 import com.uniovi.dto.QuestionBaseDto;
+import com.uniovi.dto.QuestionDto;
 import com.uniovi.dto.RoleDto;
 import com.uniovi.entities.*;
 import com.uniovi.services.*;
 import com.uniovi.services.impl.PlayerServiceImpl;
 import com.uniovi.services.impl.QuestionBaseServiceImpl;
+import com.uniovi.services.impl.QuestionServiceImageImpl;
 import com.uniovi.services.impl.QuestionServiceImpl;
 import com.uniovi.validators.EditUserValidator;
 import com.uniovi.validators.SignUpValidator;
@@ -41,22 +42,22 @@ import static com.uniovi.services.QuestionImageGeneratorService.JSON_FILE_PATH;
 public class PlayersController<T extends QuestionBase, P extends QuestionBaseDto> {
     private final PlayerService playerService;
     private final RoleService roleService;
-    private final PlayerServiceImpl playerServiceImageImpl;
-    private final QuestionBaseServiceImpl<T,P> questionService;
+    private final QuestionServiceImpl questionService;
+    private final QuestionServiceImageImpl questionImageService;
     private final SignUpValidator signUpValidator;
     private final EditUserValidator editUserValidator;
-    private final GameSessionService gameSessionService;
+    private final GameSessionService<T> gameSessionService;
 
     @Autowired
-    public PlayersController(PlayerService playerService, SignUpValidator signUpValidator, GameSessionService gameSessionService,
-                             RoleService roleService, QuestionBaseServiceImpl<T,P> questionService, EditUserValidator editUserValidator, PlayerServiceImpl playerServiceImageImpl) {
+    public PlayersController(PlayerService playerService, SignUpValidator signUpValidator, GameSessionService<T> gameSessionService,
+                             RoleService roleService, QuestionServiceImpl questionService, QuestionServiceImageImpl questionImageIService, EditUserValidator editUserValidator) {
         this.playerService = playerService;
         this.signUpValidator =  signUpValidator;
         this.gameSessionService = gameSessionService;
         this.roleService = roleService;
         this.questionService = questionService;
+        this.questionImageService = questionImageIService;
         this.editUserValidator = editUserValidator;
-        this.playerServiceImageImpl = playerServiceImageImpl;
     }
 
     @RequestMapping("/signup")
@@ -130,7 +131,6 @@ public class PlayersController<T extends QuestionBase, P extends QuestionBaseDto
         }
 
         playerService.addNewPlayer(user);
-        playerServiceImageImpl.addNewPlayer(user);
 
         try {
             request.login(user.getUsername(), user.getPassword());
@@ -184,7 +184,7 @@ public class PlayersController<T extends QuestionBase, P extends QuestionBaseDto
             return "redirect:/login";
         }
 
-        Page<GameSession> ranking = gameSessionService.getPlayerRanking(pageable, p);
+        Page<GameSession<T>> ranking = gameSessionService.getPlayerRanking(pageable, p);
 
         model.addAttribute("ranking", ranking.getContent());
         model.addAttribute("page", ranking);
@@ -332,10 +332,37 @@ public class PlayersController<T extends QuestionBase, P extends QuestionBaseDto
         }
     }
 
-    @RequestMapping("/questions/getJson")
+    @RequestMapping("/image/questions/getJson")
     @ResponseBody
     public String getJson() {
         return questionService.getJsonGenerator().toString();
+    }
+
+    @RequestMapping("/player/admin/image/deleteAllQuestions")
+    @ResponseBody
+    public String deleteAllImageQuestions() throws IOException {
+        questionImageService.deleteAllQuestions();
+        return "Questions deleted";
+    }
+
+    @PutMapping("/player/admin/image/saveQuestions")
+    @ResponseBody
+    public String saveImageQuestions(HttpServletResponse response, @RequestBody String json) throws IOException {
+        try {
+            JsonNode node = new ObjectMapper().readTree(json);
+            questionImageService.setJsonGenerator(node);
+            return "Questions saved";
+        }
+        catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return e.getMessage();
+        }
+    }
+
+    @RequestMapping("/questions/getJson")
+    @ResponseBody
+    public String getImageJson() {
+        return questionImageService.getJsonGenerator().toString();
     }
 
     @RequestMapping("/player/admin/monitoring")

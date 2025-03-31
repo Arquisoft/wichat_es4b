@@ -3,6 +3,7 @@ package com.uniovi.components.generators;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uniovi.entities.Answer;
+import com.uniovi.entities.Associations;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
 import org.slf4j.Logger;
@@ -77,7 +78,6 @@ public class QuestionGeneratorImpl extends QuestionGeneratorBaseImpl<Question>{
 
                 // Generate the question
                 Question q = new Question(questionStatement, options, correct, cat, language);
-
                 // Add the question to the list
                 questions.add(q);
             }

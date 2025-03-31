@@ -47,6 +47,7 @@ public class QuestionBase implements JsonEntity {
         this.correctAnswer = correctAnswer;
         this.category = category;
         this.language = language;
+
     }
 
     public QuestionBase(String statement, List<Answer> options, Answer correctAnswer, Category category, Language language) {

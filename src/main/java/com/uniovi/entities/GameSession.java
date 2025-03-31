@@ -17,7 +17,7 @@ import java.util.*;
 @Setter
 @Entity
 @NoArgsConstructor
-public class GameSession implements JsonEntity, Serializable {
+public class GameSession<T extends QuestionBase> implements JsonEntity, Serializable {
     @Id
     @GeneratedValue
     private Long id;
@@ -37,13 +37,13 @@ public class GameSession implements JsonEntity, Serializable {
     private int score;
 
     @Transient
-    private Set<QuestionBase> answeredQuestions = new HashSet<>();
+    private Set<T> answeredQuestions = new HashSet<>();
 
     @Transient
-    private List<QuestionBase> questionsToAnswer = new ArrayList<>();
+    private List<T> questionsToAnswer = new ArrayList<>();
 
     @Transient
-    private QuestionBase currentQuestion;
+    private T currentQuestion;
 
     @Transient
     private boolean isMultiplayer = false;
@@ -51,7 +51,7 @@ public class GameSession implements JsonEntity, Serializable {
     @Transient
     private boolean isFinished = false;
 
-    public GameSession(Player player, List<QuestionBase> questions) {
+    public GameSession(Player player, List<T> questions) {
         this.player = player;
         this.questionsToAnswer = questions;
         this.createdAt = LocalDateTime.now();
@@ -71,16 +71,16 @@ public class GameSession implements JsonEntity, Serializable {
         }
     }
 
-    public void addAnsweredQuestion(QuestionBase question) {
+    public void addAnsweredQuestion(T question) {
         questionsToAnswer.remove(question);
         answeredQuestions.add(question);
     }
 
-    public boolean isAnswered(QuestionBase question) {
+    public boolean isAnswered(T question) {
         return answeredQuestions.contains(question);
     }
 
-    public QuestionBase getNextQuestion() {
+    public T getNextQuestion() {
         if (questionsToAnswer.isEmpty()) {
             currentQuestion = null;
             return null;

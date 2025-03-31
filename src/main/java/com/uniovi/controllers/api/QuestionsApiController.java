@@ -9,9 +9,7 @@ import com.uniovi.dto.AnswerDto;
 import com.uniovi.dto.QuestionDto;
 import com.uniovi.entities.*;
 import com.uniovi.services.ApiKeyService;
-import com.uniovi.services.QuestionService;
 import com.uniovi.services.RestApiService;
-import com.uniovi.services.impl.QuestionBaseServiceImpl;
 import com.uniovi.services.impl.QuestionServiceImpl;
 import com.uniovi.validators.QuestionValidator;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,18 +36,21 @@ import java.util.Map;
 
 @Tag(name = "Questions API", description = "API for managing questions")
 @RestController
-public class QuestionsApiController {
+public class QuestionsApiController<T extends QuestionBase> {
     private final ApiKeyService apiKeyService;
-    private final RestApiService restApiService;
+    private RestApiService<T> restApiService;
     private final QuestionServiceImpl questionService;
     private final QuestionValidator questionValidator;
 
     @Autowired
-    public QuestionsApiController(ApiKeyService apiKeyService, RestApiService restApiService, QuestionServiceImpl questionService, QuestionValidator questionValidator) {
+    public QuestionsApiController(ApiKeyService apiKeyService, QuestionServiceImpl questionService, QuestionValidator questionValidator) {
         this.apiKeyService = apiKeyService;
-        this.restApiService = restApiService;
         this.questionService = questionService;
         this.questionValidator = questionValidator;
+    }
+
+    protected void setRestApiService(RestApiService<T> restApiService) {
+        this.restApiService = restApiService;
     }
 
     @Operation(summary = "Fetch questions, with different params available for management", description = "Fetch questions based on the provided parameters such as category, statement, id. The results are paged, and the page can be controlled with the page and size parameters.")
@@ -122,8 +123,8 @@ public class QuestionsApiController {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode root = objectMapper.createObjectNode();
         ArrayNode arrayNode = objectMapper.createArrayNode();
-        List<Question> questions = restApiService.getQuestions(params, pageable);
-        for (Question question : questions) {
+        List<T> questions = restApiService.getQuestions(params, pageable);
+        for (T question : questions) {
             arrayNode.add(question.toJson());
         }
         root.set("questions", arrayNode);

@@ -41,18 +41,24 @@ servers = {
 })
 @Tag(name = "Player API", description = "API for managing players")
 @RestController
-public class PlayerApiController {
+public class PlayerApiBaseController<T extends QuestionBase> {
     private final ApiKeyService apiKeyService;
-    private final RestApiService restApiService;
+    private RestApiService<T> restApiService;
     private final SignUpValidator signUpValidator;
-    private final PlayerService playerService;
+    private PlayerService playerService;
 
     @Autowired
-    public PlayerApiController(ApiKeyService apiKeyService, RestApiService restApiService, SignUpValidator signUpValidator, PlayerService playerService) {
+    public PlayerApiBaseController(ApiKeyService apiKeyService, SignUpValidator signUpValidator) {
         this.apiKeyService = apiKeyService;
-        this.restApiService = restApiService;
         this.signUpValidator = signUpValidator;
+    }
+
+    protected void setPlayerService(PlayerService playerService) {
         this.playerService = playerService;
+    }
+
+    protected void setRestApiService(RestApiService<T> restApiService) {
+        this.restApiService = restApiService;
     }
 
     @Operation(summary = "Get players by various filters", description = "Fetch players based on the provided parameters such as username, email, id, roles.")

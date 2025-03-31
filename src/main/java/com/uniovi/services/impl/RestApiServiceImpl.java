@@ -1,6 +1,7 @@
 package com.uniovi.services.impl;
 
 import com.mysql.cj.util.StringUtils;
+import com.uniovi.dto.QuestionBaseDto;
 import com.uniovi.entities.*;
 import com.uniovi.repositories.RestApiLogRepository;
 import com.uniovi.services.CategoryService;
@@ -8,29 +9,31 @@ import com.uniovi.services.PlayerService;
 import com.uniovi.services.QuestionService;
 import com.uniovi.services.RestApiService;
 import jakarta.transaction.Transactional;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import org.springframework.data.domain.Pageable;
 import java.util.*;
 
 @Service
 @Transactional // makes hibernate open transaction context automatically to avoid lazy-loading issues
-public class RestApiServiceImpl implements RestApiService {
+public class RestApiServiceImpl<T extends QuestionBase, P extends QuestionBaseDto> implements RestApiService<T> {
     private final PlayerService playerService;
     private final RestApiLogRepository restApiLogRepository;
-    private final QuestionService questionService;
+    @Setter
+    private  QuestionService<T, P> questionService;
     private final CategoryService categoryService;
 
     @Autowired
-    public RestApiServiceImpl(PlayerService playerService, RestApiLogRepository restApiLogRepository,
-                              QuestionService questionService, CategoryService categoryService) {
+    public RestApiServiceImpl(PlayerService playerService, RestApiLogRepository restApiLogRepository, CategoryService categoryService) {
         this.playerService = playerService;
         this.restApiLogRepository = restApiLogRepository;
-        this.questionService = questionService;
         this.categoryService = categoryService;
     }
+
+
 
     @Override
     public List<Player> getPlayers(Map<String, String> params) {
@@ -104,7 +107,7 @@ public class RestApiServiceImpl implements RestApiService {
     }
 
     @Override
-    public List<Question> getQuestions(Map<String, String> params, Pageable pageable) {
+    public List<T> getQuestions(Map<String, String> params, Pageable pageable) {
         String lang = LocaleContextHolder.getLocale().getLanguage();
         if (params.containsKey("lang")) {
             lang = params.get("lang");
@@ -125,7 +128,7 @@ public class RestApiServiceImpl implements RestApiService {
         }
         if (params.containsKey("id")) {
             try {
-                Optional<Question> found = questionService.getQuestion(Long.parseLong(params.get("id")));
+                Optional<T> found = questionService.getQuestion(Long.parseLong(params.get("id")));
                 return found.map(List::of).orElseGet(List::of);
             } catch (NumberFormatException e) {
                 return List.of();

@@ -4,11 +4,12 @@ import com.uniovi.entities.ApiKey;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Question;
 
+import com.uniovi.entities.QuestionBase;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Map;
 
-public interface RestApiService {
+public interface RestApiService<T extends QuestionBase> {
     /**
      * Get all the players in the database
      * @param params A map with the parameters of the request
@@ -29,5 +30,5 @@ public interface RestApiService {
      * @param params A map with the parameters of the request
      * @return A list with all the questions
      */
-    List<Question> getQuestions(Map<String, String> params, Pageable pageable);
+    List<T> getQuestions(Map<String, String> params, Pageable pageable);
 }
