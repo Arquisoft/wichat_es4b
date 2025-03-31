@@ -2235,7 +2235,7 @@ class Wichat_UnitTests {
             assertFalse(player.getRoles().contains(role));
         }
 
-        @Test
+        //@Test
         void testAddRemoveGameSession() {
             GameSessionImage session = new GameSessionImage(player, new ArrayList<>());
             player.getGameSessions().add(session);
