@@ -41,8 +41,11 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           command: |
             export KEYSTORE_PATH=${{ secrets.KEYSTORE_PATH }}
+            echo "KEYSTORE_PATH=${{ secrets.KEYSTORE_PATH }}" >> .env
             export KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
+            echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> .env
             export LLM_API_KEY=${{ secrets.LLM_API_KEY }}
+            echo "LLM_API_KEY=${{ secrets.LLM_API_KEY }}" >> .env
             wget https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/docker-compose.yml -O docker-compose.yml
             wget https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/prometheus.yml -O prometheus.yml
             docker compose down
