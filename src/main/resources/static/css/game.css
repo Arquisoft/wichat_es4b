@@ -8,7 +8,7 @@
 .countdown {
     position: absolute;
     top: 53%;
-    left: 50%;
+    left: 195.2%;
     transform: translate(-50%, -50%);
     font-size: 2em;
     color: white;
@@ -134,6 +134,19 @@
     background-color: #ccc; /* Color gris para el botón deshabilitado */
     color: #666;
     cursor: not-allowed; /* Cambia el cursor a "no permitido" */
+}
+
+.stopwatch-container {
+    text-align: justify; /* Centra el reloj */
+    font-size: 2rem; /* Aumenta el tamaño del texto si el reloj es texto */
+    padding: 20px;
+}
+
+.stopwatch-container img,
+.stopwatch-container svg {
+
+    width: 120px; /* Ajusta el tamaño si es una imagen o SVG */
+    height: 120px;
 }
 
 

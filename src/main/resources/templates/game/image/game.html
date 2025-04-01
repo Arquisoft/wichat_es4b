@@ -5,18 +5,7 @@
 <link th:href="@{/css/game.css}" rel="stylesheet" type="text/css"/>
 <canvas th:replace="~{fragments/background}"></canvas>
 <nav th:replace="~{fragments/nav}"></nav>
-<p class="points text-right mr-3">
-    <span class="" th:text="#{game.points}"></span>
-    <b id="gamePoints" th:inline="text" th:text="${session.gameSessionImage.score}"></b>
-</p>
-<p class="questionCounter text-right mr-3">
-    <span class="" th:text="#{game.currentQuestion}"></span>
-    <b id="questionNumber" th:inline="text">
-        <span id="currentQuestion" th:text="${session.gameSessionImage.answeredQuestions.size()+1}"></span>
-        /
-        <span id="totalQuestions" th:text="${session.gameSessionImage.questionsToAnswer.size() + session.gameSessionImage.answeredQuestions.size()}"></span>
-    </b>
-</p>
+
 <div id="gameFrame" th:replace="~{game/image/fragments/gameFrame}"></div>
 
 <footer th:replace="~{fragments/footer}"></footer>
