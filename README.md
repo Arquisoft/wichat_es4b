@@ -21,7 +21,7 @@ As a basis, we have used last year's project [wiq_es04b](https://github.com/Arqu
 
 1. Fist you have to clone the repository using a CMD and the following command: `git clone https://github.com/Arquisoft/wichat_es4b.git` or using an IDE with Git integration or any other app of your preference.
 
-2. Then you have to execute the [runServer.bat](https://github.com/Arquisoft/wichat_es4b/blob/master/database/hsqldb/bin/runServer.bat) to start the local database.
+2. Next, download [HSQLDB](https://sourceforge.net/projects/hsqldb/files/hsqldb/hsqldb_2_7/) and execute the `hsqldb/bin/runServer.bat` script to start the local database.
 
 3. With the database initialized you have to open a CMD in the project root directory and execute the following command `mvnw spring-boot:run`, to start the application.
 
