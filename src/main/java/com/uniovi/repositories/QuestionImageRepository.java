@@ -10,8 +10,9 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface QuestionImageRepository extends CrudRepository<QuestionImage, Long> {
-    QuestionImage findByStatement(String statement);
+
     List<QuestionImage> findAll();
+    QuestionImage findByStatement(String statement);
 
     @Query("SELECT q FROM QuestionImage q WHERE q.language = ?1")
     Page<QuestionImage> findByLanguage(Pageable pageable, String language);

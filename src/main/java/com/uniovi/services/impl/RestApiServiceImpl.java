@@ -5,14 +5,13 @@ import com.uniovi.entities.*;
 import com.uniovi.repositories.RestApiLogRepository;
 import com.uniovi.services.CategoryService;
 import com.uniovi.services.PlayerService;
-import com.uniovi.services.QuestionService;
 import com.uniovi.services.RestApiService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import org.springframework.data.domain.Pageable;
 import java.util.*;
 
 @Service
@@ -20,12 +19,12 @@ import java.util.*;
 public class RestApiServiceImpl implements RestApiService {
     private final PlayerService playerService;
     private final RestApiLogRepository restApiLogRepository;
-    private final QuestionService questionService;
+    private final QuestionServiceImpl questionService;
     private final CategoryService categoryService;
 
     @Autowired
     public RestApiServiceImpl(PlayerService playerService, RestApiLogRepository restApiLogRepository,
-                              QuestionService questionService, CategoryService categoryService) {
+                              QuestionServiceImpl questionService, CategoryService categoryService) {
         this.playerService = playerService;
         this.restApiLogRepository = restApiLogRepository;
         this.questionService = questionService;

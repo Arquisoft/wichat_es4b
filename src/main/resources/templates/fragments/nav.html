@@ -108,6 +108,21 @@
                                 th:text="#{navbar.ranking.local}"
                         ></a>
                     </li>
+                    <li>
+                        <a
+                                class="dropdown-item"
+                                href="/ranking/image/global"
+                                th:text="#{navbar.ranking.global.image}"
+                        ></a>
+                    </li>
+                    <li>
+                        <a
+                                sec:authorize="isAuthenticated()"
+                                class="dropdown-item"
+                                href="/ranking/image/local"
+                                th:text="#{çnavbar.ranking.local.image}"
+                        ></a>
+                    </li>
                 </ul>
             </li>
             <!--FIN SECCION RANKING-->

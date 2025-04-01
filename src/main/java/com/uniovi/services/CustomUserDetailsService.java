@@ -15,7 +15,7 @@ import java.util.Collection;
 @Service("userDetailsService")
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private PlayerRepository playerRepository;
+    private final PlayerRepository playerRepository;
 
     public CustomUserDetailsService(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;

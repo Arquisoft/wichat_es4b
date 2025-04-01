@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
 public interface PlayerRepository extends CrudRepository<Player, Long> {
+
     Player findByEmail(String email);
     Player findByUsername(String nickname);
     @Query("SELECT player FROM Player player WHERE player.multiplayerCode=:multiplayerCode")

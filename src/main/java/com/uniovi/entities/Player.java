@@ -49,6 +49,14 @@ public class Player implements JsonEntity {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "player")
     private ApiKey apiKey;
 
+    //*****  IMAGE
+
+    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<GameSessionImage> gameSessionsImage = new HashSet<>();
+
+    //*****
+
+
 
 
     // Transient: no se almacena en la base de datos

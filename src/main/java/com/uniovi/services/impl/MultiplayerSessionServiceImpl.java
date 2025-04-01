@@ -7,23 +7,23 @@ import com.uniovi.repositories.MultiplayerSessionRepository;
 import com.uniovi.repositories.PlayerRepository;
 import com.uniovi.services.GameSessionService;
 import com.uniovi.services.MultiplayerSessionService;
-import com.uniovi.services.QuestionService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
-public class MultiplayerSessionImpl implements MultiplayerSessionService {
+public class MultiplayerSessionServiceImpl implements MultiplayerSessionService<Question> {
+
     private final PlayerRepository playerRepository;
     private final MultiplayerSessionRepository multiplayerSessionRepository;
-    private final QuestionService questionService;
+    private final QuestionServiceImpl questionService;
 
-    private Map<String, List<Question>> multiplayerSessionQuestions = new HashMap<>();
+    private final Map<String, List<Question>> multiplayerSessionQuestions = new HashMap<>();
 
 
-    public MultiplayerSessionImpl(PlayerRepository playerRepository, MultiplayerSessionRepository multiplayerSessionRepository,
-                                  QuestionService questionService) {
+    public MultiplayerSessionServiceImpl(PlayerRepository playerRepository, MultiplayerSessionRepository multiplayerSessionRepository,
+                                         QuestionServiceImpl questionService) {
         this.playerRepository = playerRepository;
         this.multiplayerSessionRepository = multiplayerSessionRepository;
         this.questionService = questionService;
