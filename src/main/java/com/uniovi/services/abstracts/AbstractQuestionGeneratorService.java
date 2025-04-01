@@ -58,7 +58,7 @@ public abstract class AbstractQuestionGeneratorService<S extends QuestionService
         }
     }
 
-    public void generateAllQuestions() throws IOException {
+    private void generateAllQuestions() throws IOException {
         started = true;
         resetGeneration();
     }
@@ -84,7 +84,7 @@ public abstract class AbstractQuestionGeneratorService<S extends QuestionService
     }
 
     @Transactional
-    public abstract void processQuestions() throws IOException, InterruptedException;
+    protected abstract void processQuestions() throws IOException, InterruptedException;
 
 
     @Transactional

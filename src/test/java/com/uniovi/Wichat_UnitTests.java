@@ -60,7 +60,7 @@ class Wichat_UnitTests {
     @Autowired
     private QuestionImageServiceImpl questionImageService;
     @Autowired
-    private QuestionGeneratorService questionGeneratorService;
+    private QuestionGeneratorServiceImpl questionGeneratorServiceImpl;
     @Autowired
     private AnswerServiceImpl answerService;
     @Autowired
@@ -132,7 +132,7 @@ class Wichat_UnitTests {
 
     @Order(3)
     void testQuestionsGenerator() throws IOException, InterruptedException {
-        questionGeneratorService.generateTestQuestions();
+        questionGeneratorServiceImpl.generateTestQuestions();
         List<Question> questions = questionService.getAllQuestions();
         assertFalse(questions.isEmpty());
     }
@@ -873,7 +873,7 @@ class Wichat_UnitTests {
     @Order(51)
     void testGetQuestionsByCategoryName() throws IOException, InterruptedException, JSONException {
         String cat = "Science";
-        questionGeneratorService.generateTestQuestions(cat);
+        questionGeneratorServiceImpl.generateTestQuestions(cat);
         Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
         ApiKey apiKey = player.getApiKey();
 
@@ -889,7 +889,7 @@ class Wichat_UnitTests {
     @Order(52)
     void testGetQuestionsByCategoryId() throws IOException, InterruptedException, JSONException {
         String category = "Science";
-        questionGeneratorService.generateTestQuestions(category);
+        questionGeneratorServiceImpl.generateTestQuestions(category);
         Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
         ApiKey apiKey = player.getApiKey();
         Category cat = categoryService.getCategoryByName(category);
@@ -2253,6 +2253,6 @@ class Wichat_UnitTests {
      * Inserts some sample questions into the database
      */
     private void insertSomeQuestions() throws IOException, InterruptedException {
-        questionGeneratorService.generateTestQuestions();
+        questionGeneratorServiceImpl.generateTestQuestions();
     }
 }

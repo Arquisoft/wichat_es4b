@@ -9,7 +9,6 @@ import com.uniovi.entities.Question;
 import com.uniovi.repositories.AnswerRepository;
 import com.uniovi.repositories.QuestionRepository;
 import com.uniovi.services.CategoryService;
-import com.uniovi.services.QuestionGeneratorService;
 import com.uniovi.services.QuestionService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -29,14 +28,14 @@ import java.util.Random;
 @Service
 public class QuestionServiceImpl implements QuestionService<Question, QuestionDto> {
 
-    private final QuestionRepository questionRepository;
     private final CategoryService categoryService;
     private final AnswerServiceImpl answerService;
-    private final AnswerRepository answerRepository;
     private final EntityManager entityManager;
+    private final QuestionRepository questionRepository;
+    private final AnswerRepository answerRepository;
 
     @Setter
-    private QuestionGeneratorService questionGeneratorService;
+    private QuestionGeneratorServiceImpl questionGeneratorServiceImpl;
 
     private final Random random = new SecureRandom();
 
@@ -174,18 +173,18 @@ public class QuestionServiceImpl implements QuestionService<Question, QuestionDt
 
     @Override
     public void deleteAllQuestions() throws IOException {
-        questionGeneratorService.resetGeneration();
+        questionGeneratorServiceImpl.resetGeneration();
         questionRepository.deleteAll();
     }
 
     @Override
     public void setJsonGenerator(JsonNode json) {
-        questionGeneratorService.setJsonGeneration(json);
+        questionGeneratorServiceImpl.setJsonGeneration(json);
     }
 
     @Override
     public JsonNode getJsonGenerator() {
-        return questionGeneratorService.getJsonGeneration();
+        return questionGeneratorServiceImpl.getJsonGeneration();
     }
 
 }
