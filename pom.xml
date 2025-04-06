@@ -78,13 +78,13 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>4.30.0</version> <!-- Use latest version -->
+            <version>4.31.0</version> <!-- Use latest version -->
         </dependency>
         <!-- WebDriver Manager -->
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
-            <version>6.0.0</version> <!-- Use latest version -->
+            <version>6.0.1</version> <!-- Use latest version -->
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
@@ -94,25 +94,25 @@
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
-            <version>7.21.1</version>
+            <version>7.22.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-junit</artifactId>
-            <version>7.21.1</version>
+            <version>7.22.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-spring</artifactId>
-            <version>7.21.1</version>
+            <version>7.22.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-junit-platform-engine</artifactId>
-            <version>7.21.1</version>
+            <version>7.22.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -140,7 +140,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.12</version>
+                <version>0.8.13</version>
                 <executions>
                     <execution>
                         <goals>
