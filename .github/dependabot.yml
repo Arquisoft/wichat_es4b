@@ -9,15 +9,15 @@ updates:
 
   - package-ecosystem: "github-actions"
     directory: "/"
-    ignore:
-      - dependency-name: "eclipse-temurin*"
-        update-types: [ "version-update:semver-major" ]
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 20
 
   - package-ecosystem: "docker"
     directory: "/"
+    ignore:
+      - dependency-name: "eclipse-temurin*"
+        update-types: [ "version-update:semver-major" ]
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 20
