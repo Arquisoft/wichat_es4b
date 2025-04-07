@@ -21,6 +21,7 @@ import java.util.Locale;
 @Configuration
 @EnableScheduling
 public class CustomConfiguration implements WebMvcConfigurer {
+
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver localeResolver = new SessionLocaleResolver();

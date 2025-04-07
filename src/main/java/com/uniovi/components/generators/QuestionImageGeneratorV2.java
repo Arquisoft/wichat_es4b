@@ -29,7 +29,6 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
     private String language;
 
     private final Random random = new SecureRandom();
-    private Logger logger = LoggerFactory.getLogger(QuestionImageGeneratorV2.class);
 
     public QuestionImageGeneratorV2(JsonNode jsonNode) {
         this.jsonNode = jsonNode;
@@ -69,7 +68,6 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
         // Get the question and answer words from the JSON
         String questionImageLabel = questionImage.get("question").textValue();
         String answerLabel= questionImage.get("answer").textValue();
-        String imageLabel = questionImage.get("image").textValue();
 
         // Replace the placeholders in the query with the actual values
         query = query.replace(languagePlaceholder, language).

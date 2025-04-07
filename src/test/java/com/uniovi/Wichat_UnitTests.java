@@ -9,6 +9,8 @@ import com.uniovi.entities.*;
 import com.uniovi.repositories.*;
 import com.uniovi.services.*;
 import com.uniovi.services.impl.*;
+import com.uniovi.test.cobertura.DtoCoverageTests;
+import com.uniovi.test.cobertura.EntitiesCoverageTests;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -122,6 +124,54 @@ class Wichat_UnitTests {
     private Player createDiferentPlayer(String word) {
         return new Player("name" + word, word + "test@email.com", "password");
     }
+
+    /*
+    --------------- TEST DE COBERTURA ---------------
+     */
+
+    // Se le asignan los números del 500 al 524 a los metodos de invocación
+
+    // Test de cobertura de los DTOs. Reservado de la 525 a la 549
+
+    @Test
+    @Order(500)
+    void testDtoCoverage() {
+        DtoCoverageTests dtoCoverageTests = new DtoCoverageTests();
+
+        dtoCoverageTests.testAnswerDto();
+        dtoCoverageTests.testCategoryDto();
+        dtoCoverageTests.testPlayerDto();
+        dtoCoverageTests.testQuestionDto();
+        dtoCoverageTests.testQuestionImageDto();
+        dtoCoverageTests.testRoleDto();
+    }
+
+    // Test de cobertura de las Entities. Reservado de la 550 a la 559
+
+    @Test
+    @Order(501)
+    void testEntitiesCoverage() {
+        EntitiesCoverageTests entitiesCoverageTests = new EntitiesCoverageTests();
+
+        entitiesCoverageTests.testAnswer();
+        entitiesCoverageTests.testAnswerImage();
+        entitiesCoverageTests.testPlayerRoleAssociation();
+        entitiesCoverageTests.testPlayerApiKeyAssociation();
+        entitiesCoverageTests.testApiKeyAccessLogAssociation();
+        entitiesCoverageTests.testPlayerGameSessionAssociation();
+        entitiesCoverageTests.testApiKey();
+        entitiesCoverageTests.testCategory();
+        entitiesCoverageTests.testGameSession();
+        entitiesCoverageTests.testGameSessionImage();
+        entitiesCoverageTests.testMultiplayerSession();
+        entitiesCoverageTests.testLanguage();
+    }
+
+
+    /*
+    --------------- FIN TEST DE COBERTURA ---------------
+     */
+
 
     @Test
     @Order(1)
@@ -1849,8 +1899,8 @@ class Wichat_UnitTests {
         assertFalse(answer.isEmpty());
         assertFalse(answer.isBlank());
         System.out.println(answer);
-
     }
+
 
     @Nested
     @DisplayName("GameSessionImage Unit Tests")
@@ -2198,8 +2248,6 @@ class Wichat_UnitTests {
      * @param headers Headers to include in the request
      * @param data    Data to send in the request
      * @return The response from the server
-     * @throws IOException
-     * @throws InterruptedException
      */
     private HttpResponse<String> sendRequest(String method, String uri, Map<String, String> headers, Map<String, Object> data) throws IOException, InterruptedException {
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
@@ -2243,7 +2291,6 @@ class Wichat_UnitTests {
      *
      * @param response The response from the server
      * @return The JSON object
-     * @throws JSONException
      */
     private JSONObject parseJsonResponse(HttpResponse<String> response) throws JSONException {
         return new JSONObject(response.body());
