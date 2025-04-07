@@ -1,7 +1,7 @@
 package com.uniovi.services.impl;
 
 import com.uniovi.components.generators.QuestionGenerator;
-import com.uniovi.components.generators.QuestionGeneratorV2;
+import com.uniovi.components.generators.QuestionGeneratorImpl;
 import com.uniovi.dto.QuestionDto;
 import com.uniovi.entities.Answer;
 import com.uniovi.entities.Category;
@@ -32,7 +32,7 @@ public class QuestionGeneratorServiceImpl extends AbstractQuestionGeneratorServi
     @Override
     @Transactional
     protected void processQuestions() throws IOException, InterruptedException {
-        QuestionGenerator qgen = new QuestionGeneratorV2(json);
+        QuestionGenerator qgen = new QuestionGeneratorImpl(json);
         do {
             QuestionType type = types.pop();
             for (Language lang : List.of(Language.ES, Language.EN, Language.FR, Language.DE)) {
@@ -47,7 +47,7 @@ public class QuestionGeneratorServiceImpl extends AbstractQuestionGeneratorServi
     @Override
     @Transactional
     public void generateTestQuestions() throws IOException, InterruptedException {
-        QuestionGenerator qgen = new QuestionGeneratorV2(json);
+        QuestionGenerator qgen = new QuestionGeneratorImpl(json);
         QuestionType type = types.pop();
         List<QuestionDto> questions;
 

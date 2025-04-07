@@ -101,7 +101,7 @@ public class GameImageController {
         Player p = player.get();
         String code="" + playerService.createMultiplayerGame(p.getId());//playerService.createMultiplayerGameImage(p.getId())
         multiplayerSessionImageImpl.multiCreate(code,p.getId());
-        session.setAttribute("multiplayerCodeImage",code);
+        session.setAttribute("multiplayerCode",code);
         return "redirect:/game/lobby";
     }
 

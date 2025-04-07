@@ -15,65 +15,31 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
+public class QuestionImageGeneratorImpl extends AbstractQuestionGenerator<QuestionImage> {
 
-    private final JsonNode jsonNode;
-    private final String languagePlaceholder;
-    private final String questionImagePlaceholder;
-    private final String answerPlaceholder;
-    private String language;
+    private Logger logger = LoggerFactory.getLogger(QuestionImageGeneratorImpl.class);
 
-    private final Random random = new SecureRandom();
-    private Logger logger = LoggerFactory.getLogger(QuestionImageGeneratorV2.class);
+    public QuestionImageGeneratorImpl(JsonNode jsonNode) {
+        super(jsonNode);
 
-    public QuestionImageGeneratorV2(JsonNode jsonNode) {
-        this.jsonNode = jsonNode;
-        this.languagePlaceholder = jsonNode.get("language_placeholder").textValue();
-        this.questionImagePlaceholder = jsonNode.get("capital_placeholder").textValue();
-        this.answerPlaceholder = jsonNode.get("landmark_placeholder").textValue();
     }
 
     @Override
-    public List<QuestionImage> getQuestions(String language) throws IOException, InterruptedException {
-        this.language = language;
-        List<QuestionImage> questionsImage = new ArrayList<>();
-        JsonNode categories = jsonNode.findValue("categories");
-        for(JsonNode category : categories){
-            String categoryName = category.get("name").textValue();
-            Category cat = new Category(categoryName);
-            JsonNode questionsImageNode = category.findValue("questions");
-            for(JsonNode questionImage : questionsImageNode){
-                questionsImage.addAll(this.generateQuestionImage(questionImage, cat));
-            }
-        }
-        return questionsImage;
-    }
-
-
-
-    @Override
-    public List<QuestionImage> getQuestions(String language, JsonNode questionImage, Category cat) throws IOException, InterruptedException {
-        this.language = language;
-        return this.generateQuestionImage(questionImage, cat);
-    }
-
-    private List<QuestionImage> generateQuestionImage(JsonNode questionImage, Category cat) {
+    protected List<QuestionImage> generateQuestion(JsonNode question, Category cat) throws IOException, InterruptedException {
         // Get the SPARQL query from the JSON
-        String query = questionImage.get("sparqlQuery").textValue();
+        String query = question.get("sparqlQuery").textValue();
 
         // Get the question and answer words from the JSON
-        String questionImageLabel = questionImage.get("question").textValue();
-        String answerLabel= questionImage.get("answer").textValue();
-        String imageLabel = questionImage.get("image").textValue();
+        String questionImageLabel = question.get("question").textValue();
+        String answerLabel= question.get("answer").textValue();
+        String imageLabel = question.get("image").textValue();
 
         // Replace the placeholders in the query with the actual values
         query = query.replace(languagePlaceholder, language).
-                replace(questionImagePlaceholder, questionImageLabel).
+                replace(questionPlaceholder, questionImageLabel).
                 replace(answerPlaceholder, answerLabel);
 
         // Execute the query and get the results
@@ -83,7 +49,7 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
 
         do {
             try {
-                results = getQueryResult();
+                results = getQueryResultL();
                 pass = true;
             } catch (Exception e) {
                 e.printStackTrace(); // Agregamos logging para depuración
@@ -93,22 +59,22 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
 // Verificamos que haya resultados antes de procesarlos
         if (results != null && !results.isEmpty()) {
             // Preparamos la declaración base según el idioma
-            String statement = this.prepareStatement(questionImage);
+            String statement = this.prepareStatement(question);
 
             for (String[] result : results) {
                 String correctAnswer = result[0];
                 AnswerImage correct = new AnswerImage(correctAnswer, true);
 
                 // Generamos las opciones de respuesta
-                List<AnswerImage> options = this.generateOptions(results, correctAnswer, questionImageLabel);
+                List<AnswerImage> options = this.generateOptionsL(results, correctAnswer, questionImageLabel);
                 options.add(correct); // Añadimos la respuesta correcta
 
                 if (statement != null) {
-                    String questionImageStatement = statement.replace(questionImagePlaceholder, correctAnswer);
+                    String questionStatement = statement.replace(questionPlaceholder, correctAnswer);
                     String imageUrl = result[1];
 
                     // Creamos la pregunta
-                    QuestionImage q = new QuestionImage(questionImageStatement, options, correct, cat, language, imageUrl);
+                    QuestionImage q = new QuestionImage(questionStatement, options, correct, cat, language, imageUrl);
 
                     // Agregamos la pregunta a la lista
                     questionsImage.add(q);
@@ -116,9 +82,10 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
             }
         }
         return questionsImage;
-
     }
-    private List<AnswerImage> generateOptions(List<String[]> results, String correctAnswer, String answerLabel) {
+
+    // Método para obtener las opciones
+    protected List<AnswerImage> generateOptionsL(List<String[]> results, String correctAnswer, String answerLabel) {
         List<AnswerImage> options = new ArrayList<>();
         List<String> usedOptions = new ArrayList<>();
         int size = results.size();
@@ -127,7 +94,7 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
         while (options.size() < 3 && tries < 10) {
             int randomIdx = random.nextInt(size);
             String option = results.get(randomIdx)[0];
-            if (!option.equals(correctAnswer) && !usedOptions.contains(option) ) {
+            if (!option.equals(correctAnswer) && !usedOptions.contains(option)) {
                 usedOptions.add(option);
                 options.add(new AnswerImage(option, false));
             }
@@ -136,40 +103,13 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
         return options;
     }
 
-//    private List<AnswerImage> generateOptions(JsonNode results, String correctAnswer, String answerLabel) {
-//        List<AnswerImage> options = new ArrayList<>();
-//        List<String> usedOptions = new ArrayList<>();
-//        int size = results.size();
-//        int tries = 0;
-//
-//       while (options.size() < 3 && tries < 10) {
-//            int randomIdx = random.nextInt(size);
-//            String option = results.get(randomIdx).path(answerLabel).path("value").asText();
-//            if (!option.equals(correctAnswer) && !usedOptions.contains(option) ) {
-//                usedOptions.add(option);
-//                options.add(new AnswerImage(option, false));
-//            }
-//            tries++;
-//        }
-//        return options;
-//    }
-
-    /**
-     * Generates a statement based on the language of the question
-     * @param questionImage The question node
-     * @return The statement in the language of the question or null if the language is not found
-     */
-    private String prepareStatement(JsonNode questionImage) {
-        JsonNode statementNode = questionImage.findValue("statements");
-        for (JsonNode statement : statementNode) {
-            if (statement.get("language").textValue().equals(language)) {
-                return statement.get("statement").textValue();
-            }
-        }
+    @Override
+    protected JsonNode getQueryResult(String query) throws IOException, InterruptedException {
         return null;
     }
 
-    public static List<String[]> getQueryResult() {
+
+    public static List<String[]> getQueryResultL() {
         String ENDPOINT = "https://query.wikidata.org/sparql";
 
         String QUERY = """
