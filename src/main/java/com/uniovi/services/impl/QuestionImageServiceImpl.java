@@ -9,7 +9,6 @@ import com.uniovi.entities.QuestionImage;
 import com.uniovi.repositories.AnswerImageRepository;
 import com.uniovi.repositories.QuestionImageRepository;
 import com.uniovi.services.LlmService;
-import com.uniovi.services.QuestionImageGeneratorService;
 import com.uniovi.services.QuestionService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -39,7 +38,7 @@ public class QuestionImageServiceImpl implements QuestionService<QuestionImage, 
     private final LlmService llmService;
 
     @Setter
-    private QuestionImageGeneratorService questionGeneratorService;
+    private QuestionImageGeneratorServiceImpl questionGeneratorService;
 
     private final Random random = new SecureRandom();
 

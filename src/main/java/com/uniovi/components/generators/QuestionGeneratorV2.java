@@ -28,7 +28,7 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
     private String language;
 
     private final Random random = new SecureRandom();
-    private Logger logger = LoggerFactory.getLogger(QuestionGeneratorV2.class);
+    private final Logger logger = LoggerFactory.getLogger(QuestionGeneratorV2.class);
 
     public QuestionGeneratorV2(JsonNode jsonNode) {
         this.jsonNode = jsonNode;

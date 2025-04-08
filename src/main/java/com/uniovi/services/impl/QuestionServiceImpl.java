@@ -9,7 +9,6 @@ import com.uniovi.entities.Question;
 import com.uniovi.repositories.AnswerRepository;
 import com.uniovi.repositories.QuestionRepository;
 import com.uniovi.services.CategoryService;
-import com.uniovi.services.QuestionGeneratorService;
 import com.uniovi.services.QuestionService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -36,7 +35,7 @@ public class QuestionServiceImpl implements QuestionService<Question, QuestionDt
     private final EntityManager entityManager;
 
     @Setter
-    private QuestionGeneratorService questionGeneratorService;
+    private QuestionGeneratorServiceImpl questionGeneratorServiceImpl;
 
     private final Random random = new SecureRandom();
 
@@ -115,10 +114,7 @@ public class QuestionServiceImpl implements QuestionService<Question, QuestionDt
     @Override
     public boolean checkAnswer(Long idquestion, Long idanswer) {
         Optional<Question> q = questionRepository.findById(idquestion);
-        if (q.isPresent()) {
-            return q.get().getCorrectAnswer().getId().equals(idanswer);
-        }
-        return false;
+        return q.map(question -> question.getCorrectAnswer().getId().equals(idanswer)).orElse(false);
     }
 
     @Override
@@ -174,18 +170,18 @@ public class QuestionServiceImpl implements QuestionService<Question, QuestionDt
 
     @Override
     public void deleteAllQuestions() throws IOException {
-        questionGeneratorService.resetGeneration();
+        questionGeneratorServiceImpl.resetGeneration();
         questionRepository.deleteAll();
     }
 
     @Override
     public void setJsonGenerator(JsonNode json) {
-        questionGeneratorService.setJsonGeneration(json);
+        questionGeneratorServiceImpl.setJsonGeneration(json);
     }
 
     @Override
     public JsonNode getJsonGenerator() {
-        return questionGeneratorService.getJsonGeneration();
+        return questionGeneratorServiceImpl.getJsonGeneration();
     }
 
 }
