@@ -1,14 +1,14 @@
-.stopwatch-container {
+.stopwatch-container-pregunta-caliete {
     position: relative;
     text-align: center;
     width: 35%;
     margin: 2% auto;
 }
 
-.countdown {
+.countdown-game-pregunta {
     position: absolute;
     top: 53%;
-    left: 195.2%;
+    left: 50%;
     transform: translate(-50%, -50%);
     font-size: 2em;
     color: white;
@@ -42,9 +42,9 @@
         font-size: 1.5em;
     }
 
-    .countdown {
-         font-size: 3em;
-     }
+    .countdown-game-pregunta {
+        font-size: 3em;
+    }
 }
 
 .container .btn {
@@ -135,41 +135,6 @@
     color: #666;
     cursor: not-allowed; /* Cambia el cursor a "no permitido" */
 }
-
-.stopwatch-container {
-    text-align: justify; /* Centra el reloj */
-    font-size: 2rem; /* Aumenta el tamaño del texto si el reloj es texto */
-    padding: 20px;
-}
-
-.stopwatch-container img,
-.stopwatch-container svg {
-
-    width: 120px; /* Ajusta el tamaño si es una imagen o SVG */
-    height: 120px;
-}
-
-
-.normal.stopwatch-container {
-    position: relative;
-    text-align: center;
-    width: 35%;
-    margin: 2% auto;
-}
-
-.normal.countdown {
-    position: absolute;
-    top: 53%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 2em;
-    color: white;
-}
-.normal.stopwatch-img {
-    width: 45%;
-    height: auto;
-}
-
 
 
 

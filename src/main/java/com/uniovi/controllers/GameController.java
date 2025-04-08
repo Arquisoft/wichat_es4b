@@ -59,7 +59,7 @@ public class GameController {
 
         model.addAttribute("question", gameSession.getCurrentQuestion());
         model.addAttribute("questionDuration", getRemainingTime(gameSession));
-        return "game/basicGame";
+        return "game/GamePreguntaCaliente";
     }
 
     @RequestMapping("/game/trivial/multiplayer")
@@ -136,7 +136,7 @@ public class GameController {
 
         model.addAttribute("question", gameSession.getCurrentQuestion());
         model.addAttribute("questionDuration", getRemainingTime(gameSession));
-        return "game/basicGame";
+        return "game/GamePreguntaCaliente";
     }
 
     @RequestMapping("/multiplayerGame/endGame/{code}")
@@ -288,7 +288,7 @@ public class GameController {
         }
         model.addAttribute("question", gameSession.getCurrentQuestion());
         model.addAttribute("questionDuration", getRemainingTime(gameSession));
-        return "game/fragments/gameFrame";
+        return "game/fragments/gameFramePreguntaCaliente";
     }
 
     @RequestMapping("/game/points")

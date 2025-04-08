@@ -1,159 +1,184 @@
-<!-- question_fragment.html -->
-<div class="container mx-auto" id="gameFrame">
-    <h1 class="text-center">La imagen es de la ciudad...</h1>
-    <img th:src="${questionImage.imageUrl}" alt="Question Image"
-         class="img-fluid mx-auto d-block my-3" style="max-width: 500px; max-height: 300px;">
+<div class="container text-center" id="gameFrame">
+    <!-- Título -->
+    <h1 class="my-3">La imagen es de la ciudad...</h1>
 
-    <div class="container">
+    <!-- Contenedor Principal -->
+    <div class="row align-items-center">
+        <!-- Columna de Pistas -->
+        <div class="col-md-3">
+            <textarea id="hintBox" class="form-control" rows="5" readonly placeholder="Aquí aparecerán las pistas..." style="max-height: 450px; overflow-y: auto;"></textarea>
+            <button id="hintButton" class="btn btn-warning mt-2" onclick="disableHintButton()">Pedir pista</button>
+        </div>
+
+        <!-- Columna de Imagen y Botones -->
+        <div class="col-md-6 text-center">
+            <img th:src="${questionImage.imageUrl}" alt="Question Image"
+                 class="img-fluid mx-auto d-block my-3" style="max-width: 100%; max-height: 300px;">
             <div class="row">
-                <!-- Thymeleaf loop to generate buttons -->
-                <div th:each="answer : ${questionImage.returnScrambledOptions()}" class="col-6 col-md-6 col-12">
-                    <button th:id="${'btn' + answer.id}" class="btn btn-primary btn-block m-2 rounded" th:text="${answer.text}" th:value="${answer}"></button>
+                <!-- Thymeleaf loop para los botones -->
+                <div th:each="answer : ${questionImage.returnScrambledOptions()}" class="col-6">
+                    <button th:id="${'btn' + answer.id}" class="btn btn-primary btn-block m-2 rounded"
+                            th:text="${answer.text}" th:value="${answer}"></button>
                 </div>
-        </div>
-        <button id="continueBtn" class="prueba btn btn-primary btn-block m-2 rounded" th:text="#{game.continue}"></button>
-        <div id="bottomGamePart">
-            <div id="hintContainer">
-            <textarea th:fragment="hintBox" id="hintBox" class="form-control" rows="3" readonly
-                      placeholder="Aquí aparecerán las pistas..."></textarea>
-                <button id="hintButton" class="btn btn-warning mt-2" onclick="disableHintButton()">Pedir pista</button>
             </div>
-    </div>
-        <div th:replace="~{game/image/fragments/stopwatch}"></div>
-        <script th:inline="javascript" >
-            /*<![CDATA[*/
-            document.getElementById("hintButton").addEventListener("click", function() {
-                let questionId = /*[[${questionImage.id}]]*/ 0;
-
-                fetch(`/game/image/hint/${questionId}`)
-                    .then(response => response.text())
-                    .then(hint => {
-                        document.getElementById("hintBox").value = hint;
-                    })
-                    .catch(error => console.error("Error al obtener la pista:", error));
-            });
-
-            function disableHintButton() {
-                let button = document.getElementById("hintButton");
-                button.disabled = true; // Desactiva el botón
-                button.style.opacity = 0.5; // Reduce la opacidad para indicar que está deshabilitado
-                setTimeout(() => {
-                    button.disabled = false; // Lo reactiva después de 10s
-                    button.style.opacity = 1; // Restablece la opacidad
-                }, 10000);
-            }
-
-            function initiateGameCounters() {
-                let timeoutId = -1;
-                let interval = -1;
-                let questionId = [[${questionImage.id}]];
-                let corrAnswerId = [[${questionImage.correctAnswer.id}]];
-                let answers = /*[[${questionImage.options}]]*/ [];
-
-                $("#continueBtn").hide();
-
-                function setupAnswers() {
-                    answers.forEach(answer => {
-                        $("#btn" + answer.id).click(function () {
-                            clearTimeout(timeoutId);
-                            clearInterval(interval);
-
-                            if (corrAnswerId !== answer.id) {
-                                $("#btn" + answer.id).css("background-color", "red");
-                            }
-                            respuesta(questionId, answer.id);
-                        });
-                    });
-                }
-
-                setupAnswers();
-
-                function respuesta(qId, aId) {
-                    $.ajax(
-                        {
-                            type: "GET",
-                            url: "/game/image/" + qId + "/" + aId
-
-                    });
-                    answers.forEach(answer => {
-                        if (corrAnswerId === answer.id) {
-                            $("#btn" + answer.id).css("background-color", "green");
-                        }
-                        $("#btn" + answer.id).off("click");
-                    });
-
-                    initiateTimeout(qId, aId);
-                }
-
-                let timeoutPeriod = [[${questionDurationImage}]] * 1000; // Timeout period in milliseconds (e.g., 8000ms for 8 seconds)
-                let updateInterval = 100; // How often to update the progress bar (in milliseconds)
-
-                timeoutId = setTimeout(() => {
-                    //$("#gameFrame").load('/game/image/[[${questionImage.id}]]/-1');
-                    respuesta(questionId, -1);
-                }, timeoutPeriod);
-
-                initStopwatch(timeoutPeriod / 1000);
-                timeoutPeriod = timeoutPeriod - updateInterval * 2; // Adjust the timeout period to account for the update interval
-                interval = setInterval(updateProgressBar, updateInterval);
-
-                function updateProgressBar() {
-                    let progressBar = $('#progressBar');
-                    let currentTime = parseFloat(progressBar.attr('aria-valuenow'));
-                    let decrement = 100 * updateInterval / timeoutPeriod;
-                    let newTime = Math.max(0, currentTime - decrement);
-                    // Calculate the color based on the percentage
-                    let greenValue = Math.round((newTime * 255) / 100);
-                    let redValue = 255 - greenValue;
-                    let color = 'rgb(' + redValue + ',' + greenValue + ',0)';
-
-                    progressBar.css('width', newTime + '%');
-                    progressBar.css('background-color', color); // Apply the calculated color
-                    progressBar.attr('aria-valuenow', newTime);
-
-                    if(newTime <= 0) {
-                        clearInterval(interval);
-                    }
-                }
-
-                function initiateTimeout(qId, aId) {
-                    if (timeoutId) {
-                        clearTimeout(timeoutId);
-                        clearInterval(interval);
-                    }
-                    timeoutPeriod = 12000; // Timeout period in milliseconds (e.g., 8000ms for 8 seconds)
-                    updateInterval = 100; // How often to update the progress bar (in milliseconds)
-                    let progressBar = $('#progressBar');
-                    progressBar.attr('aria-valuenow', 100);
-
-                    timeoutId = setTimeout(function () {
-                        if (timeoutId) {
-                            clearTimeout(timeoutId);
-                            clearInterval(interval);
-                        }
-                        $("#gameFrame").load("/game/image/update");
-                    }, timeoutPeriod);
-
-                    initStopwatch(timeoutPeriod / 1000);
-                    timeoutPeriod = timeoutPeriod - updateInterval * 2; // Adjust the timeout period to account for the update interval
-                    interval = setInterval(updateProgressBar, updateInterval);
-
-                    $("#continueBtn").show();
-                    $("#continueBtn").off('click').on('click', function () {
-                        if (timeoutId) {
-                            clearTimeout(timeoutId);
-                            clearInterval(interval);
-                        }
-                        $("#gameFrame").load("/game/image/update");
-                    });
-                }
-            }
-
-            initiateGameCounters();
-            /*]]>*/
-        </script>
-        <div class="progress" style="height: 30px;">
-            <div class="progress-bar" role="progressbar" style="width: 100%; background-color: #00bf00" id="progressBar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+            <button id="continueBtn" class="btn btn-primary btn-block mt-3 rounded" th:text="#{game.continue}"></button>
         </div>
+
+        <!-- Columna de Reloj -->
+        <div class="col-md-3">
+            <p class="points text-right mr-3">
+                <span class="" th:text="#{game.points}"></span>
+                <b id="gamePoints" th:inline="text" th:text="${session.gameSessionImage.score}"></b>
+            </p>
+            <p class="questionCounter text-right mr-3">
+                <span class="" th:text="#{game.currentQuestion}"></span>
+                <b id="questionNumber" th:inline="text">
+                    <span id="currentQuestion" th:text="${session.gameSessionImage.answeredQuestions.size()+1}"></span>
+                    /
+                    <span id="totalQuestions" th:text="${session.gameSessionImage.questionsToAnswer.size() + session.gameSessionImage.answeredQuestions.size()}"></span>
+                </b>
+            </p>
+            <div class="stopwatch-container">
+                <div th:replace="~{game/image/fragments/stopwatch}"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Barra de Progreso -->
+    <div class="progress mt-3" style="height: 30px;">
+        <div class="progress-bar" role="progressbar" style="width: 100%; background-color: #00bf00"
+             id="progressBar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
 </div>
+
+<!-- Scripts -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    document.getElementById("hintButton").addEventListener("click", function() {
+        let questionId = /*[[${questionImage.id}]]*/ 0;
+
+        fetch(`/game/image/hint/${questionId}`)
+            .then(response => response.text())
+            .then(hint => {
+                document.getElementById("hintBox").value = hint;
+            })
+            .catch(error => console.error("Error al obtener la pista:", error));
+    });
+
+    function disableHintButton() {
+        let button = document.getElementById("hintButton");
+        button.disabled = true; // Desactiva el botón
+        button.style.opacity = 0.5; // Reduce la opacidad para indicar que está deshabilitado
+        setTimeout(() => {
+            button.disabled = false; // Lo reactiva después de 10s
+            button.style.opacity = 1; // Restablece la opacidad
+        }, 10000);
+    }
+
+    function initiateGameCounters() {
+        let timeoutId = -1;
+        let interval = -1;
+        let questionId = [[${questionImage.id}]];
+        let corrAnswerId = [[${questionImage.correctAnswer.id}]];
+        let answers = /*[[${questionImage.options}]]*/ [];
+
+        $("#continueBtn").hide();
+
+        function setupAnswers() {
+            answers.forEach(answer => {
+                $("#btn" + answer.id).click(function () {
+                    clearTimeout(timeoutId);
+                    clearInterval(interval);
+
+                    if (corrAnswerId !== answer.id) {
+                        $("#btn" + answer.id).css("background-color", "red");
+                    }
+                    respuesta(questionId, answer.id);
+                });
+            });
+        }
+
+        setupAnswers();
+
+        function respuesta(qId, aId) {
+            $.ajax(
+                {
+                    type: "GET",
+                    url: "/game/image/" + qId + "/" + aId
+                });
+            answers.forEach(answer => {
+                if (corrAnswerId === answer.id) {
+                    $("#btn" + answer.id).css("background-color", "green");
+                }
+                $("#btn" + answer.id).off("click");
+            });
+
+            initiateTimeout(qId, aId);
+        }
+
+        let timeoutPeriod = [[${questionDurationImage}]] * 1000; // Timeout period in milliseconds
+        let updateInterval = 100; // How often to update the progress bar
+
+        timeoutId = setTimeout(() => {
+            respuesta(questionId, -1);
+        }, timeoutPeriod);
+
+        initStopwatch(timeoutPeriod / 1000);
+        timeoutPeriod = timeoutPeriod - updateInterval * 2; // Adjust timeout period
+        interval = setInterval(updateProgressBar, updateInterval);
+
+        function updateProgressBar() {
+            let progressBar = $('#progressBar');
+            let currentTime = parseFloat(progressBar.attr('aria-valuenow'));
+            let decrement = 100 * updateInterval / timeoutPeriod;
+            let newTime = Math.max(0, currentTime - decrement);
+            let greenValue = Math.round((newTime * 255) / 100);
+            let redValue = 255 - greenValue;
+            let color = 'rgb(' + redValue + ',' + greenValue + ',0)';
+
+            progressBar.css('width', newTime + '%');
+            progressBar.css('background-color', color);
+            progressBar.attr('aria-valuenow', newTime);
+
+            if(newTime <= 0) {
+                clearInterval(interval);
+            }
+        }
+
+        function initiateTimeout(qId, aId) {
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+                clearInterval(interval);
+            }
+            timeoutPeriod = 12000;
+            updateInterval = 100;
+            let progressBar = $('#progressBar');
+            progressBar.attr('aria-valuenow', 100);
+
+            timeoutId = setTimeout(function () {
+                if (timeoutId) {
+                    clearTimeout(timeoutId);
+                    clearInterval(interval);
+                }
+                $("#gameFrame").load("/game/image/update");
+            }, timeoutPeriod);
+
+            initStopwatch(timeoutPeriod / 1000);
+            timeoutPeriod = timeoutPeriod - updateInterval * 2;
+            interval = setInterval(updateProgressBar, updateInterval);
+
+            $("#continueBtn").show();
+            $("#continueBtn").off('click').on('click', function () {
+                if (timeoutId) {
+                    clearTimeout(timeoutId);
+                    clearInterval(interval);
+                }
+                $("#gameFrame").load("/game/image/update");
+            });
+        }
+    }
+
+    initiateGameCounters();
+    /*]]>*/
+</script>
