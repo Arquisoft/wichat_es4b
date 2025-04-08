@@ -60,6 +60,74 @@ public class LoginAndSignUpSteps extends Wichat_IntegrationTests {
         driver.findElement(button).click();
     }
 
+    @And("I press the profile button")
+    public void iPressTheProfileButton() {
+        driver.findElement(By.xpath("//*[@id=\"btnUser\"]")).click();
+        driver.findElement(By.xpath("/html/body/nav/div/ul[2]/li[2]/div/a[3]")).click();
+    }
+
+    @When("I edit my email")
+    public void whenIEditMyEmail() {
+        WebElement emailInput = driver.findElement(By.id("email"));
+        emailInput.clear();
+        emailInput.sendKeys("nuevo@correo.com");
+        WebElement saveButton = driver.findElement(By.xpath("/html/body/div/form/div[3]/div/button"));
+        saveButton.click();
+    }
+    @When("I edit my username")
+    public void whenIEditMyUsername() {
+        WebElement emailInput = driver.findElement(By.id("username"));
+        emailInput.clear();
+        emailInput.sendKeys("nuevo");
+        WebElement saveButton = driver.findElement(By.xpath("/html/body/div/form/div[3]/div/button"));
+        saveButton.click();
+    }
+    @Then("I login with my new username")
+    public void iLoginWithMyNewUsername(){
+        WebElement username = driver.findElement(By.id("username"));
+        username.clear();
+        username.sendKeys("nuevo");
+        WebElement password = driver.findElement(By.id("password"));
+        password.clear();
+        password.sendKeys("password");
+
+        WebElement loginButton = driver.findElement(By.className("btn"));
+        loginButton.click();
+
+
+    }
+    @Then("I should see the message new username")
+    public void iShouldSeeTheMessageNewUsername() {
+        driver.findElement(By.xpath("//*[@id=\"btnUser\"]")).click();
+        driver.findElement(By.xpath("//*[@id=\"btnUserProfile\"]")).click();
+        String pageText = driver.findElement(By.tagName("body")).getText();
+        assertTrue(pageText.contains("nuevo"), "The page should contain the text 'nuevo@correo.com'");
+
+    }
+    @Then("I login with my new email")
+    public void iLoginWithMyNewEmail(){
+        WebElement username = driver.findElement(By.id("username"));
+        username.clear();
+        username.sendKeys("user1");
+        WebElement password = driver.findElement(By.id("password"));
+        password.clear();
+        password.sendKeys("password");
+
+        WebElement loginButton = driver.findElement(By.className("btn"));
+        loginButton.click();
+
+
+    }
+
+    @Then("I should see the message new email")
+    public void iShouldSeeTheMessageNewEmail() {
+        driver.findElement(By.xpath("//*[@id=\"btnUser\"]")).click();
+        driver.findElement(By.xpath("//*[@id=\"btnUserProfile\"]")).click();
+        String pageText = driver.findElement(By.tagName("body")).getText();
+        assertTrue(pageText.contains("nuevo@correo.com"), "The page should contain the text 'nuevo@correo.com'");
+
+    }
+
     @When("I logout")
     public void iLogout() {
         SeleniumUtils.waitLoadElementsBy(driver, "free", "//a[contains(@href, 'logout')]", 10).get(0).click();
