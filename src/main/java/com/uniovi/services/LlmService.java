@@ -29,13 +29,20 @@ public class LlmService {
         // Construcción del cuerpo de la solicitud
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(Map.of(
                 "model", "mistralai/Mistral-7B-Instruct-v0.3",
+                "temperature", 0.2,
+                "top_p", 0.7,
+                "frequency_penalty", 0,
+                "presence_penalty", 1,
+                "max_tokens", 1000,
                 "messages", List.of(
-                        Map.of("role", "system", "content", "" +
+                        Map.of("role", "system", "content",
                                 "You are a quiz game assistant that helps players on thinking what cities and locations are shown in the images. "
                                 + "Provide soft clues as hints to guide the user without telling" +
-                                " him the correct answer. Always respond in the language specified by the user."),
+                                " him the correct answer. Always answer in the language specified by the user."),
                         Map.of("role", "user", "content", question)
                 )
+
+
         ), headers);
 
         try {
