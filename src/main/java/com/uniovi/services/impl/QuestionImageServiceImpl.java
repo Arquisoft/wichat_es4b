@@ -192,7 +192,7 @@ public class QuestionImageServiceImpl implements QuestionService<QuestionImage, 
     public String getHintForImageQuestion(QuestionImage question) {
 
         String llmHint = ("Hola, tengo esta imagen: <" + question.getImageUrl() + ">, estas opciones de respuesta: "
-                + question.getOptions().toString() + ".\nY quiero que me respondas en el idioma de este acrónimo: " + question.getLanguage());
+                + question.getOptions().toString() + ".\nLa respuesta correcta es: " + question.getCorrectAnswer()  +  ".\nY quiero que me respondas en el idioma de este acrónimo: " + question.getLanguage());
         // Llamar al servicio LLM para obtener la pista usando Gemini.
         return llmService.sendQuestionToLLM(llmHint);
     }
