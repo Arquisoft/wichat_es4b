@@ -11,7 +11,37 @@
         <button id="continueBtn" class="prueba btn btn-primary btn-block m-2 rounded" th:text="#{game.continue}"></button>
     </div>
     <div id="bottomGamePart">
-        <div th:replace="~{game/fragments/stopwatch}"></div>
+        <div class="text-center">
+            <div class="stopwatch-container-pregunta-caliete">
+                <img th:src="@{/images/stopwatch.svg}" class="stopwatch-img" alt="Stopwatch">
+                <div class="countdown-game-pregunta" id="stopwatch" th:text="${questionDuration - 1}"></div>
+            </div>
+        </div>
+
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            activeIntervalId = null;
+
+            function initStopwatch(timer) {
+                // Si ya hay un contador activo, lo limpiamos
+                if (activeIntervalId !== null) {
+                    clearInterval(activeIntervalId);
+                }
+
+                let countdown = timer - 1;
+                const display = document.getElementById('stopwatch');
+
+                // Creamos un nuevo intervalo
+                activeIntervalId = setInterval(() => {
+                    countdown -= 1;
+                    if (countdown < 0) {
+                        countdown = 0;
+                    }
+                    display.textContent = countdown;
+                }, 1000);
+            }
+            /*]]>*/
+        </script>
         <script th:inline="javascript" >
             /*<![CDATA[*/
             function initiateGameCounters() {
