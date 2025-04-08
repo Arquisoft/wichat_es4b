@@ -1,4 +1,4 @@
-.stopwatch-container {
+.stopwatch-container-pregunta-caliete {
     position: relative;
     text-align: center;
     width: 35%;
@@ -136,20 +136,5 @@
     cursor: not-allowed; /* Cambia el cursor a "no permitido" */
 }
 
-.stopwatch-container-pregunta-caliete {
-    display: flex;
-    justify-content: center;  /* Centra horizontalmente */
-    align-items: center;      /* Centra verticalmente */
-    flex-direction: column;   /* Coloca elementos en columna si hay texto + reloj */
-    height: 100%;             /* Asegúrate de que tenga altura para centrar verticalmente */
-    font-size: 2rem;
-    padding: 20px;
-    text-align: center;       /* Centra el texto si lo hay */
-}
 
-.stopwatch-container-pregunta-caliete img,
-.stopwatch-container-pregunta-caliete svg {
-    width: 120px;
-    height: 120px;
-}
 

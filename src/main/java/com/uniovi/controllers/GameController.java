@@ -288,7 +288,7 @@ public class GameController {
         }
         model.addAttribute("question", gameSession.getCurrentQuestion());
         model.addAttribute("questionDuration", getRemainingTime(gameSession));
-        return "game/fragments/gameFrame";
+        return "game/fragments/gameFramePreguntaCaliente";
     }
 
     @RequestMapping("/game/points")
