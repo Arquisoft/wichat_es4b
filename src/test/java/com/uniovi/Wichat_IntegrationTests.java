@@ -3,7 +3,9 @@ package com.uniovi;
 import com.uniovi.util.FirefoxWebDriver;
 import com.uniovi.util.PropertiesExtractor;
 import io.cucumber.spring.CucumberContextConfiguration;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.events.WebDriverListener;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @CucumberContextConfiguration
 public class Wichat_IntegrationTests {
-    protected static final String URL = "http://localhost:3000/";
+    public static final String URL = "http://localhost:3000/";
 
     protected PropertiesExtractor p = new PropertiesExtractor("messages");
 

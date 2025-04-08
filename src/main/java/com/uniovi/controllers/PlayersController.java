@@ -8,7 +8,7 @@ import com.uniovi.dto.PlayerDto;
 import com.uniovi.dto.RoleDto;
 import com.uniovi.entities.*;
 import com.uniovi.services.PlayerService;
-import com.uniovi.services.QuestionGeneratorService;
+import com.uniovi.services.impl.QuestionGeneratorServiceImpl;
 import com.uniovi.services.RoleService;
 import com.uniovi.services.impl.GameSessionImageServiceImpl;
 import com.uniovi.services.impl.GameSessionServiceImpl;
@@ -350,7 +350,7 @@ public class PlayersController {
 
     @RequestMapping("/player/admin/questionManagement")
     public String showQuestionManagementFragment(Model model) throws IOException {
-        Resource jsonFile = new ClassPathResource(QuestionGeneratorService.JSON_FILE_PATH);
+        Resource jsonFile = new ClassPathResource(QuestionGeneratorServiceImpl.JSON_FILE_PATH);
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode json = objectMapper.readTree(jsonFile.getInputStream());
         model.addAttribute("jsonContent", json.toString());

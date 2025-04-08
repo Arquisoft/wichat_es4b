@@ -1,4 +1,4 @@
-package com.uniovi.services;
+package com.uniovi.services.impl;
 
 import com.uniovi.components.generators.QuestionGenerator;
 import com.uniovi.components.generators.QuestionGeneratorV2;
@@ -8,7 +8,6 @@ import com.uniovi.entities.Category;
 import com.uniovi.entities.Language;
 import com.uniovi.entities.Question;
 import com.uniovi.services.abstracts.AbstractQuestionGeneratorService;
-import com.uniovi.services.impl.QuestionServiceImpl;
 import jakarta.transaction.Transactional;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -17,17 +16,17 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
-public class QuestionGeneratorService extends AbstractQuestionGeneratorService<QuestionServiceImpl> {
+public class QuestionGeneratorServiceImpl extends AbstractQuestionGeneratorService<QuestionServiceImpl> {
 
     public static final String JSON_FILE_PATH = "static/JSON/QuestionTemplates.json";
 
-    public QuestionGeneratorService(QuestionServiceImpl questionService, Environment environment) throws IOException {
+    public QuestionGeneratorServiceImpl(QuestionServiceImpl questionService, Environment environment) throws IOException {
         super(questionService, environment, JSON_FILE_PATH);
     }
 
     @Override
     protected void setQuestionGeneratorService() {
-        questionService.setQuestionGeneratorService(this);
+        questionService.setQuestionGeneratorServiceImpl(this);
     }
 
     @Override

@@ -6,8 +6,6 @@ import com.uniovi.entities.Category;
 import com.uniovi.entities.QuestionImage;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -98,7 +96,7 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
                 AnswerImage correct = new AnswerImage(correctAnswer, true);
 
                 // Generamos las opciones de respuesta
-                List<AnswerImage> options = this.generateOptions(results, correctAnswer, questionImageLabel);
+                List<AnswerImage> options = this.generateOptions(results, correctAnswer);
                 options.add(correct); // Añadimos la respuesta correcta
 
                 if (statement != null) {
@@ -116,7 +114,7 @@ public class QuestionImageGeneratorV2 implements QuestionImageGenerator{
         return questionsImage;
 
     }
-    private List<AnswerImage> generateOptions(List<String[]> results, String correctAnswer, String answerLabel) {
+    private List<AnswerImage> generateOptions(List<String[]> results, String correctAnswer) {
         List<AnswerImage> options = new ArrayList<>();
         List<String> usedOptions = new ArrayList<>();
         int size = results.size();

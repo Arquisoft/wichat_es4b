@@ -1,12 +1,12 @@
 package com.uniovi.controllers.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.uniovi.dto.PlayerDto;
-import com.uniovi.entities.*;
+import com.uniovi.entities.ApiKey;
+import com.uniovi.entities.Player;
 import com.uniovi.services.ApiKeyService;
 import com.uniovi.services.PlayerService;
 import com.uniovi.services.RestApiService;
@@ -16,18 +16,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.media.Content;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
-import org.springframework.validation.SimpleErrors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,24 +30,29 @@ import java.util.Map;
 import java.util.Optional;
 
 @OpenAPIDefinition(info = @Info(title = "WIChat Game API", version = "1.0", description = "API for managing players and questions\nTo get access, please generate an API key in the webpage"),
-servers = {
-        @Server(url = "https://WIChat.es", description = "Production server"),
-        @Server(url = "http://localhost:3000", description = "Local server"),
-})
+        servers = {
+                @Server(url = "https://WIChat.es", description = "Production server"),
+                @Server(url = "http://localhost:3000", description = "Local server"),
+        })
 @Tag(name = "Player API", description = "API for managing players")
 @RestController
 public class PlayerApiController {
+
     private final ApiKeyService apiKeyService;
     private final RestApiService restApiService;
-    private final SignUpValidator signUpValidator;
     private final PlayerService playerService;
+    private final SignUpValidator signUpValidator;
 
-    @Autowired
-    public PlayerApiController(ApiKeyService apiKeyService, RestApiService restApiService, SignUpValidator signUpValidator, PlayerService playerService) {
+    private final ApiUtils apiUtils;
+
+    public PlayerApiController(ApiKeyService apiKeyService, RestApiService restApiService,
+                               SignUpValidator signUpValidator, PlayerService playerService) {
         this.apiKeyService = apiKeyService;
         this.restApiService = restApiService;
-        this.signUpValidator = signUpValidator;
         this.playerService = playerService;
+        this.signUpValidator = signUpValidator;
+
+        this.apiUtils = new ApiUtils();
     }
 
     @Operation(summary = "Get players by various filters", description = "Fetch players based on the provided parameters such as username, email, id, roles.")
@@ -99,15 +99,12 @@ public class PlayerApiController {
                     )}))
     })
     @RequestMapping("/api/players")
-    public String getPlayers(HttpServletResponse response, @RequestParam @Parameter(hidden = true) Map<String, String> params) throws JsonProcessingException {
+    public String getPlayers(HttpServletResponse response,
+                             @RequestParam @Parameter(hidden = true) Map<String, String> params) throws JsonProcessingException {
+
         response.setContentType("application/json");
-        ApiKey apiKey = getApiKeyFromParams(params);
-        if (apiKey == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, String> error = Map.of("error", "Invalid API key");
-            return objectMapper.writeValueAsString(error);
-        }
+        ApiKey apiKey = apiUtils.getApiKeyFromParams(apiKeyService, params);
+        if (apiKey == null) return apiUtils.responseWithAPiKeyNull(response);
 
         List<Player> players = restApiService.getPlayers(params);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -138,33 +135,15 @@ public class PlayerApiController {
                             value = "{\"field1\":\"Error description in field 1\", \"field2\":\"Error description in field 2\"}"
                     )}))
     })
-    @RequestMapping(value="/api/players", method=RequestMethod.POST)
+    @RequestMapping(value = "/api/players", method = RequestMethod.POST)
     public String addPlayer(@RequestHeader(name = "API-KEY") String apiKeyStr,
                             HttpServletResponse response, @RequestBody PlayerDto playerDto) throws JsonProcessingException {
         response.setContentType("application/json");
         ApiKey apiKey = apiKeyService.getApiKey(apiKeyStr);
-        if (apiKey == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, String> error = Map.of("error", "Invalid API key");
-            return objectMapper.writeValueAsString(error);
-        }
+        if (apiKey == null) return apiUtils.responseWithAPiKeyNull(response);
 
-        playerDto.setPasswordConfirm(playerDto.getPassword());
-
-        Errors err = new SimpleErrors(playerDto);
-        signUpValidator.validate(playerDto, err);
-
-        if (err.hasErrors()) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode errorNode = objectMapper.createObjectNode();
-            for (ObjectError error : err.getAllErrors()) {
-                ((ObjectNode) errorNode).put(((FieldError)error).getField(), error.getDefaultMessage());
-            }
-
-            return errorNode.toString();
-        }
+        String error = apiUtils.checkErrorForPassword(signUpValidator, response, playerDto);
+        if (error != null) return error;
 
         Long id = playerService.addNewPlayer(playerDto).getId();
 
@@ -196,53 +175,26 @@ public class PlayerApiController {
     })
     @PatchMapping("/api/players/{id}")
     public String updatePlayer(@RequestHeader(name = "API-KEY") String apiKeyStr,
-                               HttpServletResponse response, @PathVariable Long id, @RequestBody PlayerDto playerDto) throws JsonProcessingException {
+                               HttpServletResponse response, @PathVariable Long id,
+                               @RequestBody PlayerDto playerDto) throws JsonProcessingException {
         response.setContentType("application/json");
-        ApiKey apiKey = apiKeyService.getApiKey(apiKeyStr);
-        if (apiKey == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, String> error = Map.of("error", "Invalid API key");
-            return objectMapper.writeValueAsString(error);
-        }
+        if (apiKeyService.getApiKey(apiKeyStr) == null) return apiUtils.responseWithAPiKeyNull(response);
 
         Optional<Player> player = playerService.getUser(id);
         if (player.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, String> error = Map.of("error", "Player not found");
-            return objectMapper.writeValueAsString(error);
+            return apiUtils.responseToError(response, HttpServletResponse.SC_NOT_FOUND, "Player not found");
         }
 
         if (playerDto == null) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, String> error = Map.of("error", "No data provided");
-            return objectMapper.writeValueAsString(error);
+            return apiUtils.responseToError(response, HttpServletResponse.SC_BAD_REQUEST, "No data provided");
         }
 
         if (playerDto.getUsername() == null || playerDto.getRoles() == null || playerDto.getEmail() == null || playerDto.getPassword() == null) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, String> error = Map.of("error", "Missing data or null data");
-            return objectMapper.writeValueAsString(error);
+            return apiUtils.responseToError(response, HttpServletResponse.SC_BAD_REQUEST, "Missing data or null data");
         }
 
-        playerDto.setPasswordConfirm(playerDto.getPassword());
-
-        Errors err = new SimpleErrors(playerDto);
-        signUpValidator.validate(playerDto, err);
-
-        if (err.hasErrors()) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode errorNode = objectMapper.createObjectNode();
-            for (ObjectError error : err.getAllErrors()) {
-                ((ObjectNode) errorNode).put(((FieldError)error).getField(), error.getDefaultMessage());
-            }
-
-            return errorNode.toString();
-        }
+        String error = apiUtils.checkErrorForPassword(signUpValidator, response, playerDto);
+        if (error != null) return error;
 
         playerService.updatePlayer(id, playerDto);
         return "{ \"success\" : true }";
@@ -268,32 +220,14 @@ public class PlayerApiController {
     public String deletePlayer(@RequestHeader("API-KEY") String apiKeyStr,
                                HttpServletResponse response, @PathVariable Long id) throws JsonProcessingException {
         response.setContentType("application/json");
-        ApiKey apiKey = apiKeyService.getApiKey(apiKeyStr);
-        if (apiKey == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, String> error = Map.of("error", "Invalid API key");
-            return objectMapper.writeValueAsString(error);
-        }
+        if (apiKeyService.getApiKey(apiKeyStr) == null) return apiUtils.responseWithAPiKeyNull(response);
 
         Optional<Player> player = playerService.getUser(id);
         if (player.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, String> error = Map.of("error", "Player not found");
-            return objectMapper.writeValueAsString(error);
+            return apiUtils.responseToError(response, HttpServletResponse.SC_NOT_FOUND, "Player not found");
         }
 
         playerService.deletePlayer(id);
         return "{ \"success\" : true }";
-    }
-
-    private ApiKey getApiKeyFromParams(Map<String, String> params) {
-        if (!params.containsKey("apiKey")) {
-            return null;
-        }
-
-        String apiKey = params.get("apiKey");
-        return apiKeyService.getApiKey(apiKey);
     }
 }

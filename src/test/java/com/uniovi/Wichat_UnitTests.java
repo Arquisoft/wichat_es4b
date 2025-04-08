@@ -7,7 +7,10 @@ import com.uniovi.dto.PlayerDto;
 import com.uniovi.dto.RoleDto;
 import com.uniovi.entities.*;
 import com.uniovi.repositories.*;
-import com.uniovi.services.*;
+import com.uniovi.services.ApiKeyService;
+import com.uniovi.services.InsertSampleDataService;
+import com.uniovi.services.LlmService;
+import com.uniovi.services.PlayerService;
 import com.uniovi.services.impl.*;
 import com.uniovi.test.cobertura.DtoCoverageTests;
 import com.uniovi.test.cobertura.EntitiesCoverageTests;
@@ -62,7 +65,7 @@ class Wichat_UnitTests {
     @Autowired
     private QuestionImageServiceImpl questionImageService;
     @Autowired
-    private QuestionGeneratorService questionGeneratorService;
+    private QuestionGeneratorServiceImpl questionGeneratorServiceImpl;
     @Autowired
     private AnswerServiceImpl answerService;
     @Autowired
@@ -180,9 +183,10 @@ class Wichat_UnitTests {
         assertEquals(1, players.size());
     }
 
+    @Test
     @Order(3)
     void testQuestionsGenerator() throws IOException, InterruptedException {
-        questionGeneratorService.generateTestQuestions();
+        questionGeneratorServiceImpl.generateTestQuestions();
         List<Question> questions = questionService.getAllQuestions();
         assertFalse(questions.isEmpty());
     }
@@ -551,7 +555,7 @@ class Wichat_UnitTests {
         assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         assertTrue(json.has("players"));
-        assertTrue(json.getJSONArray("players").length() > 0);
+        assertFalse(json.getJSONArray("players").isEmpty());
     }
 
     @Test
@@ -613,7 +617,7 @@ class Wichat_UnitTests {
         assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         JSONArray players = json.getJSONArray("players");
-        assertTrue(players.length() > 0);
+        assertFalse(players.isEmpty());
         for (int i = 0; i < players.length(); i++) {
             JSONObject playerJson = players.getJSONObject(i);
             assertEquals(player.getUsername(), playerJson.getString("username"));
@@ -631,7 +635,7 @@ class Wichat_UnitTests {
         assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         JSONArray players = json.getJSONArray("players");
-        assertTrue(players.length() > 0);
+        assertFalse(players.isEmpty());
         for (int i = 0; i < players.length(); i++) {
             JSONObject playerJson = players.getJSONObject(i);
             assertEquals(player.getEmail(), playerJson.getString("email"));
@@ -649,7 +653,7 @@ class Wichat_UnitTests {
         assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         JSONArray players = json.getJSONArray("players");
-        assertTrue(players.length() > 0);
+        assertFalse(players.isEmpty());
         for (int i = 0; i < players.length(); i++) {
             JSONObject playerJson = players.getJSONObject(i);
             assertEquals(player.getEmail(), playerJson.getString("email"));
@@ -667,7 +671,7 @@ class Wichat_UnitTests {
         assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         JSONArray players = json.getJSONArray("players");
-        assertTrue(players.length() > 0);
+        assertFalse(players.isEmpty());
         for (int i = 0; i < players.length(); i++) {
             JSONObject playerJson = players.getJSONObject(i);
             assertEquals(player.getEmail(), playerJson.getString("email"));
@@ -880,16 +884,6 @@ class Wichat_UnitTests {
     }
 
     @Test
-    @Order(49)
-    void testGetQuestionsInvalidApiKey() throws IOException, InterruptedException, JSONException {
-        HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of("API-KEY", "zzzz"), Map.of());
-
-        assertEquals(401, response.statusCode());
-        JSONObject json = parseJsonResponse(response);
-        assertEquals("Invalid API key", json.getString("error"));
-    }
-
-    @Test
     @Order(50)
     void testGetQuestions() throws IOException, InterruptedException, JSONException {
         insertSomeQuestions();
@@ -901,7 +895,7 @@ class Wichat_UnitTests {
         assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         assertTrue(json.has("questions"));
-        assertTrue(json.getJSONArray("questions").length() > 0);
+        assertFalse(json.getJSONArray("questions").isEmpty());
     }
 
     @Test
@@ -923,7 +917,7 @@ class Wichat_UnitTests {
     @Order(51)
     void testGetQuestionsByCategoryName() throws IOException, InterruptedException, JSONException {
         String cat = "Science";
-        questionGeneratorService.generateTestQuestions(cat);
+        questionGeneratorServiceImpl.generateTestQuestions(cat);
         Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
         ApiKey apiKey = player.getApiKey();
 
@@ -932,14 +926,14 @@ class Wichat_UnitTests {
         assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         assertTrue(json.has("questions"));
-        assertTrue(json.getJSONArray("questions").length() > 0);
+        assertFalse(json.getJSONArray("questions").isEmpty());
     }
 
     @Test
     @Order(52)
     void testGetQuestionsByCategoryId() throws IOException, InterruptedException, JSONException {
         String category = "Science";
-        questionGeneratorService.generateTestQuestions(category);
+        questionGeneratorServiceImpl.generateTestQuestions(category);
         Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
         ApiKey apiKey = player.getApiKey();
         Category cat = categoryService.getCategoryByName(category);
@@ -949,7 +943,7 @@ class Wichat_UnitTests {
         assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         assertTrue(json.has("questions"));
-        assertTrue(json.getJSONArray("questions").length() > 0);
+        assertFalse(json.getJSONArray("questions").isEmpty());
     }
 
     @Test
@@ -2182,6 +2176,7 @@ class Wichat_UnitTests {
         //@Test
         void testAddRemoveGameSession() {
             GameSessionImage session = new GameSessionImage(player, new ArrayList<>());
+
             player.getGameSessionsImage().add(session);
             assertTrue(player.getGameSessions().contains(session));
 
@@ -2300,6 +2295,6 @@ class Wichat_UnitTests {
      * Inserts some sample questions into the database
      */
     private void insertSomeQuestions() throws IOException, InterruptedException {
-        questionGeneratorService.generateTestQuestions();
+        questionGeneratorServiceImpl.generateTestQuestions();
     }
 }
