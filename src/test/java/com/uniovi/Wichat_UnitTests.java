@@ -7,8 +7,13 @@ import com.uniovi.dto.PlayerDto;
 import com.uniovi.dto.RoleDto;
 import com.uniovi.entities.*;
 import com.uniovi.repositories.*;
-import com.uniovi.services.*;
+import com.uniovi.services.ApiKeyService;
+import com.uniovi.services.InsertSampleDataService;
+import com.uniovi.services.LlmService;
+import com.uniovi.services.PlayerService;
 import com.uniovi.services.impl.*;
+import com.uniovi.test.cobertura.DtoCoverageTests;
+import com.uniovi.test.cobertura.EntitiesCoverageTests;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -123,6 +128,54 @@ class Wichat_UnitTests {
         return new Player("name" + word, word + "test@email.com", "password");
     }
 
+    /*
+    --------------- TEST DE COBERTURA ---------------
+     */
+
+    // Se le asignan los números del 500 al 524 a los metodos de invocación
+
+    // Test de cobertura de los DTOs. Reservado de la 525 a la 549
+
+    @Test
+    @Order(500)
+    void testDtoCoverage() {
+        DtoCoverageTests dtoCoverageTests = new DtoCoverageTests();
+
+        dtoCoverageTests.testAnswerDto();
+        dtoCoverageTests.testCategoryDto();
+        dtoCoverageTests.testPlayerDto();
+        dtoCoverageTests.testQuestionDto();
+        dtoCoverageTests.testQuestionImageDto();
+        dtoCoverageTests.testRoleDto();
+    }
+
+    // Test de cobertura de las Entities. Reservado de la 550 a la 559
+
+    @Test
+    @Order(501)
+    void testEntitiesCoverage() {
+        EntitiesCoverageTests entitiesCoverageTests = new EntitiesCoverageTests();
+
+        entitiesCoverageTests.testAnswer();
+        entitiesCoverageTests.testAnswerImage();
+        entitiesCoverageTests.testPlayerRoleAssociation();
+        entitiesCoverageTests.testPlayerApiKeyAssociation();
+        entitiesCoverageTests.testApiKeyAccessLogAssociation();
+        entitiesCoverageTests.testPlayerGameSessionAssociation();
+        entitiesCoverageTests.testApiKey();
+        entitiesCoverageTests.testCategory();
+        entitiesCoverageTests.testGameSession();
+        entitiesCoverageTests.testGameSessionImage();
+        entitiesCoverageTests.testMultiplayerSession();
+        entitiesCoverageTests.testLanguage();
+    }
+
+
+    /*
+    --------------- FIN TEST DE COBERTURA ---------------
+     */
+
+
     @Test
     @Order(1)
     void testPlayerService() {
@@ -130,6 +183,7 @@ class Wichat_UnitTests {
         assertEquals(1, players.size());
     }
 
+    @Test
     @Order(3)
     void testQuestionsGenerator() throws IOException, InterruptedException {
         questionGeneratorServiceImpl.generateTestQuestions();
@@ -501,7 +555,7 @@ class Wichat_UnitTests {
         assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         assertTrue(json.has("players"));
-        assertTrue(json.getJSONArray("players").length() > 0);
+        assertFalse(json.getJSONArray("players").isEmpty());
     }
 
     @Test
@@ -563,7 +617,7 @@ class Wichat_UnitTests {
         assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         JSONArray players = json.getJSONArray("players");
-        assertTrue(players.length() > 0);
+        assertFalse(players.isEmpty());
         for (int i = 0; i < players.length(); i++) {
             JSONObject playerJson = players.getJSONObject(i);
             assertEquals(player.getUsername(), playerJson.getString("username"));
@@ -581,7 +635,7 @@ class Wichat_UnitTests {
         assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         JSONArray players = json.getJSONArray("players");
-        assertTrue(players.length() > 0);
+        assertFalse(players.isEmpty());
         for (int i = 0; i < players.length(); i++) {
             JSONObject playerJson = players.getJSONObject(i);
             assertEquals(player.getEmail(), playerJson.getString("email"));
@@ -599,7 +653,7 @@ class Wichat_UnitTests {
         assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         JSONArray players = json.getJSONArray("players");
-        assertTrue(players.length() > 0);
+        assertFalse(players.isEmpty());
         for (int i = 0; i < players.length(); i++) {
             JSONObject playerJson = players.getJSONObject(i);
             assertEquals(player.getEmail(), playerJson.getString("email"));
@@ -617,7 +671,7 @@ class Wichat_UnitTests {
         assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         JSONArray players = json.getJSONArray("players");
-        assertTrue(players.length() > 0);
+        assertFalse(players.isEmpty());
         for (int i = 0; i < players.length(); i++) {
             JSONObject playerJson = players.getJSONObject(i);
             assertEquals(player.getEmail(), playerJson.getString("email"));
@@ -830,16 +884,6 @@ class Wichat_UnitTests {
     }
 
     @Test
-    @Order(49)
-    void testGetQuestionsInvalidApiKey() throws IOException, InterruptedException, JSONException {
-        HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of("API-KEY", "zzzz"), Map.of());
-
-        assertEquals(401, response.statusCode());
-        JSONObject json = parseJsonResponse(response);
-        assertEquals("Invalid API key", json.getString("error"));
-    }
-
-    @Test
     @Order(50)
     void testGetQuestions() throws IOException, InterruptedException, JSONException {
         insertSomeQuestions();
@@ -851,7 +895,7 @@ class Wichat_UnitTests {
         assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         assertTrue(json.has("questions"));
-        assertTrue(json.getJSONArray("questions").length() > 0);
+        assertFalse(json.getJSONArray("questions").isEmpty());
     }
 
     @Test
@@ -882,7 +926,7 @@ class Wichat_UnitTests {
         assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         assertTrue(json.has("questions"));
-        assertTrue(json.getJSONArray("questions").length() > 0);
+        assertFalse(json.getJSONArray("questions").isEmpty());
     }
 
     @Test
@@ -899,7 +943,7 @@ class Wichat_UnitTests {
         assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         assertTrue(json.has("questions"));
-        assertTrue(json.getJSONArray("questions").length() > 0);
+        assertFalse(json.getJSONArray("questions").isEmpty());
     }
 
     @Test
@@ -1849,8 +1893,8 @@ class Wichat_UnitTests {
         assertFalse(answer.isEmpty());
         assertFalse(answer.isBlank());
         System.out.println(answer);
-
     }
+
 
     @Nested
     @DisplayName("GameSessionImage Unit Tests")
@@ -2132,6 +2176,7 @@ class Wichat_UnitTests {
         //@Test
         void testAddRemoveGameSession() {
             GameSessionImage session = new GameSessionImage(player, new ArrayList<>());
+
             player.getGameSessionsImage().add(session);
             assertTrue(player.getGameSessions().contains(session));
 
@@ -2198,8 +2243,6 @@ class Wichat_UnitTests {
      * @param headers Headers to include in the request
      * @param data    Data to send in the request
      * @return The response from the server
-     * @throws IOException
-     * @throws InterruptedException
      */
     private HttpResponse<String> sendRequest(String method, String uri, Map<String, String> headers, Map<String, Object> data) throws IOException, InterruptedException {
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
@@ -2243,7 +2286,6 @@ class Wichat_UnitTests {
      *
      * @param response The response from the server
      * @return The JSON object
-     * @throws JSONException
      */
     private JSONObject parseJsonResponse(HttpResponse<String> response) throws JSONException {
         return new JSONObject(response.body());

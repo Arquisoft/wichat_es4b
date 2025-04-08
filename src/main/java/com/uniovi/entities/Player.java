@@ -8,14 +8,16 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.uniovi.interfaces.JsonEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter // getters para todas las propiedades
-@Setter // setters para todas las propiedades
-@NoArgsConstructor(access = AccessLevel.PROTECTED) // constructor sin argumentos
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 public class Player implements JsonEntity {
     @Id

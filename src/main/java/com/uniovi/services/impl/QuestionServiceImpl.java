@@ -114,10 +114,7 @@ public class QuestionServiceImpl implements QuestionService<Question, QuestionDt
     @Override
     public boolean checkAnswer(Long idquestion, Long idanswer) {
         Optional<Question> q = questionRepository.findById(idquestion);
-        if (q.isPresent()) {
-            return q.get().getCorrectAnswer().getId().equals(idanswer);
-        }
-        return false;
+        return q.map(question -> question.getCorrectAnswer().getId().equals(idanswer)).orElse(false);
     }
 
     @Override
