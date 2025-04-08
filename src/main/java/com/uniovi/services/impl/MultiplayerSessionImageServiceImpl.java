@@ -23,7 +23,7 @@ public class MultiplayerSessionImageServiceImpl extends AbstractMultiplayerSessi
 
     @Override
     protected List<QuestionImage> getRandomQuestions() {
-        return questionService.getRandomQuestions(GameSessionService.NORMAL_GAME_QUESTION_NUM);
+        return questionService.getRandomQuestions(GameSessionImageServiceImpl.NORMAL_GAME_QUESTION_NUM);
     }
 }
 

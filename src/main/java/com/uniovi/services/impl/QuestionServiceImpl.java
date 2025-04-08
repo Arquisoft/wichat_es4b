@@ -28,11 +28,11 @@ import java.util.Random;
 @Service
 public class QuestionServiceImpl implements QuestionService<Question, QuestionDto> {
 
-    private final QuestionRepository questionRepository;
     private final CategoryService categoryService;
     private final AnswerServiceImpl answerService;
-    private final AnswerRepository answerRepository;
     private final EntityManager entityManager;
+    private final QuestionRepository questionRepository;
+    private final AnswerRepository answerRepository;
 
     @Setter
     private QuestionGeneratorServiceImpl questionGeneratorServiceImpl;

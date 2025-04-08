@@ -1,7 +1,6 @@
 package com.uniovi.services.impl;
 
-import com.uniovi.components.generators.QuestionImageGenerator;
-import com.uniovi.components.generators.QuestionImageGeneratorV2;
+import com.uniovi.components.generators.QuestionImageGeneratorImpl;
 import com.uniovi.dto.QuestionImageDto;
 import com.uniovi.entities.AnswerImage;
 import com.uniovi.entities.Category;
@@ -33,7 +32,7 @@ public class QuestionImageGeneratorServiceImpl extends AbstractQuestionGenerator
     @Override
     @Transactional
     public void processQuestions() throws IOException, InterruptedException {
-        QuestionImageGenerator qgen = new QuestionImageGeneratorV2(json);
+        QuestionImageGeneratorImpl qgen = new QuestionImageGeneratorImpl(json);
 
         do {
             QuestionType type = types.pop();
@@ -47,7 +46,7 @@ public class QuestionImageGeneratorServiceImpl extends AbstractQuestionGenerator
     @Override
     @Transactional
     public void generateTestQuestions() throws IOException, InterruptedException {
-        QuestionImageGenerator qgen = new QuestionImageGeneratorV2(json);
+        QuestionImageGeneratorImpl qgen = new QuestionImageGeneratorImpl(json);
         QuestionType type = types.pop();
         List<QuestionImageDto> questions;
 
