@@ -82,6 +82,30 @@ public class LoginAndSignUpSteps extends Wichat_IntegrationTests {
         WebElement saveButton = driver.findElement(By.xpath("/html/body/div/form/div[3]/div/button"));
         saveButton.click();
     }
+
+    @When("I edit my username with same username")
+    public void whenIEditMyUsernameWithSameUsername() {
+        WebElement emailInput = driver.findElement(By.id("username"));
+        emailInput.clear();
+        emailInput.sendKeys("user1");
+        WebElement saveButton = driver.findElement(By.xpath("/html/body/div/form/div[3]/div/button"));
+        saveButton.click();
+    }
+
+    @When("I edit my username with same email")
+    public void whenIEditMyUsernameWithSameEmail() {
+        WebElement emailInput = driver.findElement(By.id("email"));
+        emailInput.clear();
+        emailInput.sendKeys("user1@gmail.com");
+        WebElement saveButton = driver.findElement(By.xpath("/html/body/div/form/div[3]/div/button"));
+        saveButton.click();
+    }
+
+    @Then("I should see the message {string}")
+    public void iShouldSeeTheMessage(String message) {
+        String pageText = driver.findElement(By.tagName("body")).getText();
+        assertTrue(pageText.contains(message), "The page should contain the text '" + message + "'");
+    }
     @Then("I login with my new username")
     public void iLoginWithMyNewUsername(){
         WebElement username = driver.findElement(By.id("username"));
@@ -152,6 +176,12 @@ public class LoginAndSignUpSteps extends Wichat_IntegrationTests {
         By button = By.className("btn");
         driver.findElement(button).click();
     }
+    @And("I press the signup button")
+    public void iPressTheSignupButton() {
+        List<WebElement> elems = driver.findElements(By.xpath("/html/body/div/div/nav/a"));
+        elems.get(0).click();
+    }
+
     @Then("I should see the profile page")
     public void iShouldSeeTheProfilePage() {
         // Check if the text "Modos de juego" appears on the page
