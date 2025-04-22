@@ -84,7 +84,7 @@
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
-            <version>6.0.1</version> <!-- Use latest version -->
+            <version>6.1.0</version> <!-- Use latest version -->
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
