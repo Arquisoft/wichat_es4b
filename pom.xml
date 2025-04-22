@@ -10,14 +10,14 @@
     </parent>
     <groupId>com.uniovi</groupId>
     <artifactId>wichat_es4b</artifactId>
-    <version>1.0</version>
+    <version>1.1.0</version>
     <name>wichat_es4b</name>
     <description>wichat_es4b</description>
     <properties>
         <java.version>21</java.version>
         <sonar.sources>src/main/java,src/test/resources/features</sonar.sources>
         <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-        <sonar.exclusions>**/controllers/CustomErrorController.java, **/**/InsertSampleDataService.java</sonar.exclusions>
+        <sonar.exclusions>**/CustomErrorController.java,**/InsertSampleDataService.java</sonar.exclusions>
     </properties>
     <dependencies>
         <dependency>

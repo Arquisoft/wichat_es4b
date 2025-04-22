@@ -120,11 +120,11 @@ function startAnimation() {
 
 // Start animation when document is loaded
 (function () {
-    if (document.readystate !== 'loading') {
-        startAnimation();
+    if (document.readyState !== 'loading') {
+        if (!init) startAnimation();
     } else {
         document.addEventListener('DOMContentLoaded', () => {
-            startAnimation();
-        })
+            if (!init) startAnimation();
+        });
     }
 }());
