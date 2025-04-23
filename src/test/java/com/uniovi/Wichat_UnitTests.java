@@ -129,6 +129,11 @@ class Wichat_UnitTests {
     }
 
     /*
+    --------------- TEST NUEVOS ---------------
+     */
+
+
+    /*
     --------------- TEST DE COBERTURA ---------------
      */
 
@@ -2297,4 +2302,6 @@ class Wichat_UnitTests {
     private void insertSomeQuestions() throws IOException, InterruptedException {
         questionGeneratorServiceImpl.generateTestQuestions();
     }
+
+
 }
