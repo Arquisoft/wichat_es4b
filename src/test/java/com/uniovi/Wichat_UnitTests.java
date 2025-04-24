@@ -6,10 +6,7 @@ import com.uniovi.controllers.HomeController;
 import com.uniovi.dto.*;
 import com.uniovi.entities.*;
 import com.uniovi.repositories.*;
-import com.uniovi.services.ApiKeyService;
-import com.uniovi.services.InsertSampleDataService;
-import com.uniovi.services.LlmService;
-import com.uniovi.services.PlayerService;
+import com.uniovi.services.*;
 import com.uniovi.services.impl.*;
 import com.uniovi.test.cobertura.DtoCoverageTests;
 import com.uniovi.test.cobertura.EntitiesCoverageTests;
@@ -51,6 +48,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
@@ -407,6 +405,29 @@ class Wichat_UnitTests {
         assertEquals("en", dto.getLanguage());
         assertEquals("http://image.url", dto.getImageUrl());
     }
+    @Test
+    @Order(583)
+    void testAnswerImageToJson() {
+        // Crear un mock de QuestionImage
+        QuestionImage question = mock(QuestionImage.class);
+        when(question.getId()).thenReturn(42L);
+
+        // Crear la respuesta
+        AnswerImage answer = new AnswerImage("This is an answer", true);
+        answer.setId(1L); // id heredado de AbstractAnswer
+        answer.setQuestion(question);
+
+        // Ejecutar toJson
+        JsonNode json = answer.toJson();
+
+        // Verificar contenido JSON
+        assertEquals(1L, json.get("id").asLong());
+        assertEquals("This is an answer", json.get("text").asText());
+        assertTrue(json.get("correct").asBoolean());
+        assertEquals(42L, json.get("question").asLong());
+    }
+
+
 
     /*
     --------------- TEST DE COBERTURA ---------------
