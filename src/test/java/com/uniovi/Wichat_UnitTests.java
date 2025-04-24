@@ -374,6 +374,40 @@ class Wichat_UnitTests {
 
         assertFalse(errors.hasErrors());
     }
+
+    // ------------- Test ImageDto
+    @Test
+    @Order(582)
+    void testConstructorWithQuestionImage() {
+        AnswerImage correctAnswer = new AnswerImage("Correct Answer", true);
+        List<AnswerImage> options = List.of(
+                new AnswerImage("Option 1", false),
+                new AnswerImage("Option 2", false),
+                correctAnswer
+        );
+
+        Category category = new Category("Math", "Mathematics related questions");
+
+        QuestionImage questionImage = new QuestionImage();
+        questionImage.setStatement("What is 2+2?");
+        questionImage.setOptions(options);
+        questionImage.setCorrectAnswer(correctAnswer);
+        questionImage.setCategory(category);
+        questionImage.setLanguage("en");
+        questionImage.setImageUrl("http://image.url");
+
+        // Crear DTO a partir de la entidad
+        QuestionImageDto dto = new QuestionImageDto(questionImage);
+
+        // Verificar campos
+        assertEquals("What is 2+2?", dto.getStatement());
+        assertEquals(3, dto.getOptions().size());
+        assertEquals("Correct Answer", dto.getCorrectAnswer().getText());
+        assertEquals("Math", dto.getCategory().getName());
+        assertEquals("en", dto.getLanguage());
+        assertEquals("http://image.url", dto.getImageUrl());
+    }
+
     /*
     --------------- TEST DE COBERTURA ---------------
      */
