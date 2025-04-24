@@ -40,7 +40,7 @@ public class GameSessionImageServiceImpl implements GameSessionService<GameSessi
 
     @Override
     public Page<Object[]> getGlobalRanking(Pageable pageable) {
-        return gameSessionRepository.findTotalScoresByPlayer(pageable);
+        return gameSessionRepository.findScoresByPlayer(pageable);
     }
 
     @Override
