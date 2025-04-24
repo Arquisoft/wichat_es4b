@@ -1,7 +1,6 @@
 package com.uniovi.repositories;
 
 import com.uniovi.entities.Category;
-import com.uniovi.entities.abstracts.AbstractAnswer;
 import com.uniovi.entities.abstracts.AbstractQuestion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
