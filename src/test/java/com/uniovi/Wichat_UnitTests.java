@@ -3,17 +3,16 @@ package com.uniovi;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.uniovi.controllers.HomeController;
-import com.uniovi.dto.PlayerDto;
-import com.uniovi.dto.RoleDto;
+import com.uniovi.dto.*;
 import com.uniovi.entities.*;
 import com.uniovi.repositories.*;
-import com.uniovi.services.ApiKeyService;
-import com.uniovi.services.InsertSampleDataService;
-import com.uniovi.services.LlmService;
-import com.uniovi.services.PlayerService;
+import com.uniovi.services.*;
 import com.uniovi.services.impl.*;
 import com.uniovi.test.cobertura.DtoCoverageTests;
 import com.uniovi.test.cobertura.EntitiesCoverageTests;
+import com.uniovi.validators.EditUserValidator;
+import com.uniovi.validators.QuestionValidator;
+import com.uniovi.validators.SignUpValidator;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +32,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.ui.Model;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -47,6 +48,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 @SpringBootTest
@@ -117,6 +120,12 @@ class Wichat_UnitTests {
     @Mock
     private RestTemplate restTemplate;
 
+    @Mock
+    PlayerServiceImpl playerServiceMock;
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this); // Inicializa los mocks
+    }
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
     private Player createPlayer() {
@@ -127,6 +136,298 @@ class Wichat_UnitTests {
     private Player createDiferentPlayer(String word) {
         return new Player("name" + word, word + "test@email.com", "password");
     }
+
+    /*
+    --------------- TEST NUEVOS ---------------
+     */
+    // --- EditUserValidator ---
+
+    @Test
+    @Order(560)
+    public void editUserValidator_validData_noErrors() {
+        EditUserValidator validator = new EditUserValidator(playerServiceMock);
+
+        // Asegúrate de que playerService sea un mock configurado correctamente
+        Player original = new Player();
+        original.setUsername("originalUser");
+        original.setEmail("original@email.com");
+
+        // Simula el comportamiento del mock
+        when(playerServiceMock.getUserByUsername("originalUser")).thenReturn(Optional.of(original));
+
+        validator.setOriginalUsername("originalUser");
+
+        PlayerDto dto = new PlayerDto();
+        dto.setUsername("newUser");
+        dto.setEmail("new@email.com");
+
+        Errors errors = new BeanPropertyBindingResult(dto, "playerDto");
+        validator.validate(dto, errors);
+
+        assertFalse(errors.hasErrors());
+    }
+
+    @Test
+    @Order(561)
+    public void editUserValidator_invalidEmail_errorThrown() {
+        EditUserValidator validator = new EditUserValidator(playerServiceMock);
+        validator.setOriginalUsername("originalUser");
+
+        Player original = new Player();
+        original.setUsername("originalUser");
+        original.setEmail("original@email.com");
+
+        PlayerDto dto = new PlayerDto();
+        dto.setUsername("originalUser");
+        dto.setEmail("invalidEmail");
+
+        when(playerServiceMock.getUserByUsername("originalUser"))
+                .thenReturn(Optional.of(original));
+
+        Errors errors = new BeanPropertyBindingResult(dto, "playerDto");
+        validator.validate(dto, errors);
+
+        assertTrue(errors.hasErrors());
+    }
+
+    @Test
+    @Order(562)
+    public void editUserValidator_emailChangedExists_errorThrown() {
+        EditUserValidator validator = new EditUserValidator(playerServiceMock);
+        validator.setOriginalUsername("originalUser");
+
+        Player original = new Player();
+        original.setUsername("originalUser");
+        original.setEmail("original@email.com");
+
+        PlayerDto dto = new PlayerDto();
+        dto.setUsername("originalUser");
+        dto.setEmail("new@email.com");
+
+        when(playerServiceMock.getUserByUsername("originalUser")).thenReturn(Optional.of(original));
+        when(playerServiceMock.getUserByEmail("new@email.com")).thenReturn(Optional.of(new Player()));
+
+        Errors errors = new BeanPropertyBindingResult(dto, "playerDto");
+        validator.validate(dto, errors);
+
+        assertTrue(errors.hasErrors());
+    }
+
+    @Test
+    @Order(563)
+    public void editUserValidator_usernameChangedExists_errorThrown() {
+        EditUserValidator validator = new EditUserValidator(playerServiceMock);
+        validator.setOriginalUsername("originalUser");
+
+        Player original = new Player();
+        original.setUsername("originalUser");
+        original.setEmail("email@email.com");
+
+        PlayerDto dto = new PlayerDto();
+        dto.setUsername("newUser");
+        dto.setEmail("email@email.com");
+
+        when(playerServiceMock.getUserByUsername("originalUser")).thenReturn(Optional.of(original));
+        when(playerServiceMock.getUserByUsername("newUser")).thenReturn(Optional.of(new Player()));
+
+        Errors errors = new BeanPropertyBindingResult(dto, "playerDto");
+        validator.validate(dto, errors);
+
+        assertTrue(errors.hasErrors());
+    }
+
+    // --- SignUpValidator ---
+
+    @Test
+    @Order(570)
+    public void signUpValidator_validData_noErrors() {
+        SignUpValidator validator = new SignUpValidator(playerServiceMock);
+
+        PlayerDto dto = new PlayerDto();
+        dto.setUsername("newUser");
+        dto.setEmail("test@email.com");
+        dto.setPassword("pass");
+        dto.setPasswordConfirm("pass");
+
+        when(playerServiceMock.getUserByUsername("newUser")).thenReturn(Optional.empty());
+        when(playerServiceMock.getUserByEmail("test@email.com")).thenReturn(Optional.empty());
+
+        Errors errors = new BeanPropertyBindingResult(dto, "playerDto");
+        validator.validate(dto, errors);
+
+        assertFalse(errors.hasErrors());
+    }
+
+    @Test
+    @Order(571)
+    public void signUpValidator_invalidEmail_errorThrown() {
+        SignUpValidator validator = new SignUpValidator(playerServiceMock);
+
+        PlayerDto dto = new PlayerDto();
+        dto.setUsername("newUser");
+        dto.setEmail("invalid");
+        dto.setPassword("pass");
+        dto.setPasswordConfirm("pass");
+
+        Errors errors = new BeanPropertyBindingResult(dto, "playerDto");
+        validator.validate(dto, errors);
+
+        assertTrue(errors.hasErrors());
+    }
+
+    @Test
+    @Order(572)
+    public void signUpValidator_existingEmail_errorThrown() {
+        SignUpValidator validator = new SignUpValidator(playerServiceMock);
+
+        PlayerDto dto = new PlayerDto();
+        dto.setUsername("newUser");
+        dto.setEmail("used@email.com");
+        dto.setPassword("pass");
+        dto.setPasswordConfirm("pass");
+
+        when(playerServiceMock.getUserByEmail("used@email.com")).thenReturn(Optional.of(new Player()));
+
+        Errors errors = new BeanPropertyBindingResult(dto, "playerDto");
+        validator.validate(dto, errors);
+
+        assertTrue(errors.hasErrors());
+    }
+
+    @Test
+    @Order(573)
+    public void signUpValidator_existingUsername_errorThrown() {
+        SignUpValidator validator = new SignUpValidator(playerServiceMock);
+
+        PlayerDto dto = new PlayerDto();
+        dto.setUsername("usedUsername");
+        dto.setEmail("new@email.com");
+        dto.setPassword("pass");
+        dto.setPasswordConfirm("pass");
+
+        when(playerServiceMock.getUserByUsername("usedUsername")).thenReturn(Optional.of(new Player()));
+
+        Errors errors = new BeanPropertyBindingResult(dto, "playerDto");
+        validator.validate(dto, errors);
+
+        assertTrue(errors.hasErrors());
+    }
+
+    @Test
+    @Order(574)
+    public void signUpValidator_passwordMismatch_errorThrown() {
+        SignUpValidator validator = new SignUpValidator(playerServiceMock);
+
+        PlayerDto dto = new PlayerDto();
+        dto.setUsername("user");
+        dto.setEmail("email@email.com");
+        dto.setPassword("1234");
+        dto.setPasswordConfirm("4321");
+
+        Errors errors = new BeanPropertyBindingResult(dto, "playerDto");
+        validator.validate(dto, errors);
+
+        assertTrue(errors.hasErrors());
+    }
+
+    // --- QuestionValidator ---
+
+    @Test
+    @Order(580)
+    public void questionValidator_allFieldsInvalid_errorsThrown() {
+        QuestionValidator validator = new QuestionValidator();
+        QuestionDto dto = new QuestionDto();
+        dto.setStatement("");
+        dto.setOptions(new ArrayList<>());
+        dto.setCorrectAnswer(new AnswerDto());
+        dto.setCategory(new CategoryDto());
+
+        Errors errors = new BeanPropertyBindingResult(dto, "questionDto");
+        validator.validate(dto, errors);
+
+        assertTrue(errors.hasErrors());
+    }
+
+    @Test
+    @Order(581)
+    public void questionValidator_validQuestion_noErrors() {
+        QuestionValidator validator = new QuestionValidator();
+        QuestionDto dto = new QuestionDto();
+        dto.setStatement("What is 2 + 2?");
+
+        AnswerDto a1 = new AnswerDto(); a1.setText("3"); a1.setCorrect(false);
+        AnswerDto a2 = new AnswerDto(); a2.setText("4"); a2.setCorrect(true);
+        AnswerDto a3 = new AnswerDto(); a3.setText("5"); a3.setCorrect(false);
+        AnswerDto a4 = new AnswerDto(); a4.setText("6"); a4.setCorrect(false);
+
+        dto.setOptions(List.of(a1, a2, a3, a4));
+        dto.setCorrectAnswer(a2);
+
+        CategoryDto category = new CategoryDto();
+        category.setName("Math");
+        dto.setCategory(category);
+
+        Errors errors = new BeanPropertyBindingResult(dto, "questionDto");
+        validator.validate(dto, errors);
+
+        assertFalse(errors.hasErrors());
+    }
+
+    // ------------- Test ImageDto
+    @Test
+    @Order(582)
+    void testConstructorWithQuestionImage() {
+        AnswerImage correctAnswer = new AnswerImage("Correct Answer", true);
+        List<AnswerImage> options = List.of(
+                new AnswerImage("Option 1", false),
+                new AnswerImage("Option 2", false),
+                correctAnswer
+        );
+
+        Category category = new Category("Math", "Mathematics related questions");
+
+        QuestionImage questionImage = new QuestionImage();
+        questionImage.setStatement("What is 2+2?");
+        questionImage.setOptions(options);
+        questionImage.setCorrectAnswer(correctAnswer);
+        questionImage.setCategory(category);
+        questionImage.setLanguage("en");
+        questionImage.setImageUrl("http://image.url");
+
+        // Crear DTO a partir de la entidad
+        QuestionImageDto dto = new QuestionImageDto(questionImage);
+
+        // Verificar campos
+        assertEquals("What is 2+2?", dto.getStatement());
+        assertEquals(3, dto.getOptions().size());
+        assertEquals("Correct Answer", dto.getCorrectAnswer().getText());
+        assertEquals("Math", dto.getCategory().getName());
+        assertEquals("en", dto.getLanguage());
+        assertEquals("http://image.url", dto.getImageUrl());
+    }
+    @Test
+    @Order(583)
+    void testAnswerImageToJson() {
+        // Crear un mock de QuestionImage
+        QuestionImage question = mock(QuestionImage.class);
+        when(question.getId()).thenReturn(42L);
+
+        // Crear la respuesta
+        AnswerImage answer = new AnswerImage("This is an answer", true);
+        answer.setId(1L); // id heredado de AbstractAnswer
+        answer.setQuestion(question);
+
+        // Ejecutar toJson
+        JsonNode json = answer.toJson();
+
+        // Verificar contenido JSON
+        assertEquals(1L, json.get("id").asLong());
+        assertEquals("This is an answer", json.get("text").asText());
+        assertTrue(json.get("correct").asBoolean());
+        assertEquals(42L, json.get("question").asLong());
+    }
+
+
 
     /*
     --------------- TEST DE COBERTURA ---------------
@@ -2297,4 +2598,6 @@ class Wichat_UnitTests {
     private void insertSomeQuestions() throws IOException, InterruptedException {
         questionGeneratorServiceImpl.generateTestQuestions();
     }
+
+
 }
