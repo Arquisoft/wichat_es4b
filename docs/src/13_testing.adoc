@@ -1,0 +1,16 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-glossary]]
+== Testing
+
+=== Unit Test
+
+**Pendiente de realización**
+
+=== Integration testing (E2E)
+
+=== Load test
+
+==== Results
+
+=== Conclusion
