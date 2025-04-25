@@ -17,6 +17,7 @@ import com.uniovi.validators.EditUserValidator;
 import com.uniovi.validators.QuestionValidator;
 import com.uniovi.validators.SignUpValidator;
 import jakarta.servlet.http.HttpSession;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
