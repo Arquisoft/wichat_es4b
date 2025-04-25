@@ -34,9 +34,7 @@
             <label class="control-label col-sm-10" for="password" th:text="#{signup.password.label}"></label>
             <div class="col-sm-10">
                 <input type="password" id="password" class="form-control" name="password"
-                       th:placeholder="#{signup.password.placeholder}"
-                       th:value="${user.password}"
-                       required="true" />
+                       th:placeholder="#{signup.password.placeholder}"/>
                 <span class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
             </div>
         </div>
@@ -44,9 +42,7 @@
             <label class="control-label col-sm-10" for="passwordConfirm" th:text="#{signup.passwordConfirm.label}"></label>
             <div class="col-sm-10">
                 <input type="password" id="passwordConfirm" class="form-control" name="passwordConfirm"
-                       th:placeholder="#{signup.passwordConfirm.placeholder}"
-                       th:value="${user.passwordConfirm}"
-                       required="true" />
+                       th:placeholder="#{signup.passwordConfirm.placeholder}"/>
                 <span class="text-danger" th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}"></span>
             </div>
         </div>
