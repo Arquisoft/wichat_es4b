@@ -1,11 +1,12 @@
 package com.uniovi.controllers;
 
+import com.uniovi.dto.QuestionDto;
 import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Question;
 import com.uniovi.services.GameSessionService;
 import com.uniovi.services.PlayerService;
-import com.uniovi.services.QuestionService;
+import com.uniovi.services.impl.GameSessionServiceImpl;
 import com.uniovi.services.impl.MultiplayerSessionServiceImpl;
 import com.uniovi.services.impl.QuestionServiceImpl;
 import jakarta.servlet.http.HttpSession;
@@ -16,331 +17,244 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Controller
-public class GameController {
-
-    private static final String GAMESESSION_STR = "gameSession";
-
-    private final QuestionServiceImpl questionService;
-    private final GameSessionService<GameSession> gameSessionService;
-    private final PlayerService playerService;
-
-    private final MultiplayerSessionServiceImpl multiplayerSessionService;
-
-    public GameController(QuestionServiceImpl questionService, GameSessionService<GameSession> gameSessionService,
-                          PlayerService playerService, MultiplayerSessionServiceImpl multiplayerSessionService) {
-        this.questionService = questionService;
-        this.gameSessionService = gameSessionService;
-        this.playerService = playerService;
-        this.multiplayerSessionService = multiplayerSessionService;
-    }
-
-    /**
-     * This method is used to get the game view and to start the game
-     * @param model The model to be used
-     * @return The view to be shown
-     */
-    @RequestMapping("/game/pregunta")
-    public String getGame(HttpSession session, Model model, Principal principal) {
-        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
-        if (gameSession != null && !gameSession.isFinished() && !gameSession.isMultiplayer()) {
-            if (checkUpdateGameSession(gameSession, session)) {
-                return "game/fragments/gameFinished";
-            }
-        } else {
-            gameSession = gameSessionService.startNewGame(getLoggedInPlayer(principal));
-            session.setAttribute(GAMESESSION_STR, gameSession);
-            playerService.deleteMultiplayerCode(gameSession.getPlayer().getId());
-        }
-
-        model.addAttribute("question", gameSession.getCurrentQuestion());
-        model.addAttribute("questionDuration", getRemainingTime(gameSession));
-        return "game/GamePreguntaCaliente";
-    }
-
-    @RequestMapping("/game/trivial/multiplayer")
-    public String getTrivialMultiplayerGame() {
-        return "redirect:/multiplayerGame/createGame";
-    }
-
-    @RequestMapping("/multiplayerGame/{code}")
-    public String joinMultiplayerGame(@PathVariable String code, HttpSession session, Principal principal, Model model) {
-        if (!multiplayerSessionService.existsCode(code)) {
-            model.addAttribute("errorKey", "multi.code.invalid");
-            return "game/multiplayerGame";
-        }
-
-        Optional<Player> player = playerService.getUserByUsername(principal.getName());
-        if (player.isEmpty()) {
-            // Handle the case where the player is not found
-            return "redirect:/";
-        }
-        Player p = player.get();
-        if (playerService.changeMultiplayerCode(p.getId(),code)) {
-            multiplayerSessionService.addToLobby(code,p.getId());
-            model.addAttribute("multiplayerGameCode",code);
-            session.setAttribute("multiplayerCode",code);
-            return "redirect:/game/lobby";
-        } else {
-            return "redirect:/multiplayerGame";
-        }
-    }
-
-    @RequestMapping("/multiplayerGame/createGame")
-    public String createMultiplayerGame(HttpSession session, Principal principal) {
-        Optional<Player> player = playerService.getUserByUsername(principal.getName());
-        if (player.isEmpty()) {
-            // Handle the case where the player is not found
-            return "redirect:/";
-        }
-        Player p = player.get();
-        String code="" + playerService.createMultiplayerGame(p.getId());
-        multiplayerSessionService.multiCreate(code,p.getId());
-        session.setAttribute("multiplayerCode",code);
-        return "redirect:/game/lobby";
-    }
-
-    @RequestMapping("/startMultiplayerGame")
-    public String startMultiplayerGame(HttpSession session, Model model, Principal principal) {
-        GameSession gameSession = (GameSession) session.getAttribute("gameSession");
-
-        if (gameSession != null) {
-            if (! gameSession.isMultiplayer()) {
-                session.removeAttribute("gameSession");
-                return "redirect:/startMultiplayerGame";
-            }
-
-            if (gameSession.isFinished()) {
-                model.addAttribute("code", session.getAttribute("multiplayerCode"));
-                return "game/multiplayerFinished";
-            }
-
-            if (checkUpdateGameSession(gameSession, session)) {
-                return "game/fragments/gameFinished";
-            }
-        } else {
-            Optional<Player> player = playerService.getUserByUsername(principal.getName());
-            if (player.isEmpty()) {
-                return "redirect:/";
-            }
-            gameSession = gameSessionService.startNewMultiplayerGame(getLoggedInPlayer(principal),
-                    player.get().getMultiplayerCode());
-            if (gameSession == null)
-                return "redirect:/multiplayerGame";
-            session.setAttribute("gameSession", gameSession);
-        }
-
-        model.addAttribute("question", gameSession.getCurrentQuestion());
-        model.addAttribute("questionDuration", getRemainingTime(gameSession));
-        return "game/GamePreguntaCaliente";
-    }
-
-    @RequestMapping("/multiplayerGame/endGame/{code}")
-    public String endMultiplayerGame(Model model,@PathVariable String code) {
-        model.addAttribute("code",code);
-        return "ranking/multiplayerRanking";
-    }
-
-    @RequestMapping("/endGameList/{code}")
-    @ResponseBody
-    public Map<String, String> endMultiplayerGameTable(@PathVariable String code) {
-        Map<Player, Integer> playerScores = multiplayerSessionService.getPlayersWithScores(Integer.parseInt(code));
-        Map<String, String> playersNameWithScore=new HashMap<>();
-        for (Map.Entry<Player, Integer> player : playerScores.entrySet()) {
-            String playerName = player.getKey().getUsername();
-            String playerScoreValue;
-            if (player.getValue() == -1) {
-                playerScoreValue = "N/A";
-            } else {
-                playerScoreValue = "" + player.getValue();
-            }
-            playersNameWithScore.put(playerName, playerScoreValue);
-        }
-        return playersNameWithScore;
-    }
-
-    @RequestMapping("/game/lobby/{code}")
-    @ResponseBody
-    public List<String> updatePlayerList(@PathVariable String code) {
-        Map<Player,Integer> players= multiplayerSessionService.getPlayersWithScores(Integer.parseInt(code));
-        List<String> playerNames = new ArrayList<>();
-        for (Map.Entry<Player, Integer> player : players.entrySet()) {
-            playerNames.add(player.getKey().getUsername());
-        }
-        Collections.sort(playerNames);
-        return playerNames;
-    }
-
-    @RequestMapping("/game/lobby")
-    public String createLobby( HttpSession session, Model model) {
-        int code = Integer.parseInt((String)session.getAttribute("multiplayerCode"));
-        List<Player> players = playerService.getUsersByMultiplayerCode(code);
-        model.addAttribute("players",players);
-        model.addAttribute("code",session.getAttribute("multiplayerCode"));
-        return "game/lobby";
-    }
-
-    /**
-     * This method is used to check the answer for a specific question
-     * @param idQuestion The id of the question.
-     * @param idAnswer The id of the answer. If the id is -1, it means that the user has not selected any answer and the
-     *                 time has run out.
-     * @param model The model to be used.
-     * @return The view to be shown, if the answer is correct, the success view is shown, otherwise the failure view is
-     * shown or the timeOutFailure view is shown.
-     */
-    @RequestMapping("/game/{idQuestion}/{idAnswer}")
-    public String getCheckResult(@PathVariable Long idQuestion, @PathVariable Long idAnswer, Model model, HttpSession session, Principal principal) {
-        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
-        if (gameSession == null) {
-            return "redirect:/game/pregunta";
-        }
-
-        if (!gameSession.hasQuestionId(idQuestion)) {
-            model.addAttribute("score", gameSession.getCorrectQuestions());
-            session.removeAttribute(GAMESESSION_STR);
-            return "redirect:/game/pregunta"; // if someone wants to exploit the game, just redirect to the game page
-        }
-
-        if(idAnswer == -1
-            || getRemainingTime(gameSession) <= 0) {
-            gameSession.addAnsweredQuestion(gameSession.getCurrentQuestion());
-            gameSession.addQuestion(false, 0);
-        }
-        // if the answer is correct, add a new question
-        else if(questionService.checkAnswer(idQuestion, idAnswer)) {
-            if (!gameSession.isAnswered(gameSession.getCurrentQuestion())) {
-                gameSession.addQuestion(true, getRemainingTime(gameSession));
-                gameSession.addAnsweredQuestion(gameSession.getCurrentQuestion());
-            }
-        } else {
-            gameSession.addAnsweredQuestion(gameSession.getCurrentQuestion());
-            gameSession.addQuestion(false, 0);
-        }
-
-        session.setAttribute("hasJustAnswered", true);
-        gameSession.getNextQuestion();
-        return updateGame(model, session, principal);
-    }
-
-    @RequestMapping("/game/update")
-    public String updateGame(Model model, HttpSession session, Principal principal) {
-        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
-        Question nextQuestion = gameSession.getCurrentQuestion();
-        if (nextQuestion == null && gameSession.isMultiplayer()) {
-            int code = Integer.parseInt((String) session.getAttribute("multiplayerCode"));
-            List<Player> players = playerService.getUsersByMultiplayerCode(code);
-
-            if (!gameSession.isFinished()) {
-                gameSessionService.endGame(gameSession);
-
-                model.addAttribute("players", players);
-                model.addAttribute("code", session.getAttribute("multiplayerCode"));
-                gameSession.setFinished(true);
-
-                Optional<Player> player = playerService.getUserByUsername(principal.getName());
-                if (player.isEmpty()) {
-                    // Handle the case where the player is not found
-                    return "redirect:/";
-                }
-                Player p = player.get();
-                playerService.setScoreMultiplayerCode(p.getId(),"" + gameSession.getScore());
-                multiplayerSessionService.changeScore(p.getMultiplayerCode()+"",p.getId(),gameSession.getScore());
-            } else {
-                model.addAttribute("players", players);
-
-            }
-
-            model.addAttribute("code", session.getAttribute("multiplayerCode"));
-            return "ranking/multiplayerRanking";
-        }
-
-        if (nextQuestion == null) {
-            if (!gameSession.isFinished()) {
-                gameSessionService.endGame(gameSession);
-                gameSession.setFinished(true);
-            } else {
-                session.removeAttribute(GAMESESSION_STR);
-                model.addAttribute("score", gameSession.getCorrectQuestions());
-            }
-            return "game/fragments/gameFinished";
-        }
-        //añadido
-        int preguntasRespondidas = gameSession.getAnsweredQuestions().size();
-        int preguntasCorrectas = gameSession.getCorrectQuestions();
-        if(preguntasCorrectas-preguntasRespondidas!=0) {
-            gameSessionService.endGame(gameSession);
-            gameSession.setFinished(true);
-            model.addAttribute("score", gameSession.getCorrectQuestions());
-            return "game/fragments/gameFinished";
-        }
-        //fin añadido
+public class GameController extends AbstractGameController<Question, GameSession, QuestionDto> {
 
 
-        if (session.getAttribute("hasJustAnswered") != null) {
-            if ((boolean) session.getAttribute("hasJustAnswered"))
-                gameSession.setFinishTime(LocalDateTime.now());
-            session.removeAttribute("hasJustAnswered");
-        }
-        model.addAttribute("question", gameSession.getCurrentQuestion());
-        model.addAttribute("questionDuration", getRemainingTime(gameSession));
-        return "game/fragments/gameFramePreguntaCaliente";
-    }
+	public GameController(QuestionServiceImpl questionService, GameSessionServiceImpl gameSessionService,
+						  PlayerService playerService, MultiplayerSessionServiceImpl multiplayerSessionService) {
+		super(playerService, multiplayerSessionService, gameSessionService, questionService);
+	}
 
-    @RequestMapping("/game/points")
-    @ResponseBody
-    public String getPoints(HttpSession session) {
-        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
-        if (gameSession != null)
-            return String.valueOf(gameSession.getCorrectQuestions());
-        else
-            return "0";
-    }
 
-    @RequestMapping("/game/currentQuestion")
-    @ResponseBody
-    public String getCurrentQuestion(HttpSession session) {
-        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
-        if (gameSession != null)
-            return String.valueOf(Math.min(gameSession.getAnsweredQuestions().size()+1, GameSessionService.NORMAL_GAME_QUESTION_NUM));
-        else
-            return "0";
-    }
+	/**
+	 * This method is used to get the game view and to start the game
+	 *
+	 * @param model The model to be used
+	 * @return The view to be shown
+	 */
+	@RequestMapping("/game/pregunta")
+	public String getGame(HttpSession session, Model model, Principal principal) {
+		GameSession gameSession = getSessionAttribute(session);
+		if (gameSession != null && !gameSession.isFinished() && !gameSession.isMultiplayer()) {
+			if (checkUpdateGameSession(gameSession, session)) {
+				return "game/fragments/gameFinished";
+			}
+		} else {
+			gameSession = gameSessionService.startNewGame(getLoggedInPlayer(principal));
+			session.setAttribute(getGamesessionStr(), gameSession);
+			playerService.deleteMultiplayerCode(gameSession.getPlayer().getId());
+		}
+		addQuestionAttributes(model, gameSession);
+		return "game/GamePreguntaCaliente";
+	}
 
-    private Player getLoggedInPlayer(Principal principal) {
-        Optional<Player> player = playerService.getUserByUsername(principal.getName());
-        return player.orElse(null);
-    }
+	@RequestMapping("/game/trivial/multiplayer")
+	public String getTrivialMultiplayerGame() {
+		return "redirect:/multiplayerGame/createGame";
+	}
 
-    /**
-     * This method is used to check if the game session has to be updated
-     * @param gameSession The game session to be checked
-     * @param session The session to be used
-     * @return True if the game session has been ended, false otherwise
-     */
-    private boolean checkUpdateGameSession(GameSession gameSession, HttpSession session) {
-        // if time since last question started is greater than the time per question, add a new question (or check for game finish)
-        if (getRemainingTime(gameSession) <= 0
-                && gameSession.getQuestionsToAnswer().isEmpty()
-                && gameSession.getCurrentQuestion() != null) {
-            gameSession.addQuestion(false, 0);
-            gameSession.addAnsweredQuestion(gameSession.getCurrentQuestion());
-            if (gameSession.getQuestionsToAnswer().isEmpty()) {
-                gameSessionService.endGame(gameSession);
-                session.removeAttribute(GAMESESSION_STR);
-                return true;
-            }
-        }
+	@RequestMapping("/multiplayerGame/{code}")
+	public String joinMultiplayerGame(@PathVariable String code, HttpSession session, Principal principal, Model model) {
+		if (!multiplayerSessionService.existsCode(code)) {
+			model.addAttribute("errorKey", "multi.code.invalid");
+			return "game/multiplayerGame";
+		}
 
-        return false;
-    }
+		Optional<Player> player = playerService.getUserByUsername(principal.getName());
+		if (player.isEmpty()) {
+			// Handle the case where the player is not found
+			return "redirect:/";
+		}
+		Player p = player.get();
+		if (playerService.changeMultiplayerCode(p.getId(), code)) {
+			multiplayerSessionService.addToLobby(code, p.getId());
+			model.addAttribute("multiplayerGameCode", code);
+			session.setAttribute("multiplayerCode", code);
+			return "redirect:/game/lobby";
+		} else {
+			return "redirect:/multiplayerGame";
+		}
+	}
 
-    private int getRemainingTime(GameSession gameSession) {
-        return (int) Duration.between(LocalDateTime.now(),
-                gameSession.getFinishTime().plusSeconds(QuestionService.SECONDS_PER_QUESTION)).toSeconds();
-    }
+	@RequestMapping("/multiplayerGame/createGame")
+	@Override
+	public String createMultiplayerGame(HttpSession session, Principal principal) {
+		return super.createMultiplayerGame(session, principal);
+	}
+
+	@RequestMapping("/startMultiplayerGame")
+	public String startMultiplayerGame(HttpSession session, Model model, Principal principal) {
+		GameSession gameSession = getSessionAttribute(session);
+
+		if (gameSession != null) {
+			if (!gameSession.isMultiplayer()) {
+				session.removeAttribute(getGamesessionStr());
+				return "redirect:/startMultiplayerGame";
+			}
+
+			if (gameSession.isFinished()) {
+				model.addAttribute("code", session.getAttribute("multiplayerCode"));
+				return "game/multiplayerFinished";
+			}
+
+			if (checkUpdateGameSession(gameSession, session)) {
+				return "game/fragments/gameFinished";
+			}
+		} else {
+			Optional<Player> player = playerService.getUserByUsername(principal.getName());
+			if (player.isEmpty()) {
+				return "redirect:/";
+			}
+			gameSession = gameSessionService.startNewMultiplayerGame(getLoggedInPlayer(principal), player.get().getMultiplayerCode());
+			if (gameSession == null) return "redirect:/multiplayerGame";
+			session.setAttribute(getGamesessionStr(), gameSession);
+		}
+		addQuestionAttributes(model, gameSession);
+		return "game/GamePreguntaCaliente";
+	}
+
+	@RequestMapping("/multiplayerGame/endGame/{code}")
+	public String endMultiplayerGame(Model model, @PathVariable String code) {
+		model.addAttribute("code", code);
+		return "ranking/multiplayerRanking";
+	}
+
+	@RequestMapping("/endGameList/{code}")
+	@ResponseBody
+	@Override
+	public Map<String, String> endMultiplayerGameTable(@PathVariable String code) {
+		return super.endMultiplayerGameTable(code);
+	}
+
+	@RequestMapping("/game/lobby/{code}")
+	@ResponseBody
+	@Override
+	public List<String> updatePlayerList(@PathVariable String code) {
+		return super.updatePlayerList(code);
+	}
+
+
+	@RequestMapping("/game/lobby")
+	public String createLobby(HttpSession session, Model model) {
+		int code = Integer.parseInt((String) session.getAttribute("multiplayerCode"));
+		List<Player> players = playerService.getUsersByMultiplayerCode(code);
+		model.addAttribute("players", players);
+		model.addAttribute("code", session.getAttribute("multiplayerCode"));
+		return "game/lobby";
+	}
+
+	/**
+	 * This method is used to check the answer for a specific question
+	 *
+	 * @param idQuestion The id of the question.
+	 * @param idAnswer   The id of the answer. If the id is -1, it means that the user has not selected any answer and the
+	 *                   time has run out.
+	 * @param model      The model to be used.
+	 * @return The view to be shown, if the answer is correct, the success view is shown, otherwise the failure view is
+	 * shown or the timeOutFailure view is shown.
+	 */
+	@RequestMapping("/game/{idQuestion}/{idAnswer}")
+	public String getCheckResult(@PathVariable Long idQuestion, @PathVariable Long idAnswer, Model model, HttpSession session, Principal principal) {
+		GameSession gameSession = getSessionAttribute(session);
+		if (gameSession == null) {
+			return "redirect:/game/pregunta";
+		}
+
+		if (!gameSession.hasQuestionId(idQuestion)) {
+			model.addAttribute("score", gameSession.getCorrectQuestions());
+			session.removeAttribute(getGamesessionStr());
+			return "redirect:/game/pregunta"; // if someone wants to exploit the game, just redirect to the game page
+		}
+
+		checkUpdateGameSession(gameSession, idQuestion, idAnswer);
+
+		session.setAttribute("hasJustAnswered", true);
+		gameSession.getNextQuestion();
+		return updateGame(model, session, principal);
+	}
+
+	@RequestMapping("/game/update")
+	public String updateGame(Model model, HttpSession session, Principal principal) {
+		GameSession gameSession = getSessionAttribute(session);
+		Question nextQuestion = gameSession.getCurrentQuestion();
+		if (nextQuestion == null && gameSession.isMultiplayer()) {
+			int code = Integer.parseInt((String) session.getAttribute("multiplayerCode"));
+			List<Player> players = playerService.getUsersByMultiplayerCode(code);
+
+			if (!gameSession.isFinished()) {
+				gameSessionService.endGame(gameSession);
+
+				model.addAttribute("players", players);
+				model.addAttribute("code", session.getAttribute("multiplayerCode"));
+				gameSession.setFinished(true);
+
+				Optional<Player> player = playerService.getUserByUsername(principal.getName());
+				if (player.isEmpty()) {
+					// Handle the case where the player is not found
+					return "redirect:/";
+				}
+				Player p = player.get();
+				playerService.setScoreMultiplayerCode(p.getId(), "" + gameSession.getScore());
+				multiplayerSessionService.changeScore(p.getMultiplayerCode() + "", p.getId(), gameSession.getScore());
+			} else {
+				model.addAttribute("players", players);
+
+			}
+
+			model.addAttribute("code", session.getAttribute("multiplayerCode"));
+			return "ranking/multiplayerRanking";
+		}
+
+		if (nextQuestion == null) {
+			if (!gameSession.isFinished()) {
+				gameSessionService.endGame(gameSession);
+				gameSession.setFinished(true);
+			} else {
+				session.removeAttribute(getGamesessionStr());
+				model.addAttribute("score", gameSession.getCorrectQuestions());
+			}
+			return "game/fragments/gameFinished";
+		}
+		//añadido
+		int preguntasRespondidas = gameSession.getAnsweredQuestions().size();
+		int preguntasCorrectas = gameSession.getCorrectQuestions();
+		if (preguntasCorrectas - preguntasRespondidas != 0) {
+			gameSessionService.endGame(gameSession);
+			gameSession.setFinished(true);
+			model.addAttribute("score", gameSession.getCorrectQuestions());
+			return "game/fragments/gameFinished";
+		}
+		//fin añadido
+
+
+		if (session.getAttribute("hasJustAnswered") != null) {
+			if ((boolean) session.getAttribute("hasJustAnswered")) gameSession.setFinishTime(LocalDateTime.now());
+			session.removeAttribute("hasJustAnswered");
+		}
+		addQuestionAttributes(model, gameSession);
+		return "game/fragments/gameFramePreguntaCaliente";
+	}
+
+	@RequestMapping("/game/points")
+	@ResponseBody
+	public String getPoints(HttpSession session) {
+		GameSession gameSession = getSessionAttribute(session);
+		if (gameSession != null) return String.valueOf(gameSession.getCorrectQuestions());
+		else return "0";
+	}
+
+	@RequestMapping("/game/currentQuestion")
+	@ResponseBody
+	public String getCurrentQuestion(HttpSession session) {
+		GameSession gameSession = getSessionAttribute(session);
+		if (gameSession != null)
+			return String.valueOf(Math.min(gameSession.getAnsweredQuestions().size() + 1, GameSessionService.NORMAL_GAME_QUESTION_NUM));
+		else return "0";
+	}
 }

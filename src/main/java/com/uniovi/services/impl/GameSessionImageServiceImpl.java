@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class GameSessionImageServiceImpl implements GameSessionService<GameSessionImage> {
 
-    public static Integer NORMAL_GAME_QUESTION_NUM = 4;
+    public static final Integer NORMAL_GAME_QUESTION_NUM = 4;
 
     private final GameSessionImageRepository gameSessionRepository;
     private final QuestionImageServiceImpl questionService;

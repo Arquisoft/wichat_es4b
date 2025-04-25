@@ -2,15 +2,15 @@
     <h1 class="text-center" th:text="#{game.finish}"></h1>
     <p class="display-1 text-center">
         <span th:text="#{game.points}"></span>
-        <b th:inline="text" th:text="${scoreImage}"></b>
+        <b th:inline="text" th:text="${score}"></b>
     </p>
     <img class="game-logo d-block mx-auto" th:src="${logoImage}">
     <div class="row text-center">
         <div class="col-6">
-            <a class="btn btn-primary" href="/ranking/image/local" th:text="#{navbar.ranking.local}"></a>
+            <a class="btn btn-primary" href="/ranking/image/local" th:text="#{navbar.ranking.local.image}"></a>
         </div>
         <div class="col-6">
-            <a class="btn btn-primary" href="/ranking/image/global" th:text="#{navbar.ranking.global}"></a>
+            <a class="btn btn-primary" href="/ranking/image/global" th:text="#{navbar.ranking.global.image}"></a>
         </div>
     </div>
     <script>

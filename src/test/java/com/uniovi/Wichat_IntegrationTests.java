@@ -21,7 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 public class Wichat_IntegrationTests {
     public static final String URL = "http://localhost:3000/";
 
-    protected PropertiesExtractor p = new PropertiesExtractor("messages");
+    protected final PropertiesExtractor p = new PropertiesExtractor("messages");
 
     protected static WebDriver driver;
 

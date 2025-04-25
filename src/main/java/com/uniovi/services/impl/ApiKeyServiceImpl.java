@@ -18,12 +18,11 @@ public class ApiKeyServiceImpl implements ApiKeyService {
     }
 
     @Override
-    public ApiKey createApiKey(Player forPlayer) {
+    public void createApiKey(Player forPlayer) {
         ApiKey apiKey = new ApiKey();
         Associations.PlayerApiKey.addApiKey(forPlayer, apiKey);
         apiKeyRepository.save(apiKey);
-        return apiKey;
-    }
+	}
 
     @Override
     public ApiKey getApiKey(String apiKey) {

@@ -3,7 +3,6 @@ package com.uniovi.services.impl;
 import com.uniovi.entities.QuestionImage;
 import com.uniovi.repositories.MultiplayerSessionRepository;
 import com.uniovi.repositories.PlayerRepository;
-import com.uniovi.services.GameSessionService;
 import com.uniovi.services.abstracts.AbstractMultiplayerSessionService;
 import org.springframework.stereotype.Service;
 

@@ -12,11 +12,11 @@
 
         <!-- Columna de Imagen y Botones -->
         <div class="col-md-6 text-center">
-            <img th:src="${questionImage.imageUrl}" alt="Question Image"
+            <img th:src="${question.imageUrl}" alt="Question Image"
                  class="img-fluid mx-auto d-block my-3" style="max-width: 100%; max-height: 300px;">
             <div class="row">
                 <!-- Thymeleaf loop para los botones -->
-                <div th:each="answer : ${questionImage.returnScrambledOptions()}" class="col-6">
+                <div th:each="answer : ${question.returnScrambledOptions()}" class="col-6">
                     <button th:id="${'btn' + answer.id}" class="btn btn-primary btn-block m-2 rounded"
                             th:text="${answer.text}" th:value="${answer}"></button>
                 </div>
@@ -56,7 +56,7 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     document.getElementById("hintButton").addEventListener("click", function() {
-        let questionId = /*[[${questionImage.id}]]*/ 0;
+        let questionId = /*[[${question.id}]]*/ 0;
 
         fetch(`/game/image/hint/${questionId}`)
             .then(response => response.text())
@@ -79,9 +79,9 @@
     function initiateGameCounters() {
         let timeoutId = -1;
         let interval = -1;
-        let questionId = [[${questionImage.id}]];
-        let corrAnswerId = [[${questionImage.correctAnswer.id}]];
-        let answers = /*[[${questionImage.options}]]*/ [];
+        let questionId = [[${question.id}]];
+        let corrAnswerId = [[${question.correctAnswer.id}]];
+        let answers = /*[[${question.options}]]*/ [];
 
         $("#continueBtn").hide();
 
@@ -117,7 +117,7 @@
             initiateTimeout(qId, aId);
         }
 
-        let timeoutPeriod = [[${questionDurationImage}]] * 1000; // Timeout period in milliseconds
+        let timeoutPeriod = [[${questionDuration}]] * 1000; // Timeout period in milliseconds
         let updateInterval = 100; // How often to update the progress bar
 
         timeoutId = setTimeout(() => {

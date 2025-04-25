@@ -21,7 +21,7 @@ import java.util.List;
 public class QuestionGeneratorImpl extends AbstractQuestionGenerator<Question> {
 
 
-    private Logger logger = LoggerFactory.getLogger(QuestionGeneratorImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(QuestionGeneratorImpl.class);
 
     public QuestionGeneratorImpl(JsonNode jsonNode) {
         super(jsonNode);
@@ -29,7 +29,7 @@ public class QuestionGeneratorImpl extends AbstractQuestionGenerator<Question> {
 
 
     @Override
-    protected List<Question> generateQuestion(JsonNode question, Category cat) throws IOException, InterruptedException {
+    protected List<Question> generateQuestion(JsonNode question, Category cat) throws InterruptedException {
         // Get the SPARQL query from the JSON
         String query = question.get("sparqlQuery").textValue();
 
