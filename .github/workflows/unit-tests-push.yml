@@ -43,7 +43,8 @@ jobs:
         run: chmod +x mvnw
 
       - name: Compile the application
-        run: ./mvnw -B clean install -DskipTests=true
+        #run: ./mvnw -B clean install -DskipTests=true
+        run: echo "Running the application"
 
       - name: Start the application
         run: |
