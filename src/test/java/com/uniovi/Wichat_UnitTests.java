@@ -463,7 +463,7 @@ class Wichat_UnitTests {
 		dtoCoverageTests.testRoleDto();
 	}
 
-	// Test de cobertura de las Entities. Reservado de la 550 a la 559
+	// Test de cobertura de las Entities. Reservado de la 550 a la 599
 
 	@Test
 	@Order(501)
@@ -473,15 +473,20 @@ class Wichat_UnitTests {
 		entitiesCoverageTests.testAnswer();
 		entitiesCoverageTests.testAnswerImage();
 		entitiesCoverageTests.testPlayerRoleAssociation();
-		entitiesCoverageTests.testPlayerApiKeyAssociation();
 		entitiesCoverageTests.testApiKeyAccessLogAssociation();
+		entitiesCoverageTests.testPlayerApiKeyAssociation();
 		entitiesCoverageTests.testPlayerGameSessionAssociation();
+		entitiesCoverageTests.testPlayerGameSessionImageAssociation();
+		entitiesCoverageTests.testQuestionCategoryAssociation();
+		entitiesCoverageTests.testQuestionImageCategoryAssociation();
+		entitiesCoverageTests.testQuestionImageAnswerAssociation();
 		entitiesCoverageTests.testApiKey();
 		entitiesCoverageTests.testCategory();
 		entitiesCoverageTests.testGameSession();
 		entitiesCoverageTests.testGameSessionImage();
 		entitiesCoverageTests.testMultiplayerSession();
 		entitiesCoverageTests.testLanguage();
+		entitiesCoverageTests.testQuestion();
 	}
 
 
@@ -2547,6 +2552,84 @@ class Wichat_UnitTests {
 			assertEquals("about-us", viewName);
 		}
 	}
+
+	@Nested
+	@DisplayName("Tests de QuestionImageServiceImpl")
+	class QuestionImageServiceTests {
+
+		private QuestionImage questionImage;
+		private AnswerImage answer1;
+		private AnswerImage answer2;
+		private Category category;
+
+		@BeforeEach
+		void initQuestionImageTestData() {
+			category = new Category("Historia");
+			answer1 = new AnswerImage("A", false);
+			answer2 = new AnswerImage("B", true);
+			List<AnswerImage> options = List.of(answer1, answer2);
+
+			questionImage = new QuestionImage("¿Qué letra es correcta?", options, answer2, category, Language.ES, "http://example.com/image.jpg");
+
+			answer1.setQuestion(questionImage);
+			answer2.setQuestion(questionImage);
+		}
+
+		@Test
+		void testQuestionImageCorrectAnswerValidation() {
+			assertTrue(questionImage.isCorrectAnswer(answer2));
+			assertFalse(questionImage.isCorrectAnswer(answer1));
+		}
+
+		@Test
+		void testQuestionImageScrambledOptions() {
+			List<AnswerImage> scrambled = questionImage.returnScrambledOptions();
+
+			assertEquals(2, scrambled.size());
+			assertTrue(scrambled.contains(answer1));
+			assertTrue(scrambled.contains(answer2));
+		}
+
+		@Test
+		void testHasEmptyOptionsFalse() {
+			assertFalse(questionImage.hasEmptyOptions());
+		}
+
+		@Test
+		void testHasEmptyOptionsTrue() {
+			answer1.setText("   "); // opción vacía con espacios
+			assertTrue(questionImage.hasEmptyOptions());
+		}
+
+		@Test
+		void testQuestionImageToString() {
+			String output = questionImage.toString();
+			assertNotNull(output);
+			assertTrue(output.contains("statement"));
+			assertTrue(output.contains("imageUrl"));
+		}
+
+		@Test
+		void testToJsonIncludesImageUrl() {
+			assertEquals("http://example.com/image.jpg", questionImage.toJson().get("imageUrl").asText());
+			assertEquals(questionImage.getStatement(), questionImage.toJson().get("statement").asText());
+		}
+
+		@Test
+		void testEqualsAndHashCode() {
+			QuestionImage other = new QuestionImage();
+			questionImage.setId(10L);
+			other.setId(10L);
+
+			assertEquals(questionImage, other);
+			assertEquals(questionImage.hashCode(), other.hashCode());
+		}
+	}
+
+
+	/**
+	 *  --------------------- METODOS ADICIONALES DE CODIGO ---------------------
+	 */
 
 
 	/**

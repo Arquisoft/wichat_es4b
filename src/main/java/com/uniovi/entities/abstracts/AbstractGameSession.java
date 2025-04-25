@@ -19,113 +19,111 @@ import java.util.*;
 @MappedSuperclass
 @NoArgsConstructor
 public abstract class AbstractGameSession<T extends AbstractQuestion<?>> implements JsonEntity, Serializable {
-	@Id
-	@GeneratedValue
-	private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-	@ManyToOne
-	private Player player;
+    @ManyToOne
+    private Player player;
 
-	private Integer correctQuestions;
-	private Integer totalQuestions;
+    private Integer correctQuestions;
+    private Integer totalQuestions;
 
-	// When game started
-	private LocalDateTime createdAt;
+    // When game started
+    private LocalDateTime createdAt;
 
-	// When the last question started, or when the game ended
-	private LocalDateTime finishTime;
+    // When the last question started, or when the game ended
+    private LocalDateTime finishTime;
 
-	private int score;
+    private int score;
 
-	@Transient
-	private Set<T> answeredQuestions = new HashSet<>();
+    @Transient
+    private Set<T> answeredQuestions = new HashSet<>();
 
-	@Transient
-	private List<T> questionsToAnswer = new ArrayList<>();
+    @Transient
+    private List<T> questionsToAnswer = new ArrayList<>();
 
-	@Transient
-	private T currentQuestion;
+    @Transient
+    private T currentQuestion;
 
-	@Transient
-	private boolean isMultiplayer = false;
+    @Transient
+    private boolean isMultiplayer = false;
 
-	@Transient
-	private boolean isFinished = false;
+    @Transient
+    private boolean isFinished = false;
 
-	public AbstractGameSession(Player player, List<T> questions) {
-		this.player = player;
-		this.questionsToAnswer = questions;
-		this.createdAt = LocalDateTime.now();
-		this.finishTime = LocalDateTime.now();
-		this.correctQuestions = 0;
-		this.totalQuestions = 0;
-		getNextQuestion();
-	}
+    public AbstractGameSession(Player player, List<T> questions) {
+        this.player = player;
+        this.questionsToAnswer = questions;
+        this.createdAt = LocalDateTime.now();
+        this.finishTime = LocalDateTime.now();
+        this.correctQuestions = 0;
+        this.totalQuestions = 0;
+        getNextQuestion();
+    }
 
-	public void addQuestion(boolean correct, int timeLeft) {
-		if (correct)
-			correctQuestions++;
-		totalQuestions++;
+    public void addQuestion(boolean correct, int timeLeft) {
+        if(correct)
+            correctQuestions++;
+        totalQuestions++;
 
-		if (correct) {
-			score += timeLeft + 10 /* magic number TBD */;
-		}
-	}
+        if (correct) {
+            score += timeLeft + 10 /* magic number TBD */;
+        }
+    }
 
-	public void addAnsweredQuestion(T question) {
-		questionsToAnswer.remove(question);
-		answeredQuestions.add(question);
-	}
+    public void addAnsweredQuestion(T question) {
+        questionsToAnswer.remove(question);
+        answeredQuestions.add(question);
+    }
 
-	public boolean isAnswered(T question) {
-		return answeredQuestions.contains(question);
-	}
+    public boolean isAnswered(T question) {
+        return answeredQuestions.contains(question);
+    }
 
-	public T getNextQuestion() {
-		if (questionsToAnswer.isEmpty()) {
-			currentQuestion = null;
-			return null;
-		}
-		Collections.shuffle(questionsToAnswer);
-		currentQuestion = questionsToAnswer.get(0);
-		return currentQuestion;
-	}
+    public T getNextQuestion() {
+        if (questionsToAnswer.isEmpty()) {
+            currentQuestion = null;
+            return null;
+        }
+        Collections.shuffle(questionsToAnswer);
+        currentQuestion = questionsToAnswer.get(0);
+        return currentQuestion;
+    }
 
-	@Override
-	public JsonNode toJson() {
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.createObjectNode()
-				.put("id", id)
-				.put("player", player.getId())
-				.put("correctQuestions", correctQuestions)
-				.put("totalQuestions", totalQuestions)
-				.put("createdAt", createdAt.toString())
-				.put("finishTime", finishTime.toString())
-				.put("score", score);
-	}
+    @Override
+    public JsonNode toJson() {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.createObjectNode()
+                .put("id", id)
+                .put("player", player.getId())
+                .put("correctQuestions", correctQuestions)
+                .put("totalQuestions", totalQuestions)
+                .put("createdAt", createdAt.toString())
+                .put("finishTime", finishTime.toString())
+                .put("score", score);
+    }
 
 	public boolean hasQuestionId(Long idQuestion) {
-		for (T q : questionsToAnswer) {
+		for (T q : questionsToAnswer)
 			if (q.getId().equals(idQuestion))
 				return true;
-		}
 
-		for (T q : answeredQuestions) {
+		for (T q : answeredQuestions)
 			if (q.getId().equals(idQuestion))
 				return true;
-		}
 		return false;
 	}
 
-	public String getDuration() {
-		if (createdAt != null && finishTime != null) {
-			Duration duration = Duration.between(createdAt, finishTime);
-			long hours = duration.toHours();
-			long minutes = duration.toMinutes() % 60;
-			long seconds = duration.getSeconds() % 60;
-			return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-		} else {
-			return "00:00:00";
-		}
-	}
+    public String getDuration() {
+        if (createdAt != null && finishTime != null) {
+            Duration duration = Duration.between(createdAt, finishTime);
+            long hours = duration.toHours();
+            long minutes = duration.toMinutes() % 60;
+            long seconds = duration.getSeconds() % 60;
+            return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        } else {
+            return "00:00:00";
+        }
+    }
 }
