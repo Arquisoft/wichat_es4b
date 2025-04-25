@@ -73,7 +73,9 @@ jobs:
       - name: Show app logs
         if: always()
         run: |
-          cat logs.txt
+          if [ -f logs.txt ]; then
+            cat logs.txt
+          fi
 
       - name: Shut down the application
         run: |
