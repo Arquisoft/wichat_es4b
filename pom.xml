@@ -18,6 +18,7 @@
         <sonar.sources>src/main/java,src/test/resources/features</sonar.sources>
         <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sonar.exclusions>**/CustomErrorController.java,**/InsertSampleDataService.java</sonar.exclusions>
+        <jacoco-agent.destfile>${project.build.directory}/jacoco.exec</jacoco-agent.destfile>
     </properties>
     <dependencies>
         <dependency>
@@ -198,6 +199,12 @@
                     </jvmArguments>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.11.0.3922</version>
+            </plugin>
+
         </plugins>
     </build>
     <profiles>
