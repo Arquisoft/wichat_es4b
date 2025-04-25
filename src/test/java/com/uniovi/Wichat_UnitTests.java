@@ -478,7 +478,7 @@ class Wichat_UnitTests {
 
 
     @Test
-    @Order(1)
+    @Order(2)
     void testPlayerService() {
         List<Player> players = playerService.getUsersByRole("ROLE_USER");
         assertEquals(1, players.size());
@@ -826,7 +826,8 @@ class Wichat_UnitTests {
     }
 
     @Test
-    @Order(28)
+    //@Order(28)
+    @Order(1)
     void testGetPlayerNoApiKey() throws IOException, InterruptedException, JSONException {
         HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of(), Map.of());
 
