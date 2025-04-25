@@ -82,10 +82,12 @@ jobs:
 
       - name: Shut down the application
         run: |
-          PID="$(cat spring-boot-app.pid)"
-          if ps -p "$PID" > /dev/null; then
-            kill "$PID"
-          fi
+          if [ -f spring-boot-app.pid ]; then
+            PID="$(cat spring-boot-app.pid)"
+            if ps -p "$PID" > /dev/null; then
+              kill "$PID"
+            fi
+          fi          
 
       - if: ${{ github.actor != 'dependabot[bot]' }}
         name: Collect Jacoco report and send to Sonar
