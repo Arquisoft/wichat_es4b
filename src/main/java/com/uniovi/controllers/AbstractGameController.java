@@ -10,7 +10,6 @@ import com.uniovi.services.QuestionService;
 import com.uniovi.services.abstracts.AbstractMultiplayerSessionService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.security.Principal;
 import java.time.Duration;
@@ -62,7 +61,7 @@ public abstract class AbstractGameController<T extends AbstractQuestion<?>, Q ex
 		return "redirect:/game/lobby";
 	}
 
-	public Map<String, String> endMultiplayerGameTable(@PathVariable String code) {
+	public Map<String, String> endMultiplayerGameTable(String code) {
 		Map<Player, Integer> playerScores = multiplayerSessionService.getPlayersWithScores(Integer.parseInt(code));
 		Map<String, String> playersNameWithScore = new HashMap<>();
 		for (Map.Entry<Player, Integer> player : playerScores.entrySet()) {
@@ -78,7 +77,7 @@ public abstract class AbstractGameController<T extends AbstractQuestion<?>, Q ex
 		return playersNameWithScore;
 	}
 
-	public List<String> updatePlayerList(@PathVariable String code) {
+	public List<String> updatePlayerList(String code) {
 		Map<Player, Integer> players = multiplayerSessionService.getPlayersWithScores(Integer.parseInt(code));
 		List<String> playerNames = new ArrayList<>();
 		for (Map.Entry<Player, Integer> player : players.entrySet()) {
