@@ -20,72 +20,84 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 public class Player implements JsonEntity {
-    @Id
-    @GeneratedValue
-    private Long id;
+	@Id
+	@GeneratedValue
+	private Long id;
 
-    @Column(unique = true, nullable = false)
-    @NotEmpty
-    private String username;
+	@Column(unique = true, nullable = false)
+	@NotEmpty
+	private String username;
 
-    @Column(unique = true, nullable = false)
-    private String email;
+	@Column(unique = true, nullable = false)
+	private String email;
 
-    @Column(nullable = false)
-    @NotEmpty
-    private String password;
+	@Column(nullable = false)
+	@NotEmpty
+	private String password;
 
-    @Column
-    private Integer multiplayerCode;
+	@Column
+	private Integer multiplayerCode;
 
-    @Column
-    private String scoreMultiplayerCode;
-
-
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    private Set<Role> roles = new HashSet<>();
-
-    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<GameSession> gameSessions = new HashSet<>();
-
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "player")
-    private ApiKey apiKey;
-
-    //*****  IMAGE
-
-    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<GameSessionImage> gameSessionsImage = new HashSet<>();
-
-    //*****
+	@Column
+	private String scoreMultiplayerCode;
 
 
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+	private Set<Role> roles = new HashSet<>();
+
+	@OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<GameSession> gameSessions = new HashSet<>();
+
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "player")
+	private ApiKey apiKey;
+
+	//*****  IMAGE
+
+	@OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<GameSessionImage> gameSessionsImage = new HashSet<>();
+
+	//*****
 
 
-    // Transient: no se almacena en la base de datos
-    @Transient
-    private String passwordConfirm;
+	// Transient: no se almacena en la base de datos
+	@Transient
+	private String passwordConfirm;
 
-    public Player(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
+	public Player(String username, String email, String password) {
+		this.username = username;
+		this.email = email;
+		this.password = password;
+	}
 
-    @Override
-    public JsonNode toJson() {
-        ObjectMapper mapper = new ObjectMapper();
-        ArrayNode rolesArray = mapper.createArrayNode();
-        roles.forEach(role -> rolesArray.add(role.getName()));
+	@Override
+	public JsonNode toJson() {
+		ObjectMapper mapper = new ObjectMapper();
+		ArrayNode rolesArray = mapper.createArrayNode();
+		roles.forEach(role -> rolesArray.add(role.getName()));
 
-        ArrayNode gameSessionsArray = mapper.createArrayNode();
-        gameSessions.forEach(gameSession -> gameSessionsArray.add(gameSession.toJson()));
+		ArrayNode gameSessionsArray = mapper.createArrayNode();
+		gameSessions.forEach(gameSession -> gameSessionsArray.add(gameSession.toJson()));
 
-        ObjectNode obj = mapper.createObjectNode();
-        obj     .put("id", id)
-                .put("username", username)
-                .put("email", email)
-                .put("roles", rolesArray);
-        obj     .put("gameSessions", gameSessionsArray);
-        return obj;
-    }
+		ObjectNode obj = mapper.createObjectNode();
+		obj.put("id", id)
+				.put("username", username)
+				.put("email", email)
+				.put("roles", rolesArray);
+		obj.put("gameSessions", gameSessionsArray);
+		return obj;
+	}
+
+	@Override
+	public String toString() {
+		return "Player{" +
+				"id=" + id +
+				", username='" + username + '\'' +
+				", email='" + email + '\'' +
+				", password='" + password + '\'' +
+				", multiplayerCode=" + multiplayerCode +
+				", scoreMultiplayerCode='" + scoreMultiplayerCode + '\'' +
+				", apiKey=" + apiKey +
+				", roles=" + roles +
+				'}';
+	}
 }
