@@ -11,16 +11,12 @@ import org.springframework.test.context.ActiveProfiles;
 @CucumberOptions(
         plugin = {"pretty"},
         features = {
-                "src/test/resources/features/home_page.feature",
-                "src/test/resources/features/loginForm.feature",
-                "src/test/resources/features/player_data_modify.feature",
-                "src/test/resources/features/signUpForm.feature"
+
+                "src/test/resources/features/playing_normal_game.feature"
                 // NO incluyas la del juego aquí
         }
 )
 @SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@ActiveProfiles("test")
 public class CucumberRunnerTests {
 }
 

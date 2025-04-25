@@ -17,6 +17,8 @@ import org.springframework.test.context.ActiveProfiles;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 //Hay que ver como hacer que solo se carga la data-sample con el test del juego unicamente
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@ActiveProfiles("integration")
 @CucumberContextConfiguration
 public class Wichat_IntegrationTests {
     public static final String URL = "http://localhost:3000/";

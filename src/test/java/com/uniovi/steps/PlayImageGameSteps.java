@@ -32,7 +32,7 @@ public class PlayImageGameSteps extends Wichat_IntegrationTests {
     public void i_answer_a_city() {
         List<WebElement> elements=null;
         try {
-            elements = SeleniumUtils.waitLoadElementsByXpath(driver, "/html/body/div/div/div[1]/div[2]/div/div[1]", 5);
+            elements = SeleniumUtils.waitLoadElementsByXpath(driver, "/html/body/div/div/div[1]/div[2]/div/div[1]", 10);
         }catch (TimeoutException e){
             elements = SeleniumUtils.waitLoadElementsByXpath(driver, "/html/body/div/div[1]/div[2]/div/div[1]", 10);
         }
