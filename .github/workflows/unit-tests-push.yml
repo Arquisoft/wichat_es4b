@@ -63,6 +63,9 @@ jobs:
 
       - name: Run tests
         run: |
+          # Reset database
+          mysql -h 127.0.0.1 -u root -proot -e "DROP DATABASE IF EXISTS test_database; CREATE DATABASE test_database;"
+    
           ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.jpa.hibernate.ddl-auto=create -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
         env:
           SPRING_PROFILES_ACTIVE: test
