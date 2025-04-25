@@ -104,18 +104,16 @@ public abstract class AbstractGameSession<T extends AbstractQuestion<?>> impleme
                 .put("score", score);
     }
 
-    public boolean hasQuestionId(Long idQuestion) {
-        for (T q : questionsToAnswer) {
-            if (q.getId().equals(idQuestion))
-                return true;
-        }
+	public boolean hasQuestionId(Long idQuestion) {
+		for (T q : questionsToAnswer)
+			if (q.getId().equals(idQuestion))
+				return true;
 
-        for (T q : answeredQuestions) {
-            if (q.getId().equals(idQuestion))
-                return true;
-        }
-        return false;
-    }
+		for (T q : answeredQuestions)
+			if (q.getId().equals(idQuestion))
+				return true;
+		return false;
+	}
 
     public String getDuration() {
         if (createdAt != null && finishTime != null) {
