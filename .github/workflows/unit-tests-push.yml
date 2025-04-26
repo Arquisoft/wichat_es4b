@@ -10,7 +10,7 @@ on:
 
 jobs:
   app-tests-analyze:
-    runs-on: ubuntu:noble-20250127
+    runs-on: ubuntu-latest
     services:
       mysql:
         image: mysql:9.2
