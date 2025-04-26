@@ -49,8 +49,6 @@ jobs:
         run: |
           ./mvnw spring-boot:run > logs.txt 2>&1 &
           echo $! > spring-boot-app.pid
-          sleep 60
-
         env:
           SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/test_database
           SPRING_DATASOURCE_USERNAME: root
@@ -60,12 +58,26 @@ jobs:
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
+      - name: Wait for Spring Boot to be ready
+        run: |
+          echo "Waiting for application to start..."
+          for i in {1..30}; do
+            if nc -z localhost 3000; then
+              echo "Application is up!"
+              exit 0
+            fi
+            echo "Still waiting for application..."
+            sleep 5
+          done
+          echo "Application failed to start within timeout" >&2
+          exit 1
+
       - name: Check listening ports
         run: ss -tuln
 
       - name: Run tests
         run: |
-          ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+          ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.jpa.hibernate.ddl-auto=create -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
         env:
           SPRING_PROFILES_ACTIVE: test
           headless: true
@@ -81,6 +93,7 @@ jobs:
           fi
 
       - name: Shut down the application
+        if: always()
         run: |
           if [ -f spring-boot-app.pid ]; then
             PID="$(cat spring-boot-app.pid)"

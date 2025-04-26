@@ -1,4 +1,4 @@
-package com.uniovi.steps;
+package com.uniovi.steps.config.integration;
 
 import com.uniovi.Wichat_IntegrationTests;
 import com.uniovi.util.PropertiesExtractor;
@@ -7,7 +7,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
