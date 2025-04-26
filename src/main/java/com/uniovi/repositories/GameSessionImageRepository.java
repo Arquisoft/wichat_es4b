@@ -14,7 +14,7 @@ public interface GameSessionImageRepository extends CrudRepository<GameSessionIm
     List<GameSessionImage> findAll();
     List<GameSessionImage> findAllByPlayer(Player player);
 
-    @Query("SELECT gs.player, gs.score FROM GameSessionImage gs GROUP BY gs.player ORDER BY gs.score DESC")
+    @Query("SELECT gs.player, gs.score FROM GameSessionImage gs ORDER BY gs.score DESC")
     Page<Object[]> findScoresByPlayer(Pageable pageable);
     Page<GameSessionImage> findAllByPlayerOrderByScoreDesc(Pageable pageable, Player player);
 }
