@@ -53,13 +53,13 @@
                                 th:text="#{navbar.game.mode.pregunta.caliente}"
                         ></a>
                     </li>
-                    <li>
+                    <!--li>
                         <a
                                 class="dropdown-item"
                                 href="/game/trivial/multiplayer"
                                 th:text="#{navbar.game.mode.trivial.multiplayer}"
                         ></a>
-                    </li>
+                    </li-->
                     <li>
                         <a
                                 class="dropdown-item"
@@ -67,13 +67,13 @@
                                 th:text="#{navbar.game.mode.image}"
                         ></a>
                     </li>
-                    <li>
+                    <!--li>
                         <a
                                 class="dropdown-item"
                                 href="/game/image/multiplayer"
                                 th:text="#{navbar.game.mode.image.multiplayer}"
                         ></a>
-                    </li>
+                    </li-->
                     <!-- MAS MODOS DE JUEGO AQUI -->
                 </ul>
             </li>
@@ -249,7 +249,8 @@
                         aria-labelledby="navbarDropdown"
                 >
                     <!--Enlace al perfil personal del usuario-->
-                    <a class="dropdown-item" id="btnUserProfile" th:href="@{'/player/details/' + ${#authentication.principal.username}}">
+                    <a class="dropdown-item" id="btnUserProfile"
+                       th:href="@{'/player/details/' + ${#authentication.principal.username}}">
                         <span th:text="#{navbar.profile}"></span>
                     </a>
                     <!--Enlace a la APIKEY del usuario-->

@@ -4,14 +4,16 @@
 <body class="d-flex flex-column min-vh-100">
 <nav th:replace="~{fragments/nav}"></nav>
 <canvas th:replace="~{fragments/background}"></canvas>
-<div class="container-fluid d-flex justify-content-center align-items-center text-center text-white" style="height: 80vh;">
+<div class="container-fluid d-flex justify-content-center align-items-center text-center text-white"
+     style="height: 80vh;">
     <div class="row">
         <div class="col-md-12">
             <h2 class="display-4 mb-4" th:text="#{app.name}"></h2>
             <p class="lead mb-4" th:text="#{index.subtitle}"></p>
             <button id="gameBtn" type="button" class="btn btn-custom" th:text="#{index.button}"></button>
-            <br></br>
-            <button id="multiplayerBtn" type="button" class="btn btn-custom" th:text="#{index.multiplayer.button}"></button>
+            <!--br/>
+            <button id="multiplayerBtn" type="button" class="btn btn-custom"
+                    th:text="#{index.multiplayer.button}"></button-->
         </div>
     </div>
 </div>
@@ -20,11 +22,11 @@
         window.location.href = "/game";
     });
 </script>
-<script>
+<!--script>
     $("#multiplayerBtn").click(function () {
         window.location.href = "/multiplayerGame";
     });
-</script>
+</script-->
 <footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>

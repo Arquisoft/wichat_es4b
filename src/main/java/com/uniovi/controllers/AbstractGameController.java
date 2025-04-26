@@ -48,6 +48,10 @@ public abstract class AbstractGameController<T extends AbstractQuestion<?>, Q ex
 	 * Metodos a redefinir HTTP
 	 */
 
+	/*
+	 * Multiplayer
+	 */
+
 	public String createMultiplayerGame(HttpSession session, Principal principal) {
 		Optional<Player> player = playerService.getUserByUsername(principal.getName());
 		if (player.isEmpty()) {

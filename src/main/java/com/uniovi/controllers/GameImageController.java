@@ -2,7 +2,6 @@ package com.uniovi.controllers;
 
 import com.uniovi.dto.QuestionImageDto;
 import com.uniovi.entities.GameSessionImage;
-import com.uniovi.entities.Player;
 import com.uniovi.entities.QuestionImage;
 import com.uniovi.services.impl.GameSessionImageServiceImpl;
 import com.uniovi.services.impl.MultiplayerSessionImageServiceImpl;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -52,100 +49,6 @@ public class GameImageController extends AbstractGameController<QuestionImage, G
 
 		addQuestionAttributes(model, gameSession);
 		return "game/image/game";
-	}
-
-	@RequestMapping("/game/image/multiplayer")
-	public String getImageMultiplayerGame() {
-		return "redirect:/image/multiplayerGame/createGame";
-	}
-
-
-	@RequestMapping("/image/multiplayerGame/{code}")
-	public String joinMultiplayerGame(@PathVariable String code, HttpSession session, Principal principal, Model model) {
-		if (!multiplayerSessionService.existsCode(code)) {
-			model.addAttribute("errorKeyImage", "multi.code.invalid");
-			return "game/image/multiplayerGame";
-		}
-
-		Optional<Player> player = playerService.getUserByUsername(principal.getName());
-		if (player.isEmpty()) {
-			// Handle the case where the player is not found
-			return "redirect:/";
-		}
-		Player p = player.get();
-		if (playerService.changeMultiplayerCode(p.getId(), code)) {
-			multiplayerSessionService.addToLobby(code, p.getId());
-			model.addAttribute("multiplayerGameCodeImage", code);
-			session.setAttribute("multiplayerCodeImage", code);
-			return "redirect:/game/image/lobby";
-		} else {
-			return "redirect:/image/multiplayerGame";
-		}
-	}
-
-	@RequestMapping("/image/multiplayerGame/createGame")
-	@Override
-	public String createMultiplayerGame(HttpSession session, Principal principal) {
-		return super.createMultiplayerGame(session, principal);
-	}
-
-	@RequestMapping("/image/startMultiplayerGame")
-	public String startMultiplayerGame(HttpSession session, Model model, Principal principal) {
-		GameSessionImage gameSession = getSessionAttribute(session);
-		if (gameSession != null) {
-			if (!gameSession.isMultiplayer()) {
-				session.removeAttribute(getGamesessionStr());
-				return "redirect:/image/startMultiplayerGame";
-			}
-
-			if (gameSession.isFinished()) {
-				model.addAttribute("codeImage", session.getAttribute("multiplayerCodeImage"));
-				return "game/image/multiplayerFinished";
-			}
-
-			if (checkUpdateGameSession(gameSession, session)) {
-				return "game/image/fragments/gameFinished";
-			}
-		} else {
-			Optional<Player> player = playerService.getUserByUsername(principal.getName());
-			if (!player.isPresent()) {
-				return "redirect:/";
-			}
-			gameSession = gameSessionService.startNewMultiplayerGame(getLoggedInPlayer(principal), player.get().getMultiplayerCode());
-			if (gameSession == null) return "redirect:/image/multiplayerGame";
-			session.setAttribute(getGamesessionStr(), gameSession);
-		}
-		addQuestionAttributes(model, gameSession);
-		return "game/image/game";
-	}
-
-	@RequestMapping("/image/multiplayerGame/endGame/{code}")
-	public String endMultiplayerGame(Model model, @PathVariable String code) {
-		model.addAttribute("codeImage", code);
-		return "ranking/image/multiplayerRanking";
-	}
-
-	@RequestMapping("/image/endGameList/{code}")
-	@ResponseBody
-	@Override
-	public Map<String, String> endMultiplayerGameTable(@PathVariable String code) {
-		return super.endMultiplayerGameTable(code);
-	}
-
-	@RequestMapping("/game/image/lobby/{code}")
-	@ResponseBody
-	@Override
-	public List<String> updatePlayerList(@PathVariable String code) {
-		return super.updatePlayerList(code);
-	}
-
-	@RequestMapping("/game/image/lobby")
-	public String createLobby(HttpSession session, Model model) {
-		int code = Integer.parseInt((String) session.getAttribute("multiplayerCodeImage"));
-		List<Player> players = playerService.getUsersByMultiplayerCode(code);
-		model.addAttribute("playersImage", players);
-		model.addAttribute("codeImage", session.getAttribute("multiplayerCodeImage"));
-		return "game/image/lobby";
 	}
 
 	/**
@@ -182,39 +85,21 @@ public class GameImageController extends AbstractGameController<QuestionImage, G
 	public String updateGame(Model model, HttpSession session, Principal principal) {
 		GameSessionImage gameSession = getSessionAttribute(session);
 		QuestionImage nextQuestionImage = gameSession.getCurrentQuestion();
-		if (nextQuestionImage == null && gameSession.isMultiplayer()) {
-			int code = Integer.parseInt((String) session.getAttribute("multiplayerCodeImage"));
-			List<Player> players = playerService.getUsersByMultiplayerCode(code);
-
-			if (!gameSession.isFinished()) {
-				gameSessionService.endGame(gameSession);
-
-				model.addAttribute("playersImage", players);
-				model.addAttribute("codeImage", session.getAttribute("multiplayerCodeImage"));
-				gameSession.setFinished(true);
-
-				Optional<Player> player = playerService.getUserByUsername(principal.getName());
-				Player p = player.orElse(null);
-				playerService.setScoreMultiplayerCode(p.getId(), "" + gameSession.getScore());
-				multiplayerSessionService.changeScore(p.getMultiplayerCode() + "", p.getId(), gameSession.getScore());
-			} else {
-				model.addAttribute("playersImage", players);
-
-			}
-
-			model.addAttribute("codeImage", session.getAttribute("multiplayerCodeImage"));
-			return "game/image/ranking/multiplayerRanking";
-		}
-
 		if (nextQuestionImage == null) {
-			if (!gameSession.isFinished()) {
-				gameSessionService.endGame(gameSession);
-				gameSession.setFinished(true);
+			if (gameSession.isMultiplayer()) {
+				//Multiplayer version
+				//return playMultiplayerGame(model, session, principal, gameSession);
+				throw new IllegalStateException("Multiplayer mode not actved.");
 			} else {
-				session.removeAttribute(getGamesessionStr());
-				model.addAttribute("score", gameSession.getScore());
+				if (!gameSession.isFinished()) {
+					gameSessionService.endGame(gameSession);
+					gameSession.setFinished(true);
+				} else {
+					session.removeAttribute(getGamesessionStr());
+					model.addAttribute("score", gameSession.getScore());
+				}
+				return "game/image/fragments/gameFinished";
 			}
-			return "game/image/fragments/gameFinished";
 		}
 
 		if (session.getAttribute("hasJustAnsweredImage") != null) {
@@ -244,12 +129,134 @@ public class GameImageController extends AbstractGameController<QuestionImage, G
 
 	@RequestMapping("/game/image/hint/{id}/{llm}")
 	@ResponseBody
-	public String getImageQuestionHint(@PathVariable Long id,@PathVariable String llm) {
+	public String getImageQuestionHint(@PathVariable Long id, @PathVariable String llm) {
 		Optional<QuestionImage> questionOpt = questionService.getQuestion(id);
 		if (questionOpt.isPresent()) {
 			QuestionImage question = questionOpt.get();
-			return ((QuestionImageServiceImpl) questionService).getHintForImageQuestion(question,llm); // Devuelve solo la pista como String
+			return ((QuestionImageServiceImpl) questionService).getHintForImageQuestion(question, llm); // Devuelve solo la pista como String
 		}
 		return "No se encontró ninguna pista para esta pregunta.";
 	}
+
+	/*
+	 * MODO MULTIJUGADOR
+	 */
+
+//	private String playMultiplayerGame(Model model, HttpSession session, Principal principal, GameSessionImage gameSession) {
+//		int code = Integer.parseInt((String) session.getAttribute("multiplayerCodeImage"));
+//		List<Player> players = playerService.getUsersByMultiplayerCode(code);
+//
+//		if (!gameSession.isFinished()) {
+//			gameSessionService.endGame(gameSession);
+//
+//			model.addAttribute("playersImage", players);
+//			model.addAttribute("codeImage", session.getAttribute("multiplayerCodeImage"));
+//			gameSession.setFinished(true);
+//
+//			Optional<Player> player = playerService.getUserByUsername(principal.getName());
+//			Player p = player.orElse(null);
+//			playerService.setScoreMultiplayerCode(p.getId(), "" + gameSession.getScore());
+//			multiplayerSessionService.changeScore(p.getMultiplayerCode() + "", p.getId(), gameSession.getScore());
+//		} else {
+//			model.addAttribute("playersImage", players);
+//
+//		}
+//
+//		model.addAttribute("codeImage", session.getAttribute("multiplayerCodeImage"));
+//		return "game/image/ranking/multiplayerRanking";
+//	}
+//
+//	@RequestMapping("/image/multiplayerGame/endGame/{code}")
+//	public String endMultiplayerGame(Model model, @PathVariable String code) {
+//		model.addAttribute("codeImage", code);
+//		return "ranking/image/multiplayerRanking";
+//	}
+//
+//	@RequestMapping("/image/multiplayerGame/createGame")
+//	@Override
+//	public String createMultiplayerGame(HttpSession session, Principal principal) {
+//		return super.createMultiplayerGame(session, principal);
+//	}
+//
+//	@RequestMapping("/image/startMultiplayerGame")
+//	public String startMultiplayerGame(HttpSession session, Model model, Principal principal) {
+//		GameSessionImage gameSession = getSessionAttribute(session);
+//		if (gameSession != null) {
+//			if (!gameSession.isMultiplayer()) {
+//				session.removeAttribute(getGamesessionStr());
+//				return "redirect:/image/startMultiplayerGame";
+//			}
+//
+//			if (gameSession.isFinished()) {
+//				model.addAttribute("codeImage", session.getAttribute("multiplayerCodeImage"));
+//				return "game/image/multiplayerFinished";
+//			}
+//
+//			if (checkUpdateGameSession(gameSession, session)) {
+//				return "game/image/fragments/gameFinished";
+//			}
+//		} else {
+//			Optional<Player> player = playerService.getUserByUsername(principal.getName());
+//			if (!player.isPresent()) {
+//				return "redirect:/";
+//			}
+//			gameSession = gameSessionService.startNewMultiplayerGame(getLoggedInPlayer(principal), player.get().getMultiplayerCode());
+//			if (gameSession == null) return "redirect:/image/multiplayerGame";
+//			session.setAttribute(getGamesessionStr(), gameSession);
+//		}
+//		addQuestionAttributes(model, gameSession);
+//		return "game/image/game";
+//	}
+//
+//	@RequestMapping("/game/image/multiplayer")
+//	public String getImageMultiplayerGame() {
+//		return "redirect:/image/multiplayerGame/createGame";
+//	}
+//
+//
+//	@RequestMapping("/image/multiplayerGame/{code}")
+//	public String joinMultiplayerGame(@PathVariable String code, HttpSession session, Principal principal, Model model) {
+//		if (!multiplayerSessionService.existsCode(code)) {
+//			model.addAttribute("errorKeyImage", "multi.code.invalid");
+//			return "game/image/multiplayerGame";
+//		}
+//
+//		Optional<Player> player = playerService.getUserByUsername(principal.getName());
+//		if (player.isEmpty()) {
+//			// Handle the case where the player is not found
+//			return "redirect:/";
+//		}
+//		Player p = player.get();
+//		if (playerService.changeMultiplayerCode(p.getId(), code)) {
+//			multiplayerSessionService.addToLobby(code, p.getId());
+//			model.addAttribute("multiplayerGameCodeImage", code);
+//			session.setAttribute("multiplayerCodeImage", code);
+//			return "redirect:/game/image/lobby";
+//		} else {
+//			return "redirect:/image/multiplayerGame";
+//		}
+//	}
+//
+//	@RequestMapping("/image/endGameList/{code}")
+//	@ResponseBody
+//	@Override
+//	public Map<String, String> endMultiplayerGameTable(@PathVariable String code) {
+//		return super.endMultiplayerGameTable(code);
+//	}
+//
+//	@RequestMapping("/game/image/lobby/{code}")
+//	@ResponseBody
+//	@Override
+//	public List<String> updatePlayerList(@PathVariable String code) {
+//		return super.updatePlayerList(code);
+//	}
+//
+//	@RequestMapping("/game/image/lobby")
+//	public String createLobby(HttpSession session, Model model) {
+//		int code = Integer.parseInt((String) session.getAttribute("multiplayerCodeImage"));
+//		List<Player> players = playerService.getUsersByMultiplayerCode(code);
+//		model.addAttribute("playersImage", players);
+//		model.addAttribute("codeImage", session.getAttribute("multiplayerCodeImage"));
+//		return "game/image/lobby";
+//	}
 }

@@ -6,17 +6,12 @@ import com.uniovi.controllers.HomeController;
 import com.uniovi.dto.*;
 import com.uniovi.entities.*;
 import com.uniovi.repositories.*;
-import com.uniovi.services.ApiKeyService;
-import com.uniovi.services.InsertSampleDataService;
-import com.uniovi.services.LlmService;
-import com.uniovi.services.PlayerService;
 import com.uniovi.services.impl.*;
 import com.uniovi.test.cobertura.DtoCoverageTests;
 import com.uniovi.test.cobertura.EntitiesCoverageTests;
 import com.uniovi.validators.EditUserValidator;
 import com.uniovi.validators.QuestionValidator;
 import com.uniovi.validators.SignUpValidator;
-import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,15 +24,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URI;
@@ -46,7 +37,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -81,17 +71,11 @@ class Wichat_UnitTests {
 	@Autowired
 	private RoleServiceImpl roleService;
 	@Autowired
-	private InsertSampleDataService sampleDataService;
-	@Autowired
 	private MultiplayerSessionServiceImpl multiplayerSessionService;
-	@Autowired
-	private LlmService llmService;
 
 
 	@Autowired
 	PlayerRepository playerRepository;
-	@Autowired
-	RoleRepository roleRepository;
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	@Autowired
@@ -101,27 +85,7 @@ class Wichat_UnitTests {
 	@Autowired
 	GameSessionRepository gameSessionRepository;
 	@Autowired
-	QuestionRepository questionRepository;
-	@Autowired
 	MultiplayerSessionRepository multiplayerSessionRepository;
-
-	@Autowired
-	private MockMvc mockMvc;
-
-	@Mock
-	private GameSessionServiceImpl gameSessionImpl;
-
-	@Mock
-	PlayerServiceImpl playerServiceImageImpl;
-
-	@Mock
-	private HttpSession session;
-
-	@Mock
-	private Principal principal;
-
-	@Mock
-	private RestTemplate restTemplate;
 
 	@Mock
 	PlayerServiceImpl playerServiceMock;
@@ -186,8 +150,7 @@ class Wichat_UnitTests {
 		dto.setUsername("originalUser");
 		dto.setEmail("invalidEmail");
 
-		when(playerServiceMock.getUserByUsername("originalUser"))
-				.thenReturn(Optional.of(original));
+		when(playerServiceMock.getUserByUsername("originalUser")).thenReturn(Optional.of(original));
 
 		Errors errors = new BeanPropertyBindingResult(dto, "playerDto");
 		validator.validate(dto, errors);
@@ -391,11 +354,7 @@ class Wichat_UnitTests {
 	@Order(582)
 	void testConstructorWithQuestionImage() {
 		AnswerImage correctAnswer = new AnswerImage("Correct Answer", true);
-		List<AnswerImage> options = List.of(
-				new AnswerImage("Option 1", false),
-				new AnswerImage("Option 2", false),
-				correctAnswer
-		);
+		List<AnswerImage> options = List.of(new AnswerImage("Option 1", false), new AnswerImage("Option 2", false), correctAnswer);
 
 		Category category = new Category("Math", "Mathematics related questions");
 
@@ -2075,44 +2034,6 @@ class Wichat_UnitTests {
 		assertEquals("200", scoreMultiplayerCode);
 	}
 
-	//@Test
-	//@Order(106)
-	//void GameSessionImpl_startNewMultiplayerGame()  throws InterruptedException, IOException {
-	//    testQuestions(10);
-//
-	//    Long playerId = 1L;
-	//    Player player = createPlayer();
-	//    player.setId(playerId);
-//
-	//    String code = "123";
-	//    playerRepository.findById(playerId);
-	//    multiplayerSessionService.multiCreate(code, playerId);
-//
-	//    GameSession multiplayerGame = gameSessionService.startNewMultiplayerGame(player, 123);
-//
-	//    Assertions.assertNotNull(multiplayerGame);
-	//    Assertions.assertEquals(player, multiplayerGame.getPlayer());
-	//}
-
-	//@Test
-	//@Order(107)
-	//void testRandomMultiplayerQuestions() throws InterruptedException, IOException {
-	//    testQuestions(10);
-//
-	//    Long playerId = 1L;
-	//    Player player = createPlayer();
-	//    player.setId(playerId);
-//
-	//    String code = "123";
-	//    playerRepository.findById(playerId);
-	//    multiplayerSessionService.multiCreate(code, playerId);
-//
-//
-	//    List<Question> questions = questionService.getRandomMultiplayerQuestions(5, 123);
-//
-	//    Assertions.assertEquals(5,questions.size());
-	//}
-
 	@Test
 	@Order(108)
 	void PlayerServiceImpl_getUsersByMultiplayerCode_ReturnsPlayer() {
@@ -2208,7 +2129,7 @@ class Wichat_UnitTests {
 		AnswerImage a4 = new AnswerImage("Benidorm", true);
 		List<AnswerImage> lanswer = Arrays.asList(a1, a2, a3, a4);
 		QuestionImage questionImage = new QuestionImage("", lanswer, a4, new Category(), "es", "https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
-		String answer = questionImageService.getHintForImageQuestion(questionImage,"Empathy");
+		String answer = questionImageService.getHintForImageQuestion(questionImage, "Empathy");
 		Assertions.assertNotNull(answer);
 		assertFalse(answer.isEmpty());
 		assertFalse(answer.isBlank());
@@ -2223,7 +2144,7 @@ class Wichat_UnitTests {
 		AnswerImage a4 = new AnswerImage("Benidorm", true);
 		List<AnswerImage> lanswer = Arrays.asList(a1, a2, a3, a4);
 		QuestionImage questionImage = new QuestionImage("", lanswer, a4, new Category(), "es", "https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
-		String answer = questionImageService.getHintForImageQuestion(questionImage,"Gemini");
+		String answer = questionImageService.getHintForImageQuestion(questionImage, "Gemini");
 		Assertions.assertNotNull(answer);
 		assertFalse(answer.isEmpty());
 		assertFalse(answer.isBlank());
@@ -2231,7 +2152,7 @@ class Wichat_UnitTests {
 		a1 = new AnswerImage("León", false);
 		lanswer = Arrays.asList(a1, a2, a3, a4);
 		questionImage = new QuestionImage("", lanswer, a4, new Category(), "es", "https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
-		answer = questionImageService.getHintForImageQuestion(questionImage,"Gemini");
+		answer = questionImageService.getHintForImageQuestion(questionImage, "Gemini");
 		Assertions.assertNotNull(answer);
 		assertFalse(answer.isEmpty());
 		assertFalse(answer.isBlank());
@@ -2239,13 +2160,10 @@ class Wichat_UnitTests {
 	}
 
 
-
-
 	@Nested
 	@DisplayName("GameSessionImage Unit Tests")
 	class GameSessionImageTest {
 		private Player player;
-		private List<QuestionImage> questions;
 		private GameSessionImage gameSession;
 
 		@BeforeEach
@@ -2254,7 +2172,7 @@ class Wichat_UnitTests {
 			player = createTestPlayerWithId(1L);
 
 			// 2. Create standardized test questions
-			questions = createStandardTestQuestions();
+			List<QuestionImage> questions = createStandardTestQuestions();
 
 			// 3. Initialize game session with consistent test data
 			gameSession = new GameSessionImage(player, new ArrayList<>(questions)); // Defensive copy
@@ -2442,7 +2360,7 @@ class Wichat_UnitTests {
 			assertAll(() -> assertEquals(TEST_USERNAME, player.getUsername()), () -> assertEquals(TEST_EMAIL, player.getEmail()), () -> assertEquals(TEST_PASSWORD, player.getPassword()), () -> assertNull(player.getId()), () -> assertNull(player.getMultiplayerCode()), () -> assertNull(player.getScoreMultiplayerCode()), () -> assertNotNull(player.getRoles()), () -> assertNotNull(player.getGameSessions()), () -> assertNull(player.getApiKey()), () -> assertNull(player.getPasswordConfirm()));
 		}
 
-		//@Test
+		@Test
 		void setters_UpdateFieldsCorrectly() {
 			Long newId = 1L;
 			Integer newMultiplayerCode = 1234;
@@ -2517,34 +2435,11 @@ class Wichat_UnitTests {
 			player.getRoles().remove(role);
 			assertFalse(player.getRoles().contains(role));
 		}
-
-		//@Test
-		void testAddRemoveGameSession() {
-			GameSessionImage session = new GameSessionImage(player, new ArrayList<>());
-
-			player.getGameSessionsImage().add(session);
-			assertTrue(player.getGameSessions().contains(session));
-
-			player.getGameSessions().remove(session);
-			assertFalse(player.getGameSessions().contains(session));
-		}
 	}
 
 	@Nested
 	@DisplayName("HomeController Unit Tests")
 	class HomeControllerTest {
-
-		@Mock
-		private PlayerService playerService;
-
-		@Mock
-		private ApiKeyService apiKeyService;
-
-		@Mock
-		private Authentication auth;
-
-		@Mock
-		private Model model;
 
 		@InjectMocks
 		private HomeController homeController;
@@ -2653,7 +2548,7 @@ class Wichat_UnitTests {
 	}
 
 
-	/**
+	/*
 	 *  --------------------- METODOS ADICIONALES DE CODIGO ---------------------
 	 */
 
