@@ -29,6 +29,12 @@ Feature: I enter the webpage without being logged in
         When I click the global ranking button
         Then I should see the global ranking page
 
+    Scenario: I click global image ranking
+        Given I am in the home page
+        Given I am not logged in
+        When I click the global ranking image button
+        Then I should see the global ranking image page
+
     Scenario: I cant see the logout button
         Given I am in the home page
         Given I am not logged in
