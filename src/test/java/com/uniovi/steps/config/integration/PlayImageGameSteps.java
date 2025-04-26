@@ -1,4 +1,4 @@
-package com.uniovi.steps;
+package com.uniovi.steps.config.integration;
 
 import com.uniovi.Wichat_IntegrationTests;
 import com.uniovi.util.PropertiesExtractor;
