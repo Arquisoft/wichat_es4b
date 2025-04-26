@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mysql:
-        image: mysql:8.0
+        image: mysql:9.2
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: test_database
@@ -45,11 +45,11 @@ jobs:
       - name: Compile the application
         run: ./mvnw -B clean install -DskipTests=true
 
-#      - name: Start the application
-#        run: |
-#          ./mvnw spring-boot:run > logs.txt 2>&1 &
-#          echo $! > spring-boot-app.pid
-#          sleep 60
+      - name: Start the application
+        run: |
+          ./mvnw spring-boot:run > logs.txt 2>&1 &
+          echo $! > spring-boot-app.pid
+          sleep 60
 
         env:
           SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/test_database
@@ -60,12 +60,12 @@ jobs:
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
-#      - name: Check listening ports
-#        run: ss -tuln
+      - name: Check listening ports
+        run: ss -tuln
 
       - name: Run tests
         run: |
-          ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.jpa.hibernate.ddl-auto=create-drop -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+          ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.jpa.hibernate.ddl-auto=create -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
         env:
           SPRING_PROFILES_ACTIVE: test
           headless: true
@@ -80,14 +80,14 @@ jobs:
             cat logs.txt
           fi
 
-#      - name: Shut down the application
-#        run: |
-#          if [ -f spring-boot-app.pid ]; then
-#            PID="$(cat spring-boot-app.pid)"
-#            if ps -p "$PID" > /dev/null; then
-#              kill "$PID"
-#            fi
-#          fi
+      - name: Shut down the application
+        run: |
+          if [ -f spring-boot-app.pid ]; then
+            PID="$(cat spring-boot-app.pid)"
+            if ps -p "$PID" > /dev/null; then
+              kill "$PID"
+            fi
+          fi          
 
       - if: ${{ github.actor != 'dependabot[bot]' }}
         name: Collect Jacoco report and send to Sonar
