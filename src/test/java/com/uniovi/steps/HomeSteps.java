@@ -51,11 +51,19 @@ public class HomeSteps extends Wichat_IntegrationTests {
         elements.get(0).click();
     }
 
-    @When("I click the global ranking button")
+    @When("I click the global ranking image button")
     public void iClickTheGlobalRankingButton() {
         List<WebElement> elems = SeleniumUtils.waitLoadElementsByXpath(driver, "//*[@id=\"navbarDropdown2\"]", 5);
         elems.get(0).click();
         elems = SeleniumUtils.waitLoadElementsByXpath(driver, "/html/body/nav/div/ul[1]/li[3]/ul/li[1]", 5);
+        elems.get(0).click();
+    }
+
+    @When("I click the global ranking button")
+    public void iClickTheGlobalImageRankingButton() {
+        List<WebElement> elems = SeleniumUtils.waitLoadElementsByXpath(driver, "//*[@id=\"navbarDropdown2\"]", 5);
+        elems.get(0).click();
+        elems = SeleniumUtils.waitLoadElementsByXpath(driver, "/html/body/nav/div/ul[1]/li[3]/ul/li[3]/a", 5);
         elems.get(0).click();
     }
 
@@ -68,6 +76,13 @@ public class HomeSteps extends Wichat_IntegrationTests {
     public void iShouldSeeTheGlobalRankingPage() {
         SeleniumUtils.waitLoadElementsBy(driver, "h2", p.getString("ranking.title", PropertiesExtractor.getSPANISH()), 5);
     }
+
+    @Then("I should see the global ranking image page")
+    public void iShouldSeeTheGlobalRankingImagePage() {
+        SeleniumUtils.waitLoadElementsBy(driver, "h2", p.getString("ranking.title", PropertiesExtractor.getSPANISH()), 5);
+    }
+
+
     @Then("I should see the instructions page")
     public void iShouldSeeTheInstructionsPage() {
         SeleniumUtils.waitLoadElementsBy(driver, "h2", p.getString("instructions.heading", PropertiesExtractor.getSPANISH()), 5);
