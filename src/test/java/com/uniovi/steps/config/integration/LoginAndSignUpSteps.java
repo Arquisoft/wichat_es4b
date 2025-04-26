@@ -1,12 +1,12 @@
-package com.uniovi.steps;
+package com.uniovi.steps.config.integration;
 
 import com.uniovi.Wichat_IntegrationTests;
 import com.uniovi.util.PropertiesExtractor;
 import com.uniovi.util.SeleniumUtils;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 

@@ -51,7 +51,7 @@ import static org.mockito.Mockito.when;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-@ExtendWith(MockitoExtension.class)
+
 class Wichat_UnitTests {
 
 	@Autowired
