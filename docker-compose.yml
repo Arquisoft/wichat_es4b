@@ -26,6 +26,7 @@ services:
       KEYSTORE_PATH: ${KEYSTORE_PATH}
       KEYSTORE_PASSWORD: ${KEYSTORE_PASSWORD}
       LLM_API_KEY: ${LLM_API_KEY}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
     ports:
       - "443:443"
     networks:
