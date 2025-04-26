@@ -12,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
         plugin = {"pretty"},
         features = {
 
-                "src/test/resources/features/playing_normal_game.feature"
+                "src/test/resources/features"
                 // NO incluyas la del juego aquí
         }
 )
