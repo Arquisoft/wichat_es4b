@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mysql:
-        image: mysql:latest
+        image: mysql:9.2
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: test_database
@@ -43,15 +43,13 @@ jobs:
         run: chmod +x mvnw
 
       - name: Compile the application
-        #run: ./mvnw -B clean install -DskipTests=true
-        run: echo "Running the application"
+        run: ./mvnw -B clean install -DskipTests=true
 
       - name: Start the application
         run: |
-          #./mvnw spring-boot:run > logs.txt 2>&1 &
-          #echo $! > spring-boot-app.pid
-          #sleep 60
-          echo "Starting the application"
+          ./mvnw spring-boot:run > logs.txt 2>&1 &
+          echo $! > spring-boot-app.pid
+          sleep 60
 
         env:
           SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/test_database

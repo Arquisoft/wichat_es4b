@@ -1634,323 +1634,323 @@ class Wichat_UnitTests {
 		assertEquals(0, result.size());
 	}
 
-//	@Test
-//	@Order(82)
-//	void testAddQuestionInvalidApiKey() throws IOException, InterruptedException {
-//		HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", "zzzz"), Map.of());
-//
-//		Assertions.assertNotEquals(200, response.statusCode());
-//	}
-//
-//	@Test
-//	@Order(83)
-//	void testAddQuestionMissingData() throws IOException, InterruptedException {
-//		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
-//		ApiKey apiKey = player.getApiKey();
-//
-//		HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", apiKey.getKeyToken()), Map.of());
-//
-//		Assertions.assertNotEquals(200, response.statusCode());
-//	}
-//
-//	@Test
-//	@Order(84)
-//	void testAddQuestion() throws IOException, InterruptedException, JSONException {
-//		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
-//		ApiKey apiKey = player.getApiKey();
-//		Category category = categoryService.getCategoryByName("Geography");
-//
-//		Map<String, Object> data = new HashMap<>();
-//		data.put("statement", "Sample question");
-//
-//		List<Map<String, Object>> opts = new ArrayList<>();
-//		opts.add(Map.of("text", "Option A", "correct", true));
-//		opts.add(Map.of("text", "Option B", "correct", false));
-//		opts.add(Map.of("text", "Option C", "correct", false));
-//		opts.add(Map.of("text", "Option D", "correct", false));
-//
-//		data.put("options", opts);
-//		data.put("category", Map.of("name", category.getName()));
-//		data.put("language", "en");
-//
-//		HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", apiKey.getKeyToken()), data);
-//
-//		assertEquals(200, response.statusCode());
-//		JSONObject json = parseJsonResponse(response);
-//		assertTrue(json.getBoolean("success"));
-//		Long newId = json.getLong("id");
-//
-//		Optional<Question> newQuestion = questionService.getQuestion(newId);
-//		assertTrue(newQuestion.isPresent());
-//		assertEquals("Sample question", newQuestion.get().getStatement());
-//		assertEquals(4, newQuestion.get().getOptions().size());
-//		assertTrue(newQuestion.get().getOptions().stream().anyMatch(Answer::isCorrect));
-//	}
-//
-//	@Test
-//	@Order(85)
-//	void testAddQuestionWithLessOptions() throws IOException, InterruptedException {
-//		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
-//		ApiKey apiKey = player.getApiKey();
-//		Category category = categoryService.getCategoryByName("Geography");
-//
-//		Map<String, Object> data = new HashMap<>();
-//		data.put("statement", "Sample question");
-//
-//		List<Map<String, Object>> opts = new ArrayList<>();
-//		opts.add(Map.of("text", "Option A", "correct", true));
-//		opts.add(Map.of("text", "Option B", "correct", false));
-//
-//		data.put("options", opts);
-//		data.put("category", Map.of("name", category.getName()));
-//		data.put("language", "en");
-//
-//		HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", apiKey.getKeyToken()), data);
-//
-//		Assertions.assertNotEquals(200, response.statusCode());
-//	}
-//
-//	@Test
-//	@Order(86)
-//	void testAddQuestionWithNoCorrect() throws IOException, InterruptedException {
-//		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
-//		ApiKey apiKey = player.getApiKey();
-//		Category category = categoryService.getCategoryByName("Geography");
-//
-//		Map<String, Object> data = new HashMap<>();
-//		data.put("statement", "Sample question");
-//
-//		List<Map<String, Object>> opts = new ArrayList<>();
-//		opts.add(Map.of("text", "Option A", "correct", false));
-//		opts.add(Map.of("text", "Option B", "correct", false));
-//		opts.add(Map.of("text", "Option C", "correct", false));
-//		opts.add(Map.of("text", "Option D", "correct", false));
-//
-//		data.put("options", opts);
-//		data.put("category", Map.of("name", category.getName()));
-//		data.put("language", "en");
-//
-//		HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", apiKey.getKeyToken()), data);
-//
-//		Assertions.assertNotEquals(200, response.statusCode());
-//	}
-//
-//	@Test
-//	@Order(87)
-//	void testAddQuestionMultipleCorrect() throws IOException, InterruptedException {
-//		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
-//		ApiKey apiKey = player.getApiKey();
-//		Category category = categoryService.getCategoryByName("Geography");
-//
-//		Map<String, Object> data = new HashMap<>();
-//		data.put("statement", "Sample question");
-//
-//		List<Map<String, Object>> opts = new ArrayList<>();
-//		opts.add(Map.of("text", "Option A", "correct", true));
-//		opts.add(Map.of("text", "Option B", "correct", true));
-//		opts.add(Map.of("text", "Option C", "correct", false));
-//		opts.add(Map.of("text", "Option D", "correct", false));
-//
-//		data.put("options", opts);
-//		data.put("category", Map.of("name", category.getName()));
-//		data.put("language", "en");
-//
-//		HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", apiKey.getKeyToken()), data);
-//
-//		Assertions.assertNotEquals(200, response.statusCode());
-//	}
-//
-//	@Test
-//	@Order(88)
-//	void testModifyQuestionInvalidApiKey() throws IOException, InterruptedException {
-//		insertSomeQuestions();
-//		Question question = questionService.getAllQuestions().getFirst();
-//
-//		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", "zzzz"), Map.of());
-//
-//		Assertions.assertNotEquals(200, response.statusCode());
-//	}
-//
-//	@Test
-//	@Order(89)
-//	void testModifyQuestionNotFound() throws IOException, InterruptedException {
-//		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
-//		ApiKey apiKey = player.getApiKey();
-//
-//		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/9999999", Map.of("API-KEY", apiKey.getKeyToken()), Map.of());
-//
-//		assertEquals(404, response.statusCode());
-//	}
-//
-//	@Test
-//	@Order(90)
-//	void testModifyQuestionMissingData() throws IOException, InterruptedException {
-//		insertSomeQuestions();
-//
-//		Question question = questionService.getAllQuestions().getFirst();
-//		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
-//		ApiKey apiKey = player.getApiKey();
-//
-//		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()), Map.of());
-//
-//		Assertions.assertNotEquals(200, response.statusCode());
-//	}
-//
-//	@Test
-//	@Order(91)
-//	void testModifyQuestion() throws IOException, InterruptedException, JSONException {
-//		insertSomeQuestions();
-//		Question question = questionService.getAllQuestions().getFirst();
-//		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
-//		ApiKey apiKey = player.getApiKey();
-//		Category category = categoryService.getCategoryByName("Geography");
-//
-//		Map<String, Object> data = new HashMap<>();
-//		data.put("statement", "Modified question");
-//
-//		List<Map<String, Object>> opts = new ArrayList<>();
-//		opts.add(Map.of("text", "Option A", "correct", true));
-//		opts.add(Map.of("text", "Option B", "correct", false));
-//		opts.add(Map.of("text", "Option C", "correct", false));
-//		opts.add(Map.of("text", "Option D", "correct", false));
-//
-//		data.put("options", opts);
-//		data.put("category", Map.of("name", category.getName()));
-//		data.put("language", "en");
-//
-//		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
-//
-//		assertEquals(200, response.statusCode());
-//		JSONObject json = parseJsonResponse(response);
-//		assertTrue(json.getBoolean("success"));
-//
-//		Optional<Question> updatedQuestion = questionService.getQuestion(question.getId());
-//		assertTrue(updatedQuestion.isPresent());
-//		assertEquals("Modified question", updatedQuestion.get().getStatement());
-//	}
-//
-//	@Test
-//	@Order(91)
-//	void testModifyQuestionNewCategory() throws IOException, InterruptedException, JSONException {
-//		insertSomeQuestions();
-//		Question question = questionService.getAllQuestions().getFirst();
-//		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
-//		ApiKey apiKey = player.getApiKey();
-//		Category category = categoryService.getCategoryByName("Geography");
-//
-//		Map<String, Object> data = new HashMap<>();
-//		data.put("statement", "Modified question");
-//
-//		List<Map<String, Object>> opts = new ArrayList<>();
-//		opts.add(Map.of("text", "Option A", "correct", true));
-//		opts.add(Map.of("text", "Option B", "correct", false));
-//		opts.add(Map.of("text", "Option C", "correct", false));
-//		opts.add(Map.of("text", "Option D", "correct", false));
-//
-//		data.put("options", opts);
-//		data.put("category", Map.of("name", "NewCreatedCategory"));
-//		data.put("language", "en");
-//
-//		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
-//
-//		assertEquals(200, response.statusCode());
-//		JSONObject json = parseJsonResponse(response);
-//		assertTrue(json.getBoolean("success"));
-//
-//		Optional<Question> updatedQuestion = questionService.getQuestion(question.getId());
-//		assertTrue(updatedQuestion.isPresent());
-//		assertEquals("Modified question", updatedQuestion.get().getStatement());
-//	}
-//
-//	@Test
-//	@Order(92)
-//	void testModifyQuestionWithLessOptions() throws IOException, InterruptedException {
-//		insertSomeQuestions();
-//		Question question = questionService.getAllQuestions().getFirst();
-//		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
-//		ApiKey apiKey = player.getApiKey();
-//		Category category = categoryService.getCategoryByName("Geography");
-//
-//		Map<String, Object> data = new HashMap<>();
-//		data.put("statement", "Modified question");
-//
-//		List<Map<String, Object>> opts = new ArrayList<>();
-//		opts.add(Map.of("text", "Option A", "correct", true));
-//		opts.add(Map.of("text", "Option B", "correct", false));
-//
-//		data.put("options", opts);
-//		data.put("category", Map.of("name", category.getName()));
-//		data.put("language", "en");
-//
-//		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
-//
-//		Assertions.assertNotEquals(200, response.statusCode());
-//	}
-//
-//	@Test
-//	@Order(93)
-//	void testModifyQuestionWithNoCorrect() throws IOException, InterruptedException {
-//		insertSomeQuestions();
-//		Question question = questionService.getAllQuestions().getFirst();
-//		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
-//		ApiKey apiKey = player.getApiKey();
-//		Category category = categoryService.getCategoryByName("Geography");
-//
-//		Map<String, Object> data = new HashMap<>();
-//		data.put("statement", "Modified question");
-//
-//		List<Map<String, Object>> opts = new ArrayList<>();
-//		opts.add(Map.of("text", "Option A", "correct", false));
-//		opts.add(Map.of("text", "Option B", "correct", false));
-//		opts.add(Map.of("text", "Option C", "correct", false));
-//		opts.add(Map.of("text", "Option D", "correct", false));
-//
-//		data.put("options", opts);
-//		data.put("category", Map.of("name", category.getName()));
-//		data.put("language", "en");
-//
-//		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
-//
-//		Assertions.assertNotEquals(200, response.statusCode());
-//	}
-//
-//	@Test
-//	@Order(94)
-//	void testDeleteQuestionInvalidApiKey() throws IOException, InterruptedException {
-//		insertSomeQuestions();
-//		Question question = questionService.getAllQuestions().getFirst();
-//
-//		HttpResponse<String> response = sendRequest("DELETE", "/api/questions/" + question.getId(), Map.of("API-KEY", "zzzz"), Map.of());
-//
-//		Assertions.assertNotEquals(200, response.statusCode());
-//	}
-//
-//	@Test
-//	@Order(95)
-//	void testDeleteQuestionNotFound() throws IOException, InterruptedException {
-//		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
-//		ApiKey apiKey = player.getApiKey();
-//
-//		HttpResponse<String> response = sendRequest("DELETE", "/api/questions/9999999", Map.of("API-KEY", apiKey.getKeyToken()), Map.of());
-//
-//		assertEquals(404, response.statusCode());
-//	}
-//
-//	@Test
-//	@Order(96)
-//	@Tag("flaky")
-//	void testDeleteQuestion() throws IOException, InterruptedException {
-//		insertSomeQuestions();
-//		Question question = questionService.getAllQuestions().getFirst();
-//		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
-//		ApiKey apiKey = player.getApiKey();
-//
-//		HttpResponse<String> response = sendRequest("DELETE", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()), Map.of());
-//
-//		assertEquals(200, response.statusCode());
-//		Optional<Question> deletedQuestion = questionService.getQuestion(question.getId());
-//		assertTrue(deletedQuestion.isEmpty());
-//	}
+	@Test
+	@Order(82)
+	void testAddQuestionInvalidApiKey() throws IOException, InterruptedException {
+		HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", "zzzz"), Map.of());
+
+		Assertions.assertNotEquals(200, response.statusCode());
+	}
+
+	@Test
+	@Order(83)
+	void testAddQuestionMissingData() throws IOException, InterruptedException {
+		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
+		ApiKey apiKey = player.getApiKey();
+
+		HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", apiKey.getKeyToken()), Map.of());
+
+		Assertions.assertNotEquals(200, response.statusCode());
+	}
+
+	@Test
+	@Order(84)
+	void testAddQuestion() throws IOException, InterruptedException, JSONException {
+		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
+		ApiKey apiKey = player.getApiKey();
+		Category category = categoryService.getCategoryByName("Geography");
+
+		Map<String, Object> data = new HashMap<>();
+		data.put("statement", "Sample question");
+
+		List<Map<String, Object>> opts = new ArrayList<>();
+		opts.add(Map.of("text", "Option A", "correct", true));
+		opts.add(Map.of("text", "Option B", "correct", false));
+		opts.add(Map.of("text", "Option C", "correct", false));
+		opts.add(Map.of("text", "Option D", "correct", false));
+
+		data.put("options", opts);
+		data.put("category", Map.of("name", category.getName()));
+		data.put("language", "en");
+
+		HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", apiKey.getKeyToken()), data);
+
+		assertEquals(200, response.statusCode());
+		JSONObject json = parseJsonResponse(response);
+		assertTrue(json.getBoolean("success"));
+		Long newId = json.getLong("id");
+
+		Optional<Question> newQuestion = questionService.getQuestion(newId);
+		assertTrue(newQuestion.isPresent());
+		assertEquals("Sample question", newQuestion.get().getStatement());
+		assertEquals(4, newQuestion.get().getOptions().size());
+		assertTrue(newQuestion.get().getOptions().stream().anyMatch(Answer::isCorrect));
+	}
+
+	@Test
+	@Order(85)
+	void testAddQuestionWithLessOptions() throws IOException, InterruptedException {
+		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
+		ApiKey apiKey = player.getApiKey();
+		Category category = categoryService.getCategoryByName("Geography");
+
+		Map<String, Object> data = new HashMap<>();
+		data.put("statement", "Sample question");
+
+		List<Map<String, Object>> opts = new ArrayList<>();
+		opts.add(Map.of("text", "Option A", "correct", true));
+		opts.add(Map.of("text", "Option B", "correct", false));
+
+		data.put("options", opts);
+		data.put("category", Map.of("name", category.getName()));
+		data.put("language", "en");
+
+		HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", apiKey.getKeyToken()), data);
+
+		Assertions.assertNotEquals(200, response.statusCode());
+	}
+
+	@Test
+	@Order(86)
+	void testAddQuestionWithNoCorrect() throws IOException, InterruptedException {
+		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
+		ApiKey apiKey = player.getApiKey();
+		Category category = categoryService.getCategoryByName("Geography");
+
+		Map<String, Object> data = new HashMap<>();
+		data.put("statement", "Sample question");
+
+		List<Map<String, Object>> opts = new ArrayList<>();
+		opts.add(Map.of("text", "Option A", "correct", false));
+		opts.add(Map.of("text", "Option B", "correct", false));
+		opts.add(Map.of("text", "Option C", "correct", false));
+		opts.add(Map.of("text", "Option D", "correct", false));
+
+		data.put("options", opts);
+		data.put("category", Map.of("name", category.getName()));
+		data.put("language", "en");
+
+		HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", apiKey.getKeyToken()), data);
+
+		Assertions.assertNotEquals(200, response.statusCode());
+	}
+
+	@Test
+	@Order(87)
+	void testAddQuestionMultipleCorrect() throws IOException, InterruptedException {
+		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
+		ApiKey apiKey = player.getApiKey();
+		Category category = categoryService.getCategoryByName("Geography");
+
+		Map<String, Object> data = new HashMap<>();
+		data.put("statement", "Sample question");
+
+		List<Map<String, Object>> opts = new ArrayList<>();
+		opts.add(Map.of("text", "Option A", "correct", true));
+		opts.add(Map.of("text", "Option B", "correct", true));
+		opts.add(Map.of("text", "Option C", "correct", false));
+		opts.add(Map.of("text", "Option D", "correct", false));
+
+		data.put("options", opts);
+		data.put("category", Map.of("name", category.getName()));
+		data.put("language", "en");
+
+		HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", apiKey.getKeyToken()), data);
+
+		Assertions.assertNotEquals(200, response.statusCode());
+	}
+
+	@Test
+	@Order(88)
+	void testModifyQuestionInvalidApiKey() throws IOException, InterruptedException {
+		insertSomeQuestions();
+		Question question = questionService.getAllQuestions().getFirst();
+
+		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", "zzzz"), Map.of());
+
+		Assertions.assertNotEquals(200, response.statusCode());
+	}
+
+	@Test
+	@Order(89)
+	void testModifyQuestionNotFound() throws IOException, InterruptedException {
+		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
+		ApiKey apiKey = player.getApiKey();
+
+		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/9999999", Map.of("API-KEY", apiKey.getKeyToken()), Map.of());
+
+		assertEquals(404, response.statusCode());
+	}
+
+	@Test
+	@Order(90)
+	void testModifyQuestionMissingData() throws IOException, InterruptedException {
+		insertSomeQuestions();
+
+		Question question = questionService.getAllQuestions().getFirst();
+		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
+		ApiKey apiKey = player.getApiKey();
+
+		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()), Map.of());
+
+		Assertions.assertNotEquals(200, response.statusCode());
+	}
+
+	@Test
+	@Order(91)
+	void testModifyQuestion() throws IOException, InterruptedException, JSONException {
+		insertSomeQuestions();
+		Question question = questionService.getAllQuestions().getFirst();
+		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
+		ApiKey apiKey = player.getApiKey();
+		Category category = categoryService.getCategoryByName("Geography");
+
+		Map<String, Object> data = new HashMap<>();
+		data.put("statement", "Modified question");
+
+		List<Map<String, Object>> opts = new ArrayList<>();
+		opts.add(Map.of("text", "Option A", "correct", true));
+		opts.add(Map.of("text", "Option B", "correct", false));
+		opts.add(Map.of("text", "Option C", "correct", false));
+		opts.add(Map.of("text", "Option D", "correct", false));
+
+		data.put("options", opts);
+		data.put("category", Map.of("name", category.getName()));
+		data.put("language", "en");
+
+		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
+
+		assertEquals(200, response.statusCode());
+		JSONObject json = parseJsonResponse(response);
+		assertTrue(json.getBoolean("success"));
+
+		Optional<Question> updatedQuestion = questionService.getQuestion(question.getId());
+		assertTrue(updatedQuestion.isPresent());
+		assertEquals("Modified question", updatedQuestion.get().getStatement());
+	}
+
+	@Test
+	@Order(91)
+	void testModifyQuestionNewCategory() throws IOException, InterruptedException, JSONException {
+		insertSomeQuestions();
+		Question question = questionService.getAllQuestions().getFirst();
+		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
+		ApiKey apiKey = player.getApiKey();
+		Category category = categoryService.getCategoryByName("Geography");
+
+		Map<String, Object> data = new HashMap<>();
+		data.put("statement", "Modified question");
+
+		List<Map<String, Object>> opts = new ArrayList<>();
+		opts.add(Map.of("text", "Option A", "correct", true));
+		opts.add(Map.of("text", "Option B", "correct", false));
+		opts.add(Map.of("text", "Option C", "correct", false));
+		opts.add(Map.of("text", "Option D", "correct", false));
+
+		data.put("options", opts);
+		data.put("category", Map.of("name", "NewCreatedCategory"));
+		data.put("language", "en");
+
+		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
+
+		assertEquals(200, response.statusCode());
+		JSONObject json = parseJsonResponse(response);
+		assertTrue(json.getBoolean("success"));
+
+		Optional<Question> updatedQuestion = questionService.getQuestion(question.getId());
+		assertTrue(updatedQuestion.isPresent());
+		assertEquals("Modified question", updatedQuestion.get().getStatement());
+	}
+
+	@Test
+	@Order(92)
+	void testModifyQuestionWithLessOptions() throws IOException, InterruptedException {
+		insertSomeQuestions();
+		Question question = questionService.getAllQuestions().getFirst();
+		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
+		ApiKey apiKey = player.getApiKey();
+		Category category = categoryService.getCategoryByName("Geography");
+
+		Map<String, Object> data = new HashMap<>();
+		data.put("statement", "Modified question");
+
+		List<Map<String, Object>> opts = new ArrayList<>();
+		opts.add(Map.of("text", "Option A", "correct", true));
+		opts.add(Map.of("text", "Option B", "correct", false));
+
+		data.put("options", opts);
+		data.put("category", Map.of("name", category.getName()));
+		data.put("language", "en");
+
+		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
+
+		Assertions.assertNotEquals(200, response.statusCode());
+	}
+
+	@Test
+	@Order(93)
+	void testModifyQuestionWithNoCorrect() throws IOException, InterruptedException {
+		insertSomeQuestions();
+		Question question = questionService.getAllQuestions().getFirst();
+		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
+		ApiKey apiKey = player.getApiKey();
+		Category category = categoryService.getCategoryByName("Geography");
+
+		Map<String, Object> data = new HashMap<>();
+		data.put("statement", "Modified question");
+
+		List<Map<String, Object>> opts = new ArrayList<>();
+		opts.add(Map.of("text", "Option A", "correct", false));
+		opts.add(Map.of("text", "Option B", "correct", false));
+		opts.add(Map.of("text", "Option C", "correct", false));
+		opts.add(Map.of("text", "Option D", "correct", false));
+
+		data.put("options", opts);
+		data.put("category", Map.of("name", category.getName()));
+		data.put("language", "en");
+
+		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
+
+		Assertions.assertNotEquals(200, response.statusCode());
+	}
+
+	@Test
+	@Order(94)
+	void testDeleteQuestionInvalidApiKey() throws IOException, InterruptedException {
+		insertSomeQuestions();
+		Question question = questionService.getAllQuestions().getFirst();
+
+		HttpResponse<String> response = sendRequest("DELETE", "/api/questions/" + question.getId(), Map.of("API-KEY", "zzzz"), Map.of());
+
+		Assertions.assertNotEquals(200, response.statusCode());
+	}
+
+	@Test
+	@Order(95)
+	void testDeleteQuestionNotFound() throws IOException, InterruptedException {
+		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
+		ApiKey apiKey = player.getApiKey();
+
+		HttpResponse<String> response = sendRequest("DELETE", "/api/questions/9999999", Map.of("API-KEY", apiKey.getKeyToken()), Map.of());
+
+		assertEquals(404, response.statusCode());
+	}
+
+	@Test
+	@Order(96)
+	@Tag("flaky")
+	void testDeleteQuestion() throws IOException, InterruptedException {
+		insertSomeQuestions();
+		Question question = questionService.getAllQuestions().getFirst();
+		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
+		ApiKey apiKey = player.getApiKey();
+
+		HttpResponse<String> response = sendRequest("DELETE", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()), Map.of());
+
+		assertEquals(200, response.statusCode());
+		Optional<Question> deletedQuestion = questionService.getQuestion(question.getId());
+		assertTrue(deletedQuestion.isEmpty());
+	}
 
 	@Test
 	@Order(97)
