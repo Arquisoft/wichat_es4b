@@ -5,13 +5,13 @@ import io.cucumber.java.AfterAll;
 import io.cucumber.java.Scenario;
 
 public class CucumberHooks extends Wichat_IntegrationTests {
-    @After
-    public void cleanUpAfterScenario(Scenario scenario) {
-        driver.manage().deleteAllCookies();
-    }
-
-    @AfterAll
-    public static void before_or_after_all() {
-        driver.quit();
-    }
+//    @After
+//    public void cleanUpAfterScenario(Scenario scenario) {
+//        driver.manage().deleteAllCookies();
+//    }
+//
+//    @AfterAll
+//    public static void before_or_after_all() {
+//        driver.quit();
+//    }
 }

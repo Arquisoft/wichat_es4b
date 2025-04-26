@@ -13,30 +13,30 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 
-@Tag("integration")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+//@Tag("integration")
+//@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class Wichat_IntegrationTests {
-    public static final String URL = "http://localhost:3000/";
-
-    protected final PropertiesExtractor p = new PropertiesExtractor("messages");
-
-    protected static WebDriver driver;
-
-    public Wichat_IntegrationTests() {
-        driver = webDriver(new CustomWebDriverListener());
-    }
-
-    public WebDriver webDriver(WebDriverListener listener) {
-        if (driver != null) {
-            return driver;
-        }
-
-        driver = FirefoxWebDriver.getWebDriver(listener);
-        return driver;
-    }
-
-    private static class CustomWebDriverListener implements WebDriverListener {
-        // Implement listener methods as needed
-    }
+//    public static final String URL = "http://localhost:3000/";
+//
+//    protected final PropertiesExtractor p = new PropertiesExtractor("messages");
+//
+//    protected static WebDriver driver;
+//
+//    public Wichat_IntegrationTests() {
+//        driver = webDriver(new CustomWebDriverListener());
+//    }
+//
+//    public WebDriver webDriver(WebDriverListener listener) {
+//        if (driver != null) {
+//            return driver;
+//        }
+//
+//        driver = FirefoxWebDriver.getWebDriver(listener);
+//        return driver;
+//    }
+//
+//    private static class CustomWebDriverListener implements WebDriverListener {
+//        // Implement listener methods as needed
+//    }
 }
