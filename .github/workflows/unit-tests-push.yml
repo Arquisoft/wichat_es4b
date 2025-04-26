@@ -10,7 +10,7 @@ on:
 
 jobs:
   app-tests-analyze:
-    runs-on: archlinux:latest
+    runs-on: ubuntu-latest
     services:
       mysql:
         image: mysql:9.2
