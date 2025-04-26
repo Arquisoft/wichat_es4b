@@ -48,9 +48,9 @@ public class PlayNormalGameSteps extends Wichat_IntegrationTests {
     @Then("I take a little nap")
     public void i_take_a_nap() {
         try {
-            List<WebElement> elements = SeleniumUtils.waitLoadElementsByXpath(driver, "/html/body/div[2]/div/div[3]/table/tbody/tr[1]/td[2]/a", 5);
+            SeleniumUtils.waitLoadElementsByXpath(driver, "/html/body/div[2]/div/div[3]/table/tbody/tr[1]/td[2]/a", 5);
         }catch (Exception e){
-
+            return;
         }
     }
 

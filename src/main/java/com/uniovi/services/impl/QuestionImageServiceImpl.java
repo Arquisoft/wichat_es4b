@@ -205,7 +205,7 @@ public class QuestionImageServiceImpl implements QuestionService<QuestionImage, 
 			actualQuestionImage = question;
 		}else{
 			if(!actualQuestionImage.equals(question)) {
-				llmAnswers.removeAll(llmAnswers);
+				llmAnswers = new ArrayList<>();
 				actualQuestionImage = question;
 			}
 		}

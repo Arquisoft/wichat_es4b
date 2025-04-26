@@ -2227,7 +2227,17 @@ class Wichat_UnitTests {
 		assertFalse(answer.isEmpty());
 		assertFalse(answer.isBlank());
 		System.out.println(answer);
+		a1 = new AnswerImage("León", false);
+		lanswer = Arrays.asList(a1, a2, a3, a4);
+		questionImage = new QuestionImage("", lanswer, a4, new Category(), "es", "https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
+		answer = questionImageService.getHintForImageQuestion(questionImage,"Gemini");
+		Assertions.assertNotNull(answer);
+		assertFalse(answer.isEmpty());
+		assertFalse(answer.isBlank());
+		System.out.println(answer);
 	}
+
+
 
 
 	@Nested
