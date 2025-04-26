@@ -242,13 +242,13 @@ public class GameImageController extends AbstractGameController<QuestionImage, G
 		} else return "0";
 	}
 
-	@RequestMapping("/game/image/hint/{id}")
+	@RequestMapping("/game/image/hint/{id}/{llm}")
 	@ResponseBody
-	public String getImageQuestionHint(@PathVariable Long id) {
+	public String getImageQuestionHint(@PathVariable Long id,@PathVariable String llm) {
 		Optional<QuestionImage> questionOpt = questionService.getQuestion(id);
 		if (questionOpt.isPresent()) {
 			QuestionImage question = questionOpt.get();
-			return ((QuestionImageServiceImpl) questionService).getHintForImageQuestion(question); // Devuelve solo la pista como String
+			return ((QuestionImageServiceImpl) questionService).getHintForImageQuestion(question,llm); // Devuelve solo la pista como String
 		}
 		return "No se encontró ninguna pista para esta pregunta.";
 	}

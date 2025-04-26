@@ -36,6 +36,8 @@ public class QuestionImageServiceImpl implements QuestionService<QuestionImage, 
 	private final AnswerImageRepository answerRepository;
 	private final EntityManager entityManager;
 	private final LlmService llmService;
+	private List<String> llmAnswers = new ArrayList<>();
+	private QuestionImage actualQuestionImage;
 
 	@Setter
 	private QuestionImageGeneratorServiceImpl questionGeneratorService;
@@ -194,12 +196,22 @@ public class QuestionImageServiceImpl implements QuestionService<QuestionImage, 
 		return SECONDS_PER_QUESTION;
 	}
 
-	public String getHintForImageQuestion(QuestionImage question) {
+	public String getHintForImageQuestion(QuestionImage question, String ai) {
 
 		String llmHint = ("Hola, tengo esta imagen: <" + question.getImageUrl() + ">, estas opciones de respuesta: "
 				+ question.getOptions().toString() + ".\nLa respuesta correcta es: " + question.getCorrectAnswer() + ".\nY quiero que me respondas en el idioma de este acrónimo: " + question.getLanguage());
 		// Llamar al servicio LLM para obtener la pista usando Gemini.
-		return llmService.sendQuestionToLLM(llmHint);
+		if(actualQuestionImage == null) {
+			actualQuestionImage = question;
+		}else{
+			if(!actualQuestionImage.equals(question)) {
+				llmAnswers = new ArrayList<>();
+				actualQuestionImage = question;
+			}
+		}
+		String lastllmAnswer = llmService.sendQuestionToLLM(llmHint,ai,llmAnswers);
+		llmAnswers.add(lastllmAnswer);
+		return lastllmAnswer;
 	}
 
 }

@@ -2207,12 +2207,37 @@ class Wichat_UnitTests {
 		AnswerImage a4 = new AnswerImage("Benidorm", true);
 		List<AnswerImage> lanswer = Arrays.asList(a1, a2, a3, a4);
 		QuestionImage questionImage = new QuestionImage("", lanswer, a4, new Category(), "es", "https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
-		String answer = questionImageService.getHintForImageQuestion(questionImage);
+		String answer = questionImageService.getHintForImageQuestion(questionImage,"Empathy");
 		Assertions.assertNotNull(answer);
 		assertFalse(answer.isEmpty());
 		assertFalse(answer.isBlank());
 		System.out.println(answer);
 	}
+
+	@Test
+	void testSendQuestionToLLM_Gemini() {
+		AnswerImage a1 = new AnswerImage("Asturias", false);
+		AnswerImage a2 = new AnswerImage("Cataluña", false);
+		AnswerImage a3 = new AnswerImage("Madrid", false);
+		AnswerImage a4 = new AnswerImage("Benidorm", true);
+		List<AnswerImage> lanswer = Arrays.asList(a1, a2, a3, a4);
+		QuestionImage questionImage = new QuestionImage("", lanswer, a4, new Category(), "es", "https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
+		String answer = questionImageService.getHintForImageQuestion(questionImage,"Gemini");
+		Assertions.assertNotNull(answer);
+		assertFalse(answer.isEmpty());
+		assertFalse(answer.isBlank());
+		System.out.println(answer);
+		a1 = new AnswerImage("León", false);
+		lanswer = Arrays.asList(a1, a2, a3, a4);
+		questionImage = new QuestionImage("", lanswer, a4, new Category(), "es", "https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
+		answer = questionImageService.getHintForImageQuestion(questionImage,"Gemini");
+		Assertions.assertNotNull(answer);
+		assertFalse(answer.isEmpty());
+		assertFalse(answer.isBlank());
+		System.out.println(answer);
+	}
+
+
 
 
 	@Nested
