@@ -77,7 +77,7 @@ jobs:
 
       - name: Run tests
         run: |
-          ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.jpa.hibernate.ddl-auto=create-drop -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+          ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
         env:
           SPRING_PROFILES_ACTIVE: test
           headless: true
