@@ -13,9 +13,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 
-//@Tag("integration")
-//@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@Tag("integration")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class Wichat_IntegrationTests {
     public static final String URL = "http://localhost:3000/";
 
