@@ -62,7 +62,7 @@ jobs:
         run: |
           echo "Waiting for application to start..."
           for i in {1..30}; do
-            if nc -z localhost 8080; then
+            if nc -z localhost 3000; then
               echo "Application is up!"
               exit 0
             fi
