@@ -16,7 +16,7 @@ jobs:
         ruby-version: '3.3'
 
     - name: Install Asciidoctor and Asciidoctor-diagram
-      run: gem install asciidoctor asciidoctor-plantuml asciidoctor-diagram-plantuml
+      run: gem install asciidoctor asciidoctor-diagram asciidoctor-diagram-plantuml
 
     - name: Install Graphviz
       run: sudo apt-get install graphviz
