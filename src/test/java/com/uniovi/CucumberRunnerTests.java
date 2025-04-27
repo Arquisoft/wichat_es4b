@@ -11,10 +11,10 @@ import org.springframework.test.context.ActiveProfiles;
 @CucumberOptions(
         plugin = {"pretty"},
         features = {
-                //"src/test/resources/features/home_page.feature",
-                //"src/test/resources/features/loginForm.feature",
-                //"src/test/resources/features/player_data_modify.feature",
-                //"src/test/resources/features/signUpForm.feature",
+                "src/test/resources/features/home_page.feature",
+                "src/test/resources/features/loginForm.feature",
+                "src/test/resources/features/player_data_modify.feature",
+                "src/test/resources/features/signUpForm.feature",
                 "src/test/resources/features/api.feature"
                 // Si quieres, separa las features de juego
         },
