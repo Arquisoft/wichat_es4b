@@ -9,8 +9,8 @@ services:
         MYSQL_USER: ${MYSQL_USER:-wichat_es4b}
         MYSQL_PASSWORD: ${MYSQL_PASSWORD:-wichat_es4b}
         MYSQL_PORT: ${MYSQL_PORT:-3306}
-    volumes:
-      - db_data:/var/lib/mysql
+#    volumes:
+#      - db_data:/var/lib/mysql
     networks:
       - mynetwork
     restart: always

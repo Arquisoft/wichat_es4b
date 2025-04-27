@@ -1,6 +1,7 @@
 package com.uniovi.test.cobertura;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.uniovi.dto.AnswerDto;
 import com.uniovi.dto.CategoryDto;
 import com.uniovi.dto.QuestionDto;
 import com.uniovi.entities.Answer;
@@ -72,6 +73,13 @@ class QuestionServiceImplTest {
         dto.setLanguage("en");
         dto.setCategory(new CategoryDto("Science", "Science Desc"));
 
+        AnswerDto a1 = new AnswerDto("Asturias", false);
+        AnswerDto a2 = new AnswerDto("Cataluña", false);
+        AnswerDto a3 = new AnswerDto("Madrid", false);
+        AnswerDto a4 = new AnswerDto("Benidorm", true);
+        List<AnswerDto> lanswer = Arrays.asList(a1, a2, a3, a4);
+        dto.setOptions(lanswer);
+        dto.setCorrectAnswer(a1);
 
         Question result = questionService.addNewQuestion(dto);
 
