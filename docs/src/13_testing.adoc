@@ -2,15 +2,13 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 [[section-glossary]]
 == Testing
+To be able to achieve continuous delivery, we need to have a good test coverage. We need to have a good test coverage to be able to refactor the code without breaking it, to be able to deliver the software with confidence and to be able to deliver the software with quality.
 
 === Unit Test
-
-**Pendiente de realización**
+In our project, we have implemented unit tests for various components of the application. The tests are written in Java and use the JUnit 5 framework for testing. We also use the Spring Boot Test framework for testing Spring Boot applications, which provides utilities and annotations to test the application in a way that is very close to its actual runtime behavior. The tests are located in the src/test/java/com/uniovi directory. The main test class is Wiq_UnitTests.java, which contains tests for various services and repositories in our application.
 
 === Integration testing (E2E)
+For the integration tests, we have implemented tests using the Cucumber framework. Cucumber is a tool that supports Behavior-Driven Development (BDD), which allows you to write tests in a human-readable format. The tests are written in Gherkin, a language that is easy to understand and write. To implement each one of the cucumber steps we have used the Selenium framework, which allows us to interact with the web browser and automate the tests mocking the user’s behavior. All the cucumber files are located in the src/test/resources/features directory. We’ve implemented all the cucumber steps in the src/test/java/com/uniovi/steps directory. The main test class is CucumberRunnerTests.java in src/test/java/com/uniovi, which you should run to execute the integration tests.
 
 === Load test
-
-==== Results
-
-=== Conclusion
+We have implemented load tests to evaluate the performance of our website under extreme situations. For this we use the "Gatling" application, which allows us to evaluate a set of web requests by simulating the number of users who make them simultaneously. All tests have been carried out with a load of 1, 250, 1000, 2000 and 5000 users, for the following use cases: login, show profile, show apikey, play an image game, show the global ranking, change the language, return to the index and log out.
