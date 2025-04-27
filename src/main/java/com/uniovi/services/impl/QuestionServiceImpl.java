@@ -63,13 +63,7 @@ public class QuestionServiceImpl implements QuestionService<Question, QuestionDt
 		}
 
 		List<Answer> answers = new ArrayList<>();
-		for (int i = 0; i < question.getOptions().size(); i++) {
-			Answer a = new Answer();
-			a.setText(question.getOptions().get(i).getText());
-			a.setCorrect(question.getOptions().get(i).isCorrect());
-			answerService.addNewAnswer(a);
-			answers.add(a);
-		}
+
 
 		Question q = new Question();
 		q.setStatement(question.getStatement());
