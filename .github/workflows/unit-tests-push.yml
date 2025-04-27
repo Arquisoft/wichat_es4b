@@ -67,7 +67,7 @@ jobs:
         env:
           SPRING_PROFILES_ACTIVE: test
           headless: true
-          EXCLUDE_JUNIT: false
+          EXCLUDE_JUNIT: true
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
