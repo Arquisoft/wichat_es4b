@@ -58,7 +58,7 @@ public class QuestionsApiController {
 
 		response.setContentType("application/json");
 		ApiKey apiKey = apiUtils.getApiKeyFromParams(apiKeyService, params);
-		if (apiKey == null) apiUtils.responseWithAPiKeyNull(response);
+		if (apiKey == null) apiUtils.responseForAPiKeyNull(response);
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		ObjectNode root = objectMapper.createObjectNode();
@@ -79,7 +79,7 @@ public class QuestionsApiController {
 							  @RequestBody QuestionDto questionDto) throws JsonProcessingException {
 
 		ApiKey apiKey = apiKeyService.getApiKey(apiKeyStr);
-		if (apiKeyService.getApiKey(apiKeyStr) == null) apiUtils.responseWithAPiKeyNull(response);
+		if (apiKeyService.getApiKey(apiKeyStr) == null) apiUtils.responseForAPiKeyNull(response);
 
 		if (questionDto == null)
 			return apiUtils.responseToError(response, HttpServletResponse.SC_BAD_REQUEST, "Missing data");
@@ -109,7 +109,7 @@ public class QuestionsApiController {
 	public String updateQuestion(HttpServletResponse response, @RequestHeader("API-KEY") String apiKeyStr,
 								 @PathVariable Long id, @RequestBody QuestionDto questionDto) throws JsonProcessingException {
 
-		if (apiKeyService.getApiKey(apiKeyStr) == null) apiUtils.responseWithAPiKeyNull(response);
+		if (apiKeyService.getApiKey(apiKeyStr) == null) apiUtils.responseForAPiKeyNull(response);
 
 		AbstractQuestion<?> q = questionService.getQuestion(id).orElse(null);
 
@@ -133,7 +133,7 @@ public class QuestionsApiController {
 	public String deleteQuestion(HttpServletResponse response, @RequestHeader("API-KEY") String apiKeyStr,
 								 @PathVariable Long id) throws JsonProcessingException {
 
-		if (apiKeyService.getApiKey(apiKeyStr) == null) apiUtils.responseWithAPiKeyNull(response);
+		if (apiKeyService.getApiKey(apiKeyStr) == null) apiUtils.responseForAPiKeyNull(response);
 
 		AbstractQuestion<?> q = questionService.getQuestion(id).orElse(null);
 		if (q == null)

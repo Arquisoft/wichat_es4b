@@ -33,11 +33,20 @@ public class ApiUtils {
 		return objectMapper.writeValueAsString(error);
 	}
 
-	String responseWithAPiKeyNull(HttpServletResponse response) throws JsonProcessingException {
+	String responseForAPiKeyNull(HttpServletResponse response) throws JsonProcessingException {
 		return responseToError(response, HttpServletResponse.SC_UNAUTHORIZED, "Invalid API key");
 	}
 
 	String checkErrorForPassword(SignUpValidator signUpValidator, HttpServletResponse response, PlayerDto playerDto) {
+		playerDto.setPasswordConfirm(playerDto.getPassword());
+
+		Errors err = new SimpleErrors(playerDto);
+		signUpValidator.validate(playerDto, err);
+
+		return (err.hasErrors()) ? responseToError(response, err) : null;
+	}
+
+	String checkUserForOwnOrAdmin(SignUpValidator signUpValidator, HttpServletResponse response, PlayerDto playerDto) {
 		playerDto.setPasswordConfirm(playerDto.getPassword());
 
 		Errors err = new SimpleErrors(playerDto);
