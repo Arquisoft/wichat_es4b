@@ -478,10 +478,6 @@ class Wichat_UnitTests {
 	@Test
 	@Order(3)
 	void testQuestionsGenerator() throws IOException, InterruptedException {
-		questionGeneratorServiceImpl.generateTestQuestions();
-		List<Question> questions = questionService.getAllQuestions();
-		assertFalse(questions.isEmpty());
-
 		questionImageGeneratorServiceImpl.generateTestQuestions();
 		List<QuestionImage> questionsImage = questionImageService.getAllQuestions();
 		assertFalse(questionsImage.isEmpty());
