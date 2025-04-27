@@ -218,7 +218,7 @@
                             <includes>
                                 <include>**/CucumberRunnerTests.java</include>
                             </includes>
-                            <argLine>@{failsafeJacocoAgent}</argLine>
+                            <argLine>@{failsafeArgLine}</argLine>
                         </configuration>
                     </execution>
                 </executions>
