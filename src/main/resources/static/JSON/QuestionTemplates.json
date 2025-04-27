@@ -9,50 +9,191 @@
         {
           "type": "element",
           "statements": [
-            {
-              "language": "es",
-              "statement": "¿Cuál es el símbolo químico del [QUESTION]?"
-            },
-            {
-              "language": "en",
-              "statement": "What is the chemical symbol of [QUESTION]?"
-            },
-            {
-              "language": "fr",
-              "statement": "Quel est le symbole chimique du [QUESTION]?"
-            },
-            {
-              "language": "de",
-              "statement": "Was ist das chemische Symbol für [QUESTION]?"
-            }
+            { "language": "es", "statement": "¿Cuál es el símbolo químico del [QUESTION]?" },
+            { "language": "en", "statement": "What is the chemical symbol of [QUESTION]?" },
+            { "language": "fr", "statement": "Quel est le symbole chimique du [QUESTION]?" },
+            { "language": "de", "statement": "Was ist das chemische Symbol für [QUESTION]?" }
           ],
           "question": "elementLabel",
           "answer": "symbol",
-          "sparqlQuery": "select distinct ?element ?[QUESTION] ?[ANSWER] where {\n  ?element wdt:P31 wd:Q11344 .\n  ?element wdt:P246 ?[ANSWER] .\n  ?element rdfs:label ?[QUESTION] .\n  FILTER NOT EXISTS {?element wdt:P31 wd:Q1299291} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\")\n  }"
+          "sparqlQuery": "SELECT DISTINCT ?element ?[QUESTION] ?[ANSWER] WHERE { ?element wdt:P31 wd:Q11344 . ?element wdt:P246 ?[ANSWER] . ?element rdfs:label ?[QUESTION] . FILTER NOT EXISTS { ?element wdt:P31 wd:Q1299291 } . FILTER(LANG(?[QUESTION])='[LANGUAGE]') } LIMIT 50"
         },
         {
           "type": "atomic_number",
           "statements": [
-            {
-              "language": "es",
-              "statement": "¿Cuál es el número atómico del [QUESTION]?"
-            },
-            {
-              "language": "en",
-              "statement": "What is the atomic number of [QUESTION]?"
-            },
-            {
-              "language": "fr",
-              "statement": "Quel est le numéro atomique du [QUESTION]?"
-            },
-            {
-              "language": "de",
-              "statement": "Was ist die Ordnungszahl von [QUESTION]?"
-            }
+            { "language": "es", "statement": "¿Cuál es el número atómico del [QUESTION]?" },
+            { "language": "en", "statement": "What is the atomic number of [QUESTION]?" },
+            { "language": "fr", "statement": "Quel est le numéro atomique du [QUESTION]?" },
+            { "language": "de", "statement": "Was ist die Ordnungszahl von [QUESTION]?" }
           ],
           "question": "elementLabel",
           "answer": "atomicNumber",
-          "sparqlQuery": "select distinct ?element ?[QUESTION] ?[ANSWER] where {\n  ?element wdt:P31 wd:Q11344 .\n  ?element wdt:P1086 ?[ANSWER] .\n  ?element rdfs:label ?[QUESTION] .\n  FILTER NOT EXISTS {?element wdt:P31 wd:Q1299291} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\")\n  }"
+          "sparqlQuery": "SELECT DISTINCT ?element ?[QUESTION] ?[ANSWER] WHERE { ?element wdt:P31 wd:Q11344 . ?element wdt:P1086 ?[ANSWER] . ?element rdfs:label ?[QUESTION] . FILTER NOT EXISTS { ?element wdt:P31 wd:Q1299291 } . FILTER(LANG(?[QUESTION])='[LANGUAGE]') } LIMIT 50"
+        }
+      ]
+    },
+    {
+      "name": "Geography",
+      "questions": [
+        {
+          "type": "capital_city",
+          "statements": [
+            { "language": "es", "statement": "¿Cuál es la capital de [QUESTION]?" },
+            { "language": "en", "statement": "What is the capital of [QUESTION]?" },
+            { "language": "fr", "statement": "Quelle est la capitale de [QUESTION]?" },
+            { "language": "de", "statement": "Was ist die Hauptstadt von [QUESTION]?" }
+          ],
+          "question": "countryLabel",
+          "answer": "capitalLabel",
+          "sparqlQuery": "SELECT DISTINCT ?country ?[QUESTION] ?[ANSWER] WHERE { ?country wdt:P31 wd:Q6256 . ?country wdt:P36 ?capital . ?capital rdfs:label ?[ANSWER] . ?country rdfs:label ?[QUESTION] . FILTER(LANG(?[QUESTION])='[LANGUAGE]') FILTER(LANG(?[ANSWER])='[LANGUAGE]') } LIMIT 50"
+        },
+        {
+          "type": "continent",
+          "statements": [
+            { "language": "es", "statement": "¿En qué continente se encuentra [QUESTION]?" },
+            { "language": "en", "statement": "On which continent is [QUESTION] located?" },
+            { "language": "fr", "statement": "Sur quel continent se trouve [QUESTION]?" },
+            { "language": "de", "statement": "Auf welchem Kontinent liegt [QUESTION]?" }
+          ],
+          "question": "countryLabel",
+          "answer": "continentLabel",
+          "sparqlQuery": "SELECT DISTINCT ?country ?[QUESTION] ?[ANSWER] WHERE { ?country wdt:P31 wd:Q6256 . ?country wdt:P30 ?continent . ?country rdfs:label ?[QUESTION] . ?continent rdfs:label ?[ANSWER] . FILTER(LANG(?[QUESTION])='[LANGUAGE]') FILTER(LANG(?[ANSWER])='[LANGUAGE]') } LIMIT 50"
+        }
+      ]
+    },
+    {
+      "name": "History",
+      "questions": [
+        {
+          "type": "birth_year",
+          "statements": [
+            { "language": "es", "statement": "¿En qué año nació [QUESTION]?" },
+            { "language": "en", "statement": "In which year was [QUESTION] born?" },
+            { "language": "fr", "statement": "En quelle année est né(e) [QUESTION]?" },
+            { "language": "de", "statement": "In welchem Jahr wurde [QUESTION] geboren?" }
+          ],
+          "question": "personLabel",
+          "answer": "birthYear",
+          "sparqlQuery": "SELECT DISTINCT ?person ?[QUESTION] (YEAR(?birthdate) AS ?[ANSWER]) WHERE { ?person wdt:P31 wd:Q5 . ?person wdt:P569 ?birthdate . ?person rdfs:label ?[QUESTION] . FILTER(LANG(?[QUESTION])='[LANGUAGE]') } LIMIT 50"
+        }
+      ]
+    },
+    {
+      "name": "Literature",
+      "questions": [
+        {
+          "type": "author_of_book",
+          "statements": [
+            { "language": "es", "statement": "¿Quién escribió [QUESTION]?" },
+            { "language": "en", "statement": "Who wrote [QUESTION]?" },
+            { "language": "fr", "statement": "Qui a écrit [QUESTION]?" },
+            { "language": "de", "statement": "Wer hat [QUESTION] geschrieben?" }
+          ],
+          "question": "bookLabel",
+          "answer": "authorLabel",
+          "sparqlQuery": "SELECT DISTINCT ?book ?[QUESTION] ?[ANSWER] WHERE { ?book wdt:P31 wd:Q571 . ?book wdt:P50 ?author . ?book rdfs:label ?[QUESTION] . ?author rdfs:label ?[ANSWER] . FILTER(LANG(?[QUESTION])='[LANGUAGE]') FILTER(LANG(?[ANSWER])='[LANGUAGE]') } LIMIT 50"
+        }
+      ]
+    },
+    {
+      "name": "Movies",
+      "questions": [
+        {
+          "type": "director_of_movie",
+          "statements": [
+            { "language": "es", "statement": "¿Quién dirigió [QUESTION]?" },
+            { "language": "en", "statement": "Who directed [QUESTION]?" },
+            { "language": "fr", "statement": "Qui a réalisé [QUESTION]?" },
+            { "language": "de", "statement": "Wer hat [QUESTION] inszeniert?" }
+          ],
+          "question": "movieLabel",
+          "answer": "directorLabel",
+          "sparqlQuery": "SELECT DISTINCT ?movie ?[QUESTION] ?[ANSWER] WHERE { ?movie wdt:P31 wd:Q11424 . ?movie wdt:P57 ?director . ?movie rdfs:label ?[QUESTION] . ?director rdfs:label ?[ANSWER] . FILTER(LANG(?[QUESTION])='[LANGUAGE]') FILTER(LANG(?[ANSWER])='[LANGUAGE]') } LIMIT 50"
+        }
+      ]
+    },
+    {
+      "name": "Sports",
+      "questions": [
+        {
+          "type": "player_team",
+          "statements": [
+            { "language": "es", "statement": "¿En qué equipo juega [QUESTION]?" },
+            { "language": "en", "statement": "Which team does [QUESTION] play for?" },
+            { "language": "fr", "statement": "Dans quelle équipe joue [QUESTION]?" },
+            { "language": "de", "statement": "Für welches Team spielt [QUESTION]?" }
+          ],
+          "question": "playerLabel",
+          "answer": "teamLabel",
+          "sparqlQuery": "SELECT DISTINCT ?player ?[QUESTION] ?[ANSWER] WHERE { ?player wdt:P54 ?team . ?player rdfs:label ?[QUESTION] . ?team rdfs:label ?[ANSWER] . FILTER(LANG(?[QUESTION])='[LANGUAGE]') FILTER(LANG(?[ANSWER])='[LANGUAGE]') } LIMIT 50"
+        }
+      ]
+    },
+    {
+      "name": "Music",
+      "questions": [
+        {
+          "type": "song_artist",
+          "statements": [
+            { "language": "es", "statement": "¿Quién canta [QUESTION]?" },
+            { "language": "en", "statement": "Who sings [QUESTION]?" },
+            { "language": "fr", "statement": "Qui chante [QUESTION]?" },
+            { "language": "de", "statement": "Wer singt [QUESTION]?" }
+          ],
+          "question": "songLabel",
+          "answer": "artistLabel",
+          "sparqlQuery": "SELECT DISTINCT ?song ?[QUESTION] ?[ANSWER] WHERE { ?song wdt:P31 wd:Q7366 . ?song wdt:P175 ?artist . ?song rdfs:label ?[QUESTION] . ?artist rdfs:label ?[ANSWER] . FILTER(LANG(?[QUESTION])='[LANGUAGE]') FILTER(LANG(?[ANSWER])='[LANGUAGE]') } LIMIT 50"
+        }
+      ]
+    },
+    {
+      "name": "Technology",
+      "questions": [
+        {
+          "type": "inventor_of",
+          "statements": [
+            { "language": "es", "statement": "¿Quién inventó [QUESTION]?" },
+            { "language": "en", "statement": "Who invented [QUESTION]?" },
+            { "language": "fr", "statement": "Qui a inventé [QUESTION]?" },
+            { "language": "de", "statement": "Wer hat [QUESTION] erfunden?" }
+          ],
+          "question": "inventionLabel",
+          "answer": "inventorLabel",
+          "sparqlQuery": "SELECT DISTINCT ?invention ?[QUESTION] ?[ANSWER] WHERE { ?invention wdt:P31 wd:Q1183543 . ?invention wdt:P61 ?inventor . ?invention rdfs:label ?[QUESTION] . ?inventor rdfs:label ?[ANSWER] . FILTER(LANG(?[QUESTION])='[LANGUAGE]') FILTER(LANG(?[ANSWER])='[LANGUAGE]') } LIMIT 50"
+        }
+      ]
+    },
+    {
+      "name": "Art",
+      "questions": [
+        {
+          "type": "painter_of",
+          "statements": [
+            { "language": "es", "statement": "¿Quién pintó [QUESTION]?" },
+            { "language": "en", "statement": "Who painted [QUESTION]?" },
+            { "language": "fr", "statement": "Qui a peint [QUESTION]?" },
+            { "language": "de", "statement": "Wer malte [QUESTION]?" }
+          ],
+          "question": "paintingLabel",
+          "answer": "painterLabel",
+          "sparqlQuery": "SELECT DISTINCT ?painting ?[QUESTION] ?[ANSWER] WHERE { ?painting wdt:P31 wd:Q3305213 . ?painting wdt:P170 ?painter . ?painting rdfs:label ?[QUESTION] . ?painter rdfs:label ?[ANSWER] . FILTER(LANG(?[QUESTION])='[LANGUAGE]') FILTER(LANG(?[ANSWER])='[LANGUAGE]') } LIMIT 50"
+        }
+      ]
+    },
+    {
+      "name": "Nature",
+      "questions": [
+        {
+          "type": "animal_class",
+          "statements": [
+            { "language": "es", "statement": "¿A qué clase pertenece [QUESTION]?" },
+            { "language": "en", "statement": "To which class does [QUESTION] belong?" },
+            { "language": "fr", "statement": "À quelle classe appartient [QUESTION]?" },
+            { "language": "de", "statement": "Zu welcher Klasse gehört [QUESTION]?" }
+          ],
+          "question": "animalLabel",
+          "answer": "classLabel",
+          "sparqlQuery": "SELECT DISTINCT ?animal ?[QUESTION] ?[ANSWER] WHERE { ?animal wdt:P31 wd:Q729 . ?animal wdt:P279 ?class . ?animal rdfs:label ?[QUESTION] . ?class rdfs:label ?[ANSWER] . FILTER(LANG(?[QUESTION])='[LANGUAGE]') FILTER(LANG(?[ANSWER])='[LANGUAGE]') } LIMIT 50"
         }
       ]
     }
