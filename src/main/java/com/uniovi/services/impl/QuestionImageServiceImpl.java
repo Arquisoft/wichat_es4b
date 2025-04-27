@@ -26,7 +26,8 @@ import java.util.Optional;
 import java.util.Random;
 
 @Service
-public class QuestionImageServiceImpl implements QuestionService<QuestionImage, QuestionImageDto> {
+public class QuestionImageServiceImpl
+		implements QuestionService<QuestionImage, QuestionImageDto> {
 
 	public static final Integer SECONDS_PER_QUESTION = 60;
 
@@ -44,15 +45,17 @@ public class QuestionImageServiceImpl implements QuestionService<QuestionImage, 
 
 	private final Random random = new SecureRandom();
 
-	public QuestionImageServiceImpl(QuestionImageRepository questionRepository, CategoryServiceImpl categoryService,
-									AnswerServiceImageImpl answerService, AnswerImageRepository answerRepository,
+	public QuestionImageServiceImpl(QuestionImageRepository questionRepository,
+									CategoryServiceImpl categoryService,
+									AnswerServiceImageImpl answerService,
+									AnswerImageRepository answerRepository,
 									EntityManager entityManager, LlmService llmService) {
 		this.questionRepository = questionRepository;
-		this.categoryService = categoryService;
-		this.answerService = answerService;
-		this.answerRepository = answerRepository;
-		this.entityManager = entityManager;
-		this.llmService = llmService;
+		this.categoryService    = categoryService;
+		this.answerService      = answerService;
+		this.answerRepository   = answerRepository;
+		this.entityManager      = entityManager;
+		this.llmService         = llmService;
 	}
 
 	@Override
@@ -62,10 +65,14 @@ public class QuestionImageServiceImpl implements QuestionService<QuestionImage, 
 
 	@Override
 	public QuestionImage addNewQuestion(QuestionImageDto questionImage) {
-		Category category = categoryService.getCategoryByName(questionImage.getCategory().getName());
+		Category category = categoryService.getCategoryByName(
+				questionImage.getCategory().getName());
 		if (category == null) {
-			categoryService.addNewCategory(new Category(questionImage.getCategory().getName(), questionImage.getCategory().getDescription()));
-			category = categoryService.getCategoryByName(questionImage.getCategory().getName());
+			categoryService.addNewCategory(
+					new Category(questionImage.getCategory().getName(),
+								 questionImage.getCategory().getDescription()));
+			category = categoryService.getCategoryByName(
+					questionImage.getCategory().getName());
 		}
 
 		List<AnswerImage> answersImage = new ArrayList<>();
@@ -95,7 +102,8 @@ public class QuestionImageServiceImpl implements QuestionService<QuestionImage, 
 
 	@Override
 	public Page<QuestionImage> getQuestions(Pageable pageable) {
-		return questionRepository.findByLanguage(pageable, LocaleContextHolder.getLocale().getLanguage());
+		return questionRepository.findByLanguage(pageable, LocaleContextHolder.getLocale()
+				.getLanguage());
 	}
 
 	@Override
@@ -106,11 +114,13 @@ public class QuestionImageServiceImpl implements QuestionService<QuestionImage, 
 	@Override
 	public List<QuestionImage> getRandomQuestions(int num) {
 		List<QuestionImage> allQuestions = questionRepository.findAll().stream()
-				.filter(question -> question.getLanguage().equals(LocaleContextHolder.getLocale().getLanguage())).toList();
+				.filter(question -> question.getLanguage()
+						.equals(LocaleContextHolder.getLocale().getLanguage())).toList();
 		List<QuestionImage> res = new ArrayList<>();
 		for (int i = 0; i < num; i++) {
 			int idx = random.nextInt(allQuestions.size());
-			while (allQuestions.get(idx).hasEmptyOptions() || res.contains(allQuestions.get(idx))) {
+			while (allQuestions.get(idx).hasEmptyOptions() ||
+					res.contains(allQuestions.get(idx))) {
 				idx = random.nextInt(allQuestions.size());
 			}
 			res.add(allQuestions.get(idx));
@@ -121,17 +131,22 @@ public class QuestionImageServiceImpl implements QuestionService<QuestionImage, 
 	@Override
 	public boolean checkAnswer(Long idquestion, Long idanswer) {
 		Optional<QuestionImage> q = questionRepository.findById(idquestion);
-		return q.map(question -> question.getCorrectAnswer().getId().equals(idanswer)).orElse(false);
+		return q.map(question -> question.getCorrectAnswer().getId().equals(idanswer))
+				.orElse(false);
 	}
 
 	@Override
-	public List<QuestionImage> getQuestionsByCategory(Pageable pageable, Category category, String lang) {
-		return questionRepository.findByCategoryAndLanguage(pageable, category, lang).toList();
+	public List<QuestionImage> getQuestionsByCategory(Pageable pageable,
+													  Category category, String lang) {
+		return questionRepository.findByCategoryAndLanguage(pageable, category, lang)
+				.toList();
 	}
 
 	@Override
-	public List<QuestionImage> getQuestionsByStatement(Pageable pageable, String statement, String lang) {
-		return questionRepository.findByStatementAndLanguage(pageable, statement, lang).toList();
+	public List<QuestionImage> getQuestionsByStatement(Pageable pageable,
+													   String statement, String lang) {
+		return questionRepository.findByStatementAndLanguage(pageable, statement, lang)
+				.toList();
 	}
 
 	@Override
@@ -140,24 +155,40 @@ public class QuestionImageServiceImpl implements QuestionService<QuestionImage, 
 		if (q.isPresent()) {
 			entityManager.clear();
 			QuestionImage question = q.get();
-			question.setStatement(questionDto.getStatement());
-			question.setLanguage(questionDto.getLanguage());
-			Category category = categoryService.getCategoryByName(questionDto.getCategory().getName());
-			if (category == null) {
-				categoryService.addNewCategory(new Category(questionDto.getCategory().getName(), questionDto.getCategory().getDescription()));
-				category = categoryService.getCategoryByName(questionDto.getCategory().getName());
+			// Verificar si 'statement' no es nulo antes de actualizar
+			if (questionDto.getStatement() != null) question.setStatement(
+					questionDto.getStatement());
+			// Verificar si 'language' no es nulo antes de actualizar
+			if (questionDto.getLanguage() != null) question.setLanguage(
+					questionDto.getLanguage());
+			// Verificar si la categoría es válida y no es nula
+			if (questionDto.getCategory() != null &&
+					questionDto.getCategory().getName() != null) {
+				Category category = categoryService.getCategoryByName(
+						questionDto.getCategory().getName());
+				if (category == null) {
+					categoryService.addNewCategory(
+							new Category(questionDto.getCategory().getName(),
+										 questionDto.getCategory().getDescription()));
+					category = categoryService.getCategoryByName(
+							questionDto.getCategory().getName());
+				} else { // Remover la categoría anterior solo si se cambia
+					Associations.QuestionsImageCategory.removeCategory(question,
+																	   question.getCategory());
+					Associations.QuestionsImageCategory.addCategory(question, category);
+				}
 			}
 
-			Associations.QuestionsImageCategory.removeCategory(question, question.getCategory());
-
-			for (int i = 0; i < questionDto.getOptions().size(); i++) {
-				AnswerImage a = question.getOption(i);
-				a.setText(questionDto.getOptions().get(i).getText());
-				a.setCorrect(questionDto.getOptions().get(i).isCorrect());
-			}
-
-			Associations.QuestionsImageCategory.addCategory(question, category);
-			questionRepository.save(question);
+			// Verificar si las opciones no son nulas antes de actualizar
+			if (questionDto.getOptions() != null)
+				for (int i = 0; i < questionDto.getOptions().size(); i++) {
+					AnswerImage a = question.getOption(i);
+					if (questionDto.getOptions().get(i).getText() != null) {
+						a.setText(questionDto.getOptions().get(i).getText());
+					}
+					a.setCorrect(questionDto.getOptions().get(i).isCorrect());
+					// Siempre se puede actualizar la corrección
+				}
 		}
 	}
 
@@ -168,8 +199,10 @@ public class QuestionImageServiceImpl implements QuestionService<QuestionImage, 
 		if (q.isPresent()) {
 			QuestionImage question = q.get();
 			answerRepository.deleteAll(question.getOptions());
-			Associations.QuestionImageAnswers.removeAnswer(question, question.getOptions());
-			Associations.QuestionsImageCategory.removeCategory(question, question.getCategory());
+			Associations.QuestionImageAnswers.removeAnswer(question,
+														   question.getOptions());
+			Associations.QuestionsImageCategory.removeCategory(question,
+															   question.getCategory());
 			q.get().setCorrectAnswer(null);
 			questionRepository.delete(question);
 		}
@@ -198,18 +231,23 @@ public class QuestionImageServiceImpl implements QuestionService<QuestionImage, 
 
 	public String getHintForImageQuestion(QuestionImage question, String ai) {
 
-		String llmHint = ("Hola, tengo esta imagen: <" + question.getImageUrl() + ">, estas opciones de respuesta: "
-				+ question.getOptions().toString() + ".\nLa respuesta correcta es: " + question.getCorrectAnswer() + ".\nY quiero que me respondas en el idioma de este acrónimo: " + question.getLanguage());
+		String llmHint = ("Hola, tengo esta imagen: <" + question.getImageUrl() +
+								  ">, estas opciones de respuesta: " +
+								  question.getOptions().toString() +
+								  ".\nLa respuesta correcta es: " +
+								  question.getCorrectAnswer() +
+								  ".\nY quiero que me respondas en el idioma de este acrónimo: " +
+								  question.getLanguage());
 		// Llamar al servicio LLM para obtener la pista usando Gemini.
-		if(actualQuestionImage == null) {
+		if (actualQuestionImage == null) {
 			actualQuestionImage = question;
-		}else{
-			if(!actualQuestionImage.equals(question)) {
-				llmAnswers = new ArrayList<>();
+		} else {
+			if (!actualQuestionImage.equals(question)) {
+				llmAnswers          = new ArrayList<>();
 				actualQuestionImage = question;
 			}
 		}
-		String lastllmAnswer = llmService.sendQuestionToLLM(llmHint,ai,llmAnswers);
+		String lastllmAnswer = llmService.sendQuestionToLLM(llmHint, ai, llmAnswers);
 		llmAnswers.add(lastllmAnswer);
 		return lastllmAnswer;
 	}

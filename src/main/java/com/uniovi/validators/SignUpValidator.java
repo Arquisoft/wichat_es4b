@@ -9,40 +9,50 @@ import org.springframework.validation.Validator;
 
 @Component
 public class SignUpValidator implements Validator {
-    private final PlayerService playerService;
+	private final PlayerService playerService;
 
-    public SignUpValidator(PlayerService playerService) {
-        this.playerService = playerService;
-    }
+	public SignUpValidator(PlayerService playerService) {
+		this.playerService = playerService;
+	}
 
-    @Override
-    public boolean supports(Class<?> clazz) {
-        return clazz.equals(PlayerDto.class);
-    }
+	@Override
+	public boolean supports(Class<?> clazz) {
+		return clazz.equals(PlayerDto.class);
+	}
 
-    @Override
-    public void validate(Object target, Errors errors) {
-        PlayerDto user = (PlayerDto) target;
+	@Override
+	public void validate(Object target, Errors errors) {
+		PlayerDto user = (PlayerDto) target;
 
-        if (!EmailValidator.getInstance().isValid(user.getEmail())) {
-            errors.rejectValue("email", "signup.error.email.valid",
-                    "El email no es válido");
-        }
+		validateEmail(user, errors);
+		validateUsername(user, errors);
+		validatePasswords(user, errors);
+	}
 
-        if(playerService.getUserByEmail(user.getEmail()).isPresent()){
-            errors.rejectValue("email", "signup.error.email.already",
-                    "Ya hay una cuenta registrada con este email");
-        }
+	public void validateEmail(PlayerDto user, Errors errors) {
+		if (!EmailValidator.getInstance().isValid(user.getEmail())) {
+			errors.rejectValue("email", "signup.error.email.valid",
+					"El email no es válido");
+		}
 
-        if (playerService.getUserByUsername(user.getUsername()).isPresent()) {
-            errors.rejectValue("username", "signup.error.username.already",
-                    "Ya existe una cuenta con este nombre de usuario");
-        }
+		if (playerService.getUserByEmail(user.getEmail()).isPresent()) {
+			errors.rejectValue("email", "signup.error.email.already",
+					"Ya hay una cuenta registrada con este email");
+		}
+	}
 
-        if (user.getPassword() == null
-            || !user.getPassword().equals(user.getPasswordConfirm())) {
-            errors.rejectValue("passwordConfirm", "signup.error.password.match",
-                    "Las contraseñas no coinciden");
-        }
-    }
+	public void validateUsername(PlayerDto user, Errors errors) {
+		if (playerService.getUserByUsername(user.getUsername()).isPresent()) {
+			errors.rejectValue("username", "signup.error.username.already",
+					"Ya existe una cuenta con este nombre de usuario");
+		}
+	}
+
+	public void validatePasswords(PlayerDto user, Errors errors) {
+		if (user.getPassword() == null
+				|| !user.getPassword().equals(user.getPasswordConfirm())) {
+			errors.rejectValue("passwordConfirm", "signup.error.password.match",
+					"Las contraseñas no coinciden");
+		}
+	}
 }
