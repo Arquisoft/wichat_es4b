@@ -1497,28 +1497,9 @@ internal service interactions, while external communication is handled via REST 
 <div class="paragraph">
 <p>This section provides an overview of the main components of the system and their interactions. The core of the system is the WIChat (WIChatEs04bApplication) component, which interfaces with Users, Wikidata for question generation, a LLM API for hint generation, a Database for persistence, and offers a REST API for External Developers.</p>
 </div>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre>Failed to generate image: Could not load PlantUML. Either require 'asciidoctor-diagram-plantuml' or specify the location of the PlantUML JAR(s) using the 'DIAGRAM_PLANTUML_CLASSPATH' environment variable. Alternatively a PlantUML binary can be provided (plantuml-native in $PATH).
-@startuml
-!theme plain
-
-actor User
-actor "External Developers" as Dev
-component "com.uniovi.WIChatEs04bApplication" as WIChat {
-
-}
-database "Database" as DB
-[WikiData] as WikiData
-[LLM Service] as LLM
-
-User --&gt; WIChat : Interacts
-WIChat --&gt; WikiData : Fetches data
-WIChat --&gt; LLM : Fetches data
-WIChat --&gt; DB : Reads/Writes Data
-Dev --&gt; WIChat : Uses APIs
-
-@enduml</pre>
+<img src="./images/Whitebox-overall.png" alt="Whitebox overall" width="433" height="348">
 </div>
 </div>
 <div class="sect3">
@@ -1593,38 +1574,9 @@ Dev --&gt; WIChat : Uses APIs
 </li>
 </ul>
 </div>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre>Failed to generate image: Could not load PlantUML. Either require 'asciidoctor-diagram-plantuml' or specify the location of the PlantUML JAR(s) using the 'DIAGRAM_PLANTUML_CLASSPATH' environment variable. Alternatively a PlantUML binary can be provided (plantuml-native in $PATH).
-@startuml
-!theme plain
-
-actor User
-actor "External Developers" as Dev
-component "com.uniovi.WIChatEs04bApplication" {
-    package "com.uniovi.services" {
-      component "[GameSession\nService]" as Logic
-      component "[PlayerService]" as UserMgmt
-      component "[QuestionService]" as QuestMgmt
-      component "[LLMService]" as LLMMgmt
-      component "[RestApi\nService]" as APIMgmt
-
-      UserMgmt -[hidden]-&gt; Logic : &lt;&lt;uses&gt;&gt;
-      QuestMgmt -[hidden]-&gt; Logic : &lt;&lt;uses&gt;&gt;
-      APIMgmt -[hidden]-&gt; UserMgmt : &lt;&lt;interfaces&gt;&gt;
-      APIMgmt -[hidden]-&gt; QuestMgmt : &lt;&lt;interfaces&gt;&gt;
-
-      Logic ..&gt; UserMgmt : Uses
-      Logic ..&gt; QuestMgmt : Uses
-      Logic ..&gt; LLMMgmt : Uses
-      UserMgmt ..&gt; APIMgmt : Interfaces
-      QuestMgmt ..&gt; APIMgmt : Interfaces
-    }
-}
-
-User --&gt; [com.uniovi.WIChatEs04bApplication] : Interacts
-Dev --&gt; APIMgmt : Uses APIs
-@enduml</pre>
+<img src="./images/level2.png" alt="level2" width="680" height="777">
 </div>
 </div>
 </div>
@@ -1646,21 +1598,9 @@ Dev --&gt; APIMgmt : Uses APIs
 <div class="paragraph">
 <p>This level of documentation provides a structured and clear view of the system&#8217;s architecture, particularly focusing on its integration points. By balancing formal language with accessibility, we aim to communicate effectively with a broad audience of stakeholders, ensuring understanding and transparency in the system&#8217;s design.</p>
 </div>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre>Failed to generate image: Could not load PlantUML. Either require 'asciidoctor-diagram-plantuml' or specify the location of the PlantUML JAR(s) using the 'DIAGRAM_PLANTUML_CLASSPATH' environment variable. Alternatively a PlantUML binary can be provided (plantuml-native in $PATH).
-@startuml
-!theme plain
-
-package "com.uniovi.services.RestApiService" {
-  interface "Player Information API" as PlayerAPI
-  interface "Question Information API" as QuestAPI
-
-  [External Developers] -right-&gt; PlayerAPI : Uses
-  [External Developers] -left-&gt; QuestAPI : Uses
-}
-
-@enduml</pre>
+<img src="./images/level3.png" alt="level3" width="518" height="114">
 </div>
 </div>
 <div style="page-break-after: always;"></div>
@@ -1672,157 +1612,57 @@ package "com.uniovi.services.RestApiService" {
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_user_authentication">6.1. User Authentication</h3>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre>Failed to generate image: Could not load PlantUML. Either require 'asciidoctor-diagram-plantuml' or specify the location of the PlantUML JAR(s) using the 'DIAGRAM_PLANTUML_CLASSPATH' environment variable. Alternatively a PlantUML binary can be provided (plantuml-native in $PATH).
-actor User
-participant "WIChat Frontend" as Frontend
-participant "WIChat Backend" as Backend
-database Database as Data
-
-User -&gt; Frontend: Log in
-Frontend -&gt; Backend: Authentication request
-Backend -&gt; Data: User data query
-Data --&gt; Backend: User data
-Backend --&gt; Frontend: Authentication response
-Frontend --&gt; User: Login confirmation</pre>
+<img src="./images/Sequence%20diagram%201.png" alt="Sequence diagram 1" width="517" height="355">
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_question_generation">6.2. Question Generation</h3>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre>Failed to generate image: Could not load PlantUML. Either require 'asciidoctor-diagram-plantuml' or specify the location of the PlantUML JAR(s) using the 'DIAGRAM_PLANTUML_CLASSPATH' environment variable. Alternatively a PlantUML binary can be provided (plantuml-native in $PATH).
-actor User
-participant "WIChat Frontend" as Frontend
-participant "WIChat Backend" as Backend
-database Database as DB
-database Wikidata as Data
-
-User -&gt; Frontend: Request question generation
-Frontend -&gt; Backend: Question generation request
-Backend -&gt; DB: Relevant data query in DB
-DB --&gt; Backend: Data obtained from DB
-Backend -&gt; Data: Relevant data query in Wikidata
-Data --&gt; Backend: Data obtained from Wikidata
-Backend -&gt; Backend: Question and answers generation
-Backend --&gt; Frontend: Generated question</pre>
+<img src="./images/Sequence%20diagram%202.png" alt="Sequence diagram 2" width="794" height="427">
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_user_responds_to_a_question">6.3. User Responds to a Question</h3>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre>Failed to generate image: Could not load PlantUML. Either require 'asciidoctor-diagram-plantuml' or specify the location of the PlantUML JAR(s) using the 'DIAGRAM_PLANTUML_CLASSPATH' environment variable. Alternatively a PlantUML binary can be provided (plantuml-native in $PATH).
-actor User
-participant "WIChat Frontend" as Frontend
-participant "WIChat Backend" as Backend
-database Database as Data
-
-User -&gt; Frontend: Answer question
-Frontend -&gt; Backend: Send answer
-Backend -&gt; Data: Question data query
-Data --&gt; Backend: Question data
-Backend -&gt; Backend: Evaluate answer
-Backend --&gt; Frontend: Answer result</pre>
+<img src="./images/Sequence%20diagram%203.png" alt="Sequence diagram 3" width="490" height="368">
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_user_checks_their_history">6.4. User Checks their History</h3>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre>Failed to generate image: Could not load PlantUML. Either require 'asciidoctor-diagram-plantuml' or specify the location of the PlantUML JAR(s) using the 'DIAGRAM_PLANTUML_CLASSPATH' environment variable. Alternatively a PlantUML binary can be provided (plantuml-native in $PATH).
-actor User
-participant "WIChat Frontend" as Frontend
-participant "WIChat Backend" as Backend
-database Database as DB
-
-User -&gt; Frontend: Check history
-Frontend -&gt; Backend: History request
-Backend -&gt; DB: User history query
-DB --&gt; Backend: History data
-Backend --&gt; Frontend: User history</pre>
+<img src="./images/Sequence%20diagram%204.png" alt="Sequence diagram 4" width="458" height="326">
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_access_to_user_information_via_an_api">6.5. Access to User Information via an API</h3>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre>Failed to generate image: Could not load PlantUML. Either require 'asciidoctor-diagram-plantuml' or specify the location of the PlantUML JAR(s) using the 'DIAGRAM_PLANTUML_CLASSPATH' environment variable. Alternatively a PlantUML binary can be provided (plantuml-native in $PATH).
-actor User
-participant "WIChat Frontend" as Frontend
-participant "WIChat Backend" as Backend
-database Database as DB
-participant "User API" as UserAPI
-
-User -&gt; Frontend: Access user information
-Frontend -&gt; Backend: User information request
-Backend -&gt; DB: User data query
-DB --&gt; Backend: User data
-Backend -&gt; UserAPI: User information query
-UserAPI --&gt; Backend: User data via API
-Backend --&gt; Frontend: User data</pre>
+<img src="./images/Sequence%20diagram%205.png" alt="Sequence diagram 5" width="644" height="385">
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_access_to_generated_questions_information_via_an_api">6.6. Access to Generated Questions Information via an API</h3>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre>Failed to generate image: Could not load PlantUML. Either require 'asciidoctor-diagram-plantuml' or specify the location of the PlantUML JAR(s) using the 'DIAGRAM_PLANTUML_CLASSPATH' environment variable. Alternatively a PlantUML binary can be provided (plantuml-native in $PATH).
-actor User
-participant "WIChat Frontend" as Frontend
-participant "WIChat Backend" as Backend
-database Database as DB
-participant "Question API" as QuestionAPI
-
-User -&gt; Frontend: Access question information
-Frontend -&gt; Backend: Question information request
-Backend -&gt; DB: Questions data query
-DB --&gt; Backend: Questions data
-Backend -&gt; QuestionAPI: Questions information query
-QuestionAPI --&gt; Backend: Questions data via API
-Backend --&gt; Frontend: Questions data</pre>
+<img src="./images/Sequence%20diagram%206.png" alt="Sequence diagram 6" width="766" height="385">
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_user_interacts_with_the_game_and_requests_a_hint">6.7. User Interacts with the Game and Requests a Hint</h3>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre>Failed to generate image: Could not load PlantUML. Either require 'asciidoctor-diagram-plantuml' or specify the location of the PlantUML JAR(s) using the 'DIAGRAM_PLANTUML_CLASSPATH' environment variable. Alternatively a PlantUML binary can be provided (plantuml-native in $PATH).
-actor User
-participant "WIChat Frontend" as Frontend
-participant "WIChat Backend" as Backend
-participant "LLM Service API" as LLM
-database Database as DB
-
-User -&gt; Frontend: Start game
-Frontend -&gt; Backend: Start game request
-Backend -&gt; DB: Retrieve game state and questions
-DB --&gt; Backend: Game state and questions
-Backend --&gt; Frontend: Initialize game
-
-User -&gt; Frontend: Request hint
-Frontend -&gt; Backend: Hint request
-Backend -&gt; DB: Query question data for hint
-DB --&gt; Backend: Retrieve question data
-Backend -&gt; LLM: Query LLM for hint based on question
-LLM --&gt; Backend: Hint response
-Backend --&gt; Frontend: Return hint to user
-Frontend --&gt; User: Display hint
-
-User -&gt; Frontend: Submit answer
-Frontend -&gt; Backend: Send answer
-Backend -&gt; DB: Query question data
-DB --&gt; Backend: Retrieve question data
-Backend -&gt; Backend: Evaluate answer
-Backend --&gt; Frontend: Return answer result
-Frontend --&gt; User: Display result</pre>
+<img src="./images/Sequence%20diagram%207.png" alt="Sequence diagram 7" width="719" height="776">
 </div>
 </div>
 <div class="sect3">
@@ -1947,42 +1787,11 @@ The infrastructure features a Docker container running the Java Spring Boot appl
 <div class="paragraph">
 <p>These workflows help maintain the project’s quality, ensure that the team remains up to date, and automate routine tasks, allowing the team to focus more on development and less on manual processes.</p>
 </div>
-<div class="listingblock">
-<div class="title">Diagram: Docker Container Setup</div>
+<div class="imageblock">
 <div class="content">
-<pre>Failed to generate image: Could not load PlantUML. Either require 'asciidoctor-diagram-plantuml' or specify the location of the PlantUML JAR(s) using the 'DIAGRAM_PLANTUML_CLASSPATH' environment variable. Alternatively a PlantUML binary can be provided (plantuml-native in $PATH).
-@startuml
-package "Docker compose" {
-    package "App's Docker Container" {
-        node "Java Spring Boot App (.jar)" as App
-        database "Web Server (Embedded)" as WebServer
-    }
-
-    package "MySQL Server Container" {
-        database "MySQL Server" as MySQL
-    }
-
-    package "Prometheus Container" {
-        database "Prometheus" as Prometheus
-    }
-
-    package "Grafana Container" {
-        node "Grafana" as Grafana
-    }
-}
-
-cloud "LLM API" as LLM
-cloud "Wikidata API" as API
-
-App --&gt; MySQL : Store game data
-MySQL --&gt; App : Fetch game data
-App -left-&gt; API : Fetch questions
-App --&gt; LLM : Send queries for hint generation
-App ..&gt; WebServer : Server application
-Prometheus --&gt; App : Collect metrics
-Grafana --&gt; Prometheus : Visualize metrics
-@enduml</pre>
+<img src="./images/Docker%20Container%20Setup.png" alt="Docker Container Setup" width="962" height="610">
 </div>
+<div class="title">Figure 1. Diagram: Docker Container Setup</div>
 </div>
 <div class="paragraph">
 <div class="title">Explanation:</div>
@@ -2705,7 +2514,7 @@ Grafana --&gt; Prometheus : Visualize metrics
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2025-04-27 09:31:41 UTC
+Last updated 2025-04-27 09:39:34 UTC
 </div>
 </div>
 </body>
