@@ -147,12 +147,10 @@
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
                         <configuration>
-                            <dataFile>${project.build.directory}/jacoco-it.exec</dataFile>
                             <outputDirectory>${project.build.directory}/jacoco</outputDirectory>
                             <formats>
                                 <format>XML</format>
@@ -168,11 +166,7 @@
                 <configuration>
                     <excludes>
                         <exclude>**/CucumberRunnerTests.java</exclude>
-                        <exclude>**/CucumberIntegrationRunnerTests.java</exclude>
                     </excludes>
-                          <argLine>
-                              -javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/0.8.13/org.jacoco.agent-0.8.13-runtime.jar=destfile=${project.build.directory}/jacoco.exec,includes=*,output=file
-                          </argLine>
                 </configuration>
             </plugin>
             <plugin>
@@ -182,7 +176,6 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>integration-test</goal>
                             <goal>verify</goal>
                         </goals>
                     </execution>
@@ -190,11 +183,7 @@
                 <configuration>
                     <includes>
                         <include>**/CucumberRunnerTests.java</include>
-                        <include>**/CucumberIntegrationRunnerTests.java</include>
                     </includes>
-                          <argLine>
-                              -javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/0.8.13/org.jacoco.agent-0.8.13-runtime.jar=destfile=${project.build.directory}/jacoco-it.exec,includes=*,output=file
-                          </argLine>
                 </configuration>
             </plugin>
             <plugin>
