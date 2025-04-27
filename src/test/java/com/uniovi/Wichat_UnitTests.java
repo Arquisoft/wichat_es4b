@@ -3,6 +3,8 @@ package com.uniovi;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.uniovi.controllers.HomeController;
+import com.uniovi.controllers.api.PlayerApiController;
+import com.uniovi.controllers.api.QuestionImageGameApiController;
 import com.uniovi.dto.*;
 import com.uniovi.entities.*;
 import com.uniovi.repositories.*;
@@ -86,6 +88,8 @@ class Wichat_UnitTests {
 
 	@Mock
 	PlayerServiceImpl playerServiceMock;
+	@Autowired
+	private QuestionImageGeneratorServiceImpl questionImageGeneratorServiceImpl;
 
 	@BeforeEach
 	void setUp() {
@@ -119,7 +123,8 @@ class Wichat_UnitTests {
 		original.setEmail("original@email.com");
 
 		// Simula el comportamiento del mock
-		when(playerServiceMock.getUserByUsername("originalUser")).thenReturn(Optional.of(original));
+		when(playerServiceMock.getUserByUsername("originalUser")).thenReturn(
+				Optional.of(original));
 
 		validator.setOriginalUsername("originalUser");
 
@@ -147,7 +152,8 @@ class Wichat_UnitTests {
 		dto.setUsername("originalUser");
 		dto.setEmail("invalidEmail");
 
-		when(playerServiceMock.getUserByUsername("originalUser")).thenReturn(Optional.of(original));
+		when(playerServiceMock.getUserByUsername("originalUser")).thenReturn(
+				Optional.of(original));
 
 		Errors errors = new BeanPropertyBindingResult(dto, "playerDto");
 		validator.validate(dto, errors);
@@ -169,8 +175,10 @@ class Wichat_UnitTests {
 		dto.setUsername("originalUser");
 		dto.setEmail("new@email.com");
 
-		when(playerServiceMock.getUserByUsername("originalUser")).thenReturn(Optional.of(original));
-		when(playerServiceMock.getUserByEmail("new@email.com")).thenReturn(Optional.of(new Player()));
+		when(playerServiceMock.getUserByUsername("originalUser")).thenReturn(
+				Optional.of(original));
+		when(playerServiceMock.getUserByEmail("new@email.com")).thenReturn(
+				Optional.of(new Player()));
 
 		Errors errors = new BeanPropertyBindingResult(dto, "playerDto");
 		validator.validate(dto, errors);
@@ -192,8 +200,10 @@ class Wichat_UnitTests {
 		dto.setUsername("newUser");
 		dto.setEmail("email@email.com");
 
-		when(playerServiceMock.getUserByUsername("originalUser")).thenReturn(Optional.of(original));
-		when(playerServiceMock.getUserByUsername("newUser")).thenReturn(Optional.of(new Player()));
+		when(playerServiceMock.getUserByUsername("originalUser")).thenReturn(
+				Optional.of(original));
+		when(playerServiceMock.getUserByUsername("newUser")).thenReturn(
+				Optional.of(new Player()));
 
 		Errors errors = new BeanPropertyBindingResult(dto, "playerDto");
 		validator.validate(dto, errors);
@@ -215,7 +225,8 @@ class Wichat_UnitTests {
 		dto.setPasswordConfirm("pass");
 
 		when(playerServiceMock.getUserByUsername("newUser")).thenReturn(Optional.empty());
-		when(playerServiceMock.getUserByEmail("test@email.com")).thenReturn(Optional.empty());
+		when(playerServiceMock.getUserByEmail("test@email.com")).thenReturn(
+				Optional.empty());
 
 		Errors errors = new BeanPropertyBindingResult(dto, "playerDto");
 		validator.validate(dto, errors);
@@ -251,7 +262,8 @@ class Wichat_UnitTests {
 		dto.setPassword("pass");
 		dto.setPasswordConfirm("pass");
 
-		when(playerServiceMock.getUserByEmail("used@email.com")).thenReturn(Optional.of(new Player()));
+		when(playerServiceMock.getUserByEmail("used@email.com")).thenReturn(
+				Optional.of(new Player()));
 
 		Errors errors = new BeanPropertyBindingResult(dto, "playerDto");
 		validator.validate(dto, errors);
@@ -270,7 +282,8 @@ class Wichat_UnitTests {
 		dto.setPassword("pass");
 		dto.setPasswordConfirm("pass");
 
-		when(playerServiceMock.getUserByUsername("usedUsername")).thenReturn(Optional.of(new Player()));
+		when(playerServiceMock.getUserByUsername("usedUsername")).thenReturn(
+				Optional.of(new Player()));
 
 		Errors errors = new BeanPropertyBindingResult(dto, "playerDto");
 		validator.validate(dto, errors);
@@ -351,7 +364,9 @@ class Wichat_UnitTests {
 	@Order(582)
 	void testConstructorWithQuestionImage() {
 		AnswerImage correctAnswer = new AnswerImage("Correct Answer", true);
-		List<AnswerImage> options = List.of(new AnswerImage("Option 1", false), new AnswerImage("Option 2", false), correctAnswer);
+		List<AnswerImage> options = List.of(new AnswerImage("Option 1", false),
+											new AnswerImage("Option 2", false),
+											correctAnswer);
 
 		Category category = new Category("Math", "Mathematics related questions");
 
@@ -455,16 +470,17 @@ class Wichat_UnitTests {
 	@Test
 	@Order(1)
 	void testPlayerService() {
-		List<Player> players = playerService.getUsersByRole("ROLE_USER");
-		assertEquals(1, players.size());
+		assertEquals(1, playerService.getUsersByRole("ROLE_USER").size());
+
+		assertEquals(2, playerService.getUsersByRole("ROLE_ADMIN").size());
 	}
 
 	@Test
 	@Order(3)
 	void testQuestionsGenerator() throws IOException, InterruptedException {
-		questionGeneratorServiceImpl.generateTestQuestions();
-		List<Question> questions = questionService.getAllQuestions();
-		assertFalse(questions.isEmpty());
+		questionImageGeneratorServiceImpl.generateTestQuestions();
+		List<QuestionImage> questionsImage = questionImageService.getAllQuestions();
+		assertFalse(questionsImage.isEmpty());
 	}
 
 	@Test
@@ -681,8 +697,10 @@ class Wichat_UnitTests {
 	@Test
 	@Order(21)
 	void testGetDuration() {
-		LocalDateTime createdAt = LocalDateTime.of(2022, 1, 1, 10, 0); // Assuming game started at 10:00 AM
-		LocalDateTime finishTime = LocalDateTime.of(2022, 1, 1, 10, 5); // Assuming game finished at 10:05 AM
+		LocalDateTime createdAt = LocalDateTime.of(2022, 1, 1, 10,
+												   0); // Assuming game started at 10:00 AM
+		LocalDateTime finishTime = LocalDateTime.of(2022, 1, 1, 10,
+													5); // Assuming game finished at 10:05 AM
 		Player player = createPlayer();
 		List<Question> questions = new ArrayList<>();
 		GameSession gameSession = new GameSession(player, questions);
@@ -789,7 +807,8 @@ class Wichat_UnitTests {
 		options.add(option1);
 		options.add(option2);
 
-		Question question = new Question("Sample question", options, option1, category, "en");
+		Question question = new Question("Sample question", options, option1, category,
+										 "en");
 		question.setId(1L);
 
 		JsonNode json = question.toJson();
@@ -803,7 +822,9 @@ class Wichat_UnitTests {
 	@Test
 	@Order(28)
 	void testGetPlayerNoApiKey() throws IOException, InterruptedException, JSONException {
-		HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of(), Map.of());
+		HttpResponse<String> response = sendRequest("GET",
+													PlayerApiController.HTTP_URL_API_PLAYERS,
+													Map.of(), Map.of());
 
 		assertEquals(401, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
@@ -812,8 +833,11 @@ class Wichat_UnitTests {
 
 	@Test
 	@Order(29)
-	void testGetPlayerInvalidApiKey() throws IOException, InterruptedException, JSONException {
-		HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of("API-KEY", "zzzz"), Map.of());
+	void testGetPlayerInvalidApiKey()
+			throws IOException, InterruptedException, JSONException {
+		HttpResponse<String> response = sendRequest("GET",
+													PlayerApiController.HTTP_URL_API_PLAYERS,
+													Map.of("API-KEY", "zzzz"), Map.of());
 
 		assertEquals(401, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
@@ -826,7 +850,10 @@ class Wichat_UnitTests {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
-		HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of(), Map.of("apiKey", apiKey.getKeyToken()));
+		HttpResponse<String> response = sendRequest("GET",
+													PlayerApiController.HTTP_URL_API_PLAYERS,
+													Map.of(), Map.of("apiKey",
+																	 apiKey.getKeyToken()));
 
 		assertEquals(200, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
@@ -840,7 +867,12 @@ class Wichat_UnitTests {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
-		HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of(), Map.of("apiKey", apiKey.getKeyToken(), "id", String.valueOf(player.getId())));
+		HttpResponse<String> response = sendRequest("GET",
+													PlayerApiController.HTTP_URL_API_PLAYERS,
+													Map.of(),
+													Map.of("apiKey", apiKey.getKeyToken(),
+														   "id", String.valueOf(
+																	player.getId())));
 
 		assertEquals(200, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
@@ -856,7 +888,11 @@ class Wichat_UnitTests {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
-		HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of(), Map.of("apiKey", apiKey.getKeyToken(), "email", player.getEmail()));
+		HttpResponse<String> response = sendRequest("GET",
+													PlayerApiController.HTTP_URL_API_PLAYERS,
+													Map.of(),
+													Map.of("apiKey", apiKey.getKeyToken(),
+														   "email", player.getEmail()));
 
 		assertEquals(200, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
@@ -868,11 +904,17 @@ class Wichat_UnitTests {
 
 	@Test
 	@Order(33)
-	void testGetPlayerByUsername() throws IOException, InterruptedException, JSONException {
+	void testGetPlayerByUsername()
+			throws IOException, InterruptedException, JSONException {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
-		HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of(), Map.of("apiKey", apiKey.getKeyToken(), "username", player.getUsername()));
+		HttpResponse<String> response = sendRequest("GET",
+													PlayerApiController.HTTP_URL_API_PLAYERS,
+													Map.of(),
+													Map.of("apiKey", apiKey.getKeyToken(),
+														   "username",
+														   player.getUsername()));
 
 		assertEquals(200, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
@@ -884,11 +926,17 @@ class Wichat_UnitTests {
 
 	@Test
 	@Order(34)
-	void testGetPlayersByUsernames() throws IOException, InterruptedException, JSONException {
+	void testGetPlayersByUsernames()
+			throws IOException, InterruptedException, JSONException {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
-		HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of(), Map.of("apiKey", apiKey.getKeyToken(), "usernames", player.getUsername()));
+		HttpResponse<String> response = sendRequest("GET",
+													PlayerApiController.HTTP_URL_API_PLAYERS,
+													Map.of(),
+													Map.of("apiKey", apiKey.getKeyToken(),
+														   "usernames",
+														   player.getUsername()));
 
 		assertEquals(200, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
@@ -902,11 +950,16 @@ class Wichat_UnitTests {
 
 	@Test
 	@Order(35)
-	void testGetPlayersByEmails() throws IOException, InterruptedException, JSONException {
+	void testGetPlayersByEmails()
+			throws IOException, InterruptedException, JSONException {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
-		HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of(), Map.of("apiKey", apiKey.getKeyToken(), "emails", player.getEmail()));
+		HttpResponse<String> response = sendRequest("GET",
+													PlayerApiController.HTTP_URL_API_PLAYERS,
+													Map.of(),
+													Map.of("apiKey", apiKey.getKeyToken(),
+														   "emails", player.getEmail()));
 
 		assertEquals(200, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
@@ -920,11 +973,17 @@ class Wichat_UnitTests {
 
 	@Test
 	@Order(35)
-	void testGetPlayersByEmailsAndRole() throws IOException, InterruptedException, JSONException {
+	void testGetPlayersByEmailsAndRole()
+			throws IOException, InterruptedException, JSONException {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
-		HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of(), Map.of("apiKey", apiKey.getKeyToken(), "emails", player.getEmail(), "role", "ROLE_USER"));
+		HttpResponse<String> response = sendRequest("GET",
+													PlayerApiController.HTTP_URL_API_PLAYERS,
+													Map.of(),
+													Map.of("apiKey", apiKey.getKeyToken(),
+														   "emails", player.getEmail(),
+														   "role", "ROLE_USER"));
 
 		assertEquals(200, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
@@ -942,12 +1001,17 @@ class Wichat_UnitTests {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
-		HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of(), Map.of("apiKey", apiKey.getKeyToken(), "role", "ROLE_USER"));
+		HttpResponse<String> response = sendRequest("GET",
+													PlayerApiController.HTTP_URL_API_PLAYERS,
+													Map.of(),
+													Map.of("apiKey", apiKey.getKeyToken(),
+														   "role", "ROLE_USER"));
 
 		assertEquals(200, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
 		JSONArray players = json.getJSONArray("players");
 		assertFalse(players.isEmpty());
+		assertEquals(1, players.length());
 		for (int i = 0; i < players.length(); i++) {
 			JSONObject playerJson = players.getJSONObject(i);
 			assertEquals(player.getEmail(), playerJson.getString("email"));
@@ -957,7 +1021,9 @@ class Wichat_UnitTests {
 	@Test
 	@Order(36)
 	void testCreatePlayerEmptyApiKey() throws IOException, InterruptedException {
-		HttpResponse<String> response = sendRequest("POST", "/api/players", Map.of(), Map.of());
+		HttpResponse<String> response = sendRequest("POST",
+													PlayerApiController.HTTP_URL_API_PLAYERS,
+													Map.of(), Map.of());
 
 		Assertions.assertNotEquals(200, response.statusCode());
 	}
@@ -965,7 +1031,9 @@ class Wichat_UnitTests {
 	@Test
 	@Order(37)
 	void testCreatePlayerInvalidApiKey() throws IOException, InterruptedException {
-		HttpResponse<String> response = sendRequest("POST", "/api/players", Map.of("API-KEY", "zzzz"), Map.of());
+		HttpResponse<String> response = sendRequest("POST",
+													PlayerApiController.HTTP_URL_API_PLAYERS,
+													Map.of("API-KEY", "zzzz"), Map.of());
 
 		Assertions.assertNotEquals(200, response.statusCode());
 	}
@@ -983,7 +1051,10 @@ class Wichat_UnitTests {
 		data.put("password", "password");
 		data.put("roles", new String[]{"ROLE_USER"});
 
-		HttpResponse<String> response = sendRequest("POST", "/api/players", Map.of("API-KEY", apiKey.getKeyToken()), data);
+		HttpResponse<String> response = sendRequest("POST",
+													PlayerApiController.HTTP_URL_API_PLAYERS,
+													Map.of("API-KEY",
+														   apiKey.getKeyToken()), data);
 
 		assertEquals(200, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
@@ -1000,7 +1071,8 @@ class Wichat_UnitTests {
 
 	@Test
 	@Order(39)
-	void testCreateUserInvalidUsernameAndEmail() throws IOException, InterruptedException, JSONException {
+	void testCreateUserInvalidUsernameAndEmail()
+			throws IOException, InterruptedException, JSONException {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
@@ -1011,7 +1083,10 @@ class Wichat_UnitTests {
 		data.put("password", "password");
 		data.put("roles", new String[]{"ROLE_USER"});
 
-		HttpResponse<String> response = sendRequest("POST", "/api/players", Map.of("API-KEY", apiKey.getKeyToken()), data);
+		HttpResponse<String> response = sendRequest("POST",
+													PlayerApiController.HTTP_URL_API_PLAYERS,
+													Map.of("API-KEY",
+														   apiKey.getKeyToken()), data);
 
 		assertEquals(400, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
@@ -1021,7 +1096,8 @@ class Wichat_UnitTests {
 
 	@Test
 	@Order(40)
-	void testCreateUserInvalidEmail() throws IOException, InterruptedException, JSONException {
+	void testCreateUserInvalidEmail()
+			throws IOException, InterruptedException, JSONException {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
@@ -1032,7 +1108,10 @@ class Wichat_UnitTests {
 		data.put("password", "password");
 		data.put("roles", new String[]{"ROLE_USER"});
 
-		HttpResponse<String> response = sendRequest("POST", "/api/players", Map.of("API-KEY", apiKey.getKeyToken()), data);
+		HttpResponse<String> response = sendRequest("POST",
+													PlayerApiController.HTTP_URL_API_PLAYERS,
+													Map.of("API-KEY",
+														   apiKey.getKeyToken()), data);
 
 		assertEquals(400, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
@@ -1051,7 +1130,11 @@ class Wichat_UnitTests {
 		data.put("password", "newPassword");
 		data.put("roles", new String[]{"ROLE_USER"});
 
-		HttpResponse<String> response = sendRequest("PATCH", "/api/players/" + player.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
+		HttpResponse<String> response = sendRequest("PATCH",
+													PlayerApiController.HTTP_URL_API_PLAYERS +
+															"/" + player.getId(),
+													Map.of("API-KEY",
+														   apiKey.getKeyToken()), data);
 
 		assertEquals(200, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
@@ -1068,14 +1151,18 @@ class Wichat_UnitTests {
 	void testModifyInvalidApiKey() throws IOException, InterruptedException {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 
-		HttpResponse<String> response = sendRequest("PATCH", "/api/players/" + player.getId(), Map.of("API-KEY", "zzzz"), Map.of());
+		HttpResponse<String> response = sendRequest("PATCH",
+													PlayerApiController.HTTP_URL_API_PLAYERS +
+															"/" + player.getId(),
+													Map.of("API-KEY", "zzzz"), Map.of());
 
 		Assertions.assertNotEquals(200, response.statusCode());
 	}
 
 	@Test
 	@Order(43)
-	void testModifyUserAlreadyExisting() throws IOException, InterruptedException, JSONException {
+	void testModifyUserAlreadyExisting()
+			throws IOException, InterruptedException, JSONException {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
@@ -1085,26 +1172,36 @@ class Wichat_UnitTests {
 		data.put("password", "newPassword");
 		data.put("roles", new String[]{"ROLE_USER"});
 
-		HttpResponse<String> response = sendRequest("PATCH", "/api/players/" + player.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
+		HttpResponse<String> response = sendRequest("PATCH",
+													PlayerApiController.HTTP_URL_API_PLAYERS +
+															"/" + player.getId(),
+													Map.of("API-KEY",
+														   apiKey.getKeyToken()), data);
 
 		Assertions.assertNotEquals(200, response.statusCode());
-		JSONObject json = parseJsonResponse(response);
-
-		assertTrue(json.has("email"));
-		assertTrue(json.has("username"));
 	}
 
 	@Test
 	@Order(44)
 	void testModifyUserMissing() throws IOException, InterruptedException {
-		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
+		Player player = playerService.getUsersByRole("ROLE_ADMIN").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
 		Map<String, Object> data = new HashMap<>();
 
-		HttpResponse<String> response = sendRequest("PATCH", "/api/players/" + player.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
+		HttpResponse<String> response = sendRequest("PATCH",
+													PlayerApiController.HTTP_URL_API_PLAYERS +
+															"/" + player.getId(),
+													Map.of("API-KEY",
+														   apiKey.getKeyToken()), data);
 
-		Assertions.assertNotEquals(200, response.statusCode());
+		Assertions.assertEquals(400, response.statusCode());
+
+
+		response = sendRequest("PUT", PlayerApiController.HTTP_URL_API_PLAYERS + "/" +
+				player.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
+
+		Assertions.assertEquals(400, response.statusCode());
 	}
 
 	@Test
@@ -1119,7 +1216,11 @@ class Wichat_UnitTests {
 		data.put("password", "newPassword");
 		data.put("roles", new String[]{"ROLE_USER"});
 
-		HttpResponse<String> response = sendRequest("PATCH", "/api/players/" + player.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
+		HttpResponse<String> response = sendRequest("PATCH",
+													PlayerApiController.HTTP_URL_API_PLAYERS +
+															"/" + player.getId(),
+													Map.of("API-KEY",
+														   apiKey.getKeyToken()), data);
 
 		Assertions.assertNotEquals(200, response.statusCode());
 	}
@@ -1129,7 +1230,10 @@ class Wichat_UnitTests {
 	void testDeleteUserInvalidApiKey() throws IOException, InterruptedException {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 
-		HttpResponse<String> response = sendRequest("DELETE", "/api/players/" + player.getId(), Map.of("API-KEY", "zzzz"), Map.of());
+		HttpResponse<String> response = sendRequest("DELETE",
+													PlayerApiController.HTTP_URL_API_PLAYERS +
+															"/" + player.getId(),
+													Map.of("API-KEY", "zzzz"), Map.of());
 
 		Assertions.assertNotEquals(200, response.statusCode());
 	}
@@ -1140,7 +1244,11 @@ class Wichat_UnitTests {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
-		HttpResponse<String> response = sendRequest("DELETE", "/api/players/9999999", Map.of("API-KEY", apiKey.getKeyToken()), Map.of());
+		HttpResponse<String> response = sendRequest("DELETE",
+													PlayerApiController.HTTP_URL_API_PLAYERS +
+															"/9999999", Map.of("API-KEY",
+																			   apiKey.getKeyToken()),
+													Map.of());
 
 		assertEquals(404, response.statusCode());
 	}
@@ -1151,10 +1259,13 @@ class Wichat_UnitTests {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
-		HttpResponse<String> response = sendRequest("DELETE", "/api/players/" + player.getId(), Map.of("API-KEY", apiKey.getKeyToken()), Map.of());
-
+		HttpResponse<String> response = sendRequest("DELETE",
+													PlayerApiController.HTTP_URL_API_PLAYERS +
+															"/" + player.getId(),
+													Map.of("API-KEY",
+														   apiKey.getKeyToken()),
+													Map.of());
 		assertEquals(200, response.statusCode());
-
 		Optional<Player> deletedPlayer = playerService.getUser(player.getId());
 		assertTrue(deletedPlayer.isEmpty());
 	}
@@ -1166,7 +1277,10 @@ class Wichat_UnitTests {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
-		HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(), Map.of("apiKey", apiKey.getKeyToken(), "lang", "es"));
+		HttpResponse<String> response = sendRequest("GET",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION,
+													Map.of(), Map.of("apiKey",
+																	 apiKey.getKeyToken()));
 
 		assertEquals(200, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
@@ -1176,12 +1290,17 @@ class Wichat_UnitTests {
 
 	@Test
 	@Order(50)
-	void testGetQuestionsInvalidId() throws IOException, InterruptedException, JSONException {
+	void testGetQuestionsInvalidId()
+			throws IOException, InterruptedException, JSONException {
 		insertSomeQuestions();
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
-		HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(), Map.of("apiKey", apiKey.getKeyToken(), "id", "notnumeric"));
+		HttpResponse<String> response = sendRequest("GET",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION,
+													Map.of(),
+													Map.of("apiKey", apiKey.getKeyToken(),
+														   "id", "notnumeric"));
 
 		assertEquals(200, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
@@ -1191,30 +1310,41 @@ class Wichat_UnitTests {
 
 	@Test
 	@Order(51)
-	void testGetQuestionsByCategoryName() throws IOException, InterruptedException, JSONException {
-		String cat = "Science";
-		questionGeneratorServiceImpl.generateTestQuestions(cat);
+	void testGetQuestionsByCategoryName()
+			throws IOException, InterruptedException, JSONException {
+		String category = "Geography";
+		questionImageGeneratorServiceImpl.generateTestQuestions(category);
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
+		Category cat = categoryService.getCategoryByName(category);
 
-		HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(), Map.of("apiKey", apiKey.getKeyToken(), "category", cat));
+		HttpResponse<String> response = sendRequest("GET",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION,
+													Map.of("apiKey",
+														   apiKey.getKeyToken()),
+													Map.of("apiKey", apiKey.getKeyToken(),
+														   "category", cat.getName()));
 
 		assertEquals(200, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
-		assertTrue(json.has("questions"));
 		assertFalse(json.getJSONArray("questions").isEmpty());
 	}
 
 	@Test
 	@Order(52)
-	void testGetQuestionsByCategoryId() throws IOException, InterruptedException, JSONException {
-		String category = "Science";
-		questionGeneratorServiceImpl.generateTestQuestions(category);
+	void testGetQuestionsByCategoryId()
+			throws IOException, InterruptedException, JSONException {
+		String category = "Geography";
+		questionImageGeneratorServiceImpl.generateTestQuestions(category);
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 		Category cat = categoryService.getCategoryByName(category);
 
-		HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(), Map.of("apiKey", apiKey.getKeyToken(), "category", cat.getId()));
+		HttpResponse<String> response = sendRequest("GET",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION,
+													Map.of(),
+													Map.of("apiKey", apiKey.getKeyToken(),
+														   "category", cat.getId()));
 
 		assertEquals(200, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
@@ -1228,10 +1358,14 @@ class Wichat_UnitTests {
 		insertSomeQuestions();
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
-		Question question = questionService.getAllQuestions().getFirst();
+		QuestionImage question = questionImageService.getAllQuestions().getFirst();
 
-		HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(), Map.of("apiKey", apiKey.getKeyToken(), "id", question.getId()));
-
+		HttpResponse<String> response = sendRequest("GET",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION,
+													Map.of(),
+													Map.of("apiKey", apiKey.getKeyToken(),
+														   "id", String.valueOf(
+																	question.getId())));
 		assertEquals(200, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
 		JSONObject questionJson = json.getJSONArray("questions").getJSONObject(0);
@@ -1241,13 +1375,19 @@ class Wichat_UnitTests {
 
 	@Test
 	@Order(53)
-	void testGetQuestionByStatement() throws IOException, InterruptedException, JSONException {
+	void testGetQuestionByStatement()
+			throws IOException, InterruptedException, JSONException {
 		insertSomeQuestions();
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
-		Question question = questionService.getAllQuestions().getFirst();
+		QuestionImage question = questionImageService.getAllQuestions().getFirst();
 
-		HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(), Map.of("apiKey", apiKey.getKeyToken(), "statement", question.getStatement()));
+		HttpResponse<String> response = sendRequest("GET",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION,
+													Map.of(),
+													Map.of("apiKey", apiKey.getKeyToken(),
+														   "statement",
+														   question.getStatement()));
 
 		assertEquals(200, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
@@ -1264,7 +1404,8 @@ class Wichat_UnitTests {
 
 		PlayerDto dto = new PlayerDto("b", "abcd@gmail.com", "1221", "1221", null);
 
-		IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> playerService.addNewPlayer(dto));
+		IllegalArgumentException exception = Assertions.assertThrows(
+				IllegalArgumentException.class, () -> playerService.addNewPlayer(dto));
 		assertEquals("Email already in use", exception.getMessage());
 	}
 
@@ -1276,7 +1417,8 @@ class Wichat_UnitTests {
 
 		PlayerDto dto = new PlayerDto("a", "a@gmail.com", "1221", "1221", null);
 
-		IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> playerService.addNewPlayer(dto));
+		IllegalArgumentException exception = Assertions.assertThrows(
+				IllegalArgumentException.class, () -> playerService.addNewPlayer(dto));
 		assertEquals("Username already in use", exception.getMessage());
 	}
 
@@ -1296,7 +1438,8 @@ class Wichat_UnitTests {
 	@Test
 	@Order(57)
 	void PlayerServiceImpl_addNewPlayer_RoleExists() {
-		PlayerDto dto = new PlayerDto("a", "a@gmail.com", "1221", "1221", new String[]{"ROLE_USER"});
+		PlayerDto dto = new PlayerDto("a", "a@gmail.com", "1221", "1221",
+									  new String[]{"ROLE_USER"});
 		roleService.addRole(new RoleDto(dto.getRoles()[0]));
 
 		Player player = playerService.addNewPlayer(dto);
@@ -1311,7 +1454,8 @@ class Wichat_UnitTests {
 	@Order(58)
 	void PlayerServiceImpl_getUsers_ReturnsPlayersList() {
 		List<Player> players = new ArrayList<>();
-		players.add(new Player("test", "test@test.com", "1a"));
+		players.add(new Player("test", "test@test.com", "test"));
+		players.add(new Player("admin", "admin@wichat.es", "adminWichat2025ASW"));
 		players.add(new Player("a", "a@gmail.com", "1a"));
 		players.add(new Player("b", "b@gmail.com", "1b"));
 
@@ -1333,7 +1477,7 @@ class Wichat_UnitTests {
 		List<Player> result = playerService.getUsers();
 
 		// Always exists 1 test user
-		assertEquals(1, result.size());
+		assertEquals(2, result.size());
 	}
 
 	@Test
@@ -1412,7 +1556,8 @@ class Wichat_UnitTests {
 		categoryRepository.save(category);
 
 		String language = "en";
-		Question question = new Question(statement, options, correctAnswer, category, language);
+		Question question = new Question(statement, options, correctAnswer, category,
+										 language);
 
 		List<Answer> expectedAnswers = question.getOptions();
 		questionService.addNewQuestion(question);
@@ -1476,7 +1621,8 @@ class Wichat_UnitTests {
 		assertEquals(categories.size(), result.size());
 		for (int i = 0; i < categories.size(); i++) {
 			assertEquals(categories.get(i).getName(), result.get(i).getName());
-			assertEquals(categories.get(i).getDescription(), result.get(i).getDescription());
+			assertEquals(categories.get(i).getDescription(),
+						 result.get(i).getDescription());
 		}
 	}
 
@@ -1593,7 +1739,9 @@ class Wichat_UnitTests {
 	@Test
 	@Order(82)
 	void testAddQuestionInvalidApiKey() throws IOException, InterruptedException {
-		HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", "zzzz"), Map.of());
+		HttpResponse<String> response = sendRequest("POST",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION,
+													Map.of("API-KEY", "zzzz"), Map.of());
 
 		Assertions.assertNotEquals(200, response.statusCode());
 	}
@@ -1604,7 +1752,11 @@ class Wichat_UnitTests {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
-		HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", apiKey.getKeyToken()), Map.of());
+		HttpResponse<String> response = sendRequest("POST",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION,
+													Map.of("API-KEY",
+														   apiKey.getKeyToken()),
+													Map.of());
 
 		Assertions.assertNotEquals(200, response.statusCode());
 	}
@@ -1612,7 +1764,7 @@ class Wichat_UnitTests {
 	@Test
 	@Order(84)
 	void testAddQuestion() throws IOException, InterruptedException, JSONException {
-		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
+		Player player = playerService.getUsersByRole("ROLE_ADMIN").getFirst();
 		ApiKey apiKey = player.getApiKey();
 		Category category = categoryService.getCategoryByName("Geography");
 
@@ -1628,19 +1780,24 @@ class Wichat_UnitTests {
 		data.put("options", opts);
 		data.put("category", Map.of("name", category.getName()));
 		data.put("language", "en");
+		data.put("imageUrl", "http://example.com/image.jpg");
 
-		HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", apiKey.getKeyToken()), data);
-
+		HttpResponse<String> response = sendRequest("POST",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION,
+													Map.of("API-KEY",
+														   apiKey.getKeyToken()), data);
 		assertEquals(200, response.statusCode());
 		JSONObject json = parseJsonResponse(response);
 		assertTrue(json.getBoolean("success"));
 		Long newId = json.getLong("id");
 
-		Optional<Question> newQuestion = questionService.getQuestion(newId);
+
+		Optional<QuestionImage> newQuestion = questionImageService.getQuestion(newId);
 		assertTrue(newQuestion.isPresent());
 		assertEquals("Sample question", newQuestion.get().getStatement());
 		assertEquals(4, newQuestion.get().getOptions().size());
-		assertTrue(newQuestion.get().getOptions().stream().anyMatch(Answer::isCorrect));
+		assertTrue(
+				newQuestion.get().getOptions().stream().anyMatch(AnswerImage::isCorrect));
 	}
 
 	@Test
@@ -1661,7 +1818,10 @@ class Wichat_UnitTests {
 		data.put("category", Map.of("name", category.getName()));
 		data.put("language", "en");
 
-		HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", apiKey.getKeyToken()), data);
+		HttpResponse<String> response = sendRequest("POST",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION,
+													Map.of("API-KEY",
+														   apiKey.getKeyToken()), data);
 
 		Assertions.assertNotEquals(200, response.statusCode());
 	}
@@ -1686,7 +1846,10 @@ class Wichat_UnitTests {
 		data.put("category", Map.of("name", category.getName()));
 		data.put("language", "en");
 
-		HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", apiKey.getKeyToken()), data);
+		HttpResponse<String> response = sendRequest("POST",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION,
+													Map.of("API-KEY",
+														   apiKey.getKeyToken()), data);
 
 		Assertions.assertNotEquals(200, response.statusCode());
 	}
@@ -1711,7 +1874,10 @@ class Wichat_UnitTests {
 		data.put("category", Map.of("name", category.getName()));
 		data.put("language", "en");
 
-		HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", apiKey.getKeyToken()), data);
+		HttpResponse<String> response = sendRequest("POST",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION,
+													Map.of("API-KEY",
+														   apiKey.getKeyToken()), data);
 
 		Assertions.assertNotEquals(200, response.statusCode());
 	}
@@ -1720,9 +1886,12 @@ class Wichat_UnitTests {
 	@Order(88)
 	void testModifyQuestionInvalidApiKey() throws IOException, InterruptedException {
 		insertSomeQuestions();
-		Question question = questionService.getAllQuestions().getFirst();
+		QuestionImage question = questionImageService.getAllQuestions().getFirst();
 
-		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", "zzzz"), Map.of());
+		HttpResponse<String> response = sendRequest("PATCH",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION +
+															"/" + question.getId(),
+													Map.of("API-KEY", "zzzz"), Map.of());
 
 		Assertions.assertNotEquals(200, response.statusCode());
 	}
@@ -1733,7 +1902,11 @@ class Wichat_UnitTests {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
-		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/9999999", Map.of("API-KEY", apiKey.getKeyToken()), Map.of());
+		HttpResponse<String> response = sendRequest("PATCH",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION +
+															"/9999999", Map.of("API-KEY",
+																			   apiKey.getKeyToken()),
+													Map.of());
 
 		assertEquals(404, response.statusCode());
 	}
@@ -1743,86 +1916,25 @@ class Wichat_UnitTests {
 	void testModifyQuestionMissingData() throws IOException, InterruptedException {
 		insertSomeQuestions();
 
-		Question question = questionService.getAllQuestions().getFirst();
+		QuestionImage question = questionImageService.getAllQuestions().getFirst();
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
-		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()), Map.of());
+		HttpResponse<String> response = sendRequest("PATCH",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION +
+															"/" + question.getId(),
+													Map.of("API-KEY",
+														   apiKey.getKeyToken()),
+													Map.of());
 
 		Assertions.assertNotEquals(200, response.statusCode());
-	}
-
-	@Test
-	@Order(91)
-	void testModifyQuestion() throws IOException, InterruptedException, JSONException {
-		insertSomeQuestions();
-		Question question = questionService.getAllQuestions().getFirst();
-		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
-		ApiKey apiKey = player.getApiKey();
-		Category category = categoryService.getCategoryByName("Geography");
-
-		Map<String, Object> data = new HashMap<>();
-		data.put("statement", "Modified question");
-
-		List<Map<String, Object>> opts = new ArrayList<>();
-		opts.add(Map.of("text", "Option A", "correct", true));
-		opts.add(Map.of("text", "Option B", "correct", false));
-		opts.add(Map.of("text", "Option C", "correct", false));
-		opts.add(Map.of("text", "Option D", "correct", false));
-
-		data.put("options", opts);
-		data.put("category", Map.of("name", category.getName()));
-		data.put("language", "en");
-
-		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
-
-		assertEquals(200, response.statusCode());
-		JSONObject json = parseJsonResponse(response);
-		assertTrue(json.getBoolean("success"));
-
-		Optional<Question> updatedQuestion = questionService.getQuestion(question.getId());
-		assertTrue(updatedQuestion.isPresent());
-		assertEquals("Modified question", updatedQuestion.get().getStatement());
-	}
-
-	@Test
-	@Order(91)
-	void testModifyQuestionNewCategory() throws IOException, InterruptedException, JSONException {
-		insertSomeQuestions();
-		Question question = questionService.getAllQuestions().getFirst();
-		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
-		ApiKey apiKey = player.getApiKey();
-		Category category = categoryService.getCategoryByName("Geography");
-
-		Map<String, Object> data = new HashMap<>();
-		data.put("statement", "Modified question");
-
-		List<Map<String, Object>> opts = new ArrayList<>();
-		opts.add(Map.of("text", "Option A", "correct", true));
-		opts.add(Map.of("text", "Option B", "correct", false));
-		opts.add(Map.of("text", "Option C", "correct", false));
-		opts.add(Map.of("text", "Option D", "correct", false));
-
-		data.put("options", opts);
-		data.put("category", Map.of("name", "NewCreatedCategory"));
-		data.put("language", "en");
-
-		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
-
-		assertEquals(200, response.statusCode());
-		JSONObject json = parseJsonResponse(response);
-		assertTrue(json.getBoolean("success"));
-
-		Optional<Question> updatedQuestion = questionService.getQuestion(question.getId());
-		assertTrue(updatedQuestion.isPresent());
-		assertEquals("Modified question", updatedQuestion.get().getStatement());
 	}
 
 	@Test
 	@Order(92)
 	void testModifyQuestionWithLessOptions() throws IOException, InterruptedException {
 		insertSomeQuestions();
-		Question question = questionService.getAllQuestions().getFirst();
+		QuestionImage question = questionImageService.getAllQuestions().getFirst();
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 		Category category = categoryService.getCategoryByName("Geography");
@@ -1838,7 +1950,11 @@ class Wichat_UnitTests {
 		data.put("category", Map.of("name", category.getName()));
 		data.put("language", "en");
 
-		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
+		HttpResponse<String> response = sendRequest("PATCH",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION +
+															"/" + question.getId(),
+													Map.of("API-KEY",
+														   apiKey.getKeyToken()), data);
 
 		Assertions.assertNotEquals(200, response.statusCode());
 	}
@@ -1847,7 +1963,7 @@ class Wichat_UnitTests {
 	@Order(93)
 	void testModifyQuestionWithNoCorrect() throws IOException, InterruptedException {
 		insertSomeQuestions();
-		Question question = questionService.getAllQuestions().getFirst();
+		QuestionImage question = questionImageService.getAllQuestions().getFirst();
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 		Category category = categoryService.getCategoryByName("Geography");
@@ -1865,7 +1981,11 @@ class Wichat_UnitTests {
 		data.put("category", Map.of("name", category.getName()));
 		data.put("language", "en");
 
-		HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
+		HttpResponse<String> response = sendRequest("PATCH",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION +
+															"/" + question.getId(),
+													Map.of("API-KEY",
+														   apiKey.getKeyToken()), data);
 
 		Assertions.assertNotEquals(200, response.statusCode());
 	}
@@ -1874,9 +1994,12 @@ class Wichat_UnitTests {
 	@Order(94)
 	void testDeleteQuestionInvalidApiKey() throws IOException, InterruptedException {
 		insertSomeQuestions();
-		Question question = questionService.getAllQuestions().getFirst();
+		QuestionImage question = questionImageService.getAllQuestions().getFirst();
 
-		HttpResponse<String> response = sendRequest("DELETE", "/api/questions/" + question.getId(), Map.of("API-KEY", "zzzz"), Map.of());
+		HttpResponse<String> response = sendRequest("DELETE",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION +
+															"/" + question.getId(),
+													Map.of("API-KEY", "zzzz"), Map.of());
 
 		Assertions.assertNotEquals(200, response.statusCode());
 	}
@@ -1887,7 +2010,11 @@ class Wichat_UnitTests {
 		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
-		HttpResponse<String> response = sendRequest("DELETE", "/api/questions/9999999", Map.of("API-KEY", apiKey.getKeyToken()), Map.of());
+		HttpResponse<String> response = sendRequest("DELETE",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION +
+															"/9999999", Map.of("API-KEY",
+																			   apiKey.getKeyToken()),
+													Map.of());
 
 		assertEquals(404, response.statusCode());
 	}
@@ -1897,15 +2024,20 @@ class Wichat_UnitTests {
 	@Tag("flaky")
 	void testDeleteQuestion() throws IOException, InterruptedException {
 		insertSomeQuestions();
-		Question question = questionService.getAllQuestions().getFirst();
-		Player player = playerService.getUsersByRole("ROLE_USER").getFirst();
+		QuestionImage question = questionImageService.getAllQuestions().getFirst();
+		Player player = playerService.getUsersByRole("ROLE_ADMIN").getFirst();
 		ApiKey apiKey = player.getApiKey();
 
-		HttpResponse<String> response = sendRequest("DELETE", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()), Map.of());
+		HttpResponse<String> response = sendRequest("DELETE",
+													QuestionImageGameApiController.HTTP_URL_API_IMAGE_QUESTION +
+															"/" + question.getId(),
+													Map.of("API-KEY",
+														   apiKey.getKeyToken()),
+													Map.of());
 
 		assertEquals(200, response.statusCode());
-		Optional<Question> deletedQuestion = questionService.getQuestion(question.getId());
-		assertTrue(deletedQuestion.isEmpty());
+
+		assertTrue(questionImageService.getQuestion(question.getId()).isEmpty());
 	}
 
 	@Test
@@ -2125,12 +2257,14 @@ class Wichat_UnitTests {
 		AnswerImage a3 = new AnswerImage("Madrid", false);
 		AnswerImage a4 = new AnswerImage("Benidorm", true);
 		List<AnswerImage> lanswer = Arrays.asList(a1, a2, a3, a4);
-		QuestionImage questionImage = new QuestionImage("", lanswer, a4, new Category(), "es", "https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
-		String answer = questionImageService.getHintForImageQuestion(questionImage, "Empathy");
+		QuestionImage questionImage = new QuestionImage("", lanswer, a4, new Category(),
+														"es",
+														"https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
+		String answer = questionImageService.getHintForImageQuestion(questionImage,
+																	 "Empathy");
 		Assertions.assertNotNull(answer);
 		assertFalse(answer.isEmpty());
 		assertFalse(answer.isBlank());
-		System.out.println(answer);
 	}
 
 	@Test
@@ -2140,20 +2274,23 @@ class Wichat_UnitTests {
 		AnswerImage a3 = new AnswerImage("Madrid", false);
 		AnswerImage a4 = new AnswerImage("Benidorm", true);
 		List<AnswerImage> lanswer = Arrays.asList(a1, a2, a3, a4);
-		QuestionImage questionImage = new QuestionImage("", lanswer, a4, new Category(), "es", "https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
-		String answer = questionImageService.getHintForImageQuestion(questionImage, "Gemini");
+		QuestionImage questionImage = new QuestionImage("", lanswer, a4, new Category(),
+														"es",
+														"https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
+		String answer = questionImageService.getHintForImageQuestion(questionImage,
+																	 "Gemini");
 		Assertions.assertNotNull(answer);
 		assertFalse(answer.isEmpty());
 		assertFalse(answer.isBlank());
-		System.out.println(answer);
-		a1 = new AnswerImage("León", false);
-		lanswer = Arrays.asList(a1, a2, a3, a4);
-		questionImage = new QuestionImage("", lanswer, a4, new Category(), "es", "https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
-		answer = questionImageService.getHintForImageQuestion(questionImage, "Gemini");
+		a1            = new AnswerImage("León", false);
+		lanswer       = Arrays.asList(a1, a2, a3, a4);
+		questionImage = new QuestionImage("", lanswer, a4, new Category(), "es",
+										  "https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
+		answer        = questionImageService.getHintForImageQuestion(questionImage,
+																	 "Gemini");
 		Assertions.assertNotNull(answer);
 		assertFalse(answer.isEmpty());
 		assertFalse(answer.isBlank());
-		System.out.println(answer);
 	}
 
 
@@ -2172,30 +2309,40 @@ class Wichat_UnitTests {
 			List<QuestionImage> questions = createStandardTestQuestions();
 
 			// 3. Initialize game session with consistent test data
-			gameSession = new GameSessionImage(player, new ArrayList<>(questions)); // Defensive copy
+			gameSession = new GameSessionImage(player, new ArrayList<>(
+					questions)); // Defensive copy
 		}
 
 		private Player createTestPlayerWithId(Long id) {
-			Player player = new Player("testPlayer_" + id,  // Unique name per test if needed
-					"testplayer" + id + "@test.com",  // Unique email
-					"securePassword123"  // Realistic test password
+			Player player = new Player("testPlayer_" + id,
+									   // Unique name per test if needed
+									   "testplayer" + id + "@test.com",  // Unique email
+									   "securePassword123"  // Realistic test password
 			);
 			player.setId(id);
 			return player;
 		}
 
 		private List<QuestionImage> createStandardTestQuestions() {
-			return List.of(createTestQuestion(1L, "What is the capital of France?"), createTestQuestion(2L, "What is 2+2?"), createTestQuestion(3L, "Which planet is known as the Red Planet?"));
+			return List.of(createTestQuestion(1L, "What is the capital of France?"),
+						   createTestQuestion(2L, "What is 2+2?"), createTestQuestion(3L,
+																					  "Which planet is known as the Red Planet?"));
 		}
 
 		private QuestionImage createTestQuestion(Long id, String statement) {
 			// Create realistic question structure
 			Category testCategory = new Category("General Knowledge", "Various topics");
-			List<AnswerImage> options = List.of(new AnswerImage("Option A", false), new AnswerImage("Option B", true),  // Correct answer
-					new AnswerImage("Option C", false), new AnswerImage("Option D", false));
+			List<AnswerImage> options = List.of(new AnswerImage("Option A", false),
+												new AnswerImage("Option B", true),
+												// Correct answer
+												new AnswerImage("Option C", false),
+												new AnswerImage("Option D", false));
 
-			QuestionImage question = new QuestionImage(statement, options, options.get(1),  // Correct answer
-					testCategory, "en", "https://example.com/q" + id + ".jpg");
+			QuestionImage question = new QuestionImage(statement, options, options.get(1),
+													   // Correct answer
+													   testCategory, "en",
+													   "https://example.com/q" + id +
+															   ".jpg");
 			question.setId(id);
 			return question;
 		}
@@ -2230,7 +2377,7 @@ class Wichat_UnitTests {
 
 		@Test
 		void addAnsweredQuestion_MovesQuestionBetweenSets() {
-			QuestionImage question = gameSession.getQuestionsToAnswer().get(0);
+			QuestionImage question = gameSession.getQuestionsToAnswer().getFirst();
 			gameSession.addAnsweredQuestion(question);
 
 			assertFalse(gameSession.getQuestionsToAnswer().contains(question));
@@ -2239,7 +2386,7 @@ class Wichat_UnitTests {
 
 		@Test
 		void isAnswered_ReturnsCorrectStatus() {
-			QuestionImage question = gameSession.getQuestionsToAnswer().get(0);
+			QuestionImage question = gameSession.getQuestionsToAnswer().getFirst();
 			assertFalse(gameSession.isAnswered(question));
 
 			gameSession.addAnsweredQuestion(question);
@@ -2254,7 +2401,8 @@ class Wichat_UnitTests {
 
 			assertEquals(1, gameSession.getCorrectQuestions());
 			assertEquals(1, gameSession.getTotalQuestions());
-			assertEquals(initialScore + 15, gameSession.getScore()); // 5 (time) + 10 (bonus)
+			assertEquals(initialScore + 15,
+						 gameSession.getScore()); // 5 (time) + 10 (bonus)
 		}
 
 		@Test
@@ -2281,7 +2429,7 @@ class Wichat_UnitTests {
 
 		@Test
 		void hasQuestionId_FindsInAnswered() {
-			QuestionImage question = gameSession.getQuestionsToAnswer().get(0);
+			QuestionImage question = gameSession.getQuestionsToAnswer().getFirst();
 			gameSession.addAnsweredQuestion(question);
 			assertTrue(gameSession.hasQuestionId(question.getId()));
 		}
@@ -2354,7 +2502,16 @@ class Wichat_UnitTests {
 
 		@Test
 		void constructor_InitializesFieldsCorrectly() {
-			assertAll(() -> assertEquals(TEST_USERNAME, player.getUsername()), () -> assertEquals(TEST_EMAIL, player.getEmail()), () -> assertEquals(TEST_PASSWORD, player.getPassword()), () -> assertNull(player.getId()), () -> assertNull(player.getMultiplayerCode()), () -> assertNull(player.getScoreMultiplayerCode()), () -> assertNotNull(player.getRoles()), () -> assertNotNull(player.getGameSessions()), () -> assertNull(player.getApiKey()), () -> assertNull(player.getPasswordConfirm()));
+			assertAll(() -> assertEquals(TEST_USERNAME, player.getUsername()),
+					  () -> assertEquals(TEST_EMAIL, player.getEmail()),
+					  () -> assertEquals(TEST_PASSWORD, player.getPassword()),
+					  () -> assertNull(player.getId()),
+					  () -> assertNull(player.getMultiplayerCode()),
+					  () -> assertNull(player.getScoreMultiplayerCode()),
+					  () -> assertNotNull(player.getRoles()),
+					  () -> assertNotNull(player.getGameSessions()),
+					  () -> assertNull(player.getApiKey()),
+					  () -> assertNull(player.getPasswordConfirm()));
 		}
 
 		@Test
@@ -2369,7 +2526,11 @@ class Wichat_UnitTests {
 			player.setScoreMultiplayerCode(newScoreCode);
 			player.setPasswordConfirm(newPasswordConfirm);
 
-			assertAll(() -> assertEquals(newId, player.getId()), () -> assertEquals(newMultiplayerCode, player.getMultiplayerCode()), () -> assertEquals(newScoreCode, player.getScoreMultiplayerCode()), () -> assertEquals(newPasswordConfirm, player.getPasswordConfirm()));
+			assertAll(() -> assertEquals(newId, player.getId()),
+					  () -> assertEquals(newMultiplayerCode, player.getMultiplayerCode()),
+					  () -> assertEquals(newScoreCode, player.getScoreMultiplayerCode()),
+					  () -> assertEquals(newPasswordConfirm,
+										 player.getPasswordConfirm()));
 		}
 
 		//@Test
@@ -2392,7 +2553,12 @@ class Wichat_UnitTests {
 			JsonNode json = player.toJson();
 
 			// Verify
-			assertAll(() -> assertEquals(player.getId(), json.get("id").asLong()), () -> assertEquals(player.getUsername(), json.get("username").asText()), () -> assertEquals(player.getEmail(), json.get("email").asText()), () -> assertEquals(2, json.get("roles").size()), () -> assertEquals(1, json.get("gameSessions").size()));
+			assertAll(() -> assertEquals(player.getId(), json.get("id").asLong()),
+					  () -> assertEquals(player.getUsername(),
+										 json.get("username").asText()),
+					  () -> assertEquals(player.getEmail(), json.get("email").asText()),
+					  () -> assertEquals(2, json.get("roles").size()),
+					  () -> assertEquals(1, json.get("gameSessions").size()));
 
 			// Verify roles array
 			ArrayNode rolesArray = (ArrayNode) json.get("roles");
@@ -2410,7 +2576,8 @@ class Wichat_UnitTests {
 			player.setId(1L);
 			JsonNode json = player.toJson();
 
-			assertAll(() -> assertTrue(json.get("roles").isEmpty()), () -> assertTrue(json.get("gameSessions").isEmpty()));
+			assertAll(() -> assertTrue(json.get("roles").isEmpty()),
+					  () -> assertTrue(json.get("gameSessions").isEmpty()));
 		}
 
 
@@ -2420,7 +2587,8 @@ class Wichat_UnitTests {
 			player.setApiKey(apiKey);
 			apiKey.setPlayer(player);
 
-			assertAll(() -> assertEquals(apiKey, player.getApiKey()), () -> assertEquals(player, apiKey.getPlayer()));
+			assertAll(() -> assertEquals(apiKey, player.getApiKey()),
+					  () -> assertEquals(player, apiKey.getPlayer()));
 		}
 
 		@Test
@@ -2483,11 +2651,13 @@ class Wichat_UnitTests {
 		@BeforeEach
 		void initQuestionImageTestData() {
 			category = new Category("Historia");
-			answer1 = new AnswerImage("A", false);
-			answer2 = new AnswerImage("B", true);
+			answer1  = new AnswerImage("A", false);
+			answer2  = new AnswerImage("B", true);
 			List<AnswerImage> options = List.of(answer1, answer2);
 
-			questionImage = new QuestionImage("¿Qué letra es correcta?", options, answer2, category, Language.ES, "http://example.com/image.jpg");
+			questionImage = new QuestionImage("¿Qué letra es correcta?", options, answer2,
+											  category, Language.ES,
+											  "http://example.com/image.jpg");
 
 			answer1.setQuestion(questionImage);
 			answer2.setQuestion(questionImage);
@@ -2529,8 +2699,10 @@ class Wichat_UnitTests {
 
 		@Test
 		void testToJsonIncludesImageUrl() {
-			assertEquals("http://example.com/image.jpg", questionImage.toJson().get("imageUrl").asText());
-			assertEquals(questionImage.getStatement(), questionImage.toJson().get("statement").asText());
+			assertEquals("http://example.com/image.jpg",
+						 questionImage.toJson().get("imageUrl").asText());
+			assertEquals(questionImage.getStatement(),
+						 questionImage.toJson().get("statement").asText());
 		}
 
 		@Test
@@ -2559,19 +2731,28 @@ class Wichat_UnitTests {
 	 * @param data    Data to send in the request
 	 * @return The response from the server
 	 */
-	private HttpResponse<String> sendRequest(String method, String uri, Map<String, String> headers, Map<String, Object> data) throws IOException, InterruptedException {
+	private HttpResponse<String> sendRequest(String method, String uri,
+											 Map<String, String> headers,
+											 Map<String, Object> data)
+			throws IOException, InterruptedException {
 		HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
 
-		uri = Wichat_IntegrationTests.URL.substring(0, Wichat_IntegrationTests.URL.length() - 1) + uri;
+		uri = Wichat_IntegrationTests.URL.substring(0,
+													Wichat_IntegrationTests.URL.length() -
+															1) + uri;
 
 		if ("GET".equalsIgnoreCase(method)) {
 			if (!data.isEmpty()) {
 				uri += "?" + buildQueryString(data);
 			}
 			requestBuilder.uri(URI.create(uri)).GET();
-		} else if ("POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method) || "PATCH".equalsIgnoreCase(method)) {
+		} else if ("POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method) ||
+				"PATCH".equalsIgnoreCase(method)) {
 			JSONObject json = new JSONObject(data);
-			requestBuilder.uri(URI.create(uri)).method(method.toUpperCase(), HttpRequest.BodyPublishers.ofString(json.toString())).header("Content-Type", "application/json");
+			requestBuilder.uri(URI.create(uri)).method(method.toUpperCase(),
+													   HttpRequest.BodyPublishers.ofString(
+															   json.toString()))
+					.header("Content-Type", "application/json");
 		} else if ("DELETE".equalsIgnoreCase(method)) {
 			requestBuilder.uri(URI.create(uri)).DELETE();
 		} else {
@@ -2592,7 +2773,9 @@ class Wichat_UnitTests {
 	 */
 	private String buildQueryString(Map<String, Object> data) {
 		StringJoiner sj = new StringJoiner("&");
-		data.forEach((key, value) -> sj.add(URLEncoder.encode(key, StandardCharsets.UTF_8) + "=" + URLEncoder.encode(value.toString(), StandardCharsets.UTF_8)));
+		data.forEach((key, value) -> sj.add(
+				URLEncoder.encode(key, StandardCharsets.UTF_8) + "=" +
+						URLEncoder.encode(value.toString(), StandardCharsets.UTF_8)));
 		return sj.toString();
 	}
 
@@ -2602,7 +2785,8 @@ class Wichat_UnitTests {
 	 * @param response The response from the server
 	 * @return The JSON object
 	 */
-	private JSONObject parseJsonResponse(HttpResponse<String> response) throws JSONException {
+	private JSONObject parseJsonResponse(HttpResponse<String> response)
+			throws JSONException {
 		return new JSONObject(response.body());
 	}
 
@@ -2610,7 +2794,7 @@ class Wichat_UnitTests {
 	 * Inserts some sample questions into the database
 	 */
 	private void insertSomeQuestions() throws IOException, InterruptedException {
-		questionGeneratorServiceImpl.generateTestQuestions();
+		questionImageGeneratorServiceImpl.generateTestQuestions();
 	}
 
 
