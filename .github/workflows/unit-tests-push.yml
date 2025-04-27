@@ -67,7 +67,7 @@ jobs:
         env:
           SPRING_PROFILES_ACTIVE: test
           headless: true
-          EXCLUDE_JUNIT: false
+          EXCLUDE_JUNIT: true
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
@@ -97,5 +97,5 @@ jobs:
             -Dsonar.branch.name=${{ github.head_ref || github.ref_name }} \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
-            -Dsonar.coverage.jacoco.xmlReportPaths="${{ github.workspace }}/target/jacoco/jacoco.xml,${{ github.workspace }}/target/site/jacoco-it/jacoco.xml"
+            -Dsonar.coverage.jacoco.xmlReportPaths="${{ github.workspace }}/target/jacoco/jacoco.xml,${{ github.workspace }}/target/site/jacoco-integration/jacoco.xml" \
             -Dspring.profiles.active=test
