@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.checkerframework.common.aliasing.qual.Unique;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -31,5 +32,17 @@ public class Role {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || getClass() != o.getClass()) return false;
+		Role role = (Role) o;
+		return Objects.equals(name, role.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(name);
 	}
 }
