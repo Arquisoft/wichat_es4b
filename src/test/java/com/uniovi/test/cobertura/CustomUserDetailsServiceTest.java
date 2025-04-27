@@ -4,12 +4,14 @@ import com.uniovi.entities.Player;
 import com.uniovi.entities.Role;
 import com.uniovi.repositories.PlayerRepository;
 import com.uniovi.services.CustomUserDetailsService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,7 +19,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-@SpringBootTest
+
 class CustomUserDetailsServiceTest {
 
     private PlayerRepository playerRepository;

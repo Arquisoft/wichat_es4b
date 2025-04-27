@@ -1,12 +1,12 @@
 package com.uniovi.test.cobertura;
 
 import com.uniovi.dto.*;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("unitTest coverage for Dtos")
 @TestMethodOrder(OrderAnnotation.class)
-@SpringBootTest
 public class DtoCoverageTests {
 
     // Test de cobertura de los DTOs. Reservado de la 525 a la 549
