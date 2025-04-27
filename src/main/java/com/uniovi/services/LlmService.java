@@ -123,7 +123,6 @@ public class LlmService {
                 }
                 return "Sin respuestas válidas en la API";
             } catch (Exception e) {
-                e.printStackTrace();
                 return "Error procesando la respuesta";
             }
     }
