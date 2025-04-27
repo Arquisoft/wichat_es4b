@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("unitTest coverage for Entities")
 @TestMethodOrder(OrderAnnotation.class)
+@SpringBootTest
 public class EntitiesCoverageTests {
 
 	// Test de cobertura de las Entities. Reservado de la 550 a la 559
