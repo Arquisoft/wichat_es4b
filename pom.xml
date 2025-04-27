@@ -16,7 +16,6 @@
     <properties>
         <java.version>21</java.version>
         <sonar.sources>src/main/java,src/test/resources/features</sonar.sources>
-        <sonar.jacoco.reportPaths>${project.build.directory}/jacoco-integration.exec</sonar.jacoco.reportPaths>
         <sonar.exclusions>**/CustomErrorController.java,**/InsertSampleDataService.java</sonar.exclusions>
         <jacoco-agent.destfile>${project.build.directory}/jacoco.exec</jacoco-agent.destfile>
     </properties>
