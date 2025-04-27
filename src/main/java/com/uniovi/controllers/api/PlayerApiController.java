@@ -68,7 +68,8 @@ import java.util.Optional;
 				title = "WIChat Game API", version = "1.0",
 				description = "API for managing players and questions\nTo get access, please generate an API key in the webpage"
 		), servers = {@Server(
-		url = "https://WIChat.es", description = "Production server"
+		url = "https://wichat.uksouth.cloudapp.azure.com",
+		description = "Production server"
 ), @Server(url = "http://localhost:3000", description = "Local server"),}
 )
 @Tag(
