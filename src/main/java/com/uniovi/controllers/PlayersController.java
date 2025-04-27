@@ -25,6 +25,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -63,13 +64,25 @@ public class PlayersController {
     }
 
     @RequestMapping("/signup")
-    public String showRegistrationForm(Model model){
+    public String showRegistrationForm(Model model, HttpSession session) {
+
         if (SecurityConfig.isAuthenticated())
             return "redirect:/home";
 
         if (model.containsAttribute("user")) {
             model.addAttribute("user", model.getAttribute("user"));
             return "player/signup";
+        }
+
+        // Obtener el token CSRF del request
+        CsrfToken csrfToken = (CsrfToken) session.getAttribute("_csrf");
+        if (csrfToken == null) {
+            csrfToken = (CsrfToken) session.getAttribute(CsrfToken.class.getName());
+        }
+
+        // Agregar el CSRF al modelo si lo tenemos
+        if (csrfToken != null) {
+            model.addAttribute("_csrf", csrfToken);
         }
 
         model.addAttribute("user", new PlayerDto());

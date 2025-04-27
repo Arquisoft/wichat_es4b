@@ -6,7 +6,7 @@ on:
       - master
       - develop
   pull_request:
-    types: [ opened, synchronize, reopened ]
+    types: [opened, synchronize, reopened]
 
 jobs:
   app-tests-analyze:
@@ -47,9 +47,13 @@ jobs:
 
       - name: Start the application
         run: |
-          ./mvnw spring-boot:run > logs.txt 2>&1 &
+          ./mvnw spring-boot:run > logs.txt 2>&1 & 
           echo $! > spring-boot-app.pid
-          sleep 60
+          # Wait for the application to be up and running
+          while ! curl --silent --head --fail http://localhost:3000; do
+            echo "Waiting for application to start..."
+            sleep 10
+          done
         env:
           SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/test_database
           SPRING_DATASOURCE_USERNAME: root
@@ -64,7 +68,7 @@ jobs:
 
       - name: Run tests
         run: |
-          ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+          ./mvnw verify -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver -DjacocoArgLine="-javaagent:${{ github.workspace }}/target/jacoco-it.exec"
         env:
           SPRING_PROFILES_ACTIVE: test
           headless: true
@@ -87,9 +91,9 @@ jobs:
             if ps -p "$PID" > /dev/null; then
               kill "$PID"
             fi
-          fi          
+          fi
 
       - if: ${{ github.actor != 'dependabot[bot]' }}
         name: Collect Jacoco report and send to Sonar
         run: |
-          ./mvnw org.jacoco:jacoco-maven-plugin:report sonar:sonar -Dsonar.projectKey=Arquisoft_wichat_es4b -Dsonar.organization=arquisoft -Dsonar.branch.name=${{ github.head_ref || github.ref_name }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }} -Dspring.profiles.active=test
+          ./mvnw sonar:sonar -Dsonar.projectKey=Arquisoft_wichat_es4b -Dsonar.organization=arquisoft -Dsonar.branch.name=${{ github.head_ref || github.ref_name }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }} -Dspring.profiles.active=test
