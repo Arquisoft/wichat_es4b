@@ -144,11 +144,6 @@
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
-                        <configuration>
-                            <destFile>${project.build.directory}/jacoco-it.exec</destFile>
-                            <append>true</append>
-                            <includes>com.uniovi.*</includes>
-                        </configuration>
                     </execution>
                     <execution>
                         <id>report</id>
@@ -172,9 +167,12 @@
                 <version>3.5.3</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/Cucumber*.java</exclude>
+                        <exclude>**/CucumberRunnerTests.java</exclude>
+                        <exclude>**/CucumberIntegrationRunnerTests.java</exclude>
                     </excludes>
-                    <argLine>@{jacocoArgLine}</argLine>
+                          <argLine>
+                              -javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/0.8.13/org.jacoco.agent-0.8.13-runtime.jar=destfile=${project.build.directory}/jacoco.exec,includes=*,output=file
+                          </argLine>
                 </configuration>
             </plugin>
             <plugin>
@@ -191,15 +189,22 @@
                 </executions>
                 <configuration>
                     <includes>
-                        <include>**/Cucumber*.java</include>
+                        <include>**/CucumberRunnerTests.java</include>
+                        <include>**/CucumberIntegrationRunnerTests.java</include>
                     </includes>
-                    <argLine>@{jacocoArgLine}</argLine>
+                          <argLine>
+                              -javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/0.8.13/org.jacoco.agent-0.8.13-runtime.jar=destfile=${project.build.directory}/jacoco-it.exec,includes=*,output=file
+                          </argLine>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-
+                <configuration>
+                    <jvmArguments>
+                        -javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/0.8.13/org.jacoco.agent-0.8.13-runtime.jar=destfile=${project.build.directory}/jacoco.exec,includes=*,output=file
+                    </jvmArguments>
+                </configuration>
             </plugin>
 
         </plugins>
