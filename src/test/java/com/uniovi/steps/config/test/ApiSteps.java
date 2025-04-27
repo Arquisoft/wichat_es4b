@@ -27,6 +27,8 @@ public class ApiSteps extends Wichat_IntegrationTests {
 
     @Then("I should see the api key")
     public void iShouldSeeTheApiKey() {
+        List<WebElement> elements = SeleniumUtils.waitLoadElementsByXpath(driver, "/html/body/div/div/form/div/div/div", 10);
+        elements.get(0).click();
         SeleniumUtils.waitLoadElementsBy(driver, "h2", p.getString("navbar.profile.apikey", PropertiesExtractor.getSPANISH()), 10);
     }
 
