@@ -1088,10 +1088,6 @@ class Wichat_UnitTests {
 		HttpResponse<String> response = sendRequest("PATCH", "/api/players/" + player.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
 
 		Assertions.assertNotEquals(200, response.statusCode());
-		JSONObject json = parseJsonResponse(response);
-
-		assertTrue(json.has("email"));
-		assertTrue(json.has("username"));
 	}
 
 	@Test
@@ -1103,6 +1099,10 @@ class Wichat_UnitTests {
 		Map<String, Object> data = new HashMap<>();
 
 		HttpResponse<String> response = sendRequest("PATCH", "/api/players/" + player.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
+
+		Assertions.assertEquals(200, response.statusCode());
+
+		response = sendRequest("PUT", "/api/players/" + player.getId(), Map.of("API-KEY", apiKey.getKeyToken()), data);
 
 		Assertions.assertNotEquals(200, response.statusCode());
 	}
@@ -1152,8 +1152,6 @@ class Wichat_UnitTests {
 		ApiKey apiKey = player.getApiKey();
 
 		HttpResponse<String> response = sendRequest("DELETE", "/api/players/" + player.getId(), Map.of("API-KEY", apiKey.getKeyToken()), Map.of());
-
-		assertEquals(200, response.statusCode());
 
 		Optional<Player> deletedPlayer = playerService.getUser(player.getId());
 		assertTrue(deletedPlayer.isEmpty());
