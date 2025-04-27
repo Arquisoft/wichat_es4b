@@ -62,9 +62,8 @@ jobs:
       - name: Check listening ports
         run: ss -tuln
 
-      - name: Run tests
-        run: |
-          ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+      - name: Run Tests
+        run: ./mvnw -B verify -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
         env:
           SPRING_PROFILES_ACTIVE: test
           headless: true
@@ -87,9 +86,9 @@ jobs:
             if ps -p "$PID" > /dev/null; then
               kill "$PID"
             fi
-          fi          
+          fi
 
       - if: ${{ github.actor != 'dependabot[bot]' }}
         name: Collect Jacoco report and send to Sonar
         run: |
-          ./mvnw org.jacoco:jacoco-maven-plugin:report sonar:sonar -Dsonar.projectKey=Arquisoft_wichat_es4b -Dsonar.organization=arquisoft -Dsonar.branch.name=${{ github.head_ref || github.ref_name }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }} -Dspring.profiles.active=test
+          ./mvnw sonar:sonar -Dsonar.projectKey=Arquisoft_wichat_es4b -Dsonar.organization=arquisoft -Dsonar.branch.name=${{ github.head_ref || github.ref_name }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }} -Dsonar.jacoco.reportPaths=${{ github.workspace }}/target/jacoco-integration.exec -Dspring.profiles.active=test
