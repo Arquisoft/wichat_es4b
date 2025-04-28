@@ -91,7 +91,7 @@ jobs:
       - if: ${{ github.actor != 'dependabot[bot]' }}
         name: Collect Jacoco report and send to Sonar
         run: |
-          ./mvnw org.jacoco:jacoco-maven-plugin:report sonar \
+          ./mvnw org.jacoco:jacoco-maven-plugin:report sonar:sonar \
             -Dsonar.projectKey=Arquisoft_wichat_es4b \
             -Dsonar.organization=arquisoft \
             -Dsonar.branch.name=${{ github.head_ref || github.ref_name }} \

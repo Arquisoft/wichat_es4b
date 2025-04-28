@@ -15,6 +15,7 @@
     <description>wichat_es4b</description>
     <properties>
         <java.version>21</java.version>
+        <jacoco.version>0.8.13</jacoco.version>
         <sonar.sources>src/main/java,src/test/resources/features</sonar.sources>
         <sonar.exclusions>**/CustomErrorController.java,**/InsertSampleDataService.java</sonar.exclusions>
         <jacoco-agent.destfile>${project.build.directory}/jacoco.exec</jacoco-agent.destfile>
@@ -124,6 +125,7 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
+            <version>1.14.5</version>
         </dependency>
     </dependencies>
 
@@ -137,7 +139,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.13</version>
+                <version>${jacoco.version}</version>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
@@ -223,7 +225,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <jvmArguments>
-                        -javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/0.8.13/org.jacoco.agent-0.8.13-runtime.jar=destfile=${project.build.directory}/jacoco.exec,includes=*,output=file
+                        -javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${project.build.directory}/jacoco.exec,includes=*,output=file
                     </jvmArguments>
                 </configuration>
             </plugin>
