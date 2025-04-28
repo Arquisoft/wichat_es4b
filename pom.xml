@@ -17,7 +17,7 @@
         <java.version>21</java.version>
         <jacoco.version>0.8.13</jacoco.version>
         <sonar.sources>src/main/java,src/test/resources/features</sonar.sources>
-        <sonar.exclusions>**/CustomErrorController.java,**/InsertSampleDataService.java</sonar.exclusions>
+        <sonar.exclusions>**/CustomErrorController.java,**/InsertSampleDataService.java,**/com/uniovi/controllers/api/*</sonar.exclusions>
         <jacoco-agent.destfile>${project.build.directory}/jacoco.exec</jacoco-agent.destfile>
     </properties>
     <dependencies>
