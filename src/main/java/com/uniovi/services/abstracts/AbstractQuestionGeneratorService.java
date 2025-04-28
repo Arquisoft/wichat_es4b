@@ -20,96 +20,98 @@ import java.util.Deque;
 
 public abstract class AbstractQuestionGeneratorService<S extends QuestionService<?, ?>> {
 
-    public final String JSONFilePath;
+	public final String JSONFilePath;
 
-    protected final S questionService;
-    protected final Environment environment;
-    protected final Deque<QuestionType> types = new ArrayDeque<>();
-    protected JsonNode json;
-    protected boolean started;
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+	protected final S questionService;
+	protected final Environment environment;
+	protected final Deque<QuestionType> types = new ArrayDeque<>();
+	protected JsonNode json;
+	protected boolean started;
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    public AbstractQuestionGeneratorService(S questionService, Environment environment, String JSONFilePath) throws IOException {
-        this.questionService = questionService;
-        this.environment = environment;
-        this.JSONFilePath = JSONFilePath;
-        setQuestionGeneratorService();
-        parseQuestionTypes();
-        this.started = true;
-    }
+	protected AbstractQuestionGeneratorService(S questionService, Environment environment,
+											   String JSONFilePath) throws IOException {
+		this.questionService = questionService;
+		this.environment     = environment;
+		this.JSONFilePath    = JSONFilePath;
+		setQuestionGeneratorService();
+		parseQuestionTypes();
+		this.started = true;
+	}
 
-    protected abstract void setQuestionGeneratorService();
-
-
-    private void parseQuestionTypes() throws IOException {
-        if (json == null) {
-            Resource resource = new ClassPathResource(JSONFilePath);
-            ObjectMapper objectMapper = new ObjectMapper();
-            json = objectMapper.readTree(resource.getInputStream());
-        }
-        JsonNode categories = json.findValue("categories");
-        for (JsonNode category : categories) {
-            String categoryName = category.get("name").textValue();
-            Category cat = new Category(categoryName);
-            JsonNode questionsNode = category.findValue("questions");
-            for (JsonNode question : questionsNode) {
-                types.push(new QuestionType(question, cat));
-            }
-        }
-    }
-
-    private void generateAllQuestions() throws IOException {
-        started = true;
-        resetGeneration();
-    }
-
-    @Transactional
-    public void generateQuestions() throws IOException, InterruptedException {
-        if (types.isEmpty()) {
-            return;
-        }
-
-        if (started) {
-            started = false;
-            questionService.deleteAllQuestions();
-        }
-
-        if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> (env.equalsIgnoreCase("test")))) {
-            log.info("Test profile active, skipping sample data insertion");
-            return;
-        }
-
-        processQuestions();
-
-    }
-
-    @Transactional
-    protected abstract void processQuestions() throws IOException, InterruptedException;
+	protected abstract void setQuestionGeneratorService();
 
 
-    @Transactional
-    public abstract void generateTestQuestions() throws IOException, InterruptedException;
+	private void parseQuestionTypes() throws IOException {
+		if (json == null) {
+			Resource resource = new ClassPathResource(JSONFilePath);
+			ObjectMapper objectMapper = new ObjectMapper();
+			json = objectMapper.readTree(resource.getInputStream());
+		}
+		JsonNode categories = json.findValue("categories");
+		for (JsonNode category : categories) {
+			String categoryName = category.get("name").textValue();
+			Category cat = new Category(categoryName);
+			JsonNode questionsNode = category.findValue("questions");
+			for (JsonNode question : questionsNode) {
+				types.push(new QuestionType(question, cat));
+			}
+		}
+	}
 
-    @Transactional
-    public abstract void generateTestQuestions(String cat);
+	private void generateAllQuestions() throws IOException {
+		started = true;
+		resetGeneration();
+	}
 
-    public void setJsonGeneration(JsonNode json) {
-        this.json = json;
-    }
+	@Transactional
+	public void generateQuestions() throws IOException, InterruptedException {
+		if (types.isEmpty()) {
+			return;
+		}
 
-    public void resetGeneration() throws IOException {
-        types.clear();
-        parseQuestionTypes();
-    }
+		if (started) {
+			started = false;
+			questionService.deleteAllQuestions();
+		}
 
-    public JsonNode getJsonGeneration() {
-        return json;
-    }
+		if (Arrays.stream(environment.getActiveProfiles())
+				.anyMatch(env -> (env.equalsIgnoreCase("test")))) {
+			log.info("Test profile active, skipping sample data insertion");
+			return;
+		}
 
-    @Getter
-    @AllArgsConstructor
-    protected static class QuestionType {
-        private final JsonNode question;
-        private final Category category;
-    }
+		processQuestions();
+
+	}
+
+	@Transactional
+	protected abstract void processQuestions() throws IOException, InterruptedException;
+
+
+	@Transactional
+	public abstract void generateTestQuestions() throws IOException, InterruptedException;
+
+	@Transactional
+	public abstract void generateTestQuestions(String cat);
+
+	public void setJsonGeneration(JsonNode json) {
+		this.json = json;
+	}
+
+	public void resetGeneration() throws IOException {
+		types.clear();
+		parseQuestionTypes();
+	}
+
+	public JsonNode getJsonGeneration() {
+		return json;
+	}
+
+	@Getter
+	@AllArgsConstructor
+	protected static class QuestionType {
+		private final JsonNode question;
+		private final Category category;
+	}
 }
