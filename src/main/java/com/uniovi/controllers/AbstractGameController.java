@@ -112,8 +112,8 @@ public abstract class AbstractGameController<T extends AbstractQuestion<?>, Q ex
 	 * Metodos adicionales
 	 */
 
-	protected void checkUpdateGameSession(AbstractGameSession<T> gameSession,
-										  Long idQuestion, Long idAnswer) {
+	public void checkUpdateGameSession(AbstractGameSession<T> gameSession,
+                                       Long idQuestion, Long idAnswer) {
 		if (!gameSession.isAnswered(gameSession.getCurrentQuestion())) {
 			gameSession.addAnsweredQuestion(gameSession.getCurrentQuestion());
 
@@ -130,17 +130,17 @@ public abstract class AbstractGameController<T extends AbstractQuestion<?>, Q ex
 		return gamesessionStr;
 	}
 
-	protected Q getSessionAttribute(HttpSession session) {
+	public Q getSessionAttribute(HttpSession session) {
 		return (Q) session.getAttribute(getGamesessionStr());
 	}
 
-	protected void addQuestionAttributes(Model model, Q gameSession) {
+	public void addQuestionAttributes(Model model, Q gameSession) {
 		model.addAttribute("question", gameSession.getCurrentQuestion());
 		model.addAttribute("questionDuration", getRemainingTime(gameSession));
 	}
 
 
-	protected Player getLoggedInPlayer(Principal principal) {
+	public Player getLoggedInPlayer(Principal principal) {
 		Optional<Player> player = playerService.getUserByUsername(principal.getName());
 		return player.orElse(null);
 	}
@@ -150,11 +150,11 @@ public abstract class AbstractGameController<T extends AbstractQuestion<?>, Q ex
 				.plusSeconds(questionService.getSecondsPerQuestion())).toSeconds();
 	}
 
-	protected boolean timeOut(AbstractGameSession<?> gameSession) {
+	public boolean timeOut(AbstractGameSession<?> gameSession) {
 		return getRemainingTime(gameSession) <= 0;
 	}
 
-	protected boolean checkUpdateGameSession(Q gameSession, HttpSession session) {
+	public boolean checkUpdateGameSession(Q gameSession, HttpSession session) {
 		// if time since last question started is greater than the time per question, add a new question (or check for game finish)
 		if (timeOut(gameSession) && gameSession.getQuestionsToAnswer().isEmpty() &&
 				gameSession.getCurrentQuestion() != null) {
