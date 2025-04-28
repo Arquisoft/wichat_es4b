@@ -15,23 +15,23 @@ import lombok.Setter;
 @NoArgsConstructor
 public abstract class AbstractAnswer implements JsonEntity {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+	@Id
+	@GeneratedValue
+	private Long id;
 
-    @JsonIgnore
-    private String text;
+	@JsonIgnore
+	private String text;
 
-    @JsonIgnore
-    private boolean correct;
+	@JsonIgnore
+	private boolean correct;
 
-    public AbstractAnswer(String text, boolean correct) {
-        this.text = text;
-        this.correct = correct;
-    }
+	protected AbstractAnswer(String text, boolean correct) {
+		this.text    = text;
+		this.correct = correct;
+	}
 
-    @Override
-    public String toString() {
-        return text;
-    }
+	@Override
+	public String toString() {
+		return text;
+	}
 }

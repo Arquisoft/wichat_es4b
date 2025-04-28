@@ -2,12 +2,11 @@ package com.uniovi.test.cobertura;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.uniovi.entities.*;
-import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -305,7 +304,8 @@ public class EntitiesCoverageTests {
 		List<Answer> answers = List.of(a1, a2, a3);
 
 		// Crear una pregunta con texto
-		Question question = new Question("What is the capital of France?", answers, a1, category, language);
+		Question question = new Question("What is the capital of France?", answers, a1,
+										 category, language);
 
 		// Verificaciones básicas
 		assertEquals("What is the capital of France?", question.getStatement());
@@ -333,7 +333,9 @@ public class EntitiesCoverageTests {
 		List<AnswerImage> imageAnswers = List.of(ai1, ai2, ai3);
 
 		// Crear una pregunta con imagen
-		QuestionImage questionImage = new QuestionImage("Which one is a cat?", imageAnswers, ai1, category, language, "cat_question.jpg");
+		QuestionImage questionImage = new QuestionImage("Which one is a cat?",
+														imageAnswers, ai1, category,
+														language, "cat_question.jpg");
 
 		// Verificaciones básicas
 		assertEquals("Which one is a cat?", questionImage.getStatement());

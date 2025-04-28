@@ -14,9 +14,12 @@ import org.springframework.ui.Model;
 import java.security.Principal;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Optional;
 
 public abstract class AbstractGameController<T extends AbstractQuestion<?>, Q extends AbstractGameSession<T>, E extends QuestionDto> {
+
+	protected static final String ATTR_SCORE = "score";
+
 
 	private static final String GAMESESSION_STR = "gameSession";
 
@@ -31,17 +34,25 @@ public abstract class AbstractGameController<T extends AbstractQuestion<?>, Q ex
 	 * Constructores Services
 	 */
 
-	public AbstractGameController(PlayerService playerService, AbstractMultiplayerSessionService<T> multiplayerSessionService, GameSessionService<Q> gameSessionService, QuestionService<T, E> questionService, String gamesessionStr) {
-		this.playerService = playerService;
+	protected AbstractGameController(PlayerService playerService,
+									 AbstractMultiplayerSessionService<T> multiplayerSessionService,
+									 GameSessionService<Q> gameSessionService,
+									 QuestionService<T, E> questionService,
+									 String gamesessionStr) {
+		this.playerService             = playerService;
 		this.multiplayerSessionService = multiplayerSessionService;
-		this.gameSessionService = gameSessionService;
-		this.questionService = questionService;
+		this.gameSessionService        = gameSessionService;
+		this.questionService           = questionService;
 
 		this.gamesessionStr = gamesessionStr;
 	}
 
-	public AbstractGameController(PlayerService playerService, AbstractMultiplayerSessionService<T> multiplayerSessionService, GameSessionService<Q> gameSessionService, QuestionService<T, E> questionService) {
-		this(playerService, multiplayerSessionService, gameSessionService, questionService, GAMESESSION_STR);
+	protected AbstractGameController(PlayerService playerService,
+									 AbstractMultiplayerSessionService<T> multiplayerSessionService,
+									 GameSessionService<Q> gameSessionService,
+									 QuestionService<T, E> questionService) {
+		this(playerService, multiplayerSessionService, gameSessionService,
+			 questionService, GAMESESSION_STR);
 	}
 
 	/*
@@ -51,45 +62,47 @@ public abstract class AbstractGameController<T extends AbstractQuestion<?>, Q ex
 	/*
 	 * Multiplayer
 	 */
-
-	public String createMultiplayerGame(HttpSession session, Principal principal) {
-		Optional<Player> player = playerService.getUserByUsername(principal.getName());
-		if (player.isEmpty()) {
-			// Handle the case where the player is not found
-			return "redirect:/";
-		}
-		Player p = player.get();
-		String code = "" + playerService.createMultiplayerGame(p.getId());
-		multiplayerSessionService.multiCreate(code, p.getId());
-		session.setAttribute("multiplayerCode", code);
-		return "redirect:/game/lobby";
-	}
-
-	public Map<String, String> endMultiplayerGameTable(String code) {
-		Map<Player, Integer> playerScores = multiplayerSessionService.getPlayersWithScores(Integer.parseInt(code));
-		Map<String, String> playersNameWithScore = new HashMap<>();
-		for (Map.Entry<Player, Integer> player : playerScores.entrySet()) {
-			String playerName = player.getKey().getUsername();
-			String playerScoreValue;
-			if (player.getValue() == -1) {
-				playerScoreValue = "N/A";
-			} else {
-				playerScoreValue = "" + player.getValue();
-			}
-			playersNameWithScore.put(playerName, playerScoreValue);
-		}
-		return playersNameWithScore;
-	}
-
-	public List<String> updatePlayerList(String code) {
-		Map<Player, Integer> players = multiplayerSessionService.getPlayersWithScores(Integer.parseInt(code));
-		List<String> playerNames = new ArrayList<>();
-		for (Map.Entry<Player, Integer> player : players.entrySet()) {
-			playerNames.add(player.getKey().getUsername());
-		}
-		Collections.sort(playerNames);
-		return playerNames;
-	}
+	//
+	//	public String createMultiplayerGame(HttpSession session, Principal principal) {
+	//		Optional<Player> player = playerService.getUserByUsername(principal.getName());
+	//		if (player.isEmpty()) {
+	//			// Handle the case where the player is not found
+	//			return "redirect:/";
+	//		}
+	//		Player p = player.get();
+	//		String code = "" + playerService.createMultiplayerGame(p.getId());
+	//		multiplayerSessionService.multiCreate(code, p.getId());
+	//		session.setAttribute("multiplayerCode", code);
+	//		return "redirect:/game/lobby";
+	//	}
+	//
+	//	public Map<String, String> endMultiplayerGameTable(String code) {
+	//		Map<Player, Integer> playerScores = multiplayerSessionService.getPlayersWithScores(
+	//				Integer.parseInt(code));
+	//		Map<String, String> playersNameWithScore = new HashMap<>();
+	//		for (Map.Entry<Player, Integer> player : playerScores.entrySet()) {
+	//			String playerName = player.getKey().getUsername();
+	//			String playerScoreValue;
+	//			if (player.getValue() == -1) {
+	//				playerScoreValue = "N/A";
+	//			} else {
+	//				playerScoreValue = "" + player.getValue();
+	//			}
+	//			playersNameWithScore.put(playerName, playerScoreValue);
+	//		}
+	//		return playersNameWithScore;
+	//	}
+	//
+	//	public List<String> updatePlayerList(String code) {
+	//		Map<Player, Integer> players = multiplayerSessionService.getPlayersWithScores(
+	//				Integer.parseInt(code));
+	//		List<String> playerNames = new ArrayList<>();
+	//		for (Map.Entry<Player, Integer> player : players.entrySet()) {
+	//			playerNames.add(player.getKey().getUsername());
+	//		}
+	//		Collections.sort(playerNames);
+	//		return playerNames;
+	//	}
 
 
 
@@ -99,11 +112,13 @@ public abstract class AbstractGameController<T extends AbstractQuestion<?>, Q ex
 	 * Metodos adicionales
 	 */
 
-	protected void checkUpdateGameSession(AbstractGameSession<T> gameSession, Long idQuestion, Long idAnswer) {
+	protected void checkUpdateGameSession(AbstractGameSession<T> gameSession,
+										  Long idQuestion, Long idAnswer) {
 		if (!gameSession.isAnswered(gameSession.getCurrentQuestion())) {
 			gameSession.addAnsweredQuestion(gameSession.getCurrentQuestion());
 
-			if (idAnswer == -1 || timeOut(gameSession) || !questionService.checkAnswer(idQuestion, idAnswer)) {
+			if (idAnswer == -1 || timeOut(gameSession) ||
+					!questionService.checkAnswer(idQuestion, idAnswer)) {
 				gameSession.addQuestion(false, 0);
 			} else {
 				gameSession.addQuestion(true, getRemainingTime(gameSession));
@@ -131,7 +146,8 @@ public abstract class AbstractGameController<T extends AbstractQuestion<?>, Q ex
 	}
 
 	protected int getRemainingTime(AbstractGameSession<?> gameSession) {
-		return (int) Duration.between(LocalDateTime.now(), gameSession.getFinishTime().plusSeconds(questionService.getSecondsPerQuestion())).toSeconds();
+		return (int) Duration.between(LocalDateTime.now(), gameSession.getFinishTime()
+				.plusSeconds(questionService.getSecondsPerQuestion())).toSeconds();
 	}
 
 	protected boolean timeOut(AbstractGameSession<?> gameSession) {
@@ -140,7 +156,8 @@ public abstract class AbstractGameController<T extends AbstractQuestion<?>, Q ex
 
 	protected boolean checkUpdateGameSession(Q gameSession, HttpSession session) {
 		// if time since last question started is greater than the time per question, add a new question (or check for game finish)
-		if (timeOut(gameSession) && gameSession.getQuestionsToAnswer().isEmpty() && gameSession.getCurrentQuestion() != null) {
+		if (timeOut(gameSession) && gameSession.getQuestionsToAnswer().isEmpty() &&
+				gameSession.getCurrentQuestion() != null) {
 			gameSession.addQuestion(false, 0);
 			gameSession.addAnsweredQuestion(gameSession.getCurrentQuestion());
 			if (gameSession.getQuestionsToAnswer().isEmpty()) {
