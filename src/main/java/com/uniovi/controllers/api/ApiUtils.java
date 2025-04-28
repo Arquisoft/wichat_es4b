@@ -25,12 +25,12 @@ import java.util.Map;
 public class ApiUtils {
 
 
-	ApiKey getApiKeyFromParams(ApiKeyService apiKeyService, Map<String, String> params) {
+	public ApiKey getApiKeyFromParams(ApiKeyService apiKeyService, Map<String, String> params) {
 		return (!params.containsKey("apiKey")) ? null : apiKeyService.getApiKey(
 				params.get("apiKey"));
 	}
 
-	String resToError(HttpServletResponse response, int status, String message)
+	public String resToError(HttpServletResponse response, int status, String message)
 			throws JsonProcessingException {
 		response.setStatus(status);
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -38,14 +38,14 @@ public class ApiUtils {
 		return objectMapper.writeValueAsString(error);
 	}
 
-	String responseForAPiKeyNull(HttpServletResponse response)
+	public String responseForAPiKeyNull(HttpServletResponse response)
 			throws JsonProcessingException {
 		return resToError(response, HttpServletResponse.SC_UNAUTHORIZED,
 						  "Invalid API key");
 	}
 
-	String checkErrorForPassword(SignUpValidator signUpValidator,
-								 HttpServletResponse response, PlayerDto playerDto) {
+	public String checkErrorForPassword(SignUpValidator signUpValidator,
+                                        HttpServletResponse response, PlayerDto playerDto) {
 		playerDto.setPasswordConfirm(playerDto.getPassword());
 
 		Errors err = new SimpleErrors(playerDto);
@@ -54,18 +54,18 @@ public class ApiUtils {
 		return (err.hasErrors()) ? resToError(response, err) : null;
 	}
 
-	boolean isAdmin(ApiKey apiKey) {
+	public boolean isAdmin(ApiKey apiKey) {
 		return apiKey != null &&
 				apiKey.getPlayer().getRoles().contains(new Role("ROLE_ADMIN"));
 	}
 
-	boolean isAdminOrOwn(ApiKey apiKey, Long id) {
+	public boolean isAdminOrOwn(ApiKey apiKey, Long id) {
 		return apiKey.getPlayer().getId().equals(id) || isAdmin(apiKey);
 	}
 
-	String checkErrorForImageQuestion(QuestionValidator questionValidator,
-									  QuestionImageDto question,
-									  HttpServletResponse response)
+	public String checkErrorForImageQuestion(QuestionValidator questionValidator,
+                                             QuestionImageDto question,
+                                             HttpServletResponse response)
 			throws JsonProcessingException {
 		//Compruebo los casos genericos
 		String err = checkErrorForBasicQuestion(questionValidator, question, response);
