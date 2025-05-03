@@ -27,3 +27,4 @@ The load tests have been conducted with user loads of 1, 250, 1000, 2000, and 50
 By conducting these load tests, we aim to identify potential bottlenecks and ensure that our website can handle high traffic volumes effectively, providing a seamless experience for all users.
 
 ==== Login
+.1 user
