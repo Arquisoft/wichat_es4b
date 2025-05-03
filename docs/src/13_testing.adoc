@@ -2,13 +2,28 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 [[section-glossary]]
 == Testing
-To be able to achieve continuous delivery, we need to have a good test coverage. We need to have a good test coverage to be able to refactor the code without breaking it, to be able to deliver the software with confidence and to be able to deliver the software with quality.
+To ensure reliable and frequent software releases, comprehensive testing is essential. Robust test coverage enables safe code refactoring, instills confidence in deployments, and maintains high standards of software quality.
 
 === Unit Test
-In our project, we have implemented unit tests for various components of the application. The tests are written in Java and use the JUnit 5 framework for testing. We also use the Spring Boot Test framework for testing Spring Boot applications, which provides utilities and annotations to test the application in a way that is very close to its actual runtime behavior. The tests are located in the src/test/java/com/uniovi directory. The main test class is Wiq_UnitTests.java, which contains tests for various services and repositories in our application.
+The project utilizes JUnit 5 for isolated testing of individual application components, complemented by Spring Boot Test utilities to simulate the application's runtime behavior. The test classes are organized in the src/test/java/com/uniovi directory, with Wichat_UnitTests.java serving as the primary test suite for the service and repository layers.
 
 === Integration testing (E2E)
-For the integration tests, we have implemented tests using the Cucumber framework. Cucumber is a tool that supports Behavior-Driven Development (BDD), which allows you to write tests in a human-readable format. The tests are written in Gherkin, a language that is easy to understand and write. To implement each one of the cucumber steps we have used the Selenium framework, which allows us to interact with the web browser and automate the tests mocking the user’s behavior. All the cucumber files are located in the src/test/resources/features directory. We’ve implemented all the cucumber steps in the src/test/java/com/uniovi/steps directory. The main test class is CucumberRunnerTests.java in src/test/java/com/uniovi, which you should run to execute the integration tests.
+Behavior-Driven Development (BDD) principles guide our integration tests through Cucumber's Gherkin syntax, creating executable specifications in plain language. Selenium WebDriver automates browser interactions to simulate real user workflows. Feature definitions are stored in src/test/resources/features, with their implementations in src/test/java/com/uniovi/steps. The CucumberRunnerTests.java orchestrates these scenario validations.
 
 === Load test
-We have implemented load tests to evaluate the performance of our website under extreme situations. For this we use the "Gatling" application, which allows us to evaluate a set of web requests by simulating the number of users who make them simultaneously. All tests have been carried out with a load of 1, 250, 1000, 2000 and 5000 users, for the following use cases: login, show profile, show apikey, play an image game, show the global ranking, change the language, return to the index and log out.
+We have implemented load tests to evaluate the performance of our website under extreme conditions. For this purpose, we utilize the Gatling application, which enables us to simulate a specified number of users making web requests simultaneously.
+
+The load tests have been conducted with user loads of 1, 250, 1000, 2000, and 5000 users. The following use cases were evaluated during these tests:
+
+* **Login**: Assessing the performance and response time during user authentication.
+* **Show Profile**: Evaluating the loading speed and responsiveness when users access their profiles.
+* **Show API Key**: Testing the retrieval of API keys and ensuring secure access.
+* **Play an Image Game**: Measuring performance while users engage with interactive content.
+* **Show Global Image Ranking**: Analyzing the system's ability to display rankings under heavy load.
+* **Change Language**: Testing the responsiveness of the application when users switch languages.
+* **Return to Index**: Evaluating the performance of navigation back to the homepage.
+* **Log Out**: Assessing the efficiency of the logout process.
+
+By conducting these load tests, we aim to identify potential bottlenecks and ensure that our website can handle high traffic volumes effectively, providing a seamless experience for all users.
+
+==== Login
