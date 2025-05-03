@@ -81,7 +81,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>4.31.0</version> <!-- Use latest version -->
+            <version>4.32.0</version> <!-- Use latest version -->
         </dependency>
         <!-- WebDriver Manager -->
         <dependency>
