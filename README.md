@@ -3,6 +3,9 @@
 [![Deploy on release](https://github.com/Arquisoft/wichat_es4b/actions/workflows/release.yml/badge.svg)](https://github.com/Arquisoft/wichat_es4b/actions/workflows/release.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wichat_es4b&metric=alert_status)](https://sonarcloud.io/summary/overall?id=Arquisoft_wichat_es4b)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wichat_es4b&metric=coverage)](https://sonarcloud.io/summary/overall?id=Arquisoft_wichat_es4b)
+[![CodeScene Average Code Health](https://codescene.io/projects/66529/status-badges/average-code-health)](https://codescene.io/projects/66529)
+[![CodeScene System Mastery](https://codescene.io/projects/66529/status-badges/system-mastery)](https://codescene.io/projects/66529)
+[![CodeScene Hotspot Code Health](https://codescene.io/projects/66529/status-badges/hotspot-code-health)](https://codescene.io/projects/66529)
 
 ## Contributors:
 
