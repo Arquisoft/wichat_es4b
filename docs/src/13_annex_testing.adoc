@@ -1,7 +1,7 @@
 ifndef::imagesdir[:imagesdir: ../images]
 
 [[section-glossary]]
-== Testing
+== Annex I - Testing
 To ensure reliable and frequent software releases, comprehensive testing is essential. Robust test coverage enables safe code refactoring, instills confidence in deployments, and maintains high standards of software quality.
 
 === Unit Test
