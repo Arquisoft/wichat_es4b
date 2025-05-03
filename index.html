@@ -530,6 +530,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#section-glossary">12. Glossary</a></li>
+<li><a href="#section-glossary">13. Testing</a>
+<ul class="sectlevel2">
+<li><a href="#_unit_test">13.1. Unit Test</a></li>
+<li><a href="#_integration_testing_e2e">13.2. Integration testing (E2E)</a></li>
+<li><a href="#_load_test">13.3. Load test</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -2508,13 +2515,78 @@ The infrastructure features a Docker container running the Java Spring Boot appl
 </tr>
 </tbody>
 </table>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="section-glossary">13. Testing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To ensure reliable and frequent software releases, comprehensive testing is essential. Robust test coverage enables safe code refactoring, instills confidence in deployments, and maintains high standards of software quality.</p>
+</div>
+<div class="sect2">
+<h3 id="_unit_test">13.1. Unit Test</h3>
+<div class="paragraph">
+<p>The project utilizes JUnit 5 for isolated testing of individual application components, complemented by Spring Boot Test utilities to simulate the application&#8217;s runtime behavior. The test classes are organized in the src/test/java/com/uniovi directory, with Wichat_UnitTests.java serving as the primary test suite for the service and repository layers.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_integration_testing_e2e">13.2. Integration testing (E2E)</h3>
+<div class="paragraph">
+<p>Behavior-Driven Development (BDD) principles guide our integration tests through Cucumber&#8217;s Gherkin syntax, creating executable specifications in plain language. Selenium WebDriver automates browser interactions to simulate real user workflows. Feature definitions are stored in src/test/resources/features, with their implementations in src/test/java/com/uniovi/steps. The CucumberRunnerTests.java orchestrates these scenario validations.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_load_test">13.3. Load test</h3>
+<div class="paragraph">
+<p>We have implemented load tests to evaluate the performance of our website under extreme conditions. For this purpose, we utilize the Gatling application, which enables us to simulate a specified number of users making web requests simultaneously.</p>
+</div>
+<div class="paragraph">
+<p>The load tests have been conducted with user loads of 1, 250, 1000, 2000, and 5000 users. The following use cases were evaluated during these tests:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Login</strong>: Assessing the performance and response time during user authentication.</p>
+</li>
+<li>
+<p><strong>Show Profile</strong>: Evaluating the loading speed and responsiveness when users access their profiles.</p>
+</li>
+<li>
+<p><strong>Show API Key</strong>: Testing the retrieval of API keys and ensuring secure access.</p>
+</li>
+<li>
+<p><strong>Play an Image Game</strong>: Measuring performance while users engage with interactive content.</p>
+</li>
+<li>
+<p><strong>Show Global Image Ranking</strong>: Analyzing the system&#8217;s ability to display rankings under heavy load.</p>
+</li>
+<li>
+<p><strong>Change Language</strong>: Testing the responsiveness of the application when users switch languages.</p>
+</li>
+<li>
+<p><strong>Return to Index</strong>: Evaluating the performance of navigation back to the homepage.</p>
+</li>
+<li>
+<p><strong>Log Out</strong>: Assessing the efficiency of the logout process.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>By conducting these load tests, we aim to identify potential bottlenecks and ensure that our website can handle high traffic volumes effectively, providing a seamless experience for all users.</p>
+</div>
+<div class="sect3">
+<h4 id="_login">13.3.1. Login</h4>
+
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2025-05-03 12:11:45 UTC
+Last updated 2025-05-03 17:37:20 UTC
 </div>
 </div>
 </body>
