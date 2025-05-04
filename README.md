@@ -26,13 +26,15 @@ As a basis, we have used last year's project [wiq_es04b](https://github.com/Arqu
 
 2. Next, download [HSQLDB](https://sourceforge.net/projects/hsqldb/files/hsqldb/hsqldb_2_7/) and execute the `hsqldb/bin/runServer.bat` script to start the local database.
 
-3. With the database initialized you have to open a CMD in the project root directory and execute the following command `mvnw spring-boot:run`, to start the application.
+3. You need to obtain an API key from [Gemini](https://gemini.google.com) and assign it to the environment variable GEMINI_API_KEY.
 
-4. When the application is started the web app uses the port 3000. You can access the app through any web client using the following URL: http://localhost:3000/.
+4. With the database initialized you have to open a CMD in the project root directory and execute the following command `mvnw spring-boot:run`, to start the application.
 
-5. If you wish to execute the tests you have to open a CMD in the project root directory (you could use the same you used before), you have to execute `set EXCLUDE_JUNIT=true` if you also want to execute the E2E tests. Then to execute the tests you have to use the following command: `mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify`.
+5. When the application is started the web app uses the port 3000. You can access the app through any web client using the following URL: http://localhost:3000/.
 
-6. If you want to obtain the report you have to torn off the app and in the same CMD as before execute the following command: `mvnw org.jacoco:jacoco-maven-plugin:report`.
+6. If you wish to execute the tests you have to open a CMD in the project root directory (you could use the same you used before), you have to execute `set EXCLUDE_JUNIT=true` if you also want to execute the E2E tests. Then to execute the tests you have to use the following command: `mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify`.
+
+7. If you want to obtain the report you have to torn off the app and in the same CMD as before execute the following command: `mvnw org.jacoco:jacoco-maven-plugin:report`.
 
 #### With docker (faster):
 
