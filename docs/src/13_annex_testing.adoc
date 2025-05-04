@@ -13,7 +13,7 @@ Behavior-Driven Development (BDD) principles guide our integration tests through
 === Load test
 We have implemented load tests to evaluate the performance of our website under extreme conditions. For this purpose, we utilize the Gatling application, which enables us to simulate a specified number of users making web requests simultaneously.
 
-The load tests have been conducted with user loads of 1, 250, 1000, 2000, and 5000 users. The following use cases were evaluated during these tests:
+The load tests have been conducted with user loads of 10 and 1,000 users simultaneously, as well as ramping up to 200 users over 20 seconds and 2,000 users over 60 seconds. The following use cases were evaluated during these tests:
 
 * **Login**: Assessing the performance and response time during user authentication.
 * **Show Profile**: Evaluating the loading speed and responsiveness when users access their profiles.
@@ -21,9 +21,9 @@ The load tests have been conducted with user loads of 1, 250, 1000, 2000, and 50
 * **Play an Image Game**: Measuring performance while users engage with interactive content.
 * **Show Global Image Ranking**: Analyzing the system's ability to display rankings under heavy load.
 * **Change Language**: Testing the responsiveness of the application when users switch languages.
-* **Return to Index**: Evaluating the performance of navigation back to the homepage.
 * **Log Out**: Assessing the efficiency of the logout process.
 
 By conducting these load tests, we aim to identify potential bottlenecks and ensure that our website can handle high traffic volumes effectively, providing a seamless experience for all users.
 
 ==== Login
+.10 user
