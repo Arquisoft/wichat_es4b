@@ -885,7 +885,7 @@ The platform includes user registration, game history tracking, and various game
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Monitoring and deployment</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Deployment automation are required. The deployment must maintain high availability, meaning the infrastructure must be capable of handling potential failures with minimal service disruption, ensuring maximum uptime. Due to this, an online virtual machine provider must be selected for deployment.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Observability and deployment automation are required. The deployment must maintain high availability, meaning the infrastructure must be capable of handling potential failures with minimal service disruption, ensuring maximum uptime. Due to this, an online virtual machine provider must be selected for deployment.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Docker for deployment</em></p></td>
@@ -1744,10 +1744,7 @@ The infrastructure features a Docker container running the Java Spring Boot appl
 <p>Unit testing (JUnit 5, Mockito)</p>
 </li>
 <li>
-<p>Integration testing (Cucumber)</p>
-</li>
-<li>
-<p>E2E testing (Selenium)</p>
+<p>E2E testing (Selenium, Cucumber)</p>
 </li>
 </ul>
 </div>
@@ -1936,6 +1933,10 @@ These inherited decisions are documented <a href="https://github.com/Arquisoft/w
 <td class="tableblock halign-left valign-top"><p class="tableblock">The system should support automated testing to facilitate quality assurance and reduce errors.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#change-scenarios-monitoring"><strong>Monitoring &amp; Logging</strong></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The application should include monitoring and logging mechanisms to track performance and troubleshoot issues.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#usage-scenarios-security"><strong>Security</strong></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The system ensures that only registered users can access their data. API keys are private and user-specific. Personal data is protected, ensuring only authorized users can view their private information.</p></td>
 </tr>
@@ -2020,6 +2021,11 @@ These inherited decisions are documented <a href="https://github.com/Arquisoft/w
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="change-scenarios-testability"></a> Testability</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Developers implement automated tests.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The system supports comprehensive unit and integration testing.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="change-scenarios-monitoring"></a> Monitoring &amp; Logging</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System logs errors and performance metrics.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Logs provide real-time monitoring and facilitate troubleshooting.</p></td>
 </tr>
 </tbody>
 </table>
@@ -2531,7 +2537,7 @@ These inherited decisions are documented <a href="https://github.com/Arquisoft/w
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2025-05-05 20:17:03 UTC
+Last updated 2025-05-05 21:33:14 UTC
 </div>
 </div>
 </body>
