@@ -1815,12 +1815,22 @@ The infrastructure features a Docker container running the Java Spring Boot appl
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>This structured approach ensures:
-* <em>Security-first</em> design
-* <em>Maintainable</em> codebase through SOLID principles
-* <em>Scalable</em> infrastructure via containerization
-* <em>Engaging UX</em> through performance optimization</p>
+<div class="ulist">
+<div class="title">This structured approach ensures:</div>
+<ul>
+<li>
+<p><em>Security-first</em> design</p>
+</li>
+<li>
+<p><em>Maintainable</em> codebase through SOLID principles</p>
+</li>
+<li>
+<p><em>Scalable</em> infrastructure via containerization</p>
+</li>
+<li>
+<p><em>Engaging UX</em> through performance optimization</p>
+</li>
+</ul>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -2533,7 +2543,7 @@ These inherited decisions are documented <a href="https://github.com/Arquisoft/w
 <div class="sect3">
 <h4 id="_conclusions">13.3.8. Conclusions</h4>
 <div class="paragraph">
-<p>After executing the Gatling performance tests, we observed that the application performs significantly better in a local environment than when deployed on the Azure virtual machine. This outcome is expected, as local deployments benefit from minimal latency and faster resource access compared to cloud environments, which introduce additional network delays and potential resource contention.</p>
+<p>After executing the load tests, we observed that the application performs significantly better in a local environment than when deployed on the Azure virtual machine. This outcome is expected, as local deployments benefit from minimal latency and faster resource access compared to cloud environments, which introduce additional network delays and potential resource contention.</p>
 </div>
 <div class="paragraph">
 <p>In high-load scenarios—such as tests with 1,000 or 2,000 simulated users—the response times in the cloud setup were noticeably higher, and some endpoints occasionally experienced timeouts. This highlights the limitations of the current single-server architecture when handling large-scale concurrent traffic.</p>
@@ -2558,7 +2568,7 @@ These inherited decisions are documented <a href="https://github.com/Arquisoft/w
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2025-05-05 23:12:47 UTC
+Last updated 2025-05-05 23:27:15 UTC
 </div>
 </div>
 </body>
