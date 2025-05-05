@@ -8,6 +8,7 @@ import com.uniovi.services.impl.MultiplayerSessionImageServiceImpl;
 import com.uniovi.services.impl.PlayerServiceImpl;
 import com.uniovi.services.impl.QuestionImageServiceImpl;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -145,7 +146,7 @@ public class GameImageController
 		if (questionOpt.isPresent()) {
 			QuestionImage question = questionOpt.get();
 			return ((QuestionImageServiceImpl) questionService).getHintForImageQuestion(
-					question, llm); // Devuelve solo la pista como String
+					question, llm, LocaleContextHolder.getLocale().getLanguage()); // Devuelve solo la pista como String
 		}
 		return "No se encontró ninguna pista para esta pregunta.";
 	}

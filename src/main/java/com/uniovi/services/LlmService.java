@@ -1,5 +1,7 @@
 package com.uniovi.services;
 
+import jakarta.servlet.http.HttpSession;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -65,27 +67,34 @@ public class LlmService {
         }else{
             List<Map<String, Object>> contents = new ArrayList<>();
 
-// Primero agregamos todos los mensajes pasados del modelo
+            // Primero agregamos todos los mensajes pasados del modelo como hints anteriores
             if (llmAnswers != null && !llmAnswers.isEmpty()) {
+                int i = 1;
                 for (String answer : llmAnswers) {
                     contents.add(Map.of(
                             "role", "model",
                             PARTS, List.of(
-                                    Map.of("text", answer)
+                                    Map.of("text", "Hint " + (i++) + ": " + answer)
                             )
                     ));
                 }
             }
 
+            // Luego añadimos el mensaje actual del usuario, con aclaración de las pistas anteriores
             contents.add(Map.of(
                     "role", "user",
                     PARTS, List.of(
-                            Map.of("text", "You are a quiz game assistant that helps players on thinking what cities and locations are shown in the images. "
-                                    + "Provide soft clues as hints to guide the user without telling"
-                                    + " him the correct answer. Always answer in the language specified by the user. "
-                                    + "Hints must not be too helpful and only one and different from your last answer if you have answered me before."
-                                    + "Do not overextend in your answers, just tell me the hint directly without any conversational start"),
-                            Map.of("text", question)
+                            Map.of("text",
+                                    "You are acting as a helpful assistant in a quiz game where players must guess the name of a city or a location based on an image. "
+                                            + "Your role is to provide thoughtful and subtle hints to help guide the player toward the correct answer without revealing it directly. "
+                                            + "Each hint should be informative but not too obvious — the goal is to challenge the player, not to give away the answer. "
+                                            + "The user may ask in different languages, and you must always respond in the language specified in their question or selected via a language acronym. "
+                                            + "If you have already provided hints for the same image before, make sure your new hint is different and offers a new angle or perspective. "
+                                            + "You must only provide **one** hint per request. Avoid repeating earlier hints, and do not restate the question. "
+                                            + "Keep your response focused and concise: no greetings, no unnecessary introductions — just the hint itself. "
+                                            + "Do not say things like 'Here is your hint:' or 'I think it might be...' Just state the hint directly and naturally.\n\n"
+                                            + "The above messages are hints you have already given for this question. Make sure your new hint is different from them.\n\n"
+                                            + "Now, based on the following question and image, provide a new hint:\n" + question)
                     )
             ));
 

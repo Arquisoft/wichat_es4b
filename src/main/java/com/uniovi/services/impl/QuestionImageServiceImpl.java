@@ -229,15 +229,14 @@ public class QuestionImageServiceImpl
 		return SECONDS_PER_QUESTION;
 	}
 
-	public String getHintForImageQuestion(QuestionImage question, String ai) {
+	public String getHintForImageQuestion(QuestionImage question, String ai, String lang) {
 
-		String llmHint = ("Hola, tengo esta imagen: <" + question.getImageUrl() +
-								  ">, estas opciones de respuesta: " +
-								  question.getOptions().toString() +
-								  ".\nLa respuesta correcta es: " +
-								  question.getCorrectAnswer() +
-								  ".\nY quiero que me respondas en el idioma de este acrónimo: " +
-								  question.getLanguage());
+		String llmHint = (
+				"I have an image with the following URL: <" + question.getImageUrl() + ">.\n" +
+						"Here are the answer options: " + question.getOptions().toString() + ".\n" +
+						"The correct answer is: " + question.getCorrectAnswer() + ".\n" +
+						"Please provide your response in the language corresponding to this acronym: " + lang + "."
+		);
 		// Llamar al servicio LLM para obtener la pista usando Gemini.
 		if (actualQuestionImage == null) {
 			actualQuestionImage = question;

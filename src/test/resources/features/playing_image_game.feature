@@ -27,4 +27,27 @@ Feature: I play the image game as a logged user
        When I answer with a city
        Then I should see next question advance option
        When I go to next question
+       When I answer with a city
+       Then I should see next question advance option
+       When I go to next question
+       Then I should see one round advanced
+       When I answer with a city
+       Then I should see next question advance option
+       When I go to next question
+       Then I should see one round advanced
+       When I answer with a city
+       Then I should see next question advance option
+       When I go to next question
+       Then I should see one round advanced
+       When I answer with a city
+       Then I should see next question advance option
+       When I go to next question
+       Then I should see one round advanced
+       When I answer with a city
+       Then I should see next question advance option
+       When I go to next question
+       Then I should see one round advanced
+       When I answer with a city
+       Then I should see next question advance option
+       When I go to next question
        Then I should see the game finished

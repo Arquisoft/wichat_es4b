@@ -6,8 +6,8 @@
     <div class="row align-items-center">
         <!-- Columna de Pistas -->
         <div class="col-md-3">
-            <textarea id="hintBox" class="form-control" rows="5" readonly placeholder="Aquí aparecerán las pistas..." style="max-height: 450px; overflow-y: auto;"></textarea>
-            <button id="hintButton" class="btn btn-warning mt-2" onclick="disableHintButton()">Pedir pista</button>
+            <textarea id="hintBox" class="form-control" rows="5" readonly th:placeholder="#{llm.hint}" style="max-height: 450px; overflow-y: auto;"></textarea>
+            <button id="hintButton" class="btn btn-warning mt-2" onclick="disableHintButton()" th:text="#{llm.askhint}"> </button>
         </div>
 
         <!-- Columna de Imagen y Botones -->
@@ -73,7 +73,7 @@
         setTimeout(() => {
             button.disabled = false; // Lo reactiva después de 10s
             button.style.opacity = 1; // Restablece la opacidad
-        }, 5000);
+        }, 10000);
     }
 
     function initiateGameCounters() {

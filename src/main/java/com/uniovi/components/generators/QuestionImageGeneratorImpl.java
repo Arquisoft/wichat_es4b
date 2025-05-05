@@ -111,21 +111,26 @@ public class QuestionImageGeneratorImpl extends AbstractQuestionGenerator<Questi
 	}
 
 
-	public static List<String[]> getQueryResultL() {
+	public List<String[]> getQueryResultL() {
 		String ENDPOINT = "https://query.wikidata.org/sparql";
 
 		String QUERY = """
-				        SELECT DISTINCT ?capitalLabel ?image WHERE {
-				                            ?country wdt:P31 wd:Q6256;  # Es un país
-				                                     wdt:P36 ?capital;  # Tiene una capital
-				                                     wdt:P30 ?continent. # Pertenece a un continente
-				                            FILTER(?continent IN (wd:Q46, wd:Q49)) # Solo Europa y América
-				                            OPTIONAL {\s
-				                              ?capital wdt:P18 ?image. # Imagen representativa de la capital
-				                            }
-				                            SERVICE wikibase:label { bd:serviceParam wikibase:language "es". }
-				                          } LIMIT 50
-				""";
+			SELECT DISTINCT ?capitalLabel ?image WHERE {
+				?country wdt:P31 wd:Q6256;       # Es un país
+						 wdt:P36 ?capital;       # Tiene una capital
+						 wdt:P30 ?continent.     # Pertenece a un continente
+				FILTER(?continent IN (wd:Q46, wd:Q49)) # Solo Europa y América
+		
+				?capital wdt:P18 ?image.         # Imagen obligatoria de la capital
+		
+				SERVICE wikibase:label { 
+					bd:serviceParam wikibase:language \"""" + language + """
+				". 
+				}
+			} LIMIT 50
+		""";
+
+
 		List<String[]> resultados = new ArrayList<>();
 		try {
 			String urlStr = ENDPOINT + "?query=" + URLEncoder.encode(QUERY, StandardCharsets.UTF_8) + "&format=json";
@@ -163,6 +168,7 @@ public class QuestionImageGeneratorImpl extends AbstractQuestionGenerator<Questi
 
 		return resultados;
 	}
+
 
 //    private JsonNode getQueryResult(String query) throws IOException, InterruptedException {
 //        logger.info("Query: {}", query);

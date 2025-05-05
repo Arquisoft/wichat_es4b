@@ -24,6 +24,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -2261,7 +2262,7 @@ class Wichat_UnitTests {
 														"es",
 														"https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
 		String answer = questionImageService.getHintForImageQuestion(questionImage,
-																	 "Empathy");
+																	 "Empathy", "es");
 		Assertions.assertNotNull(answer);
 		assertFalse(answer.isEmpty());
 		assertFalse(answer.isBlank());
@@ -2278,7 +2279,7 @@ class Wichat_UnitTests {
 														"es",
 														"https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
 		String answer = questionImageService.getHintForImageQuestion(questionImage,
-																	 "Gemini");
+																	 "Gemini","es");
 		Assertions.assertNotNull(answer);
 		assertFalse(answer.isEmpty());
 		assertFalse(answer.isBlank());
@@ -2287,7 +2288,7 @@ class Wichat_UnitTests {
 		questionImage = new QuestionImage("", lanswer, a4, new Category(), "es",
 										  "https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
 		answer        = questionImageService.getHintForImageQuestion(questionImage,
-																	 "Gemini");
+																	 "Gemini","es");
 		Assertions.assertNotNull(answer);
 		assertFalse(answer.isEmpty());
 		assertFalse(answer.isBlank());
