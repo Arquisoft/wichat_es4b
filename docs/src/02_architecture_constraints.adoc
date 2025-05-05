@@ -50,6 +50,6 @@ ifndef::imagesdir[:imagesdir: ../images]
 |===
 | Constraints        | Explanations
 | _Scalability_          | The system must support multiple simultaneous users.
-| _Monitoring and deployment_         | Deployment automation are required. The deployment must maintain high availability, meaning the infrastructure must be capable of handling potential failures with minimal service disruption, ensuring maximum uptime. Due to this, an online virtual machine provider must be selected for deployment.
+| _Monitoring and deployment_         | Observability and deployment automation are required. The deployment must maintain high availability, meaning the infrastructure must be capable of handling potential failures with minimal service disruption, ensuring maximum uptime. Due to this, an online virtual machine provider must be selected for deployment.
 | _Docker for deployment_         | Docker is also used in the deployment process to ensure efficient management of production, testing, and development environments. This facilitates scalability and maintenance by allowing more precise control over dependencies and configurations.
 |===

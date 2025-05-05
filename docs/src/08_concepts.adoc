@@ -67,8 +67,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 === Development Concepts
 .Testing Strategy
 * Unit testing (JUnit 5, Mockito)
-* Integration testing (Cucumber)
-* E2E testing (Selenium)
+* E2E testing (Selenium, Cucumber)
 
 .CI/CD Pipeline
 * GitHub Actions workflow:
