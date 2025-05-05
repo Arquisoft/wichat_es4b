@@ -95,7 +95,7 @@ class QuestionImageServiceImplTest {
 		when(llmService.sendQuestionToLLM(anyString(), anyString(),
 										  anyList())).thenReturn("This is a hint");
 
-		String hint = questionService.getHintForImageQuestion(sampleQuestion, "Gemini","es");
+		String hint = questionService.getHintForImageQuestion(sampleQuestion, "AI_MODEL","es");
 
 		assertThat(hint).isEqualTo("This is a hint");
 		verify(llmService, times(1)).sendQuestionToLLM(anyString(), anyString(),

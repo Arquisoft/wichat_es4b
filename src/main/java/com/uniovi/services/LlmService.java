@@ -74,7 +74,7 @@ public class LlmService {
                     contents.add(Map.of(
                             "role", "model",
                             PARTS, List.of(
-                                    Map.of("text", "Hint " + (i++) + ": " + answer)
+                                    Map.of("text",  (i++) + ": " + answer)
                             )
                     ));
                 }

@@ -158,10 +158,10 @@ public class GameImageControllerTest {
     void getImageQuestionHint_ValidQuestion_ReturnsHint() {
         // Arrange
         when(questionService.getQuestion(1L)).thenReturn(Optional.of(question));
-        when(questionService.getHintForImageQuestion(question, "Gemini","es")).thenReturn("This is a test hint");
+        when(questionService.getHintForImageQuestion(question, "gpt4","es")).thenReturn("This is a test hint");
 
         // Act
-        String result = gameImageController.getImageQuestionHint(1L, "Gemini");
+        String result = gameImageController.getImageQuestionHint(1L, "gpt4");
 
         // Assert
         assertEquals("This is a test hint", result);
