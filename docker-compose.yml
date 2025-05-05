@@ -9,8 +9,8 @@ services:
         MYSQL_USER: ${MYSQL_USER:-wichat_es4b}
         MYSQL_PASSWORD: ${MYSQL_PASSWORD:-wichat_es4b}
         MYSQL_PORT: ${MYSQL_PORT:-3306}
-    volumes:
-      - db_data:/var/lib/mysql
+#    volumes:
+#      - db_data:/var/lib/mysql
     networks:
       - mynetwork
     restart: always
@@ -39,7 +39,7 @@ services:
       - ${KEYSTORE_PATH}:/certs/keystore.p12
 
   prometheus:
-    image: prom/prometheus
+    image: prom/prometheus:latest
     volumes:
       - prometheus_data:/prometheus
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
@@ -52,16 +52,15 @@ services:
     restart: always
 
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:latest
     volumes:
       - grafana_data:/var/lib/grafana
     environment:
-      - GF_SERVER_HTTP_PORT=9091
-      - GF_AUTH_DISABLE_LOGIN_FORM=true
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      GF_AUTH_DISABLE_LOGIN_FORM: 1
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
     ports:
-      - "9091:9091"
+      - "3000:3000"
     networks:
       - mynetwork
     depends_on:
