@@ -170,3 +170,17 @@ image:../images/gatling/logout_200_users_in_20_seconds.png[Logout with 200 users
 
 .2000 users in 60 seconds
 image:../images/gatling/logout_2000_users_in_60_seconds.png[Logout with 2000 users in 60 seconds]
+
+
+==== Conclusions
+After executing the Gatling performance tests, we observed that the application performs significantly better in a local environment than when deployed on the Azure virtual machine. This outcome is expected, as local deployments benefit from minimal latency and faster resource access compared to cloud environments, which introduce additional network delays and potential resource contention.
+
+In high-load scenarios—such as tests with 1,000 or 2,000 simulated users—the response times in the cloud setup were noticeably higher, and some endpoints occasionally experienced timeouts. This highlights the limitations of the current single-server architecture when handling large-scale concurrent traffic.
+
+A potential solution to improve scalability and performance would involve deploying multiple application servers behind a load balancer, distributing incoming user traffic more efficiently. However, such an architecture would also require a distributed MySQL setup, with techniques like replication or clustering, to avoid the database becoming a bottleneck under increased load. The coordination between multiple app servers and a distributed SQL backend introduces significant architectural complexity.
+
+Although technically feasible, implementing a horizontally scaled architecture with both load-balanced servers and a distributed MySQL database goes far beyond the scope and budget of this course. This includes added challenges in consistency, fault tolerance, and deployment orchestration.
+
+As an alternative, integrating a Content Delivery Network (CDN) could help reduce the load on the application by caching static assets closer to end users. While this approach is simpler than deploying a distributed system, it still introduces architectural complexity that goes beyond the intended learning scope of the project.
+
+In conclusion, while the tests demonstrate that the application behaves correctly under load, they also highlight the performance limitations of a single-instance deployment. More advanced scaling strategies such as load balancing and distributed SQL databases could improve performance, but their implementation would require infrastructure and financial resources not available within the constraints of this assignment.
