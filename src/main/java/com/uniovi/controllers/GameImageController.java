@@ -145,12 +145,8 @@ public class GameImageController
 		Optional<QuestionImage> questionOpt = questionService.getQuestion(id);
 		if (questionOpt.isPresent()) {
 			QuestionImage question = questionOpt.get();
-			String language = question.getLanguage();
-			if(LocaleContextHolder.getLocale().getLanguage()!=null){
-				language = LocaleContextHolder.getLocale().getLanguage();
-			}
 			return ((QuestionImageServiceImpl) questionService).getHintForImageQuestion(
-					question, llm, language); // Devuelve solo la pista como String
+					question, llm, LocaleContextHolder.getLocale().getLanguage()); // Devuelve solo la pista como String
 		}
 		return "No se encontró ninguna pista para esta pregunta.";
 	}
