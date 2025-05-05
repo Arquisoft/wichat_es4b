@@ -3,36 +3,11 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-architecture-constraints]]
 == Architecture Constraints
 
-
-ifdef::arc42help[]
-[role="arc42help"]
-****
-.Contents
-Any requirement that constraints software architects in their freedom of design and implementation decisions or decision about the development process. These constraints sometimes go beyond individual systems and are valid for whole organizations and companies.
-
-.Motivation
-Architects should know exactly where they are free in their design decisions and where they must adhere to constraints.
-Constraints must always be dealt with; they may be negotiable, though.
-
-.Form
-Simple tables of constraints with explanations.
-If needed you can subdivide them into
-technical constraints, organizational and political constraints and
-conventions (e.g. programming or versioning guidelines, documentation or naming conventions)
-
-
-.Further Information
-
-See https://docs.arc42.org/section-2/[Architecture Constraints] in the arc42 documentation.
-
-****
-endif::arc42help[]
-
 === Organizational Constraints
 
 [options="header",cols="1,3"]
 |===
-| Constraints        | Explanations        
+| Constraints        | Explanations
 | _Fixed data source_          | Questions, images, and hints must be generated exclusively from Wikidata data.
 | _External language model_         | A LLM accessed through a predefined API will be used, limiting the choice of models, customization options, and potential for fine-tuning or adaptation to specific needs.
 |===
@@ -41,7 +16,7 @@ endif::arc42help[]
 
 [options="header",cols="1,3"]
 |===
-| Constraints        | Explanations        
+| Constraints        | Explanations
 | _Mandatory web platform_          | The application must be accessible via web browsers and deployed online.
 | _Conversational hints logic_         | Hints must be generated while mitigating hallucinations using specific techniques, integrated with Wikidata.
 | _Docker for containerization_     | Docker must be used for application containerization, as the solution's architecture requires that all components be packaged into containers to ensure portability, isolation, and compatibility across environments
@@ -52,7 +27,7 @@ endif::arc42help[]
 
 [options="header",cols="1,3"]
 |===
-| Constraints        | Explanations        
+| Constraints        | Explanations
 | _Privacy compliance_          | User data must comply with regulations like GDPR.
 | _Data licensing_         | Images and data used must adhere to Wikidata licensing policies and ensure proper usage.
 |===
@@ -61,8 +36,8 @@ endif::arc42help[]
 
 [options="header",cols="1,3"]
 |===
-| Constraints        | Explanations       
-| _Fixed question format_          | Each question must have one correct answer and several incorrect ones generated automatically, with balanced and coherent options. 
+| Constraints        | Explanations
+| _Fixed question format_          | Each question must have one correct answer and several incorrect ones generated automatically, with balanced and coherent options.
 | _User registration_          | The system must include functionalities for registration, participation history, and statistics.
 | _Mandatory interaction_         | Users must interact with the system to obtain conversational hints about the questions.
 | _Time-limited answers_         | Each question must be answered within a set time, necessitating efficient interaction and time management design.
@@ -73,7 +48,7 @@ endif::arc42help[]
 
 [options="header",cols="1,3"]
 |===
-| Constraints        | Explanations        
+| Constraints        | Explanations
 | _Scalability_          | The system must support multiple simultaneous users.
 | _Monitoring and deployment_         | Observability and deployment automation are required. The deployment must maintain high availability, meaning the infrastructure must be capable of handling potential failures with minimal service disruption, ensuring maximum uptime. Due to this, an online virtual machine provider must be selected for deployment.
 | _Docker for deployment_         | Docker is also used in the deployment process to ensure efficient management of production, testing, and development environments. This facilitates scalability and maintenance by allowing more precise control over dependencies and configurations.
