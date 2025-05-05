@@ -14,7 +14,7 @@ This section outlines the key architectural decisions and strategies that shape 
 * **Frontend:** Thymeleaf for dynamic rendering within the MVC framework.
 * **Database:** HSQLDB for structured data storage.
 * **Authentication:** Spring Security with JWT for secure access control.
-* **Hosting & Deployment:**Docker and Docker Compose to ensure scalable, consistent, and efficient application deployment across environments.
+* **Hosting & Deployment:** Docker and Docker Compose to ensure scalable, consistent, and efficient application deployment across environments.
 * **Integration:** Wikidata API for question generation and an external LLM API for hints.
 
 === System Decomposition
