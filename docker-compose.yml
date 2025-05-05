@@ -60,7 +60,7 @@ services:
       GF_AUTH_ANONYMOUS_ENABLED: "true"
       GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
     ports:
-      - "9091:9091"
+      - "3000:3000"
     networks:
       - mynetwork
     depends_on:
