@@ -61,7 +61,9 @@
         fetch(`/game/image/hint/${questionId}/Gemini`)
             .then(response => response.text())
             .then(hint => {
-                document.getElementById("hintBox").value = hint;
+                let hintBox = document.getElementById("hintBox");
+                hintBox.value += (hintBox.value.trim() ? "\n" : "") + hint;
+                hintBox.scrollTop = hintBox.scrollHeight; // scroll automático al final
             })
             .catch(error => console.error("Error al obtener la pista:", error));
     });
@@ -71,7 +73,7 @@
         button.disabled = true; // Desactiva el botón
         button.style.opacity = 0.5; // Reduce la opacidad para indicar que está deshabilitado
         setTimeout(() => {
-            button.disabled = false; // Lo reactiva después de 10s
+            button.disabled = false; // Lo reactiva después de 7.5s
             button.style.opacity = 1; // Restablece la opacidad
         }, 7500);
     }

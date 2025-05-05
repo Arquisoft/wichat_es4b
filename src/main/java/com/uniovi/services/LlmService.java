@@ -74,7 +74,7 @@ public class LlmService {
                     contents.add(Map.of(
                             "role", "model",
                             PARTS, List.of(
-                                    Map.of("text",  (i++) + ": " + answer)
+                                    Map.of("text",  answer)
                             )
                     ));
                 }
@@ -93,7 +93,7 @@ public class LlmService {
                                             + "You must only provide **one** hint per request. Avoid repeating earlier hints, and do not restate the question. "
                                             + "Keep your response focused and concise: no greetings, no unnecessary introductions — just the hint itself. "
                                             + "Do not say things like 'Here is your hint:' or 'I think it might be...' Just state the hint directly and naturally.\n\n"
-                                            + "The above messages are hints you have already given for this question. Make sure your new hint is different from them.\n\n"
+                                            + "The above messages are hints you have already given for this question. Make sure your new hint is different from them and continuos the enumeration. "
                                             + "Now, based on the following question and image, provide a new hint:\n" + question)
                     )
             ));
