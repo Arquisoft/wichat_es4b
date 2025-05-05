@@ -26,18 +26,24 @@ As a basis, we have used last year's project [wiq_es04b](https://github.com/Arqu
 
 2. Next, download [HSQLDB](https://sourceforge.net/projects/hsqldb/files/hsqldb/hsqldb_2_7/) and execute the `hsqldb/bin/runServer.bat` script to start the local database.
 
-3. With the database initialized you have to open a CMD in the project root directory and execute the following command `mvnw spring-boot:run`, to start the application.
+3. You need to obtain an API key from [Gemini](https://gemini.google.com) and assign it to the environment variable `GEMINI_API_KEY`.
 
-4. When the application is started the web app uses the port 3000. You can access the app through any web client using the following URL: http://localhost:3000/.
+4. With the database initialized you have to open a CMD in the project root directory and execute the following command `mvnw spring-boot:run`, to start the application.
 
-5. If you wish to execute the tests you have to open a CMD in the project root directory (you could use the same you used before), you have to execute `set EXCLUDE_JUNIT=true` if you also want to execute the E2E tests. Then to execute the tests you have to use the following command: `mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify`.
+5. When the application is started the web app uses the port 3000. You can access the app through any web client using the following URL: http://localhost:3000/.
 
-6. If you want to obtain the report you have to torn off the app and in the same CMD as before execute the following command: `mvnw org.jacoco:jacoco-maven-plugin:report`.
+6. If you wish to execute the tests you have to open a CMD in the project root directory (you could use the same you used before), you have to execute `set EXCLUDE_JUNIT=true` if you also want to execute the E2E tests. Then to execute the tests you have to use the following command: `mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify`.
+
+7. If you want to obtain the report you have to torn off the app and in the same CMD as before execute the following command: `mvnw org.jacoco:jacoco-maven-plugin:report`.
 
 #### With docker (faster):
 
 > #### *Disclaimer: This method is faster but it is not recommended for development because it is harder to debug and to see the logs and it is harder to execute the tests.*
 
 1. First you need to have installed [docker](https://www.docker.com/#build) and docker [compose](https://docs.docker.com/compose/install/).
-2. Then you have to clone the repository using a CMD and the following command: `git clone https://github.com/Arquisoft/wichat_es4b.git` or using an IDE with Git integration or any other app of your preference.
-3. Then you have to open a CMD in the project root directory and execute the following command: `docker-compose up`. This is going to deploy the docker image that is in our repository. This docker will contain the app, a MySql database, Graphana and Prometheus. The app will be available in the port 443 https.
+
+3. Then you have to clone the repository using a CMD and the following command: `git clone https://github.com/Arquisoft/wichat_es4b.git` or using an IDE with Git integration or any other app of your preference.
+
+5. Next, you need to obtain an API key from [Gemini](https://gemini.google.com) and assign it to the environment variable used by docker-compose in the .env file as `GEMINI_API_KEY`.
+
+7. Then you have to open a CMD in the project root directory and execute the following command: `docker-compose up`. This is going to deploy the docker image that is in our repository. This docker will contain the app, a MySql database, Graphana and Prometheus. The app will be available in the port 443 https.
