@@ -23,7 +23,36 @@ The load tests have been conducted with user loads of 10 and 1,000 users simulta
 * **Change Language**: Testing the responsiveness of the application when users switch languages.
 * **Log Out**: Assessing the efficiency of the logout process.
 
+These load tests have been executed against both the locally deployed environment and the production-like environment hosted in a virtual machine on Microsoft Azure. This dual testing approach allows us to compare performance under controlled conditions and in a cloud-hosted infrastructure more similar to a real-world deployment.
+
 By conducting these load tests, we aim to identify potential bottlenecks and ensure that our website can handle high traffic volumes effectively, providing a seamless experience for all users.
 
 ==== Login
-.10 user
+
+===== Local deployment
+.10 users at once
+image:../images/locallogin_10_users_at_once.png[Local login with 10 users at once]
+
+.1000 users at once
+image:../images/locallogin_1000_users_at_once.png[Local login with 1000 users at once]
+
+.200 users in 20 seconds
+image:../images/locallogin_200_users_in_20_seconds.png[Local login with 200 users in 20 seconds]
+
+.2000 users in 60 seconds
+image:../images/locallogin_2000_users_in_60_seconds.png[Local login with 2000 users in 60 seconds]
+
+===== Cloud deployment
+.10 users at once
+image:../images/login_10_users_at_once.png[Login with 10 users at once]
+
+.1000 users at once
+image:../images/login_1000_users_at_once.png[Login with 1000 users at once]
+
+.200 users in 20 seconds
+image:../images/login_200_users_in_20_seconds.png[Login with 200 users in 20 seconds]
+
+.2000 users in 60 seconds
+image:../images/login_2000_users_in_60_seconds.png[Login with 2000 users in 60 seconds]
+
+==== Show Profile
