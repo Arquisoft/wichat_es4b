@@ -9,4 +9,4 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     scheme: https
     static_configs:
-      - targets: [ 'wikigame.es:443' ]
+      - targets: [ 'wichat.uksouth.cloudapp.azure.com:443' ]
