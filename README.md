@@ -26,7 +26,7 @@ As a basis, we have used last year's project [wiq_es04b](https://github.com/Arqu
 
 2. Next, download [HSQLDB](https://sourceforge.net/projects/hsqldb/files/hsqldb/hsqldb_2_7/) and execute the `hsqldb/bin/runServer.bat` script to start the local database.
 
-3. You need to obtain an API key from [Gemini](https://gemini.google.com) and assign it to the environment variable GEMINI_API_KEY.
+3. You need to obtain an API key from [Gemini](https://gemini.google.com) and assign it to the environment variable `GEMINI_API_KEY`.
 
 4. With the database initialized you have to open a CMD in the project root directory and execute the following command `mvnw spring-boot:run`, to start the application.
 
@@ -41,5 +41,9 @@ As a basis, we have used last year's project [wiq_es04b](https://github.com/Arqu
 > #### *Disclaimer: This method is faster but it is not recommended for development because it is harder to debug and to see the logs and it is harder to execute the tests.*
 
 1. First you need to have installed [docker](https://www.docker.com/#build) and docker [compose](https://docs.docker.com/compose/install/).
-2. Then you have to clone the repository using a CMD and the following command: `git clone https://github.com/Arquisoft/wichat_es4b.git` or using an IDE with Git integration or any other app of your preference.
-3. Then you have to open a CMD in the project root directory and execute the following command: `docker-compose up`. This is going to deploy the docker image that is in our repository. This docker will contain the app, a MySql database, Graphana and Prometheus. The app will be available in the port 443 https.
+
+3. Then you have to clone the repository using a CMD and the following command: `git clone https://github.com/Arquisoft/wichat_es4b.git` or using an IDE with Git integration or any other app of your preference.
+
+5. Next, you need to obtain an API key from [Gemini](https://gemini.google.com) and assign it to the environment variable used by docker-compose in the .env file as `GEMINI_API_KEY`.
+
+7. Then you have to open a CMD in the project root directory and execute the following command: `docker-compose up`. This is going to deploy the docker image that is in our repository. This docker will contain the app, a MySql database, Graphana and Prometheus. The app will be available in the port 443 https.
