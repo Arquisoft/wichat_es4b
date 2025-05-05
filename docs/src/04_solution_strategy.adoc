@@ -31,23 +31,18 @@ The application follows an MVC architecture with clearly defined layers:
 [options="header"]
 |===
 | Priority | Quality Goal | Strategy
-| High     | Scalability  | Load balancing, database connection pooling, and optimized queries.
+| Medium    | Scalability  | Load balancing, database connection pooling, and optimized queries.
 | High     | Performance  | Asynchronous processing with Spring Boot and caching mechanisms.
 | High     | Security     | Spring Security, encrypted storage, and role-based access control.
-| Medium   | Availability | Deployment with Kubernetes and monitoring tools.
+| Medium   | Availability | Deployment of the server on Azure Cloud Services for easy distribution over the internet, with control over when the server is active.
 | Medium   | Maintainability | Modular architecture with well-documented Spring Boot services.
 |===
 
 === Organizational Decisions
 * **Development Process:** Agile methodology with Scrum.
-* **Collaboration Tools:** GitHub for version control and Jira for task management.
-* **Testing Strategy:** Unit tests with JUnit, integration tests with Spring Test, and performance testing.
+* **Collaboration Tools:** GitHub for version control and GitHub kanban for work distribution.
+* **Testing Strategy:** Unit tests with JUnit and integration tests with Selenium + Cucumber.
 
 === Justification
 These decisions ensure that the system is **scalable, secure, and maintainable**, leveraging Spring Boot's powerful ecosystem for **enterprise-grade applications** while integrating **AI-powered hints and automated question generation**.
 
-=== References
-* https://docs.arc42.org/section-4/
-* https://www.wikidata.org/
-* https://spring.io/projects/spring-boot
-* https://github.com/Arquisoft/wiq_es04b

@@ -13,11 +13,9 @@ ifndef::imagesdir[:imagesdir: ../images]
 | link:#change-scenarios-maintainability[**Maintainability**] | The system must allow easy extension and modification to accommodate new features and improvements.
 | link:#usage-scenarios-availability[**Availability**] | The system should maintain at least 95% uptime, ensuring users can access the application reliably.
 | link:#usage-scenarios-reliability[**Reliability**] | The system should minimize errors or failures and provide consistent and accurate results to users.
-| link:#usage-scenarios-resilience[**Resilience**] | The system should recover from failures and continue operating in a degraded state when necessary.
 | link:#usage-scenarios-internationalization[**Internationalization**] | The application should support multiple languages and cultural adaptations for a global audience.
 | link:#change-scenarios-scalability[**Scalability**] | The system should be capable of handling increasing loads efficiently.
 | link:#change-scenarios-testability[**Testability**] | The system should support automated testing to facilitate quality assurance and reduce errors.
-| link:#change-scenarios-monitoring[**Monitoring & Logging**] | The application should include monitoring and logging mechanisms to track performance and troubleshoot issues.
 | link:#usage-scenarios-security[**Security**] | The system ensures that only registered users can access their data. API keys are private and user-specific. Personal data is protected, ensuring only authorized users can view their private information.
 |===
 
@@ -41,7 +39,5 @@ ifndef::imagesdir[:imagesdir: ../images]
 |===
 | **Scenario Category** | **Scenario** | **System Response**
 | [[change-scenarios-maintainability]] Maintainability | Developers add a new game mode. | Existing game modes remain unaffected, and the new mode integrates seamlessly.
-| [[change-scenarios-scalability]] Scalability | User traffic significantly increases. | The system dynamically scales to maintain performance.
 | [[change-scenarios-testability]] Testability | Developers implement automated tests. | The system supports comprehensive unit and integration testing.
-| [[change-scenarios-monitoring]] Monitoring & Logging | System logs errors and performance metrics. | Logs provide real-time monitoring and facilitate troubleshooting.
 |===

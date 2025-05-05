@@ -9,7 +9,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 |===
 | Constraints        | Explanations
 | _Fixed data source_          | Questions, images, and hints must be generated exclusively from Wikidata data.
-| _External language model_         | A LLM accessed through a predefined API will be used, limiting the choice of models, customization options, and potential for fine-tuning or adaptation to specific needs.
+| _External language model_         | A LLM accessed through a predefined API will be used, limiting the choice of models, customization options, and potential for fine-tuning or adaptation to specific application needs.
 |===
 
 === Technical Constraints
@@ -18,7 +18,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 |===
 | Constraints        | Explanations
 | _Mandatory web platform_          | The application must be accessible via web browsers and deployed online.
-| _Conversational hints logic_         | Hints must be generated while mitigating hallucinations using specific techniques, integrated with Wikidata.
+| _Conversational hints logic_      | Hints must be generated while mitigating hallucinations using specific techniques.
 | _Docker for containerization_     | Docker must be used for application containerization, as the solution's architecture requires that all components be packaged into containers to ensure portability, isolation, and compatibility across environments
 | _GitHub Actions for CI/CD_        | GitHub Actions must be used for automating the CI/CD pipeline, ensuring seamless integration, testing, and deployment processes.
 |===
@@ -50,6 +50,6 @@ ifndef::imagesdir[:imagesdir: ../images]
 |===
 | Constraints        | Explanations
 | _Scalability_          | The system must support multiple simultaneous users.
-| _Monitoring and deployment_         | Observability and deployment automation are required. The deployment must maintain high availability, meaning the infrastructure must be capable of handling potential failures with minimal service disruption, ensuring maximum uptime. Due to this, an online virtual machine provider must be selected for deployment.
+| _Monitoring and deployment_         | Deployment automation are required. The deployment must maintain high availability, meaning the infrastructure must be capable of handling potential failures with minimal service disruption, ensuring maximum uptime. Due to this, an online virtual machine provider must be selected for deployment.
 | _Docker for deployment_         | Docker is also used in the deployment process to ensure efficient management of production, testing, and development environments. This facilitates scalability and maintenance by allowing more precise control over dependencies and configurations.
 |===

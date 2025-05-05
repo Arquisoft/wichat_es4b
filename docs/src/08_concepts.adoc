@@ -67,15 +67,14 @@ ifndef::imagesdir[:imagesdir: ../images]
 === Development Concepts
 .Testing Strategy
 * Unit testing (JUnit 5, Mockito)
-* Integration testing (Testcontainers)
+* Integration testing (Cucumber)
 * E2E testing (Selenium)
-* Mutation testing (PITest)
 
 .CI/CD Pipeline
 * GitHub Actions workflow:
 ** SonarQube quality gate
 ** Docker image build/push
-** Kubernetes deployment (prod/staging)
+
 
 [[operations-concepts]]
 === Operational Concepts
@@ -91,9 +90,8 @@ ifndef::imagesdir[:imagesdir: ../images]
 * Database replication (1 primary + 2 replicas)
 
 .Database Management
-* MySQL 8 with daily backups
-* Flyway schema migration
-* Query optimization using index tuning
+* MySQL 8 without backups or data integrity between active server sessions.
+* SpringBoot AutoConfiguration
 
 
 This structured approach ensures:

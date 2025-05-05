@@ -18,8 +18,9 @@ The questions and images are generated from Wikidata, providing an automated, re
 * **Administrator**: Responsible for managing system infrastructure and security.
 * **WebApp**:Main interface of the system that connects with internal services.
 * **Database**: MySQL used to store user information, game history, and question data.
-* **External APIs**: External service used to retrieve image and metadata for question generation, provides AI-generated quiz questions and hints, etc.
-* **External developers**: Developers who interact with the API to retrieve and modify player data, questions, and game history.
+* **External APIs**: External service used to retrieve image and metadata for question generation and
+AI-generated quiz hints.
+* **External developers**: Developers who interact with the API to retrieve and retrieve player and questions data.
 
 ==== Business Context Table
 

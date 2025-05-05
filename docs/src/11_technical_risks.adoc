@@ -21,7 +21,7 @@ A technical risk is a potential event that could threaten the success of the pro
 | Spring Boot unfamiliarity | High | The architecture will use Spring Boot, a framework unfamiliar to some team members, potentially delaying development.
 | Wikidata integration | Medium | The project will use Wikidata as a data source, which is new to the team, requiring time to learn and implement.
 | IDE configuration | Medium | Compatibility issues across IDE versions, extensions, and preferences may lead to development delays.
-| Docker familiarity | Medium | The team may not be fully familiar with Docker, leading to delays in deployment and environment setup.
+| Docker familiarity | High | The team may not be fully familiar with Docker, leading to delays in deployment and environment setup.
 |===
 
 ==== External Risks
@@ -45,6 +45,6 @@ Technical debt refers to suboptimal development practices or decisions that coul
 | Incomplete internationalization | Low | Currently, the application is available in Spanish, English, German, and French. However, the full internationalization for all supported languages may not be completed in time.
 | Database selection | Low | The choice of database is not based on familiarity but on suitability for the project. This may introduce challenges during implementation.
 | Documentation in parallel | Medium | Documentation will be created alongside development, which may cause delays or incomplete documentation in the final stages.
-| Testing coverage | Medium | Testing will cover most of the code, but some parts may not be fully covered due to time constraints.
-| Security constraints | Low | Standard security measures will be applied, but advanced security features may be delayed due to performance concerns.
+| Testing coverage | Medium | Testing will cover most of the code, but some parts may not be fully covered due to not being essential for the current coverage objectives, as full coverage is not required and a minimum of 80% has been deemed sufficient.
+| Security constraints | Low | Standard security measures will be applied, but advanced security features may be delayed due to performance concerns and correct integration.
 |===
