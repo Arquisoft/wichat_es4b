@@ -12,8 +12,8 @@ Each decision includes justifications, impacts and evaluated alternatives.
 |===
 | ID  | Issue | Importance
 | link:https://github.com/Arquisoft/wichat_es4b/wiki/Registro-de-decisiones-arquitectonicas#adr-001-herencia-del-proyecto-del-a%C3%B1o-anterior[ADR-001] | Inheriting the Project from Last Year | Very High
-| link:https://github.com/Arquisoft/wichat_es4b/wiki/Registro-de-decisiones-arquitectonicas#adr-003-sistema-de-gesti%C3%B3n-de-base-de-datos-a-usar[ADR-003] | Data Base Management System to use | Medium
-| link:https://github.com/Arquisoft/wichat_es4b/wiki/Registro-de-decisiones-arquitectonicas#adr-004-llm-para-generaci%C3%B3n-de-pistas[ADR-004] | LLM for hint generation | Medium
+| link:https://github.com/Arquisoft/wichat_es4b/wiki/Registro-de-decisiones-arquitectonicas#adr-002-sistema-de-gesti%C3%B3n-de-base-de-datos-a-usar[ADR-002] | Data Base Management System to use | Medium
+| link:https://github.com/Arquisoft/wichat_es4b/wiki/Registro-de-decisiones-arquitectonicas#adr-003-llm-para-generaci%C3%B3n-de-pistas[ADR-003] | LLM for hint generation | Medium
 |===
 
 NOTE: Although these are the architectural decisions directly made by our team, we have reviewed and agreed to inherit **all architectural decisions** taken by the original project team.
