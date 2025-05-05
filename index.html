@@ -475,7 +475,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_strategies_for_quality_goals">4.4. Strategies for Quality Goals</a></li>
 <li><a href="#_organizational_decisions">4.5. Organizational Decisions</a></li>
 <li><a href="#_justification">4.6. Justification</a></li>
-<li><a href="#_references">4.7. References</a></li>
 </ul>
 </li>
 <li><a href="#section-building-block-view">5. Building Block View</a>
@@ -766,7 +765,7 @@ The platform includes user registration, game history tracking, and various game
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>External language model</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A LLM accessed through a predefined API will be used, limiting the choice of models, customization options, and potential for fine-tuning or adaptation to specific needs.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A LLM accessed through a predefined API will be used, limiting the choice of models, customization options, and potential for fine-tuning or adaptation to specific application needs.</p></td>
 </tr>
 </tbody>
 </table>
@@ -791,7 +790,7 @@ The platform includes user registration, game history tracking, and various game
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Conversational hints logic</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Hints must be generated while mitigating hallucinations using specific techniques, integrated with Wikidata.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hints must be generated while mitigating hallucinations using specific techniques.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Docker for containerization</em></p></td>
@@ -886,7 +885,7 @@ The platform includes user registration, game history tracking, and various game
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Monitoring and deployment</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Observability and deployment automation are required. The deployment must maintain high availability, meaning the infrastructure must be capable of handling potential failures with minimal service disruption, ensuring maximum uptime. Due to this, an online virtual machine provider must be selected for deployment.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deployment automation are required. The deployment must maintain high availability, meaning the infrastructure must be capable of handling potential failures with minimal service disruption, ensuring maximum uptime. Due to this, an online virtual machine provider must be selected for deployment.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>Docker for deployment</em></p></td>
@@ -930,10 +929,11 @@ The questions and images are generated from Wikidata, providing an automated, re
 <p><strong>Database</strong>: MySQL used to store user information, game history, and question data.</p>
 </li>
 <li>
-<p><strong>External APIs</strong>: External service used to retrieve image and metadata for question generation, provides AI-generated quiz questions and hints, etc.</p>
+<p><strong>External APIs</strong>: External service used to retrieve image and metadata for question generation and
+AI-generated quiz hints.</p>
 </li>
 <li>
-<p><strong>External developers</strong>: Developers who interact with the API to retrieve and modify player data, questions, and game history.</p>
+<p><strong>External developers</strong>: Developers who interact with the API to retrieve and retrieve player and questions data.</p>
 </li>
 </ul>
 </div>
@@ -1197,7 +1197,7 @@ A relational database (MySQL) is used for data persistence</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Scalability</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Load balancing, database connection pooling, and optimized queries.</p></td>
 </tr>
@@ -1214,7 +1214,7 @@ A relational database (MySQL) is used for data persistence</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Availability</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Deployment with Kubernetes and monitoring tools.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deployment of the server on Azure Cloud Services for easy distribution over the internet, with control over when the server is active.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
@@ -1232,10 +1232,10 @@ A relational database (MySQL) is used for data persistence</p>
 <p><strong>Development Process:</strong> Agile methodology with Scrum.</p>
 </li>
 <li>
-<p><strong>Collaboration Tools:</strong> GitHub for version control and Jira for task management.</p>
+<p><strong>Collaboration Tools:</strong> GitHub for version control and GitHub kanban for work distribution.</p>
 </li>
 <li>
-<p><strong>Testing Strategy:</strong> Unit tests with JUnit, integration tests with Spring Test, and performance testing.</p>
+<p><strong>Testing Strategy:</strong> Unit tests with JUnit and integration tests with Selenium + Cucumber.</p>
 </li>
 </ul>
 </div>
@@ -1244,25 +1244,6 @@ A relational database (MySQL) is used for data persistence</p>
 <h3 id="_justification">4.6. Justification</h3>
 <div class="paragraph">
 <p>These decisions ensure that the system is <strong>scalable, secure, and maintainable</strong>, leveraging Spring Boot&#8217;s powerful ecosystem for <strong>enterprise-grade applications</strong> while integrating <strong>AI-powered hints and automated question generation</strong>.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_references">4.7. References</h3>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://docs.arc42.org/section-4/" class="bare">https://docs.arc42.org/section-4/</a></p>
-</li>
-<li>
-<p><a href="https://www.wikidata.org/" class="bare">https://www.wikidata.org/</a></p>
-</li>
-<li>
-<p><a href="https://spring.io/projects/spring-boot" class="bare">https://spring.io/projects/spring-boot</a></p>
-</li>
-<li>
-<p><a href="https://github.com/Arquisoft/wiq_es04b" class="bare">https://github.com/Arquisoft/wiq_es04b</a></p>
-</li>
-</ul>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -1763,13 +1744,10 @@ The infrastructure features a Docker container running the Java Spring Boot appl
 <p>Unit testing (JUnit 5, Mockito)</p>
 </li>
 <li>
-<p>Integration testing (Testcontainers)</p>
+<p>Integration testing (Cucumber)</p>
 </li>
 <li>
 <p>E2E testing (Selenium)</p>
-</li>
-<li>
-<p>Mutation testing (PITest)</p>
 </li>
 </ul>
 </div>
@@ -1785,9 +1763,6 @@ The infrastructure features a Docker container running the Java Spring Boot appl
 </li>
 <li>
 <p>Docker image build/push</p>
-</li>
-<li>
-<p>Kubernetes deployment (prod/staging)</p>
 </li>
 </ul>
 </div>
@@ -1836,13 +1811,10 @@ The infrastructure features a Docker container running the Java Spring Boot appl
 <div class="title">Database Management</div>
 <ul>
 <li>
-<p>MySQL 8 with daily backups</p>
+<p>MySQL 8 without backups or data integrity between active server sessions.</p>
 </li>
 <li>
-<p>Flyway schema migration</p>
-</li>
-<li>
-<p>Query optimization using index tuning</p>
+<p>SpringBoot AutoConfiguration</p>
 </li>
 </ul>
 </div>
@@ -1884,11 +1856,6 @@ Each decision includes justifications, impacts and evaluated alternatives.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/Arquisoft/wichat_es4b/wiki/Registro-de-decisiones-arquitectonicas#adr-001-herencia-del-proyecto-del-a%C3%B1o-anterior">ADR-001</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Inheriting the Project from Last Year</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Very High</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/Arquisoft/wichat_es4b/wiki/Registro-de-decisiones-arquitectonicas#adr-002-estrategia-de-ramificaci%C3%B3n-git-flow">ADR-002</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Git Flow Branching Strategy</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/Arquisoft/wichat_es4b/wiki/Registro-de-decisiones-arquitectonicas#adr-003-sistema-de-gesti%C3%B3n-de-base-de-datos-a-usar">ADR-003</a></p></td>
@@ -1957,10 +1924,6 @@ These inherited decisions are documented <a href="https://github.com/Arquisoft/w
 <td class="tableblock halign-left valign-top"><p class="tableblock">The system should minimize errors or failures and provide consistent and accurate results to users.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#usage-scenarios-resilience"><strong>Resilience</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system should recover from failures and continue operating in a degraded state when necessary.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#usage-scenarios-internationalization"><strong>Internationalization</strong></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The application should support multiple languages and cultural adaptations for a global audience.</p></td>
 </tr>
@@ -1971,10 +1934,6 @@ These inherited decisions are documented <a href="https://github.com/Arquisoft/w
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#change-scenarios-testability"><strong>Testability</strong></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The system should support automated testing to facilitate quality assurance and reduce errors.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#change-scenarios-monitoring"><strong>Monitoring &amp; Logging</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application should include monitoring and logging mechanisms to track performance and troubleshoot issues.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#usage-scenarios-security"><strong>Security</strong></a></p></td>
@@ -2058,19 +2017,9 @@ These inherited decisions are documented <a href="https://github.com/Arquisoft/w
 <td class="tableblock halign-left valign-top"><p class="tableblock">Existing game modes remain unaffected, and the new mode integrates seamlessly.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="change-scenarios-scalability"></a> Scalability</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User traffic significantly increases.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system dynamically scales to maintain performance.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a id="change-scenarios-testability"></a> Testability</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Developers implement automated tests.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The system supports comprehensive unit and integration testing.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="change-scenarios-monitoring"></a> Monitoring &amp; Logging</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">System logs errors and performance metrics.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Logs provide real-time monitoring and facilitate troubleshooting.</p></td>
 </tr>
 </tbody>
 </table>
@@ -2143,7 +2092,7 @@ These inherited decisions are documented <a href="https://github.com/Arquisoft/w
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Docker familiarity</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The team may not be fully familiar with Docker, leading to delays in deployment and environment setup.</p></td>
 </tr>
 </tbody>
@@ -2226,12 +2175,12 @@ These inherited decisions are documented <a href="https://github.com/Arquisoft/w
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Testing coverage</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Testing will cover most of the code, but some parts may not be fully covered due to time constraints.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Testing will cover most of the code, but some parts may not be fully covered due to not being essential for the current coverage objectives, as full coverage is not required and a minimum of 80% has been deemed sufficient.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Security constraints</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Standard security measures will be applied, but advanced security features may be delayed due to performance concerns.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Standard security measures will be applied, but advanced security features may be delayed due to performance concerns and correct integration.</p></td>
 </tr>
 </tbody>
 </table>
@@ -2582,7 +2531,7 @@ These inherited decisions are documented <a href="https://github.com/Arquisoft/w
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2025-05-05 19:54:55 UTC
+Last updated 2025-05-05 20:06:56 UTC
 </div>
 </div>
 </body>
