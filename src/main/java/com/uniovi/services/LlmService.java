@@ -69,7 +69,6 @@ public class LlmService {
 
             // Primero agregamos todos los mensajes pasados del modelo como hints anteriores
             if (llmAnswers != null && !llmAnswers.isEmpty()) {
-                int i = 1;
                 for (String answer : llmAnswers) {
                     contents.add(Map.of(
                             "role", "model",
