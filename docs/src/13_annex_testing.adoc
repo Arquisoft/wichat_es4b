@@ -173,7 +173,7 @@ image:../images/gatling/logout_2000_users_in_60_seconds.png[Logout with 2000 use
 
 
 ==== Conclusions
-After executing the Gatling performance tests, we observed that the application performs significantly better in a local environment than when deployed on the Azure virtual machine. This outcome is expected, as local deployments benefit from minimal latency and faster resource access compared to cloud environments, which introduce additional network delays and potential resource contention.
+After executing the load tests, we observed that the application performs significantly better in a local environment than when deployed on the Azure virtual machine. This outcome is expected, as local deployments benefit from minimal latency and faster resource access compared to cloud environments, which introduce additional network delays and potential resource contention.
 
 In high-load scenarios—such as tests with 1,000 or 2,000 simulated users—the response times in the cloud setup were noticeably higher, and some endpoints occasionally experienced timeouts. This highlights the limitations of the current single-server architecture when handling large-scale concurrent traffic.
 
