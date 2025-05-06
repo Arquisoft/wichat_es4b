@@ -92,8 +92,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 * MySQL 8 without backups or data integrity between active server sessions.
 * SpringBoot AutoConfiguration
 
-
-This structured approach ensures:
+.This structured approach ensures:
 * _Security-first_ design
 * _Maintainable_ codebase through SOLID principles
 * _Scalable_ infrastructure via containerization
