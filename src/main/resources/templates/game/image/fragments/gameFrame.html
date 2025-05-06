@@ -6,8 +6,19 @@
     <div class="row align-items-center">
         <!-- Columna de Pistas -->
         <div class="col-md-3">
-            <textarea id="hintBox" class="form-control" rows="5" readonly th:placeholder="#{llm.hint}" style="max-height: 450px; overflow-y: auto;"></textarea>
+            <!-- Respuesta del LLM (solo lectura) -->
+            <textarea id="hintBox" class="form-control" rows="5" readonly th:placeholder="#{llm.hint}" style="max-height: 200px; overflow-y: auto;"></textarea>
+            <!-- Botón para pedir pista clásica -->
             <button id="hintButton" class="btn btn-warning mt-2" onclick="disableHintButton()" th:text="#{llm.askhint}"> </button>
+
+            <!-- Entrada para el LLM -->
+            <label for="userPrompt" class="mt-3 fw-bold" th:text="#{llm.makeQuestion}"></label>
+            <textarea id="userPrompt" class="form-control" rows="4" th:placeholder="#{llm.hintText}" style="max-height: 200px; overflow-y: auto;"></textarea>
+
+            <!-- Botón para enviar al LLM -->
+            <button id="sendToLlmBtn" class="btn btn-warning mt-2" th:text="#{llm.sendLlm}"></button>
+
+
         </div>
 
         <!-- Columna de Imagen y Botones -->
@@ -66,6 +77,29 @@
                 hintBox.scrollTop = hintBox.scrollHeight; // scroll automático al final
             })
             .catch(error => console.error("Error al obtener la pista:", error));
+    });
+
+    document.getElementById("sendToLlmBtn").addEventListener("click", function() {
+        const questionId = /*[[${question.id}]]*/ 0;
+        const llm = "Gemini"; // O el valor que necesites
+        const userInput = document.getElementById("userPrompt").value;
+
+        if (!userInput.trim()) {
+            alert("Por favor, escribe algo antes de enviarlo al LLM.");
+            return;
+        }
+
+        // Enviar la solicitud al backend con el parámetro `prompt` en la URL
+        fetch(`/game/image/llm/${questionId}/${llm}?prompt=${encodeURIComponent(userInput)}`, {
+            method: "GET"
+        })
+            .then(response => response.text())
+            .then(llmResponse => {
+                const hintBox = document.getElementById("hintBox");
+                hintBox.value += (hintBox.value.trim() ? "\n" : "") + llmResponse;
+                hintBox.scrollTop = hintBox.scrollHeight;
+            })
+            .catch(error => console.error("Error al enviar mensaje al LLM:", error));
     });
 
     function disableHintButton() {

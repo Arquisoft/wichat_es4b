@@ -154,4 +154,53 @@ public class LlmService {
             }
         }
 
+    public String sendQuestionToLLMPrompt(String question, String ai,List<String> llmAnswers) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+        List<Map<String, Object>> contents = new ArrayList<>();
+
+        // Primero agregamos todos los mensajes pasados del modelo como hints anteriores
+        if (llmAnswers != null && !llmAnswers.isEmpty()) {
+            for (String answer : llmAnswers) {
+                contents.add(Map.of(
+                        "role", "model",
+                        PARTS, List.of(
+                                Map.of("text",  answer)
+                        )
+                ));
+            }
+        }
+
+        // Luego añadimos el mensaje actual del usuario, con aclaración de las pistas anteriores
+        contents.add(Map.of(
+                "role", "user",
+                PARTS, List.of(
+                        Map.of("text",
+                                "Your role is to provide thoughtful and subtle hints to help guide the player toward the correct answer without revealing it directly. "
+                                        + "Each hint should be informative but not too obvious — the goal is to challenge the player, not to give away the answer. "
+                                        + "You must only provide **one** hint per request. "+ question)
+                )
+        ));
+
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(Map.of(
+                "contents", contents
+        ), headers);
+
+        try {
+            // Enviar la solicitud POST a la API
+            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                    GEMINI_API_URL + geminiApiKey,
+                    HttpMethod.POST,
+                    request,
+                    (Class<Map<String, Object>>) (Class<?>) Map.class
+            );
+
+            // Extraer y procesar la respuesta
+            return extractGeminiResponse(response.getBody());
+        } catch (Exception e) {
+            System.err.println("Error en la consulta a Gemini: " + e.getMessage());
+            return "Error al comunicarse con Gemini API";
+        }
+    }
 }

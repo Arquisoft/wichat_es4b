@@ -11,9 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -147,6 +145,18 @@ public class GameImageController
 			QuestionImage question = questionOpt.get();
 			return ((QuestionImageServiceImpl) questionService).getHintForImageQuestion(
 					question, llm, LocaleContextHolder.getLocale().getLanguage()); // Devuelve solo la pista como String
+		}
+		return "No se encontró ninguna pista para esta pregunta.";
+	}
+
+	@RequestMapping(value = "/game/image/llm/{questionId}/{llm}", method = RequestMethod.GET)
+	@ResponseBody
+	public String promptToLlm(@PathVariable Long questionId, @PathVariable String llm, @RequestParam String prompt) {
+		Optional<QuestionImage> questionOpt = questionService.getQuestion(questionId);
+		if (questionOpt.isPresent()) {
+			QuestionImage question = questionOpt.get();
+			return ((QuestionImageServiceImpl) questionService).getHintForImageQuestionPrompt(
+					question, llm, LocaleContextHolder.getLocale().getLanguage(), prompt); // Devuelve solo la pista como String
 		}
 		return "No se encontró ninguna pista para esta pregunta.";
 	}

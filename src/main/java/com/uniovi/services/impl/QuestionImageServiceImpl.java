@@ -251,4 +251,26 @@ public class QuestionImageServiceImpl
 		return lastllmAnswer;
 	}
 
+	public String getHintForImageQuestionPrompt(QuestionImage question, String ai, String lang, String prompt) {
+
+		String llmHint = (
+				"I have an image with the following URL: <" + question.getImageUrl() + ">.\n" +
+						"Here are the answer options: " + question.getOptions().toString() + ".\n" +
+						"The correct answer is: " + question.getCorrectAnswer() + ".\n" +
+						"Please provide your response in the language corresponding to this acronym: " + lang + "." +
+						"This is my personal question about the image, i need to guess from where is it, this is my own information for you to help me: " + prompt + "."
+		);
+		// Llamar al servicio LLM para obtener la pista usando Gemini.
+		if (actualQuestionImage == null) {
+			actualQuestionImage = question;
+		} else {
+			if (!actualQuestionImage.equals(question)) {
+				llmAnswers          = new ArrayList<>();
+				actualQuestionImage = question;
+			}
+		}
+		String lastllmAnswer = llmService.sendQuestionToLLMPrompt(llmHint, ai, llmAnswers);
+		llmAnswers.add(lastllmAnswer);
+		return lastllmAnswer;
+	}
 }
