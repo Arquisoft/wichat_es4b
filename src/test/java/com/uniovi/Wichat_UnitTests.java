@@ -2294,6 +2294,32 @@ class Wichat_UnitTests {
 		assertFalse(answer.isBlank());
 	}
 
+	@Test
+	void testSendQuestionToLLM_GeminiPrompt() {
+		AnswerImage a1 = new AnswerImage("Asturias", false);
+		AnswerImage a2 = new AnswerImage("Cataluña", false);
+		AnswerImage a3 = new AnswerImage("Madrid", false);
+		AnswerImage a4 = new AnswerImage("Benidorm", true);
+		List<AnswerImage> lanswer = Arrays.asList(a1, a2, a3, a4);
+		QuestionImage questionImage = new QuestionImage("", lanswer, a4, new Category(),
+				"es",
+				"https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
+		String answer = questionImageService.getHintForImageQuestionPrompt(questionImage,
+				"Gemini","es","¿Cuál es la zona de España en la que se encuentra?");
+		Assertions.assertNotNull(answer);
+		assertFalse(answer.isEmpty());
+		assertFalse(answer.isBlank());
+		a1            = new AnswerImage("León", false);
+		lanswer       = Arrays.asList(a1, a2, a3, a4);
+		questionImage = new QuestionImage("", lanswer, a4, new Category(), "es",
+				"https://www.wikidata.org/wiki/Q487981#/media/File:Vista_de_Benidorm,_Espa%C3%B1a,_2014-07-02,_DD_67.JPG");
+		answer        = questionImageService.getHintForImageQuestionPrompt(questionImage,
+				"Gemini","es", "¿Es una zona lluviosa o mas seca?");
+		Assertions.assertNotNull(answer);
+		assertFalse(answer.isEmpty());
+		assertFalse(answer.isBlank());
+	}
+
 
 	@Nested
 	@DisplayName("GameSessionImage Unit Tests")
